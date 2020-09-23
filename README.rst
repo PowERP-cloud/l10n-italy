@@ -1,6 +1,6 @@
 
 =============================================
-|icon| Payment Term Extension Plus 12.0.0.1.0
+|icon| Payment Term Extension Plus 12.0.0.1.1
 =============================================
 
 
@@ -133,6 +133,10 @@ In case of trouble, please check there if your issue has already been reported.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.0.1.1 (2020-09-23)
+~~~~~~~~~~~~~~~~~~~~~~~
+* [IMP] Added field inbound/outbound / Inserito metodo di pagamento in entrata ed in uscita
+
 12.0.0.1.0 (2020-09-20)
 ~~~~~~~~~~~~~~~~~~~~~~~
 * [IMP] Module implementation / Implementazione modulo 
@@ -190,7 +194,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2020-09-21
+Last Update / Ultimo aggiornamento: 2020-09-23
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status
