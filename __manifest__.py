@@ -10,7 +10,7 @@
 {
     'name': 'Invoice due dates',
     'summary': 'Due dates management',
-    'version': '12.0.0.1.2',
+    'version': '12.0.0.1.3',
     'category': 'Accounting',
     'author': 'Axitec Srl',
     'website': '',
@@ -18,6 +18,7 @@
     'depends': [
         'account',
         'account_move_line_due',
+        'account_move_plus',
     ],
     'data': [
         'security/ir.model.access.csv',
