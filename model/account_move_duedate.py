@@ -1,0 +1,154 @@
+#
+# Copyright 2020 - Didotech s.r.l. <https://www.didotech.com/>
+#
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+#
+
+from odoo import models, fields, api
+from odoo.exceptions import UserError
+
+
+class DueDate(models.Model):
+    _name = 'account.move.duedate'
+    _description = 'Scadenze collegate ad una fattura'
+
+    _order = 'due_date'
+
+    move_id = fields.Many2one(
+        comodel_name='account.move',
+        domain=[('journal_id.type', 'in', ['sale', 'sale_refund', 'purchase', 'purchase_refund'])],
+        string='Registrazione contabile',
+        requred=True
+    )
+    due_date = fields.Date('Data di scadenza', requred=True)
+    due_type_id = fields.Many2one(
+        comodel_name='fatturapa.payment_method',
+        string='Metodo di pagamento',
+        requred=True
+    )
+    due_amount = fields.Float(string='Importo', required=True)
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # ORM METHODS OVERRIDE - begin
+
+    @api.model
+    def create(self, values):
+        result = super().create(values)
+        return result
+    # end create
+
+    @api.multi
+    def write(self, values):
+        result = super().write(values)
+        return result
+    # end write
+
+    # ORM METHODS OVERRIDE - end
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # CONSTRAINTS - begin
+
+    @api.constrains('due_date')
+    def _constraint_due_date(self):
+        if not self.due_date:
+            raise UserError('La data non può essere vuota')
+        # end if
+    # end _check_due_amount
+
+    @api.constrains('due_amount')
+    def _constraint_due_amount(self):
+        error = self._validate_due_amount()
+        if error:
+            raise UserError(error['message'])
+        # end if
+    # end _check_due_amount
+
+    @api.constrains('due_type_id')
+    def _constraint_due_type_id(self):
+        error = self._validate_due_type_id()
+        if error:
+            raise UserError(error['message'])
+        # end if
+    # end _check_due_amount
+
+    # CONSTRAINTS - end
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # ONCHANGE - begin
+
+    @api.onchange('due_date')
+    def _onchange_due_date(self, values=None):
+        if not self.due_date and values:
+            return {
+                'warning': {
+                    'title': 'Data scadenza',
+                    'message': 'La data non può essere vuota'
+                }
+            }
+        # end if
+    # end _check_due_amount
+
+    @api.onchange('due_amount')
+    def _onchange_due_amount(self, values=None):
+        error = self._validate_due_amount(values)
+        if error and values:
+            return {'warning': error}
+        # end if
+    # end _check_due_amount
+
+    @api.onchange('due_type_id')
+    def _onchange_due_type_id(self, values=None):
+        error = self._validate_due_type_id(values)
+        if error and values:
+            return {'warning': error}
+        # end if
+    # end _check_due_amount
+
+    # ONCHANGE - end
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # VALIDATION METHODS - begin
+
+    # Validation methods return error message if field is not valid, None otherwise
+
+    @api.model
+    def _validate_due_amount(self, values=None):
+        """
+        Enforces the following constraints:
+
+        - the amount of each due date must me > 0
+        """
+
+        # Check: due_amount > 0
+        if self.due_amount == 0:
+            return {
+                'title': 'Scadenza - Importo',
+                'message': 'L\'importo associato alla scadenza del {} deve essere maggiore di zero'.format(
+                    self.due_date
+                ),
+            }
+        # end if
+
+    # end _validate_due_amount
+
+    @api.model
+    def _validate_due_type_id(self, values=None):
+        if not self.due_type_id:
+            return {
+                'title': 'Scadenza - Metodo di pagamento',
+                'message': 'Il metodo di pagamento associato alla scadenza del {} non può essere vuoto'.format(
+                    self.due_date
+                ),
+            }
+        else:
+            return None
+        # end if
+    # end _validate_due_type_id
+
+    # VALIDATION METHODS - end
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# end DueDate
