@@ -27,9 +27,14 @@ class AccountInvoice(models.Model):
                             elif account_type.type == 'receivable':
                                 line.write({'due_dc': 'C'})
 
-                    if inv.payment_term_id:
-                        pass
-                    print(line.due_dc)
+                        # if inv.payment_term_id:
+                        #     if account_type:
+                        #         if account_type.type == 'payable' and \
+                        #                 inv.payment_term_id.payment_method_outbound:
+                        #             pass
+                        #         elif account_type.type == 'receivable' and inv.payment_term_id.payment_method_inbound:
+                        #             pass
+                    # print(line.due_dc)
         return True
 
 
