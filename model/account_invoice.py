@@ -31,25 +31,29 @@ class AccountInvoice(models.Model):
                 inv.move_id.write({'type': self.type})
             # end if
 
+            payment_by_date = {
+                terms['due_date']: (terms['inbound'], terms['outbound'])
+                for terms in map(lambda tline:
+                                 tline.compute_due_date(inv.date_invoice),
+                                 inv.payment_term_id.line_ids)
+            }
+
             if inv.move_id.line_ids:
                 for line in inv.move_id.line_ids:
                     if line.account_id:
                         account_type = self.env['account.account.type'].search(
                             [('id', '=', line.account_id.user_type_id.id)])
                         if account_type:
+                            method = payment_by_date.get(line.date_maturity,
+                                                         (False, False))
+
                             if account_type.type == 'payable':
-                                line.write({'due_dc': 'D'})
+                                line.due_dc = 'D'
+                                line.payment_method = method[1]
                             elif account_type.type == 'receivable':
-                                line.write({'due_dc': 'C'})
+                                line.due_dc = 'C'
+                                line.payment_method = method[0]
                 # end for
-                        # if inv.payment_term_id:
-                        #     if account_type:
-                        #         if account_type.type == 'payable' and \
-                        #                 inv.payment_term_id.payment_method_outbound:
-                        #             pass
-                        #         elif account_type.type == 'receivable' and inv.payment_term_id.payment_method_inbound:
-                        #             pass
-                    # print(line.due_dc)
             # end if
         # end for
 
