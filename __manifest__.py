@@ -10,7 +10,7 @@
 {
     'name': 'Invoice due dates',
     'summary': 'Due dates management',
-    'version': '12.0.0.1.3',
+    'version': '12.0.0.1.4',
     'category': 'Accounting',
     'author': 'Axitec Srl',
     'website': '',
