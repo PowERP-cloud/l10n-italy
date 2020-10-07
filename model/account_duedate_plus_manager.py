@@ -101,6 +101,9 @@ class DueDateManager(models.Model):
         invoice_date = self.move_id.invoice_date
         total_amount = self.move_id.amount
 
+        if not invoice_date:
+            return False
+
         # If no payment terms generate only ONE due date line
         if not payment_terms:
             self.env['account.duedate_plus.line'].create({

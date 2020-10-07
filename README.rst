@@ -1,12 +1,12 @@
 
-======================================
-|icon| Invoice entry dates 12.0.2.6.15
-======================================
+===========================
+|icon| Due dates 12.0.0.1.6
+===========================
 
 
-**Registration, vat/balance application dates**
+**Due dates management**
 
-.. |icon| image:: https://raw.githubusercontent.com/axitec/accounting/12.0/account_invoice_entry_dates/static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/axitec/accounting/12.0/account_duedates/static/description/icon.png
 
 |Maturity| |Build Status| |Codecov Status| |license gpl| |Try Me|
 
@@ -118,7 +118,7 @@ From UI: go to:
 
 * |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
-* |menu| Setting > Apps |right_do| Select **account_invoice_entry_dates** > Install
+* |menu| Setting > Apps |right_do| Select **account_duedates** > Install
 
 
 |
@@ -165,6 +165,11 @@ In case of trouble, please check there if your issue has already been reported.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.0.1.6 (2020-10-07)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Avoid constraint on due date on invoice validate
 
 12.0.2.6.15 (2020-09-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -265,7 +270,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2020-09-14
+Last Update / Ultimo aggiornamento: 2020-10-07
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status
