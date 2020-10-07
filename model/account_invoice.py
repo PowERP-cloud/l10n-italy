@@ -15,12 +15,39 @@ from odoo import models, api, fields, _
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    duedate_ids = fields.One2many(
-        string='Scadenze',
-        comodel_name='account.move.line',
-        related='move_id.duedate_ids',
-        readonly=False,
+    duedate_manager_id = fields.One2many(
+        string='Gestore scadenze',
+        comodel_name='account.duedate_plus.manager',
+        inverse_name='invoice_id',
     )
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # ORM METHODS OVERRIDE - begin
+
+    @api.model
+    def create(self, values):
+        # Apply modifications inside DB transaction
+        new_invoice = super().create(values)
+
+        # Add the Duedates Manager
+        new_invoice.duedate_manager_id = new_invoice.env[
+            'account.duedate_plus.manager'
+        ].create({
+            'invoice_id': new_invoice.id
+        })
+
+        # Return the result of the write command
+        return new_invoice
+    # end create
+
+    # ORM METHODS OVERRIDE - end
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # PROTECTED METHODS
+
+    # PROTECTED METHODS - end
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     @api.multi
     def action_move_create(self):
@@ -32,10 +59,10 @@ class AccountInvoice(models.Model):
             # end if
 
             payment_by_date = {
-                terms['due_date']: (terms['inbound'], terms['outbound'])
-                for terms in map(lambda tline:
-                                 tline.compute_due_date(inv.date_invoice),
-                                 inv.payment_term_id.line_ids)
+                terms[0]: (terms[2]['inbound'], terms[2]['outbound'])
+                for terms in inv.payment_term_id.compute(
+                    value=inv.amount_total, ref_date=inv.date_invoice
+                )
             }
 
             if inv.move_id.line_ids:
