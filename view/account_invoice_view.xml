@@ -14,18 +14,16 @@
 
             <xpath expr="/form/sheet/notebook/page[1]" position="after">
                 <page string="Scadenze">
-                    <field name="duedate_ids" editable="top">
+                    <field name="duedate_line_ids">
                         <!--
                             NB: editable="top" let's the user modify the item directly from the row, without
                                 opening a new form dialog
                         -->
-                        <tree>
-                            <field name="date_maturity"/>
-                            <field name="due_dc"/>
-                            <field name="payment_method"/>
-                            <field name="amount_due"/>
-                            <field name="tax_ids" invisible="1"/>
-                            <field name="tax_line_id" invisible="1"/>
+                        <tree editable="top">
+                            <field name="due_date"/>
+<!--                                <field name="due_dc"/>-->
+                            <field name="payment_method_id"/>
+                            <field name="due_amount"/>
                         </tree>
                     </field>
                 </page>
@@ -49,16 +47,16 @@
 
             <xpath expr="/form/sheet/notebook/page[1]" position="after">
                 <page string="Scadenze">
-                    <field name="duedate_ids">
+                    <field name="duedate_line_ids">
                         <!--
                             NB: editable="top" let's the user modify the item directly from the row, without
                                 opening a new form dialog
                         -->
                         <tree editable="top">
-                            <field name="date_maturity"/>
-                            <field name="due_dc"/>
-                            <field name="payment_method"/>
-                            <field name="amount_due"/>
+                            <field name="due_date"/>
+<!--                                <field name="due_dc"/>-->
+                            <field name="payment_method_id"/>
+                            <field name="due_amount"/>
                         </tree>
                     </field>
                 </page>

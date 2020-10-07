@@ -8,9 +8,9 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 #
 {
-    'name': 'Invoice due dates',
+    'name': 'Due dates',
     'summary': 'Due dates management',
-    'version': '12.0.0.1.4',
+    'version': '12.0.0.1.5',
     'category': 'Accounting',
     'author': 'Axitec Srl',
     'website': '',

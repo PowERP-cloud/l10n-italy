@@ -9,22 +9,22 @@ from odoo.exceptions import UserError
 
 
 class DueDate(models.Model):
-    _name = 'account.move.duedate'
-    _description = 'Scadenze collegate ad una fattura'
+    _name = 'account.duedate_plus.line'
+    _description = 'Scadenze collegate ad una fattura/nota di credito'
 
     _order = 'due_date'
 
-    move_id = fields.Many2one(
-        comodel_name='account.move',
-        domain=[('journal_id.type', 'in', ['sale', 'sale_refund', 'purchase', 'purchase_refund'])],
-        string='Registrazione contabile',
+    duedate_manager_id = fields.Many2one(
+        comodel_name='account.duedate_plus.manager',
+        string='Gestore scadenze',
         requred=True
     )
+
     due_date = fields.Date('Data di scadenza', requred=True)
-    due_type_id = fields.Many2one(
-        comodel_name='fatturapa.payment_method',
+    payment_method_id = fields.Many2one(
+        comodel_name='account.payment.method',
         string='Metodo di pagamento',
-        requred=True
+        requred=False  # Non sempre è impostato il metodo di pagamento nei termini di pagamento
     )
     due_amount = fields.Float(string='Importo', required=True)
 
