@@ -169,22 +169,50 @@ class AccountPaymentTerm(models.Model):
         computing and also to handle weeks and months
         """
         date_ref = date_ref or fields.Date.today()
-        amount = value
+        amount = value  # Remaining invoice amount after each line
         result = []
+
+        # Select the currency to use
         if self.env.context.get('currency_id'):
             currency = self.env['res.currency'].browse(
                 self.env.context['currency_id'])
         else:
             currency = self.env.user.company_id.currency_id
+        # end if
+
+        # Set the precision for rounding
         prec = currency.decimal_places
+
         next_date = fields.Date.from_string(date_ref)
         for line in self.line_ids:
-            amt = line.compute_line_amount(value, amount, prec)
+
+            # Calcolo ammontare della scadenza
+            amt = line.compute_line_amount(
+                value,  # Original amount of the invoice
+                amount,  # Residual amount of the invoice after computing previous lines
+                prec  # Precision
+            )
+
+            # - - - - - - - - - - - - - - - - - - - - - - - - - -
+            # Select the due date computing method
+
+            # FIELD 'sequential_lines':
+            # - true:  due date of a line is computed starting from the due
+            #          date of the previous line
+            # - false: due date of a line is computed starting from the
+            #          invoice date (the ref_date passed to the method)
+
+            # Non sequential due dates: the due date for a line is computed
+            # starting from the ref_date -->> RESET next_date variable
             if not self.sequential_lines:
                 # For all lines, the beginning date is `date_ref`
                 next_date = fields.Date.from_string(date_ref)
                 if float_is_zero(amt, precision_digits=prec):
                     continue
+                # end if
+            # end if
+
+            # Compute the due date
             if line.option == 'day_after_invoice_date':
                 next_date += relativedelta(days=line.days,
                                            weeks=line.weeks,
@@ -201,14 +229,48 @@ class AccountPaymentTerm(models.Model):
             elif line.option == 'day_current_month':
                 # Getting last day of next month
                 next_date += relativedelta(day=line.days, months=0)
+            # end if
+
+            # Recompute next_date taking into account:
+            # - payment days
+            # - holidays
             next_date = self.apply_payment_days(line, next_date)
             next_date = self.apply_holidays(next_date)
+
+            # If the amount of the due date is != 0 add the computed due date
+            # to the result array and update the residual amount
             if not float_is_zero(amt, precision_digits=prec):
-                result.append((fields.Date.to_string(next_date), amt))
+                result.append((
+                    fields.Date.to_string(next_date),
+                    amt,
+                    {
+                        'inbound': line.payment_method_inbound,
+                        'outbound': line.payment_method_outbound,
+                    }
+                ))
                 amount -= amt
+            # end if
+        # end for
+
+        # Manage the remaining amount by computing the balance of the generated
+        # due dates and the original amount.
+        # If a line gets generated it's date will be the same of the last line
+        # or today if no other line has been computed
         amount = reduce(lambda x, y: x + y[1], result, 0.0)
         dist = round(value - amount, prec)
+
+        # If the balance is not zero add a last line
         if dist:
-            last_date = result and result[-1][0] or fields.Date.today()
-            result.append((last_date, dist))
+
+            default_date = fields.Date.today()
+            default_methods = {'inbound': False, 'outbound': False}
+
+            last_date = result and result[-1][0] or default_date
+            last_payment_methods = result and result[-1][2] or default_methods
+
+            result.append((last_date, dist, last_payment_methods))
+        # end if
+
         return result
+    # end compute
+# end AccountPaymentTerm
