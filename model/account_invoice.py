@@ -57,7 +57,9 @@ class AccountInvoice(models.Model):
         # If payment terms was changed recompute the due dates
         if 'payment_term_id' in values:
             for invoice in self:
-                invoice.duedate_manager_id.generate_duedates()
+                if invoice.duedate_manager_id:
+                    invoice.duedate_manager_id.generate_duedates()
+                # end if
             # end for
         # end if
         return result
