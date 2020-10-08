@@ -110,38 +110,57 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def finalize_invoice_move_lines(self, move_lines):
+
+        self.ensure_one()
+
         move_lines = super().finalize_invoice_move_lines(move_lines)
-        # return move_lines
-        for inv in self:
 
-            payment_by_date = {
-                terms[0]: (terms[2]['inbound'], terms[2]['outbound'])
-                for terms in inv.payment_term_id.compute(
-                    value=inv.amount_total, date_ref=inv.date_invoice
-                )[0]
-            }
-            for tline in move_lines:
-                line = tline[2]
-                if line['account_id']:
-                    account = self.env['account.account'].browse(
-                        line['account_id'])
-                    account_type = self.env['account.account.type'].search(
-                        [('id', '=', account.user_type_id.id)])
-                    if account_type:
-                        method = payment_by_date.get(
-                            str(line['date_maturity']),
-                            (False, False)
-                        )
+        # Linee di testata che rappresentano le scadenze da RIMPIAZZARE
+        head_lines = [
+            ml
+            for ml in move_lines
+            if (ml[2]['tax_ids'] is False and ml[2]['tax_line_id'] is False)
+        ]
 
-                        if account_type.type == 'payable':
-                            line['due_dc'] = 'D'
-                            line['payment_method'] = method[1].id
-                        elif account_type.type == 'receivable':
-                            line['due_dc'] = 'C'
-                            line['payment_method'] = method[0].id
-                # end for
+        # Altre linee che vanno MANTENNUTE
+        new_lines = [
+            ml
+            for ml in move_lines
+            if (ml[2]['tax_ids'] or ml[2]['tax_line_id'])
+        ]
+
+        # Dati relativi al conto
+        prototype_line = head_lines[0][2]
+        account = self.env['account.account'].browse(prototype_line['account_id'])
+        account_type = account.user_type_id.type
+
+        for duedate in self.duedates_manager_id.duedate_line_ids:
+
+            new_line_dict = prototype_line.copy()
+
+            new_line_dict['maturity_date'] = duedate.due_date
+
+            if new_line_dict['credit']:
+                new_line_dict['credit'] = duedate.amount
+            elif new_line_dict['debit']:
+                new_line_dict['debit'] = duedate.amount
+            else:
+                assert False
             # end if
+
+            new_line_dict['payment_method'] = duedate.payment_method
+
+            if account_type == 'payable':
+                new_line_dict['due_dc'] = 'D'
+            elif account_type == 'receivable':
+                new_line_dict['due_dc'] = 'C'
+            # end if
+
+            new_lines.append(
+                (0, 0, new_line_dict)
+            )
         # end for
-        return move_lines
+
+        return new_lines
     # end finalize_invoice_move_lines
 # end AccountInvoice
