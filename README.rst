@@ -1,6 +1,6 @@
 
 ===========================
-|icon| Due dates 12.0.0.1.6
+|icon| Due dates 12.0.0.1.7
 ===========================
 
 
@@ -166,6 +166,11 @@ In case of trouble, please check there if your issue has already been reported.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.0.1.7 (2020-10-08)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Refactoring account move line creation
+
 12.0.0.1.6 (2020-10-07)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -270,7 +275,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2020-10-07
+Last Update / Ultimo aggiornamento: 2020-10-08
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status
