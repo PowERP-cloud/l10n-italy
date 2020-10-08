@@ -103,35 +103,45 @@ class AccountInvoice(models.Model):
             # Update the DueManager adding the reference to the "account.move"
             inv.duedate_manager_id.write({'move_id': inv.move_id.id})
 
+        # end for
+
+        return True
+    # end action_move_create
+
+    @api.multi
+    def finalize_invoice_move_lines(self, move_lines):
+        move_lines = super().finalize_invoice_move_lines(move_lines)
+        # return move_lines
+        for inv in self:
+
             payment_by_date = {
                 terms[0]: (terms[2]['inbound'], terms[2]['outbound'])
                 for terms in inv.payment_term_id.compute(
                     value=inv.amount_total, date_ref=inv.date_invoice
                 )[0]
             }
+            for tline in move_lines:
+                line = tline[2]
+                if line['account_id']:
+                    account = self.env['account.account'].browse(
+                        line['account_id'])
+                    account_type = self.env['account.account.type'].search(
+                        [('id', '=', account.user_type_id.id)])
+                    if account_type:
+                        method = payment_by_date.get(
+                            str(line['date_maturity']),
+                            (False, False)
+                        )
 
-            if inv.move_id.line_ids:
-                for line in inv.move_id.line_ids:
-                    if line.account_id:
-                        account_type = self.env['account.account.type'].search(
-                            [('id', '=', line.account_id.user_type_id.id)])
-                        if account_type:
-                            method = payment_by_date.get(
-                                str(line.date_maturity),
-                                (False, False)
-                            )
-
-                            if account_type.type == 'payable':
-                                line.due_dc = 'D'
-                                line.payment_method = method[1]
-                            elif account_type.type == 'receivable':
-                                line.due_dc = 'C'
-                                line.payment_method = method[0]
+                        if account_type.type == 'payable':
+                            line['due_dc'] = 'D'
+                            line['payment_method'] = method[1].id
+                        elif account_type.type == 'receivable':
+                            line['due_dc'] = 'C'
+                            line['payment_method'] = method[0].id
                 # end for
             # end if
         # end for
-
-        return True
-    # end action_move_create
-
+        return move_lines
+    # end finalize_invoice_move_lines
 # end AccountInvoice
