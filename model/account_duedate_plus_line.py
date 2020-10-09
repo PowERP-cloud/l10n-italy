@@ -28,6 +28,12 @@ class DueDate(models.Model):
     )
     due_amount = fields.Float(string='Importo', required=True)
 
+    move_line_id = fields.One2many(
+        comodel_name='account.move.line',
+        inverse_name='duedate_line_id',
+        string='Riferimento riga registrazione contagbile',
+    )
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ORM METHODS OVERRIDE - begin
 

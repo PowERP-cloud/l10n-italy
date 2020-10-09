@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inherit_view_payments_tree" model="ir.ui.view">
+        <field name="name">Payments</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account_due_list.view_payments_tree"/>
+        <field name="arch" type="xml">
+
+             <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="payment_method" readonly="1"/>
+             </xpath>
+
+             <xpath expr="//field[@name='account_id']" position="after">
+                <field name="due_dc" readonly="1"/>
+                <field name="amount_due" readonly="1"/>
+             </xpath>
+
+             <xpath expr="//field[@name='debit']" position="replace">
+             </xpath>
+
+             <xpath expr="//field[@name='credit']" position="replace">
+             </xpath>
+
+        </field>
+    </record>
+
+
+<!--    account_due_list.view_payments_filter-->
+
+    <record id="inherit_view_payments_filter" model="ir.ui.view">
+        <field name="name">Payments Selection</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account_due_list.view_payments_filter"/>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='group_by_salesperson']" position="after">
+                <filter string="Metodo di pagamento"
+                        domain="[]"
+                        context="{'group_by':'payment_method'}" name="group_by_payment_method"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

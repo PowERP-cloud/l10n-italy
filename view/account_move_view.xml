@@ -8,6 +8,12 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
 
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="type" invisible="1" />
+                <field name="payment_id" attrs="{'invisible':[('type','not in',
+                ['out_invoice', 'out_refund', 'in_invoice','in_refund'])]}"/>
+            </xpath>
+
             <xpath expr="/form/sheet/notebook/page[1]" position="after">
 
                 <page string="Scadenze">
@@ -21,6 +27,7 @@
 <!--                                <field name="due_dc"/>-->
                             <field name="payment_method_id"/>
                             <field name="due_amount"/>
+                            <field name="move_line_id" groups="base.group_no_one"/> <!-- Shown only in debug mode -->
                         </tree>
                     </field>
                 </page>

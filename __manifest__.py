@@ -10,20 +10,23 @@
 {
     'name': 'Due dates',
     'summary': 'Due dates management',
-    'version': '12.0.0.1.7',
+    'version': '12.0.0.1.8',
     'category': 'Accounting',
     'author': 'Axitec Srl',
     'website': '',
     'license': 'LGPL-3',
     'depends': [
         'account',
-        'account_move_line_due',
         'account_move_plus',
+        # 'account_move_line_due',
     ],
     'data': [
         'security/ir.model.access.csv',
         'view/account_invoice_view.xml',
         'view/account_move_view.xml',
+        'view/account_move_line_view.xml',
+        'view/account_due_list_view.xml',
     ],
     'installable': True,
+    'post_init_hook': 'post_init_hook',
 }

@@ -141,6 +141,8 @@ class AccountInvoice(models.Model):
 
             new_line_dict['maturity_date'] = duedate.due_date
 
+            new_line_dict['duedate_line_id'] = duedate.id
+
             if new_line_dict['credit']:
                 new_line_dict['credit'] = duedate.due_amount
             elif new_line_dict['debit']:
@@ -149,7 +151,7 @@ class AccountInvoice(models.Model):
                 assert False
             # end if
 
-            new_line_dict['payment_method'] = duedate.payment_method_id
+            new_line_dict['payment_method'] = duedate.payment_method_id.id
 
             if account_type == 'payable':
                 new_line_dict['due_dc'] = 'D'
