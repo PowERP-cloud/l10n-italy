@@ -166,6 +166,16 @@ In case of trouble, please check there if your issue has already been reported.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.0.1.8 (2020-10-09)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Corretto nome campo errato
+
+12.0.0.1.8 (2020-10-09)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Integrated module account_move_line_due
+
 12.0.0.1.7 (2020-10-08)
 ~~~~~~~~~~~~~~~~~~~~~~~
 

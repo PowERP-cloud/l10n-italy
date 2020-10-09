@@ -139,7 +139,7 @@ class AccountInvoice(models.Model):
 
             new_line_dict = prototype_line.copy()
 
-            new_line_dict['maturity_date'] = duedate.due_date
+            new_line_dict['date_maturity'] = duedate.due_date
 
             new_line_dict['duedate_line_id'] = duedate.id
 
