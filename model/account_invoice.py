@@ -76,8 +76,9 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def action_move_create(self):
+
         super().action_move_create()
-        # move_model = self.env['account.move']
+
         for inv in self:
 
             # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -134,21 +135,21 @@ class AccountInvoice(models.Model):
         account = self.env['account.account'].browse(prototype_line['account_id'])
         account_type = account.user_type_id.type
 
-        for duedate in self.duedates_manager_id.duedate_line_ids:
+        for duedate in self.duedate_manager_id.duedate_line_ids:
 
             new_line_dict = prototype_line.copy()
 
             new_line_dict['maturity_date'] = duedate.due_date
 
             if new_line_dict['credit']:
-                new_line_dict['credit'] = duedate.amount
+                new_line_dict['credit'] = duedate.due_amount
             elif new_line_dict['debit']:
-                new_line_dict['debit'] = duedate.amount
+                new_line_dict['debit'] = duedate.due_amount
             else:
                 assert False
             # end if
 
-            new_line_dict['payment_method'] = duedate.payment_method
+            new_line_dict['payment_method'] = duedate.payment_method_id
 
             if account_type == 'payable':
                 new_line_dict['due_dc'] = 'D'
