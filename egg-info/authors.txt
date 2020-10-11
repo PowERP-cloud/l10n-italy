@@ -1,10 +1,2 @@
-.. $if branch in '7.0'
-* ISA s.r.l. <http://www.isa.it>
-.. $elif branch in '8.0'
-* Odoo Community Association (OCA) <https://odoo-community.org>
-.. $elif branch in '9.0' '10.0'
-* SHS-AV s.r.l. <https://www.zeroincombenze.it/>
-.. $elif branch in '12.0'
 * SHS-AV s.r.l. <https://www.zeroincombenze.it/>
 * Didotech srl <http://www.didotech.com>
-.. $fi

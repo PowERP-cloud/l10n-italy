@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -->
-    <!--                                                                                                              -->
-    <!--  SUPPLIER INVOICE                                                                                            -->
-    <!--                                                                                                              -->
-    <!--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- -->
+    <!-- SUPPLIER INVOICE -->
+    <!-- -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <record id="view_supplier_invoice_entry_dates_form" model="ir.ui.view">
         <field name="name">view.supplier.invoice.entry.dates.form</field>
         <field name="model">account.invoice</field>
@@ -21,7 +21,7 @@
                         -->
                         <tree editable="top">
                             <field name="due_date"/>
-<!--                                <field name="due_dc"/>-->
+                            <!-- <field name="due_dc"/>-->
                             <field name="payment_method_id"/>
                             <field name="due_amount"/>
                             <field name="move_line_id" groups="base.group_no_one"/> <!-- Shown only in debug mode -->
@@ -35,11 +35,11 @@
 
 
 
-    <!--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -->
-    <!--                                                                                                              -->
-    <!--  CUSTOMER INVOICE                                                                                            -->
-    <!--                                                                                                              -->
-    <!--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- -->
+    <!-- CUSTOMER INVOICE -->
+    <!-- -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <record id="view_invoice_entry_dates_form" model="ir.ui.view">
         <field name="name">view.invoice.entry.dates.form</field>
         <field name="model">account.invoice</field>
@@ -55,7 +55,7 @@
                         -->
                         <tree editable="top">
                             <field name="due_date"/>
-<!--                                <field name="due_dc"/>-->
+                            <!-- <field name="due_dc"/>-->
                             <field name="payment_method_id"/>
                             <field name="due_amount"/>
                             <field name="move_line_id" groups="base.group_no_one"/> <!-- Shown only in debug mode -->
@@ -67,3 +67,4 @@
     </record>
 
 </odoo>
+
