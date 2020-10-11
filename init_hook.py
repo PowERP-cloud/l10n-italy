@@ -1,3 +1,8 @@
+# Copyright 2020 SHS-AV s.r.l. <https://www.zeroincombenze.it>
+# Copyright 2020 Didotech s.r.l. <https://www.didotech.com>
+#
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
+#
 import logging
 from odoo import api, SUPERUSER_ID
 from odoo.exceptions import UserError

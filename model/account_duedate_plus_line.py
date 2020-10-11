@@ -1,7 +1,9 @@
 #
-# Copyright 2020 - Didotech s.r.l. <https://www.didotech.com/>
+# Copyright 2020 Didotech s.r.l. <https://www.didotech.com>
 #
-# License LGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# Copyright 2020 SHS-AV s.r.l. <https://www.zeroincombenze.it>
+#
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 #
 
 from odoo import models, fields, api

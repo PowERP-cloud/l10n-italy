@@ -1,9 +1,2 @@
-.. $if branch in '7.0' '8.0'
-* Paolo Chiara <p.chiara@isa.it>
-* Sergio Corato <info@icstools.it>
-.. $elif branch in '9.0' '10.0'
-* Antonio Maria Vigliotti <antoniomaria.vigliotti@gmail.com>
-.. $elif branch in '12.0'
 * Antonio Maria Vigliotti <antoniomaria.vigliotti@gmail.com>
 * Marco Tosato <marco.tosato@didotech.com>
-.. $fi
