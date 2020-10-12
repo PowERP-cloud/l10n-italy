@@ -124,6 +124,10 @@ class AccountInvoice(models.Model):
             if (ml[2]['tax_ids'] is False and ml[2]['tax_line_id'] is False)
         ]
 
+        # may be empty if account_total is zero
+        if len(head_lines) == 0:
+            return move_lines
+
         # Altre linee che vanno MANTENNUTE
         new_lines = [
             ml
@@ -149,7 +153,7 @@ class AccountInvoice(models.Model):
             elif new_line_dict['debit']:
                 new_line_dict['debit'] = duedate.due_amount
             else:
-                assert False
+                pass
             # end if
 
             new_line_dict['payment_method'] = duedate.payment_method_id.id

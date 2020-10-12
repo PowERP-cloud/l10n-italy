@@ -57,26 +57,18 @@ class DueDate(models.Model):
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # CONSTRAINTS - begin
 
-    @api.constrains('due_date')
-    def _constraint_due_date(self):
-        if not self.due_date:
-            raise UserError('La data non può essere vuota')
-        # end if
+    # @api.constrains('due_date')
+    # def _constraint_due_date(self):
+    #     if not self.due_date:
+    #         raise UserError('La data non può essere vuota')
+    #     # end if
     # end _check_due_amount
 
-    @api.constrains('due_amount')
-    def _constraint_due_amount(self):
-        error = self._validate_due_amount()
-        if error:
-            raise UserError(error['message'])
-        # end if
-    # end _check_due_amount
-
-    @api.constrains('due_type_id')
-    def _constraint_due_type_id(self):
-        error = self._validate_due_type_id()
-        if error:
-            raise UserError(error['message'])
+    # @api.constrains('due_amount')
+    # def _constraint_due_amount(self):
+    #     error = self._validate_due_amount()
+    #     if error:
+    #         raise UserError(error['message'])
         # end if
     # end _check_due_amount
 
@@ -86,32 +78,24 @@ class DueDate(models.Model):
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ONCHANGE - begin
 
-    @api.onchange('due_date')
-    def _onchange_due_date(self, values=None):
-        if not self.due_date and values:
-            return {
-                'warning': {
-                    'title': 'Data scadenza',
-                    'message': 'La data non può essere vuota'
-                }
-            }
-        # end if
+    # @api.onchange('due_date')
+    # def _onchange_due_date(self, values=None):
+    #     if not self.due_date and values:
+    #         return {
+    #             'warning': {
+    #                 'title': 'Data scadenza',
+    #                 'message': 'La data non può essere vuota'
+    #             }
+    #         }
+    #     # end if
     # end _check_due_amount
 
-    @api.onchange('due_amount')
-    def _onchange_due_amount(self, values=None):
-        error = self._validate_due_amount(values)
-        if error and values:
-            return {'warning': error}
-        # end if
-    # end _check_due_amount
-
-    @api.onchange('due_type_id')
-    def _onchange_due_type_id(self, values=None):
-        error = self._validate_due_type_id(values)
-        if error and values:
-            return {'warning': error}
-        # end if
+    # @api.onchange('due_amount')
+    # def _onchange_due_amount(self, values=None):
+    #     error = self._validate_due_amount(values)
+    #     if error and values:
+    #         return {'warning': error}
+    #     # end if
     # end _check_due_amount
 
     # ONCHANGE - end
@@ -120,41 +104,8 @@ class DueDate(models.Model):
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # VALIDATION METHODS - begin
 
-    # Validation methods return error message if field is not valid, None otherwise
-
-    @api.model
-    def _validate_due_amount(self, values=None):
-        """
-        Enforces the following constraints:
-
-        - the amount of each due date must me > 0
-        """
-
-        # Check: due_amount > 0
-        if self.due_amount == 0:
-            return {
-                'title': 'Scadenza - Importo',
-                'message': 'L\'importo associato alla scadenza del {} deve essere maggiore di zero'.format(
-                    self.due_date
-                ),
-            }
-        # end if
-
-    # end _validate_due_amount
-
-    @api.model
-    def _validate_due_type_id(self, values=None):
-        if not self.due_type_id:
-            return {
-                'title': 'Scadenza - Metodo di pagamento',
-                'message': 'Il metodo di pagamento associato alla scadenza del {} non può essere vuoto'.format(
-                    self.due_date
-                ),
-            }
-        else:
-            return None
-        # end if
-    # end _validate_due_type_id
+    # Validation methods return error message if field is not valid,
+    # None otherwise
 
     # VALIDATION METHODS - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

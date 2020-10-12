@@ -1,6 +1,6 @@
 
 ===========================
-|icon| Due dates 12.0.0.1.7
+|icon| Due dates 12.0.0.1.9
 ===========================
 
 
@@ -17,46 +17,11 @@
 Overview / Panoramica
 =====================
 
-|en| This module allows to specify some fiscal dates on invoices.
-
-Date field list:
-
-* standard Odoo date is called registration date (both sale and purchase invoices)
-* date_apply_vat is a new field to declare when vat is applied (only purchase invoices)
-* date_apply_balance is new field to declare when record is evaluated in balance sheet
-
-Notes:
-
-* This software is like account_invoice_entry_date module of Italian OCA group
-* Italian OCA module use a new field called registration_date while this module uses tha standard Odoo "date" field
-* On purchase journal, date is free, without checks
-* On sale journal, date is the same of invoice_date and it is read-only
-* Above rule may be disableb by journal configuration
-* default value of date_apply_vat and date_apply_balance are the same of the date; end-user can update the field
-
-
+|en| 
 
 |
 
-|it| Date di registrazione fatture
-
-Questo modulo permette di registrare alcune date inerenti la registrazione fatture.
-
-La lista delle date è la seguente:
-
-* la data contabile, standard Odoo è chiamata di registrazione
-* date_apply_vat è un nuovo campo che dichiara la data di competenza dell'IVA
-* date_apply_balance è un nuovo cmapo che dichiara la data di competenza a bilancio
-
-Note:
-
-* Questo software è simile al modulo account_invoice_entry_date del gruppo italiano OCA
-* Il modulo OCA italiano utiliza un nuovo campo chiamato registration_date (data di registrazione) menrte questo modulo rinomina il campo standard di Odoo
-* Nel registro degli acquisti la data di registrazione è libera, senza controlli
-* Nel registro delle vendite la data di registrazione è identica alla data fattura ed è in sola lettura
-* La regola precedente può essere disabilita con una configurazione del registro
-* I valori predefiniti delle date date_apply_vat e date_apply_balance sono quelli della data di registrazione; l'operatore ha facoltà di modifica
-
+|it| 
 
 |
 
@@ -163,75 +128,6 @@ and/or submit pull requests on `GitHub Issues
 
 In case of trouble, please check there if your issue has already been reported.
 
-ChangeLog History / Cronologia modifiche
-----------------------------------------
-
-12.0.0.1.8 (2020-10-09)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Corretto nome campo errato
-
-12.0.0.1.8 (2020-10-09)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Integrated module account_move_line_due
-
-12.0.0.1.7 (2020-10-08)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Refactoring account move line creation
-
-12.0.0.1.6 (2020-10-07)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Avoid constraint on due date on invoice validate
-
-12.0.2.6.15 (2020-09-14)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] disabled contraint on due_amount > 0 / Disabilitato il controllo sull'importo della riga
-
-12.0.2.5.15 (2020-09-10)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] disabled contraint on due_amount > 0 / Disabilitato il controllo sull'importo della riga
-
-12.0.2.4.15 (2020-08-27)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [MOD] modificato modulo per utilizzare il nuovo campo "type" di account.move
-
-12.0.2.3.15 (2020-08-27)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] attivato calcolo automatico, "Scadenze", "Prima nota" e "Riepilogo IVA" alla creazione, prima lo faceva solo al write
-
-
-12.0.2.2.15 (2020-08-26)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] ricalcolo automatico, "Scadenze", "Prima nota" e "Riepilogo IVA" al salvataggio
-* [FIX] corretto nome di variabile scritto in modo errato
-* [FIX] Righe di "Prima Nota" e "Riepilogo IVA" non sono più direttamente modificabili dall'utente
-
-12.0.1.2.14 (2020-08-18)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Riabilitata visualizzazione campo journal_id nella vista account.move
-
-12.0.1.2.13 (2020-08-18)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] inseriti controlli in create, write e post per evitare che la generazione e i controlli di due_dates, account_brief e vat_brief su registrazioni "non IVA"
-
-12.0.1.1.13 (2020-08-03)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Duplicate journal_id / Registro duplicato
-
-
-
-
 |
 |
 
@@ -250,14 +146,12 @@ Odoo is a trademark of `Odoo S.A. <https://www.odoo.com/>`__ (formerly OpenERP)
 Authors / Autori
 ----------------
 
-
 * `SHS-AV s.r.l. <https://www.zeroincombenze.it/>`__
 * `Didotech srl <http://www.didotech.com>`__
 
 
 Contributors / Collaboratori
 ----------------------------
-
 
 * Antonio Maria Vigliotti <antoniomaria.vigliotti@gmail.com>
 * Marco Tosato <marco.tosato@didotech.com>
@@ -285,7 +179,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2020-10-08
+Last Update / Ultimo aggiornamento: 2020-10-12
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status
