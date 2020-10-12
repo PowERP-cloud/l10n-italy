@@ -1,7 +1,7 @@
 
-===========================
-|icon| Due dates 12.0.0.1.9
-===========================
+============================
+|icon| Due dates 12.0.0.1.12
+============================
 
 
 **Due dates management**
@@ -127,6 +127,18 @@ and/or submit pull requests on `GitHub Issues
 <https://github.com/axitec/accounting/issues>`_.
 
 In case of trouble, please check there if your issue has already been reported.
+
+ChangeLog History / Cronologia modifiche
+----------------------------------------
+
+12.0.1.8.12 (2020-10-12)
+~~~~~~~~~~~~~~~~~~~~~~~~
+* [FIX] Inserita dipendenza modulo OCA Scadenziario account_due_list
+
+12.0.1.8.11 (2020-10-12)
+~~~~~~~~~~~~~~~~~~~~~~~~
+* [FIX] Rimosso controlli non validi
+
 
 |
 |
