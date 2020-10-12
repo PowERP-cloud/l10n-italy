@@ -88,6 +88,124 @@ class DueDateManager(models.Model):
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # VALIDATION METHODS - begin
+
+    @api.model
+    def _validate_duedates(self):
+
+        # ID not set, delay validation to when the
+        # object creation is completed
+        if not self.id:
+            return
+        # end if
+
+        # Perform validations reading from the database (the values are on the
+        # DB inside our transaction).
+        # If error raise exception ...the transaction will be rolled back and
+        # no modification will be performed on DB.
+
+        # Check for correctness of the dates
+        error_date = self._validate_duedates_date()
+        if error_date:
+            return error_date
+        # end if
+
+        # Check for correctness of the total amount of the duedates
+        error_amount = self._validate_duedates_amount()
+        if error_amount:
+            return error_amount
+        # end if
+
+    # end _validate
+
+    @api.model
+    def _validate_duedates_date(self):
+        """
+        Enforces the following constraint:
+
+        the first due_date can be prior to the mode date, every other due_date
+        must be later than or equal to the move date.
+        """
+
+        if self.invoice_id:
+            invoice_date = self.invoice_id.date_invoice
+        elif self.move_id:
+            invoice_date = self.move_id.invoice_date
+        else:
+            assert False
+        # end if
+
+        # Sorted list of dates (least date -> least index)
+        duedates_list = sorted([duedate.due_date for duedate in self.duedate_line_ids])
+
+        if len(duedates_list) <= 1:
+            # No duedates or just one date -> validation successful
+            return None
+
+        elif duedates_list[1] >= invoice_date:
+            # The second due_date is not prior than the invoice date ->
+            # -> validation successful.
+            # Since the duedates_list is a sorted list, every other date with
+            # index > 1 will be >= duedates_list[1] and consequently a
+            # valid date
+            return None
+
+        else:  # Validation FAILED
+            # When the execution arrives here the following conditions are TRUE:
+            # - there duedates
+            # - the first and second due_dates are prior to the invoice date
+            # so the dates are not valid!!
+            return {
+                'title': 'Scadenza - Data di scadenza',
+                'message': 'Solo la prima scadenza può essere precedente alla data fattura'
+            }
+
+        # end if
+
+    # end _validate_duedates_date
+
+    @api.model
+    def _validate_duedates_amount(self):
+        """
+        Enforces the following constraint:
+
+        the sum of the amount of each the duedate related to this account.move
+        must be equal to the account.move amount
+        """
+
+        if self.invoice_id:
+            precision = self.invoice_id.currency_id.decimal_places
+            amount_total = self.amount_total
+        elif self.move_id:
+            precision = self.move_id.currency_id.decimal_places
+            amount_total = self.amount
+        else:
+            assert False
+        # end if
+
+        # Get the list of the other due_dates, ordered by due_date ascending
+        duedates_amounts = [
+            round(duedate.due_amount, precision)
+            for duedate in self.duedate_ids
+        ]
+
+        # If there are duedates check the amounts
+        amounts_sum = sum(duedates_amounts)
+        difference = round(amounts_sum - amount_total, precision)
+
+        # There must be at least one due date to proceed with validation,
+        # if no due date has been defined yet skip the validation
+        if duedates_amounts and (difference != 0):  # Validation FAILED
+            return {
+                'title': 'Scadenze - Totale import',
+                'message': 'Il totale degli importi delle scadenze deve coincidere'
+                'con il totale della registrazione ({})'.format(amount_total)
+            }
+
+        else:  # Validation succesful!
+            return None
+        # end if
+    # end _validate_duedates_amount
+
     # VALIDATION METHODS - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
