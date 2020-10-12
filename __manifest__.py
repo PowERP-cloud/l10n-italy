@@ -6,15 +6,16 @@
 {
     'name': 'Due dates',
     'summary': 'Due dates management',
-    'version': '12.0.0.1.11',
+    'version': '12.0.0.1.13',
     'category': 'Accounting',
     'author': 'Axitec Srl',
     'website': '',
     'license': 'LGPL-3',
     'depends': [
         'account',
+        'account_due_list',
         'account_move_plus',
-        # 'account_move_line_due',
+        'account_move_line_due',
     ],
     'data': [
         'security/ir.model.access.csv',
