@@ -37,16 +37,6 @@ class AccountInvoice(models.Model):
         # Apply modifications inside DB transaction
         new_invoice = super().create(values)
 
-        # Add the Duedates Manager
-        new_invoice.duedate_manager_id = new_invoice.env[
-            'account.duedate_plus.manager'
-        ].create({
-            'invoice_id': new_invoice.id
-        })
-
-        # Compute the due dates
-        new_invoice.duedate_manager_id.generate_duedates()
-
         # Return the result of the write command
         return new_invoice
     # end create
@@ -55,14 +45,23 @@ class AccountInvoice(models.Model):
     def write(self, values):
         result = super().write(values)
 
-        # If payment terms was changed recompute the due dates
-        if 'payment_term_id' in values:
-            for invoice in self:
-                if invoice.duedate_manager_id:
-                    invoice.duedate_manager_id.generate_duedates()
-                # end if
-            # end for
-        # end if
+        for invoice in self:
+
+            duedate_mgr_miss = not invoice.duedate_manager_id
+            duedate_generate = duedate_mgr_miss or 'payment_term_id' in values
+
+            # Add the Duedates Manager if it's missing
+            if duedate_mgr_miss:
+                self._create_duedate_manager(invoice)
+            # end if
+
+            # Compute the due dates if payment terms was changed or duedates
+            # manager was missing
+            if duedate_generate:
+                invoice.duedate_manager_id.generate_duedates()
+            # end if
+        # end for
+
         return result
     # end write
 
@@ -71,6 +70,15 @@ class AccountInvoice(models.Model):
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # PROTECTED METHODS
+
+    def _create_duedate_manager(self, invoice):
+        # Add the Duedates Manager
+        invoice.duedate_manager_id = invoice.env[
+            'account.duedate_plus.manager'
+        ].create({
+            'invoice_id': invoice.id
+        })
+    # end _create_duedate_manager
 
     # PROTECTED METHODS - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -142,12 +150,16 @@ class AccountInvoice(models.Model):
 
         for duedate in self.duedate_manager_id.duedate_line_ids:
 
+            # Create the new line
             new_line_dict = prototype_line.copy()
 
+            # Update - maturity date
             new_line_dict['date_maturity'] = duedate.due_date
 
+            # Update - reference to the duedate line
             new_line_dict['duedate_line_id'] = duedate.id
 
+            # Update - set amount
             if new_line_dict['credit']:
                 new_line_dict['credit'] = duedate.due_amount
             elif new_line_dict['debit']:
@@ -156,8 +168,10 @@ class AccountInvoice(models.Model):
                 pass
             # end if
 
+            # Update - payment method
             new_line_dict['payment_method'] = duedate.payment_method_id.id
 
+            # Update - set credit or debit
             if account_type == 'payable':
                 new_line_dict['due_dc'] = 'D'
             elif account_type == 'receivable':

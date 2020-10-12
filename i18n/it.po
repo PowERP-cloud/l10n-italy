@@ -134,12 +134,6 @@ msgid "Payment Terms Line"
 msgstr "Riga termini di pagamento"
 
 #. module: account_duedates
-#: model:ir.model.fields,field_description:account_duedates.field_account_duedate_plus_manager__move_id
-#: model:ir.model.fields,field_description:account_duedates.field_account_move_line__move_id_duedate
-msgid "Registrazione contabile"
-msgstr ""
-
-#. module: account_duedates
 #: model:ir.model.fields,field_description:account_duedates.field_account_duedate_plus_line__move_line_id
 msgid "Riferimento riga registrazione contagbile"
 msgstr ""

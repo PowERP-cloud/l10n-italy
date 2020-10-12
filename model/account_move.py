@@ -27,22 +27,28 @@ class AccountMove(models.Model):
     )
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # PROTECTED METHODS
+
+    def _create_duedate_manager(self, move):
+        # Add the Duedates Manager
+        move.duedate_manager_id = move.env[
+            'account.duedate_plus.manager'
+        ].create({
+            'move_id': move.id
+        })
+
+    # end _create_duedate_manager
+
+    # PROTECTED METHODS - end
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ORM METHODS OVERRIDE - begin
 
     @api.model
     def create(self, values):
         # Apply modifications inside DB transaction
         new_move = super().create(values)
-
-        # Add the Duedates Manager
-        new_move.duedate_manager_id = new_move.env[
-            'account.duedate_plus.manager'
-        ].create({
-            'move_id': new_move.id
-        })
-
-        # Compute the due dates
-        new_move.duedate_manager_id.generate_duedates()
 
         # Return the result of the write command
         return new_move
@@ -52,12 +58,23 @@ class AccountMove(models.Model):
     def write(self, values):
         result = super().write(values)
 
-        # If payment terms was changed recompute the due dates
-        if 'payment_id' in values:
-            for move in self:
+        for move in self:
+
+            duedate_mgr_miss = not move.duedate_manager_id
+            duedate_generate = duedate_mgr_miss or 'payment_term_id' in values
+
+            # Add the Duedates Manager if it's missing
+            if duedate_mgr_miss:
+                self._create_duedate_manager(move)
+            # end if
+
+            # Compute the due dates if payment terms was changed or duedates
+            # manager was missing
+            if duedate_generate:
                 move.duedate_manager_id.generate_duedates()
-            # end for
-        # end if
+            # end if
+        # end for
+
         return result
     # end write
 
