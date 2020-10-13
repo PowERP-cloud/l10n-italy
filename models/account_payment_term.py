@@ -55,16 +55,19 @@ class AccountPaymentTermLine(models.Model):
              "surcharge -0.01")
     months = fields.Integer(string='Number of Months')
     weeks = fields.Integer(string='Number of Weeks')
-    payment_method_inbound = fields.Many2one(
+
+    payment_method_credit = fields.Many2one(
         comodel_name='account.payment.method',
-        string='Metodo di pagamento in entrata',
-        domain="[('payment_type', '=', 'inbound')]",
+        string='Metodo di pagamento per clienti',
+        domain="['|', ('debit_credit', '!=', 'debit'), "
+               "('debit_credit', '=', False)]",
     )
 
-    payment_method_outbound = fields.Many2one(
+    payment_method_debit = fields.Many2one(
         comodel_name='account.payment.method',
-        domain="[('payment_type', '=', 'outbound')]",
-        string='Metodo di pagamento in uscita',)
+        domain="['|', ('debit_credit', '!=', 'credit'), "
+               "('debit_credit', '=', False)]",
+        string='Metodo di pagamento per fornitori',)
 
     @api.multi
     def compute_line_amount(

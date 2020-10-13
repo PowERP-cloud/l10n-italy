@@ -51,8 +51,8 @@
 
             <field name="value" position="after">
                 <br/>
-                <field name="payment_method_inbound" />
-                <field name="payment_method_outbound" />
+                <field name="payment_method_credit" />
+                <field name="payment_method_debit" />
             </field>
 
             <field name="option" position="after">
@@ -78,8 +78,8 @@
                 <field name="amount_round"/>
             </field>
             <field name="sequence" position="after">
-                <field name="payment_method_inbound" />
-                <field name="payment_method_outbound" />
+                <field name="payment_method_credit" />
+                <field name="payment_method_debit" />
             </field>
             <field name="days" position="after">
                 <field name="weeks"/>

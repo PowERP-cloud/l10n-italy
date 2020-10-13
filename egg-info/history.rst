@@ -1,3 +1,7 @@
+12.0.0.1.3 (2020-10-13)
+~~~~~~~~~~~~~~~~~~~~~~~~
+* [REF] Update fields from inbound/outbound to credit/debit
+
 12.0.0.1.2 (2020-10-07)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 * [REF] Refactoring "compute" method
