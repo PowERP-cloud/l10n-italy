@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.0.1.12
+|icon| Due dates 12.0.0.1.14
 ============================
 
 
@@ -131,6 +131,10 @@ In case of trouble, please check there if your issue has already been reported.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.8.14 (2020-10-14)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Rimosso campo duplicato (termine di pagamento)
 
 12.0.1.8.13 (2020-10-12)
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -141,11 +145,11 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 * [FIX] Inserita dipendenza modulo OCA Scadenziario account_due_list
 
+
 12.0.1.8.11 (2020-10-12)
 ~~~~~~~~~~~~~~~~~~~~~~~~
+
 * [FIX] Rimossi controlli non validi
-
-
 
 
 |
@@ -199,7 +203,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2020-10-12
+Last Update / Ultimo aggiornamento: 2020-10-14
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status
