@@ -33,7 +33,7 @@ class AccountPaymentTermLine(models.Model):
 
         result = {
             'due_date': next_date,
-            'inbound': self.payment_method_inbound,
-            'outbound': self.payment_method_outbound,
+            'credit': self.payment_method_credit,
+            'debit': self.payment_method_debit,
         }
         return result

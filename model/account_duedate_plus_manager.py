@@ -240,9 +240,9 @@ class DueDateManager(models.Model):
             for due_date in due_dates:
 
                 if move_type in ('receivable', 'payable_refund'):
-                    payment_method = due_date[2]['inbound']
+                    payment_method = due_date[2]['credit']
                 elif move_type in ('payable', 'receivable_refund'):
-                    payment_method = due_date[2]['outbound']
+                    payment_method = due_date[2]['debit']
                 else:
                     assert False, 'move_type for move must ' \
                                   'be receivable, payable, ' \
@@ -288,9 +288,9 @@ class DueDateManager(models.Model):
                 invoice_type = self.invoice_id.account_id.user_type_id.type
 
                 if invoice_type == 'receivable':
-                    payment_method = due_date[2]['inbound']
+                    payment_method = due_date[2]['credit']
                 elif invoice_type == 'payable':
-                    payment_method = due_date[2]['outbound']
+                    payment_method = due_date[2]['debit']
                 else:
                     assert False, 'account_id for invoice must' \
                                   'be receivable or payable'

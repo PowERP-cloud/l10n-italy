@@ -21,7 +21,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='line_ids']/tree/field[@name='credit']" position="after">
                 <field name="calculate_field" invisible="1"/>
-                <field name="payment_method" domain="[('payment_type', '=', calculate_field)]"/>
+                <field name="payment_method" domain="[('debit_credit', '=', calculate_field)]"/>
                 <field name="due_dc" />
                 <field name="amount_due" />
             </xpath>

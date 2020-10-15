@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.0.1.14
+|icon| Due dates 12.0.0.1.15
 ============================
 
 
@@ -131,6 +131,11 @@ In case of trouble, please check there if your issue has already been reported.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.8.15 (2020-10-15)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Aggiornato duedate manager
+
 12.0.1.8.14 (2020-10-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -203,7 +208,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2020-10-14
+Last Update / Ultimo aggiornamento: 2020-10-15
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status

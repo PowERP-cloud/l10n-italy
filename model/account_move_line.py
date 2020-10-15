@@ -86,10 +86,12 @@ class AccountMoveLine(models.Model):
             if account_type:
                 if account_type.type == 'payable':
                     self.due_dc = 'D'
-                    domain = [('payment_type', '=', 'outbound')]
+                    domain = ['|', ('debit_credit', '=', 'debit'),
+                              ('debit_credit', '=', False)]
                 elif account_type.type == 'receivable':
                     self.due_dc = 'C'
-                    domain = [('payment_type', '=', 'inbound')]
+                    domain = ['|', ('debit_credit', '=', 'credit'),
+                              ('debit_credit', '=', False)]
                 else:
                     self.due_dc = ''
                 # end if
@@ -123,9 +125,9 @@ class AccountMoveLine(models.Model):
                     [('id', '=', rec.account_id.user_type_id.id)])
                 if account_type:
                     if account_type.type == 'payable':
-                        rec.calculate_field = 'outbound'
+                        rec.calculate_field = 'debit'
                     elif account_type.type == 'receivable':
-                        rec.calculate_field = 'inbound'
+                        rec.calculate_field = 'credit'
 
 
     @api.model
