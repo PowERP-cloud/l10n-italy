@@ -247,8 +247,8 @@ class AccountPaymentTerm(models.Model):
                     fields.Date.to_string(next_date),
                     amt,
                     {
-                        'inbound': line.payment_method_inbound,
-                        'outbound': line.payment_method_outbound,
+                        'credit': line.payment_method_credit,
+                        'debit': line.payment_method_debit,
                     }
                 ))
                 amount -= amt
@@ -266,7 +266,7 @@ class AccountPaymentTerm(models.Model):
         if dist:
 
             default_date = fields.Date.today()
-            default_methods = {'inbound': False, 'outbound': False}
+            default_methods = {'credit': False, 'debit': False}
 
             last_date = result and result[-1][0] or default_date
             last_payment_methods = result and result[-1][2] or default_methods

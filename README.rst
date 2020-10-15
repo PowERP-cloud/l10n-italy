@@ -1,6 +1,6 @@
 
 =============================================
-|icon| Payment Term Extension Plus 12.0.0.1.3
+|icon| Payment Term Extension Plus 12.0.0.1.4
 =============================================
 
 
@@ -133,6 +133,10 @@ In case of trouble, please check there if your issue has already been reported.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.0.1.4 (2020-10-14)
+~~~~~~~~~~~~~~~~~~~~~~~
+* [FIX] Checked all occurrences of inbound/outbound / Sostituite le occorrenze di inbound/outbound
+
 12.0.0.1.3 (2020-10-13)
 ~~~~~~~~~~~~~~~~~~~~~~~
 * [REF] Update fields from inbound/outbound to credit/debit
@@ -202,7 +206,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2020-10-13
+Last Update / Ultimo aggiornamento: 2020-10-15
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status

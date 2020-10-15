@@ -1,3 +1,7 @@
+12.0.0.1.4 (2020-10-14)
+~~~~~~~~~~~~~~~~~~~~~~~~
+* [FIX] Checked all occurrences of inbound/outbound / Sostituite le occorrenze di inbound/outbound
+
 12.0.0.1.3 (2020-10-13)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 * [REF] Update fields from inbound/outbound to credit/debit
