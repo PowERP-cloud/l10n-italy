@@ -7,7 +7,7 @@
 #
 
 from odoo import models, fields, api
-from odoo.exceptions import UserError
+# from odoo.exceptions import UserError
 
 
 class DueDate(models.Model):

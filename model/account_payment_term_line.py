@@ -6,7 +6,7 @@
 #
 
 from dateutil.relativedelta import relativedelta
-from odoo import models, api, fields, _
+from odoo import models, api, fields
 
 
 class AccountPaymentTermLine(models.Model):

@@ -4,8 +4,8 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 #
 import logging
-from odoo import api, SUPERUSER_ID
-from odoo.exceptions import UserError
+# from odoo import api, SUPERUSER_ID
+# from odoo.exceptions import UserError
 
 
 logger = logging.getLogger(__name__)
@@ -17,7 +17,7 @@ def post_init_hook(cr, registry):
     with the correct value.
     """
 
-    env = api.Environment(cr, SUPERUSER_ID, {})
+    # env = api.Environment(cr, SUPERUSER_ID, {})
 
     query = """UPDATE account_move_line 
     set due_dc = 'C' where user_type_id in

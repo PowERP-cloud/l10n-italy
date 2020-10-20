@@ -10,7 +10,7 @@
 #
 
 
-from odoo import models, api, fields, _
+from odoo import models, api, fields
 
 
 class AccountInvoice(models.Model):
