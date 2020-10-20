@@ -3,7 +3,7 @@
 #
 import logging
 from odoo import api, fields, models
-from odoo.exceptions import UserError, Warning
+# from odoo.exceptions import UserError, Warning
 
 _logger = logging.getLogger(__name__)
 
@@ -75,5 +75,3 @@ class AccountMove(models.Model):
 
     payment_id = fields.Many2one(comodel_name='account.payment.term',
                                  string="Termine di pagamento")
-
-
