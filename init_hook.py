@@ -21,4 +21,3 @@ def pre_init_hook(cr):
         raise UserError('Questo modulo non è installabile poichè è '
                         'presente un\'altra versione simile '
                         '(account_payment_term_extension).')
-
