@@ -22,6 +22,22 @@
                             <field name="move_line_id" groups="base.group_no_one"/> <!-- Shown only in debug mode -->
                         </tree>
                     </field>
+                    <group col="2" colspan="2">
+                        <span colspan="2" col="2">
+                            <span><strong>Assegnato: </strong></span>
+                            <field name="duedates_amount_current" nolabel="1"/>
+                        </span>
+
+                        <span colspan="2" col="2">
+                            <span><strong>Residuo: </strong></span>
+                            <field name="duedates_amount_unassigned" decoration-danger="duedates_amount_unassigned != 0" decoration-success="duedates_amount_unassigned == 0" nolabel="1"/>
+                        </span>
+
+                        <span colspan="2" col="2">
+                            <span><strong>Totale fattura: </strong></span>
+                            <field name="amount" nolabel="1"/>
+                        </span>
+                    </group>
                 </page>
 
             </xpath>

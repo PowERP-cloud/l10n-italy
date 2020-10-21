@@ -131,6 +131,11 @@ In case of trouble, please check there if your issue has already been reported.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.8.16 (2020-10-21)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Implementato totalizzazione totale scadenze e differenza tra scadenze e totale fattura
+
 12.0.1.8.15 (2020-10-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

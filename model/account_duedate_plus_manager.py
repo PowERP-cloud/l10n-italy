@@ -20,16 +20,23 @@ class DueDateManager(models.Model):
         string='Registrazione contabile',
         requred=False
     )
+
     invoice_id = fields.Many2one(
         comodel_name='account.invoice',
         string='Documento',
         requred=False
     )
+
     duedate_line_ids = fields.One2many(
         string='Righe scadenze',
         comodel_name='account.duedate_plus.line',
         inverse_name='duedate_manager_id',
         requred=False
+    )
+
+    duedate_lines_amount = fields.Float(
+        sring="Ammontare scadenze",
+        compute='_compute_duedate_lines_amount'
     )
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -84,6 +91,17 @@ class DueDateManager(models.Model):
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ONCHANGE - begin
     # ONCHANGE - end
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # PUBLIC API - begin
+
+    @api.model
+    def update_amount(self):
+        self._compute_duedate_lines_amount()
+    # end update_amount
+
+    # PUBLIC API - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

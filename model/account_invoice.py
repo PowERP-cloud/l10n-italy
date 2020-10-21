@@ -29,6 +29,16 @@ class AccountInvoice(models.Model):
         readonly=False
     )
 
+    duedates_amount_current = fields.Monetary(
+        string='Ammontare scadenze',
+        compute='_compute_duedates_amounts'
+    )
+
+    duedates_amount_unassigned = fields.Monetary(
+        string='Ammontare non assegnato a scadenze',
+        compute='_compute_duedates_amounts'
+    )
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ORM METHODS OVERRIDE - begin
 
@@ -185,4 +195,28 @@ class AccountInvoice(models.Model):
 
         return new_lines
     # end finalize_invoice_move_lines
+
+    @api.onchange('duedate_line_ids')
+    def _onchange_duedate_line_ids(self, values=False):
+        self._compute_duedates_amounts()
+    # end _onchange_duedate_line_ids
+
+    @api.multi
+    @api.depends('duedate_line_ids')
+    def _compute_duedates_amounts(self):
+
+        for inv in self:
+            # Somma ammontare di ciascuna scadenza
+            lines_total = sum(
+                # Estrazione ammontare da ciascuna scadenza
+                map(lambda l: l.due_amount, self.duedate_line_ids)
+            )
+
+            # Aggiornamento campo ammontare scadenze
+            self.duedates_amount_current = lines_total
+
+            # Aggiornamento campo ammontare non assegnato a scadenze
+            self.duedates_amount_unassigned = self.amount_total - lines_total
+        # end for
+    # end _compute_duedate_lines_amount
 # end AccountInvoice

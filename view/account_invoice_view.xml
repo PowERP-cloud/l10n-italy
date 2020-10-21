@@ -23,10 +23,26 @@
                             <field name="due_date"/>
                             <!-- <field name="due_dc"/>-->
                             <field name="payment_method_id"/>
-                            <field name="due_amount"/>
+                            <field name="due_amount" sum="Totale"/>
                             <field name="move_line_id" groups="base.group_no_one"/> <!-- Shown only in debug mode -->
                         </tree>
                     </field>
+                    <group col="2" colspan="2">
+                        <span colspan="2" col="2">
+                            <span><strong>Assegnato: </strong></span>
+                            <field name="duedates_amount_current" nolabel="1"/>
+                        </span>
+
+                        <span colspan="2" col="2">
+                            <span><strong>Residuo: </strong></span>
+                            <field name="duedates_amount_unassigned" decoration-danger="duedates_amount_unassigned != 0" decoration-success="duedates_amount_unassigned == 0" nolabel="1"/>
+                        </span>
+
+                        <span colspan="2" col="2">
+                            <span><strong>Totale fattura: </strong></span>
+                            <field name="amount_total" nolabel="1"/>
+                        </span>
+                    </group>
                 </page>
             </xpath>
         </field>
@@ -48,7 +64,7 @@
 
             <xpath expr="/form/sheet/notebook/page[1]" position="after">
                 <page string="Scadenze">
-                    <field name="duedate_line_ids">
+                    <field name="duedate_line_ids" nolabel="1">
                         <!--
                             NB: editable="top" let's the user modify the item directly from the row, without
                                 opening a new form dialog
@@ -57,10 +73,26 @@
                             <field name="due_date"/>
                             <!-- <field name="due_dc"/>-->
                             <field name="payment_method_id"/>
-                            <field name="due_amount"/>
+                            <field name="due_amount" sum="Totale"/>
                             <field name="move_line_id" groups="base.group_no_one"/> <!-- Shown only in debug mode -->
                         </tree>
                     </field>
+                    <group col="2" colspan="2">
+                        <span colspan="2" col="2">
+                            <span><strong>Assegnato: </strong></span>
+                            <field name="duedates_amount_current"/>
+                        </span>
+
+                        <span colspan="2" col="2">
+                            <span><strong>Residuo: </strong></span>
+                            <field name="duedates_amount_unassigned" decoration-danger="duedates_amount_unassigned != 0" decoration-success="duedates_amount_unassigned == 0"/>
+                        </span>
+
+                        <span colspan="2" col="2">
+                            <span><strong>Totale fattura: </strong></span>
+                            <field name="amount_total"/>
+                        </span>
+                    </group>
                 </page>
             </xpath>
         </field>

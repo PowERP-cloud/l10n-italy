@@ -1,3 +1,8 @@
+12.0.1.8.16 (2020-10-21)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Implementato totalizzazione totale scadenze e differenza tra scadenze e totale fattura
+
 12.0.1.8.15 (2020-10-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
