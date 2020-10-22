@@ -16,9 +16,9 @@
                         -->
                         <tree editable="top">
                             <field name="due_date"/>
-                            <!-- <field name="due_dc"/>-->
                             <field name="payment_method_id"/>
                             <field name="due_amount"/>
+                            <field name="proposed_new_value" attrs="{'invisible':[('proposed_new_value', '=', 0)]}"/>
                             <field name="move_line_id" groups="base.group_no_one"/> <!-- Shown only in debug mode -->
                         </tree>
                     </field>
@@ -38,6 +38,7 @@
                             <field name="amount" nolabel="1"/>
                         </span>
                     </group>
+                    <button name="generate_duedates" type="object" string="Ricalcola scadenze" class="oe_edit_only"/>
                 </page>
 
             </xpath>

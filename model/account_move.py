@@ -8,6 +8,7 @@
 
 
 from odoo import models, fields, api
+from odoo.tools.float_utils import float_round, float_is_zero
 
 
 class AccountMove(models.Model):
@@ -41,22 +42,6 @@ class AccountMove(models.Model):
     )
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # PROTECTED METHODS
-
-    def _create_duedate_manager(self, move):
-        # Add the Duedates Manager
-        move.duedate_manager_id = move.env[
-            'account.duedate_plus.manager'
-        ].create({
-            'move_id': move.id
-        })
-
-    # end _create_duedate_manager
-
-    # PROTECTED METHODS - end
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ORM METHODS OVERRIDE - begin
 
     @api.model
@@ -75,17 +60,12 @@ class AccountMove(models.Model):
         for move in self:
 
             duedate_mgr_miss = not move.duedate_manager_id
-            duedate_generate = duedate_mgr_miss or 'payment_term_id' in values
-
-            # Add the Duedates Manager if it's missing
-            if duedate_mgr_miss:
-                self._create_duedate_manager(move)
-            # end if
+            payment_terms_updated = 'payment_term_id' in values
 
             # Compute the due dates if payment terms was changed or duedates
             # manager was missing
-            if duedate_generate:
-                move.duedate_manager_id.generate_duedates()
+            if duedate_mgr_miss or payment_terms_updated:
+                move.generate_duedates()
             # end if
         # end for
 
@@ -94,10 +74,58 @@ class AccountMove(models.Model):
 
     # ORM METHODS OVERRIDE - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # ONCHANGE METHODS - begin
+
     @api.onchange('duedate_line_ids')
-    def _onchange_duedate_line_ids(self, values=False):
+    def _onchange_duedate_line_ids(self):
         self._compute_duedates_amounts()
     # end _onchange_duedate_line_ids
+
+    @api.onchange('amount')
+    def _onchange_amount(self):
+
+        ratio = self.duedates_amount_unassigned / self.duedates_amount_current
+        precision = self.env.user.company_id.currency_id.rounding
+
+        for line in self.duedate_line_ids:
+            line.proposed_new_value = line.due_amount * (1 + ratio)
+        # end for
+    # end _onchange_amount
+
+    @api.onchange('duedates_amount_unassigned')
+    def _onchange_duedates_amount_unassigned(self):
+        '''
+        Reset proposed_new_value if duedates_amount_unassigned is zero
+        '''
+        precision = self.env.user.company_id.currency_id.rounding
+
+        if float_is_zero(
+                self.duedates_amount_unassigned, precision_rounding=precision):
+            for line in self.duedate_line_ids:
+                line.proposed_new_value = 0
+            # end for
+        # end if
+    # end _onchange_duedates_amount_unassigned
+
+    # ONCHANGE METHODS - end
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # PUBLIC METHODS - begin
+
+    @api.model
+    def generate_duedates(self):
+        duedate_manager = self._get_duedate_manager()
+        duedate_manager.generate_duedates()
+    # end generate_duedates
+
+    # PUBLIC METHODS - end
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # COMPUTE METHODS - begin
 
     @api.multi
     @api.depends('duedate_line_ids')
@@ -117,4 +145,42 @@ class AccountMove(models.Model):
             self.duedates_amount_unassigned = self.amount - lines_total
         # end for
     # end _compute_duedate_lines_amount
+
+    # COMPUTE METHODS - end
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # PROTECTED METHODS - begin
+
+    @api.model
+    def _get_duedate_manager(self):
+        '''
+        Return the duedates manager for this invoice
+        :return: The duedates manager object for the invoice
+                 (account.duedate_plus.manager)
+        '''
+
+        # Check if duedate manager is missing
+        duedate_mgr_miss = not self.duedate_manager_id
+
+        # Add the Duedate Manager if it's missing
+        if duedate_mgr_miss:
+            self._create_duedate_manager()
+        # end if
+
+        # Return the manager
+        return self.duedate_manager_id
+    # end get_duedate_manager
+
+    def _create_duedate_manager(self):
+        # Add the Duedates Manager
+        self.duedate_manager_id = self.env[
+            'account.duedate_plus.manager'
+        ].create({
+            'move_id': self.id
+        })
+    # end _create_duedate_manager
+
+    # PROTECTED METHODS - end
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # end AccountMove

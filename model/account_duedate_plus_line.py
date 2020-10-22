@@ -7,7 +7,7 @@
 #
 
 from odoo import models, fields, api
-# from odoo.exceptions import UserError
+from odoo.tools.float_utils import float_is_zero
 
 
 class DueDate(models.Model):
@@ -36,13 +36,28 @@ class DueDate(models.Model):
         string='Riferimento riga registrazione contagbile',
     )
 
+    proposed_new_value = fields.Float(string='Importo proposto')
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ORM METHODS OVERRIDE - begin
 
     @api.model
     def create(self, values):
-        result = super().create(values)
-        return result
+
+        # Check if fields are empty
+        dd_miss = not values['due_date']
+        pm_miss = not values['payment_method_id']
+        da_miss = not values['due_amount']
+
+        # If all fields are empty return an empty recordset,
+        # otherwise return the newly created record
+        if dd_miss and pm_miss and da_miss:
+            empty_recordset = self.env['account.duedate_plus.line']
+            return empty_recordset.search([])
+        else:
+            result = super().create(values)
+            return result
+        # end if
     # end create
 
     @api.multi
@@ -75,6 +90,19 @@ class DueDate(models.Model):
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ONCHANGE METHODS
+
+    @api.onchange('due_amount')
+    def _onchange_due_amount(self):
+        '''
+        Reset proposed_new_value if it is equal to due_amount
+        '''
+        precision = self.env.user.company_id.currency_id.rounding
+        difference = self.due_amount - self.proposed_new_value
+
+        if float_is_zero(difference, precision_rounding=precision):
+            self.proposed_new_value = 0
+        # end if
+    # end _onchange_due_amount
 
     # @api.onchange('due_date')
     # def _onchange_due_date(self, values=None):

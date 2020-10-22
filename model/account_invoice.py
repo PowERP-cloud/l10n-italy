@@ -11,6 +11,7 @@
 
 
 from odoo import models, api, fields
+from odoo.tools.float_utils import float_round, float_is_zero
 
 
 class AccountInvoice(models.Model):
@@ -58,17 +59,12 @@ class AccountInvoice(models.Model):
         for invoice in self:
 
             duedate_mgr_miss = not invoice.duedate_manager_id
-            duedate_generate = duedate_mgr_miss or 'payment_term_id' in values
-
-            # Add the Duedates Manager if it's missing
-            if duedate_mgr_miss:
-                self._create_duedate_manager(invoice)
-            # end if
+            payment_terms_updated = 'payment_term_id' in values
 
             # Compute the due dates if payment terms was changed or duedates
             # manager was missing
-            if duedate_generate:
-                invoice.duedate_manager_id.generate_duedates()
+            if duedate_mgr_miss or payment_terms_updated:
+                invoice.generate_duedates()
             # end if
         # end for
 
@@ -79,19 +75,14 @@ class AccountInvoice(models.Model):
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # PROTECTED METHODS
+    # PUBLIC METHODS - begin
 
-    def _create_duedate_manager(self, invoice):
-        # Add the Duedates Manager
-        invoice.duedate_manager_id = invoice.env[
-            'account.duedate_plus.manager'
-        ].create({
-            'invoice_id': invoice.id
-        })
-    # end _create_duedate_manager
-
-    # PROTECTED METHODS - end
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    @api.multi
+    def generate_duedates(self):
+        self.ensure_one()
+        duedate_manager = self._get_duedate_manager()
+        duedate_manager.generate_duedates()
+    # end generate_duedates
 
     @api.multi
     def action_move_create(self):
@@ -196,13 +187,87 @@ class AccountInvoice(models.Model):
         return new_lines
     # end finalize_invoice_move_lines
 
+    # PUBLIC METHODS - end
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # ONCHANGE METHODS - begin
+
     @api.onchange('duedate_line_ids')
-    def _onchange_duedate_line_ids(self, values=False):
+    def _onchange_duedate_line_ids(self):
         self._compute_duedates_amounts()
     # end _onchange_duedate_line_ids
 
+    @api.onchange('payment_term_id')
+    def _onchange_payment_term_id(self):
+        print('_onchange_payment_term_id')
+        self.generate_duedates()
+    # end _onchange_duedate_line_ids
+
+    @api.onchange('amount_total')
+    def _onchange_amount_total(self):
+
+        ratio = self.duedates_amount_unassigned / self.duedates_amount_current
+        precision = self.env.user.company_id.currency_id.rounding
+
+        for line in self.duedate_line_ids:
+            line.proposed_new_value = line.due_amount * (1 + ratio)
+        # end for
+    # end _onchange_amount_total
+
+    @api.onchange('duedates_amount_unassigned')
+    def _onchange_duedates_amount_unassigned(self):
+        '''
+        Reset proposed_new_value if duedates_amount_unassigned is zero
+        '''
+        precision = self.env.user.company_id.currency_id.rounding
+
+        if float_is_zero(
+                self.duedates_amount_unassigned, precision_rounding=precision):
+            for line in self.duedate_line_ids:
+                line.proposed_new_value = 0
+            # end for
+        # end if
+    # end _onchange_duedates_amount_unassigned
+
+    # ONCHANGE METHODS - end
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # PROTECTED METHODS - begin
+
+    @api.model
+    def _get_duedate_manager(self):
+        '''
+        Return the duedates manager for this invoice
+        :return: The duedates manager object for the invoice
+                 (account.duedate_plus.manager)
+        '''
+
+        # Check if duedate manager is missing
+        duedate_mgr_miss = not self.duedate_manager_id
+
+        # Add the Duedate Manager if it's missing
+        if duedate_mgr_miss:
+            self._create_duedate_manager()
+        # end if
+
+        # Return the manager
+        return self.duedate_manager_id
+    # end get_duedate_manager
+
+    @ api.model
+    def _create_duedate_manager(self):
+        # Add the Duedates Manager
+        self.duedate_manager_id = self.env[
+            'account.duedate_plus.manager'
+        ].create({
+            'invoice_id': self.id
+        })
+    # end _create_duedate_manager
+
     @api.multi
-    @api.depends('duedate_line_ids')
+    @api.depends('duedate_line_ids', 'amount_total')
     def _compute_duedates_amounts(self):
 
         for inv in self:
@@ -219,4 +284,7 @@ class AccountInvoice(models.Model):
             self.duedates_amount_unassigned = self.amount_total - lines_total
         # end for
     # end _compute_duedate_lines_amount
+
+    # PROTECTED METHODS - end
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # end AccountInvoice
