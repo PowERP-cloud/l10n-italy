@@ -131,6 +131,16 @@ In case of trouble, please check there if your issue has already been reported.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.8.18 (2020-10-23)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [MOD] Correzioni di forma la codice per adeguamento a segnalazioni Flake8
+
+12.0.1.8.17 (2020-10-22)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Eliminazione righe di scadenza vuote, calcolo proposta per importo scadenze dopo modifica fattura, ricalcolo automaticp scadenze al cambio dei termini di pagamento
+
 12.0.1.8.16 (2020-10-21)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

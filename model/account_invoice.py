@@ -11,7 +11,7 @@
 
 
 from odoo import models, api, fields
-from odoo.tools.float_utils import float_round, float_is_zero
+from odoo.tools.float_utils import float_is_zero
 
 
 class AccountInvoice(models.Model):
@@ -208,7 +208,6 @@ class AccountInvoice(models.Model):
     def _onchange_amount_total(self):
 
         ratio = self.duedates_amount_unassigned / self.duedates_amount_current
-        precision = self.env.user.company_id.currency_id.rounding
 
         for line in self.duedate_line_ids:
             line.proposed_new_value = line.due_amount * (1 + ratio)

@@ -6,7 +6,7 @@
 {
     'name': 'Due dates',
     'summary': 'Due dates management',
-    'version': '12.0.0.1.17',
+    'version': '12.0.0.1.18',
     'category': 'Accounting',
     'author': 'Axitec Srl',
     'website': '',
