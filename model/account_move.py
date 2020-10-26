@@ -85,8 +85,11 @@ class AccountMove(models.Model):
 
     @api.onchange('amount')
     def _onchange_amount(self):
-
-        ratio = self.duedates_amount_unassigned / self.duedates_amount_current
+        if self.duedates_amount_current == 0:
+            ratio = 0
+        else:
+            ratio = self.duedates_amount_unassigned / self.duedates_amount_current
+        # end if
 
         for line in self.duedate_line_ids:
             line.proposed_new_value = line.due_amount * (1 + ratio)
