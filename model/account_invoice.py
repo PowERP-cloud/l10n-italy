@@ -146,8 +146,6 @@ class AccountInvoice(models.Model):
 
         # Dati relativi al conto
         prototype_line = head_lines[0][2]
-        account = self.env['account.account'].browse(prototype_line['account_id'])
-        account_type = account.user_type_id.type
 
         for duedate in self.duedate_manager_id.duedate_line_ids:
 
