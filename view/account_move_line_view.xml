@@ -8,8 +8,6 @@
         <field name="arch" type="xml">
             <field name="quantity" position="after">
                 <field name="payment_method" />
-                <field name="due_dc" />
-                <field name="amount_due" />
             </field>
         </field>
     </record>
@@ -22,8 +20,6 @@
             <xpath expr="//field[@name='line_ids']/tree/field[@name='credit']" position="after">
                 <field name="calculate_field" invisible="1"/>
                 <field name="payment_method" domain="[('debit_credit', '=', calculate_field)]"/>
-                <field name="due_dc" />
-                <field name="amount_due" />
             </xpath>
         </field>
     </record>

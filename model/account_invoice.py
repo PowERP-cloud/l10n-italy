@@ -172,13 +172,6 @@ class AccountInvoice(models.Model):
             # Update - payment method
             new_line_dict['payment_method'] = duedate.payment_method_id.id
 
-            # Update - set credit or debit
-            if account_type == 'payable':
-                new_line_dict['due_dc'] = 'D'
-            elif account_type == 'receivable':
-                new_line_dict['due_dc'] = 'C'
-            # end if
-
             new_lines.append(
                 (0, 0, new_line_dict)
             )
