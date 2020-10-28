@@ -154,42 +154,42 @@ ChangeLog History / Cronologia modifiche
 
 * [FIX] Update model, removed unused fields
 
-12.0.1.8.18 (2020-10-23)
+12.0.0.1.18 (2020-10-23)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [MOD] Correzioni di forma la codice per adeguamento a segnalazioni Flake8
 
-12.0.1.8.17 (2020-10-22)
+12.0.0.1.17 (2020-10-22)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Eliminazione righe di scadenza vuote, calcolo proposta per importo scadenze dopo modifica fattura, ricalcolo automaticp scadenze al cambio dei termini di pagamento
 
-12.0.1.8.16 (2020-10-21)
+12.0.0.1.16 (2020-10-21)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Implementato totalizzazione totale scadenze e differenza tra scadenze e totale fattura
 
-12.0.1.8.15 (2020-10-15)
+12.0.0.1.15 (2020-10-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Aggiornato duedate manager
 
-12.0.1.8.14 (2020-10-14)
+12.0.0.1.14 (2020-10-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Rimosso campo duplicato (termine di pagamento)
 
-12.0.1.8.13 (2020-10-12)
+12.0.0.1.13 (2020-10-12)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Aggiornamento bidirezionale di data scadenza e metodo di pagamento tra account.move.line e account.duedate_plus.line
 
-12.0.1.8.12 (2020-10-12)
+12.0.0.1.12 (2020-10-12)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 * [FIX] Inserita dipendenza modulo OCA Scadenziario account_due_list
 
 
-12.0.1.8.11 (2020-10-12)
+12.0.0.1.11 (2020-10-12)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Rimossi controlli non validi
