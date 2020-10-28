@@ -34,11 +34,6 @@ class AccountMoveLine(models.Model):
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ONCHANGE METHODS
 
-    @api.onchange('credit', 'debit')
-    def onchange_debit_credit(self):
-        self._value_amount_due()
-    # end onchange_debit_credit
-
     @api.onchange('account_id')
     def onchange_account_id(self):
 
