@@ -146,8 +146,6 @@ class AccountInvoice(models.Model):
 
         # Dati relativi al conto
         prototype_line = head_lines[0][2]
-        account = self.env['account.account'].browse(prototype_line['account_id'])
-        account_type = account.user_type_id.type
 
         for duedate in self.duedate_manager_id.duedate_line_ids:
 
@@ -171,13 +169,6 @@ class AccountInvoice(models.Model):
 
             # Update - payment method
             new_line_dict['payment_method'] = duedate.payment_method_id.id
-
-            # Update - set credit or debit
-            if account_type == 'payable':
-                new_line_dict['due_dc'] = 'D'
-            elif account_type == 'receivable':
-                new_line_dict['due_dc'] = 'C'
-            # end if
 
             new_lines.append(
                 (0, 0, new_line_dict)

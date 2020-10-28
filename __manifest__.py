@@ -6,7 +6,7 @@
 {
     'name': 'Due dates',
     'summary': 'Due dates management',
-    'version': '12.0.0.1.19',
+    'version': '12.0.0.1.21',
     'category': 'Accounting',
     'author': 'Axitec Srl',
     'website': '',
@@ -24,5 +24,5 @@
         'view/account_due_list_view.xml',
     ],
     'installable': True,
-    'post_init_hook': 'post_init_hook',
+    # 'post_init_hook': 'post_init_hook',
 }

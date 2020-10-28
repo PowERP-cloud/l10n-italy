@@ -8,48 +8,12 @@
 
 import logging
 from odoo import api, fields, models
-from odoo.addons import decimal_precision as dp
 
 _logger = logging.getLogger(__name__)
 
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
-
-    def _set_default_due_dc(self):
-        if self.account_id:
-            account_type = self.env['account.account.type'].search(
-                [('id', '=', self.account_id.user_type_id.id)])
-            if account_type:
-                if account_type.type == 'payable':
-                    self.due_dc = 'D'
-                elif account_type.type == 'receivable':
-                    self.due_dc = 'C'
-                else:
-                    self.due_dc = ''
-    # end _set_default_due_dc
-
-    @api.depends('due_dc')
-    def _value_amount_due(self):
-        for record in self:
-            if record:
-                if record.due_dc == 'C':
-                    record.amount_due = record.debit - record.credit
-                elif record.due_dc == 'D':
-                    record.amount_due = record.credit - record.debit
-                else:
-                    record.amount_due = 0.0
-    # end _value_amount_due
-
-    due_dc = fields.Selection(
-        string="Scadenza debito/credito",
-        selection=[('C', 'Credito'), ('D', 'Debito')],
-        default=_set_default_due_dc,
-        # required=True,
-    )
-    amount_due = fields.Float(string="Importo scadenza",
-                              compute='_value_amount_due',
-                              digits=dp.get_precision('Account'))
 
     payment_method = fields.Many2one('account.payment.method',
                                      string="Metodo di pagamento")
@@ -70,11 +34,6 @@ class AccountMoveLine(models.Model):
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ONCHANGE METHODS
 
-    @api.onchange('credit', 'debit')
-    def onchange_debit_credit(self):
-        self._value_amount_due()
-    # end onchange_debit_credit
-
     @api.onchange('account_id')
     def onchange_account_id(self):
 
@@ -85,15 +44,15 @@ class AccountMoveLine(models.Model):
                 [('id', '=', self.account_id.user_type_id.id)])
             if account_type:
                 if account_type.type == 'payable':
-                    self.due_dc = 'D'
+                    # self.due_dc = 'D'
                     domain = ['|', ('debit_credit', '=', 'debit'),
                               ('debit_credit', '=', False)]
                 elif account_type.type == 'receivable':
-                    self.due_dc = 'C'
+                    # self.due_dc = 'C'
                     domain = ['|', ('debit_credit', '=', 'credit'),
                               ('debit_credit', '=', False)]
-                else:
-                    self.due_dc = ''
+                # else:
+                #     self.due_dc = ''
                 # end if
             # end if
         # end if
@@ -164,11 +123,13 @@ class AccountMoveLine(models.Model):
     # Update the associated duedate_line
     @api.model
     def update_date_maturity(self):
-        self.duedate_line_id.due_date = self.date_maturity
+        if self.duedate_line_id:
+            self.duedate_line_id.due_date = self.date_maturity
     # end _update_date_maturity
 
     @api.model
     def update_payment_method(self):
-        self.duedate_line_id.payment_method_id = self.payment_method
+        if self.duedate_line_id:
+            self.duedate_line_id.payment_method_id = self.payment_method
     # end _update_payment_method
 # end AccountMoveLine

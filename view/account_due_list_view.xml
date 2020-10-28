@@ -11,11 +11,6 @@
                 <field name="payment_method"/>
             </xpath>
 
-            <xpath expr="//field[@name='account_id']" position="after">
-                <field name="due_dc"/>
-                <field name="amount_due" readonly="1" sum="Total Due"/>
-            </xpath>
-
             <xpath expr="//field[@name='debit']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
