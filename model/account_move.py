@@ -111,6 +111,14 @@ class AccountMove(models.Model):
         # end if
     # end _onchange_duedates_amount_unassigned
 
+    # NB: il campo 'peyment_term_id' è definito nel modulo 'account_move_plus'
+    #     che è una dipendenza di questo modulo
+    @api.onchange('payment_term_id')
+    def _onchange_payment_term_id(self):
+        print('_onchange_payment_term_id')
+        self.generate_duedates()
+    # end _onchange_duedate_line_ids
+
     # ONCHANGE METHODS - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

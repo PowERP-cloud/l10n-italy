@@ -233,7 +233,7 @@ class DueDateManager(models.Model):
     def _duedates_from_move(self):
         # Compute payment terms and total
         # amount from the move
-        payment_terms = self.move_id.payment_id
+        payment_terms = self.move_id.payment_term_id
         move_type = self.move_id.move_type
         invoice_date = self.move_id.invoice_date
         total_amount = self.move_id.amount

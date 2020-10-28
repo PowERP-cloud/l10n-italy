@@ -105,7 +105,7 @@ class AccountInvoice(models.Model):
 
             # Termini di pagamento
             pt = inv.payment_term_id
-            updates['payment_id'] = pt and pt.id or False
+            updates['payment_term_id'] = pt and pt.id or False
 
             # Update the "move"
             inv.move_id.write(updates)
