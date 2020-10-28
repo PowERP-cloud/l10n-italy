@@ -73,5 +73,8 @@ class AccountMove(models.Model):
 
     lines_count = fields.Integer(compute='count_line_ids')
 
-    payment_id = fields.Many2one(comodel_name='account.payment.term',
-                                 string="Termine di pagamento")
+    payment_term_id = fields.Many2one(
+        comodel_name='account.payment.term',
+        string='Termine di pagamento',
+        oldname='payment_id'
+    )

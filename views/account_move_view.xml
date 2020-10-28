@@ -38,8 +38,13 @@
 
             <xpath expr="//field[@name='company_id']" position="after">
                 <field name="type" invisible="1" />
-                <field name="payment_id" attrs="{'invisible':[('type','not in',
-                ['out_invoice', 'out_refund', 'in_invoice','in_refund'])]}"/>
+                <field
+                    name="payment_term_id"
+                    attrs="{
+                        'invisible': [('type', 'not in', ['out_invoice', 'out_refund', 'in_invoice','in_refund'])],
+                        'readonly': [('state', 'not in', ['draft',])]
+                    }"
+                />
             </xpath>
 
         </field>
