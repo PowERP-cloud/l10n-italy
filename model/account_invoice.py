@@ -63,9 +63,9 @@ class AccountInvoice(models.Model):
 
             # Compute the due dates if payment terms was changed or duedates
             # manager was missing
-            if duedate_mgr_miss or payment_terms_updated:
-                invoice.generate_duedates()
-            # end if
+            # if duedate_mgr_miss or payment_terms_updated:
+            #     invoice.generate_duedates()
+            # # end if
         # end for
 
         return result
@@ -77,12 +77,24 @@ class AccountInvoice(models.Model):
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # PUBLIC METHODS - begin
 
+    @api.model
+    def update_duedates_and_move_lines(self):
+        # Update account.duedate_plus.line records
+        self._update_duedates()
+
+        # Update account.move.line records according to account.duedate_plus.line records
+        #self._update_credit_debit_move_lines()
+    # end update_duedates_and_move_lines
+
+
     @api.multi
-    def generate_duedates(self):
-        self.ensure_one()
-        duedate_manager = self._get_duedate_manager()
-        duedate_manager.generate_duedates()
-    # end generate_duedates
+    def action_update_duedates_and_move_lines(self):
+        # Update account.duedate_plus.line records
+        for invoice in self:
+            invoice.update_duedates_and_move_lines()
+        # end for
+    # end update_duedates_and_move_lines
+
 
     @api.multi
     def action_move_create(self):
@@ -189,11 +201,10 @@ class AccountInvoice(models.Model):
         self._compute_duedates_amounts()
     # end _onchange_duedate_line_ids
 
-    @api.onchange('payment_term_id')
-    def _onchange_payment_term_id(self):
-        print('_onchange_payment_term_id')
-        self.generate_duedates()
-    # end _onchange_duedate_line_ids
+    @api.onchange('payment_term_id', 'date_invoice')
+    def _onchange_payment_term_id_date_invoice(self):
+        self.update_duedates_and_move_lines()
+    # end _onchange_payment_term_id_date_invoice
 
     @api.onchange('amount_total')
     def _onchange_amount_total(self):
@@ -230,6 +241,101 @@ class AccountInvoice(models.Model):
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # PROTECTED METHODS - begin
 
+    @api.multi
+    def _update_duedates(self):
+
+        # Do nothing if invoice date is not set
+        if not self.date_invoice:
+            return
+        # end if
+
+        # Ensure duedate_manager is configured
+        self._get_duedate_manager()
+
+        # Generate duedates
+        duedate_line_list = self.duedate_manager_id.generate_duedate_lines()
+
+        # Generate the commands list for the ORM update method
+        updates_list = list()
+
+        # Remove old records
+        if self.duedate_line_ids:
+            updates_list += [(2, duedate_line.id, 0) for duedate_line in self.duedate_line_ids]
+        # end if
+
+        # Create new records
+        if duedate_line_list:
+            updates_list += [(0, 0, duedate_line) for duedate_line in duedate_line_list]
+        # end if
+
+        # Update the record
+        if updates_list:
+            self.update({'duedate_line_ids': updates_list})
+        # end if
+    # end _update_duedates
+
+    @api.model
+    def _update_credit_debit_move_lines(self):
+
+        # Should not be necessary ...just in case
+        if not self.line_ids:
+            return
+        # end if
+
+        # Extract credit and debit lines
+        lines_cd = list()
+        lines_other = list()
+
+        for line in self.line_ids:
+            line._compute_line_type()
+            line_type = line.line_type
+            if line_type in ('credit', 'debit'):
+                lines_cd.append(line)
+            else:
+                lines_other.append(line)
+            # end if
+        # end for
+
+        # Build the move line template dictionary
+        move_line_template = lines_cd[0].copy_data()[0]
+        del move_line_template['move_id']  # 'move_id' removed because it will be automatically set by the update method
+
+        # List of modifications to move lines one2many field
+        move_lines_mods = list()
+
+        # Add the new move lines
+        for duedate_line in self.duedate_line_ids:
+            new_data = move_line_template.copy()
+
+            # Set the linked account.duedate_plus.line record
+            new_data['duedate_line_id'] = duedate_line.id
+
+            # Set the date_maturity field
+            new_data['date_maturity'] = duedate_line.due_date
+
+            # Set the amount
+            if new_data['credit'] > 0:
+                new_data['credit'] = duedate_line.due_amount
+            else:
+                new_data['debit'] = duedate_line.due_amount
+            # end if
+
+            move_lines_mods.append(
+                (0, False, new_data)
+            )
+        # end for
+
+        # Schedule deletion of old lines
+        move_lines_mods += [(4, line.id) for line in lines_other]
+
+        # Schedule deletion of old lines
+        move_lines_mods += [(2, line.id) for line in lines_cd]
+
+        # Save changes
+        self.update({'line_ids': move_lines_mods})
+
+    # end _update_credit_debit_move_lines
+
     @api.model
     def _get_duedate_manager(self):
         '''
@@ -253,11 +359,11 @@ class AccountInvoice(models.Model):
     @ api.model
     def _create_duedate_manager(self):
         # Add the Duedates Manager
-        self.duedate_manager_id = self.env[
-            'account.duedate_plus.manager'
-        ].create({
+        duedate_manager = self.env['account.duedate_plus.manager'].create({
             'invoice_id': self.id
         })
+
+        self.update({'duedate_manager_id': duedate_manager})
     # end _create_duedate_manager
 
     @api.multi

@@ -44,7 +44,7 @@
                             <field name="amount_total" nolabel="1"/>
                         </span>
                     </group>
-                    <button name="generate_duedates" type="object" string="Ricalcola scadenze" class="oe_edit_only"/>
+                    <button name="action_update_duedates_and_move_lines" type="object" string="Ricalcola scadenze" class="oe_edit_only" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
 
                     <!-- Hidden fields required to have them values to be passed as values to create and write methods -->
                     <field name="duedate_manager_id" invisible="1"/>
@@ -98,7 +98,7 @@
                             <span><strong>Totale fattura: </strong></span>
                             <field name="amount_total"/>
                         </span>
-                        <button name="generate_duedates" type="object" string="Ricalcola scadenze" class="oe_edit_only"/>
+                        <button name="action_update_duedates_and_move_lines" type="object" string="Ricalcola scadenze" class="oe_edit_only" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
 
                         <!-- Hidden fields required to have them values to be passed as values to create and write methods -->
                         <field name="duedate_manager_id" invisible="1"/>

@@ -115,11 +115,7 @@ class AccountMove(models.Model):
     #     che è una dipendenza di questo modulo
     @api.onchange('payment_term_id')
     def _onchange_payment_term_id(self):
-        # Update account.duedate_plus.line records
-        self._update_duedates()
-
-        # Update account.move.line records according to account.duedate_plus.line records
-        self._update_credit_debit_move_lines()
+        self.update_duedates_and_move_lines()
     # end _onchange_duedate_line_ids
 
     # ONCHANGE METHODS - end
@@ -127,6 +123,55 @@ class AccountMove(models.Model):
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # PUBLIC METHODS - begin
+
+    @api.model
+    def update_duedates_and_move_lines(self):
+        # Update account.duedate_plus.line records
+        self._update_duedates()
+
+        # Update account.move.line records according to account.duedate_plus.line records
+        self._update_credit_debit_move_lines()
+    # end update_duedates_and_move_lines
+
+
+    @api.multi
+    def action_update_duedates_and_move_lines(self):
+        # Update account.duedate_plus.line records
+        for invoice in self:
+            invoice.update_duedates_and_move_lines()
+        # end for
+    # end update_duedates_and_move_lines
+
+    # PUBLIC METHODS - end
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # COMPUTE METHODS - begin
+
+    @api.multi
+    @api.depends('duedate_line_ids')
+    def _compute_duedates_amounts(self):
+
+        for inv in self:
+            # Somma ammontare di ciascuna scadenza
+            lines_total = sum(
+                # Estrazione ammontare da ciascuna scadenza
+                map(lambda l: l.due_amount, self.duedate_line_ids)
+            )
+
+            # Aggiornamento campo ammontare scadenze
+            self.duedates_amount_current = lines_total
+
+            # Aggiornamento campo ammontare non assegnato a scadenze
+            self.duedates_amount_unassigned = self.amount - lines_total
+        # end for
+    # end _compute_duedate_lines_amount
+
+    # COMPUTE METHODS - end
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # PROTECTED METHODS - begin
 
     @api.model
     def _update_duedates(self):
@@ -137,16 +182,22 @@ class AccountMove(models.Model):
         duedate_line_list = self.duedate_manager_id.generate_duedate_lines()
 
         # Generate the commands list for the ORM update method
+        updates_list = list()
+
         # Remove old records
-        updates_list = list(
-            [(2, duedate_line.id, 0) for duedate_line in self.duedate_line_ids]
-            +
-            # Create new records
-            [(0, 0, duedate_line) for duedate_line in duedate_line_list]
-        )
+        if self.duedate_line_ids:
+            updates_list += [(2, duedate_line.id, 0) for duedate_line in self.duedate_line_ids]
+        # end if
+
+        # Create new records
+        if duedate_line_list:
+            updates_list += [(0, 0, duedate_line) for duedate_line in duedate_line_list]
+        # end if
 
         # Update the record
-        self.update({'duedate_line_ids': updates_list})
+        if updates_list:
+            self.update({'duedate_line_ids': updates_list})
+        # end if
     # end _update_duedates
 
     @api.model
@@ -162,7 +213,9 @@ class AccountMove(models.Model):
         lines_other = list()
 
         for line in self.line_ids:
-            if line.line_type in ('credit', 'debit'):
+            line._compute_line_type()
+            line_type = line.line_type
+            if line_type in ('credit', 'debit'):
                 lines_cd.append(line)
             else:
                 lines_other.append(line)
@@ -205,40 +258,11 @@ class AccountMove(models.Model):
         move_lines_mods += [(2, line.id) for line in lines_cd]
 
         # Save changes
-        self.update({'line_ids': move_lines_mods})
+        if move_lines_mods:
+            self.update({'line_ids': move_lines_mods})
+        # end if
 
     # end _update_credit_debit_move_lines
-
-    # PUBLIC METHODS - end
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # COMPUTE METHODS - begin
-
-    @api.multi
-    @api.depends('duedate_line_ids')
-    def _compute_duedates_amounts(self):
-
-        for inv in self:
-            # Somma ammontare di ciascuna scadenza
-            lines_total = sum(
-                # Estrazione ammontare da ciascuna scadenza
-                map(lambda l: l.due_amount, self.duedate_line_ids)
-            )
-
-            # Aggiornamento campo ammontare scadenze
-            self.duedates_amount_current = lines_total
-
-            # Aggiornamento campo ammontare non assegnato a scadenze
-            self.duedates_amount_unassigned = self.amount - lines_total
-        # end for
-    # end _compute_duedate_lines_amount
-
-    # COMPUTE METHODS - end
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # PROTECTED METHODS - begin
 
     @api.model
     def _get_duedate_manager(self):
