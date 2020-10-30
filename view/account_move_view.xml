@@ -18,8 +18,9 @@
                             <field name="due_date"/>
                             <field name="payment_method_id"/>
                             <field name="due_amount"/>
-                            <field name="proposed_new_value" attrs="{'invisible':[('proposed_new_value', '=', 0)]}"/>
-                            <field name="move_line_id" groups="base.group_no_one"/> <!-- Shown only in debug mode -->
+                            <field name="proposed_new_value" attrs="{'invisible':[('proposed_new_value', '=', 0)]}" readonly="1"/>
+                            <!-- Shown in debug mode only -->
+                            <field name="move_line_id" groups="base.group_no_one" readonly="1"/>
                         </tree>
                     </field>
                     <group col="2" colspan="2">
@@ -39,6 +40,9 @@
                         </span>
                     </group>
                     <button name="generate_duedates" type="object" string="Ricalcola scadenze" class="oe_edit_only"/>
+
+                    <!-- Hidden fields required to have them values to be passed as values to create and write methods -->
+                    <field name="duedate_manager_id" invisible="1"/>
                 </page>
 
             </xpath>

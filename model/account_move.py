@@ -64,8 +64,8 @@ class AccountMove(models.Model):
 
             # Compute the due dates if payment terms was changed or duedates
             # manager was missing
-            if duedate_mgr_miss or payment_terms_updated:
-                move.generate_duedates()
+            # if duedate_mgr_miss:
+            #     move.generate_duedates()
             # end if
         # end for
 
@@ -115,8 +115,11 @@ class AccountMove(models.Model):
     #     che è una dipendenza di questo modulo
     @api.onchange('payment_term_id')
     def _onchange_payment_term_id(self):
-        print('_onchange_payment_term_id')
-        self.generate_duedates()
+        # Update account.duedate_plus.line records
+        self._update_duedates()
+
+        # Update account.move.line records according to account.duedate_plus.line records
+        self._update_credit_debit_move_lines()
     # end _onchange_duedate_line_ids
 
     # ONCHANGE METHODS - end
@@ -126,10 +129,85 @@ class AccountMove(models.Model):
     # PUBLIC METHODS - begin
 
     @api.model
-    def generate_duedates(self):
-        duedate_manager = self._get_duedate_manager()
-        duedate_manager.generate_duedates()
-    # end generate_duedates
+    def _update_duedates(self):
+        # Ensure duedate_manager is configured
+        self._get_duedate_manager()
+
+        # Generate duedates
+        duedate_line_list = self.duedate_manager_id.generate_duedate_lines()
+
+        # Generate the commands list for the ORM update method
+        # Remove old records
+        updates_list = list(
+            [(2, duedate_line.id, 0) for duedate_line in self.duedate_line_ids]
+            +
+            # Create new records
+            [(0, 0, duedate_line) for duedate_line in duedate_line_list]
+        )
+
+        # Update the record
+        self.update({'duedate_line_ids': updates_list})
+    # end _update_duedates
+
+    @api.model
+    def _update_credit_debit_move_lines(self):
+
+        # Should not be necessary ...just in case
+        if not self.line_ids:
+            return
+        # end if
+
+        # Extract credit and debit lines
+        lines_cd = list()
+        lines_other = list()
+
+        for line in self.line_ids:
+            if line.line_type in ('credit', 'debit'):
+                lines_cd.append(line)
+            else:
+                lines_other.append(line)
+            # end if
+        # end for
+
+        # Build the move line template dictionary
+        move_line_template = lines_cd[0].copy_data()[0]
+        del move_line_template['move_id']  # 'move_id' removed because it will be automatically set by the update method
+
+        # List of modifications to move lines one2many field
+        move_lines_mods = list()
+
+        # Add the new move lines
+        for duedate_line in self.duedate_line_ids:
+            new_data = move_line_template.copy()
+
+            # Set the linked account.duedate_plus.line record
+            new_data['duedate_line_id'] = duedate_line.id
+
+            # Set the date_maturity field
+            new_data['date_maturity'] = duedate_line.due_date
+
+            # Set the amount
+            if new_data['credit'] > 0:
+                new_data['credit'] = duedate_line.due_amount
+            else:
+                new_data['debit'] = duedate_line.due_amount
+            # end if
+
+            move_lines_mods.append(
+                (0, False, new_data)
+            )
+        # end for
+
+        # Schedule deletion of old lines
+        move_lines_mods += [(4, line.id) for line in lines_other]
+
+        # Schedule deletion of old lines
+        move_lines_mods += [(2, line.id) for line in lines_cd]
+
+        # Save changes
+        self.update({'line_ids': move_lines_mods})
+
+    # end _update_credit_debit_move_lines
 
     # PUBLIC METHODS - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -184,11 +262,11 @@ class AccountMove(models.Model):
 
     def _create_duedate_manager(self):
         # Add the Duedates Manager
-        self.duedate_manager_id = self.env[
-            'account.duedate_plus.manager'
-        ].create({
+        duedate_manager = self.env['account.duedate_plus.manager'].create({
             'move_id': self.id
         })
+
+        self.update({'duedate_manager_id': duedate_manager})
     # end _create_duedate_manager
 
     # PROTECTED METHODS - end

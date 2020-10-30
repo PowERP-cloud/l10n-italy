@@ -60,24 +60,44 @@ class DueDateManager(models.Model):
     # PUBLIC METHODS - begin
 
     @api.model
-    def generate_duedates(self):
-
+    def write_duedate_lines(self):
+        '''
+        Generate and WRITE the account.duedate_plus.line records
+        associated with this manager
+        '''
         # Remove obsolete duedates before computing the new ones
         if self.duedate_line_ids:
             self.duedate_line_ids.unlink()
         # end if
 
+        # Get the new lines
+        new_dudate_lines = self.generate_duedate_lines()
+
+        # Create the new lines (if any)
+        if new_dudate_lines:
+            self.env['account.duedate_plus.line'].create(new_dudate_lines)
+        # end if
+    # end write_duedate_lines
+
+    @api.model
+    def generate_duedate_lines(self):
+        '''
+        Returns a list of dict, one for each account.duedate_plus.line record
+        to be generated
+        '''
+
         if self.move_id:
-            self._duedates_from_move()
+            new_dudate_lines = self._duedates_from_move()
         elif self.invoice_id:
-            self._duedates_from_invoice()
+            new_dudate_lines = self._duedates_from_invoice()
         else:
             assert False,\
                 '{} DueDate: at least one between mode_id ' \
                 'and invoice_id must be assigned'.format(__name__)
         # end if
 
-    # end generate_duedates
+        return new_dudate_lines
+    # end generate_duedate_lines
 
     # PUBLIC METHODS - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -239,7 +259,7 @@ class DueDateManager(models.Model):
         total_amount = self.move_id.amount
 
         if not invoice_date:
-            return False
+            return list()
 
         # If no payment terms generate only ONE due date line
         if not payment_terms:
@@ -272,9 +292,23 @@ class DueDateManager(models.Model):
                     'due_date': due_date[0],
                     'due_amount': due_date[1]
                 })
+
+                # new_dudate_lines.append((
+                #     0,
+                #     0,
+                #     {
+                #         'duedate_manager_id': self.id,
+                #         'payment_method_id': payment_method.id,
+                #         'due_date': due_date[0],
+                #         'due_amount': due_date[1]
+                #     }
+                # ))
             # end for
 
-            self.env['account.duedate_plus.line'].create(new_dudate_lines)
+            return new_dudate_lines
+
+            # self.env['account.duedate_plus.line'].create(new_dudate_lines)
+
         # end if
     # end _duedates_from_move
 
@@ -319,9 +353,22 @@ class DueDateManager(models.Model):
                     'due_date': due_date[0],
                     'due_amount': due_date[1]
                 })
+
+                # new_dudate_lines.append((
+                #     0,
+                #     0,
+                #     {
+                #         'duedate_manager_id': self.id,
+                #         'payment_method_id': payment_method.id,
+                #         'due_date': due_date[0],
+                #         'due_amount': due_date[1]
+                #     }
+                # ))
             # end for
 
-            self.env['account.duedate_plus.line'].create(new_dudate_lines)
+            return new_dudate_lines
+
+            # self.env['account.duedate_plus.line'].create(new_dudate_lines)
         # end if
     # end _duedates_from_invoice
 
