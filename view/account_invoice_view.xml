@@ -14,7 +14,8 @@
 
             <xpath expr="/form/sheet/notebook/page[1]" position="after">
                 <page string="Scadenze">
-                    <field name="duedate_line_ids">
+                    <field name="check_duedates_payment" invisible="1" />
+                    <field name="duedate_line_ids" attrs="{'invisible':[('check_duedates_payment', '=', True)]}" nolabel="1">
                         <!--
                             NB: editable="top" let's the user modify the item directly from the row, without
                                 opening a new form dialog
@@ -23,8 +24,26 @@
                             <field name="due_date"/>
                             <field name="payment_method_id"/>
                             <field name="due_amount" sum="Totale"/>
+                            <field name="is_paid"/>
+                            <field name="schedule_payment"/>
                             <field name="proposed_new_value" attrs="{'invisible':[('proposed_new_value', '=', 0)]}" readonly="1"/>
                             <!-- Shown in debug mode only -->
+                            <field name="move_line_id" groups="base.group_no_one" readonly="1"/>
+                        </tree>
+                    </field>
+                    <field name="no_delete_duedate_line_ids" attrs="{'invisible':[('check_duedates_payment', '=', False)]}" nolabel="1">
+                        <!--
+                            NB: editable="top" let's the user modify the item directly from the row, without
+                                opening a new form dialog
+                        -->
+                        <tree editable="top" delete="false">
+                            <field name="due_date" attrs="{'readonly':[('schedule_payment', '=', True)]}"/>
+                            <field name="payment_method_id" attrs="{'readonly':[('schedule_payment', '=', True)]}"/>
+                            <field name="due_amount" sum="Totale" attrs="{'readonly':[('schedule_payment', '=', True)]}"/>
+                            <field name="is_paid"/>
+                            <field name="schedule_payment"/>
+                            <field name="proposed_new_value" attrs="{'invisible':[('proposed_new_value', '=', 0)]}"/>
+                            <!-- Shown only in debug mode -->
                             <field name="move_line_id" groups="base.group_no_one" readonly="1"/>
                         </tree>
                     </field>
@@ -69,7 +88,8 @@
 
             <xpath expr="/form/sheet/notebook/page[1]" position="after">
                 <page string="Scadenze">
-                    <field name="duedate_line_ids" nolabel="1">
+                    <field name="check_duedates_payment" invisible="1" />
+                    <field name="duedate_line_ids" attrs="{'invisible':[('check_duedates_payment', '=', True)]}" nolabel="1">
                         <!--
                             NB: editable="top" let's the user modify the item directly from the row, without
                                 opening a new form dialog
@@ -78,11 +98,29 @@
                             <field name="due_date"/>
                             <field name="payment_method_id"/>
                             <field name="due_amount" sum="Totale"/>
+                            <field name="is_paid"/>
+                            <field name="schedule_payment"/>
                             <field name="proposed_new_value" attrs="{'invisible':[('proposed_new_value', '=', 0)]}" readonly="1"/>
                             <!-- Shown in debug mode only -->
                             <field name="move_line_id" groups="base.group_no_one" readonly="1"/>
                         </tree>
                     </field>
+                    <field name="no_delete_duedate_line_ids" attrs="{'invisible':[('check_duedates_payment', '=', False)]}" nolabel="1">
+                        <!--
+                            NB: editable="top" let's the user modify the item directly from the row, without
+                                opening a new form dialog
+                        -->
+                        <tree editable="top" delete="false">
+                            <field name="due_date" attrs="{'readonly':[('schedule_payment', '=', True)]}"/>
+                            <field name="payment_method_id" attrs="{'readonly':[('schedule_payment', '=', True)]}"/>
+                            <field name="due_amount" sum="Totale" attrs="{'readonly':[('schedule_payment', '=', True)]}"/>
+                            <field name="is_paid"/>
+                            <field name="schedule_payment"/>
+                            <field name="proposed_new_value" attrs="{'invisible':[('proposed_new_value', '=', 0)]}"/>
+                            <field name="move_line_id" groups="base.group_no_one"/> <!-- Shown only in debug mode -->
+                        </tree>
+                    </field>
+
                     <group col="2" colspan="2">
                         <span colspan="2" col="2">
                             <span><strong>Assegnato: </strong></span>

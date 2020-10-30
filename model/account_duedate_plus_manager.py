@@ -15,7 +15,8 @@ class DueDateManager(models.Model):
 
     move_id = fields.Many2one(
         comodel_name='account.move',
-        domain=[('journal_id.type', 'in', ['sale', 'sale_refund', 'purchase', 'purchase_refund'])],
+        domain=[('journal_id.type', 'in', ['sale', 'sale_refund', 'purchase',
+                                           'purchase_refund'])],
         string='Registrazione contabile',
         requred=False
     )
