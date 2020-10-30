@@ -38,6 +38,27 @@ class DueDate(models.Model):
 
     proposed_new_value = fields.Float(string='Importo proposto')
 
+    is_paid = fields.Boolean(string='Pagato', compute='_get_paid')
+
+    schedule_payment = fields.Boolean(string='In pagamento',
+                                      compute='_get_scheduled_payment')
+
+    def _get_scheduled_payment(self):
+        for line in self:
+            rec = self.env['account.payment.line'].search([
+                ('move_line_id', '=', line.move_line_id.id)])
+            if rec:
+                line.schedule_payment = True
+            else:
+                line.schedule_payment = False
+
+    def _get_paid(self):
+        for line in self:
+            if line.move_line_id.payment_id:
+                line.is_paid = True
+            else:
+                line.is_paid = False
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ORM METHODS OVERRIDE - begin
 

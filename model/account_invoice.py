@@ -30,6 +30,16 @@ class AccountInvoice(models.Model):
         readonly=False
     )
 
+    no_delete_duedate_line_ids = fields.One2many(
+        string='Righe scadenze',
+        comodel_name='account.duedate_plus.line',
+        related='duedate_manager_id.duedate_line_ids',
+        readonly=False
+    )
+
+    check_duedates_payment = fields.Boolean(string='Ha pagamenti',
+                                            compute='checks_payment')
+
     duedates_amount_current = fields.Monetary(
         string='Ammontare scadenze',
         compute='_compute_duedates_amounts'
@@ -39,6 +49,14 @@ class AccountInvoice(models.Model):
         string='Ammontare non assegnato a scadenze',
         compute='_compute_duedates_amounts'
     )
+
+    def checks_payment(self):
+        self.check_duedates_payment = False
+        for line in self.duedate_line_ids:
+            rec = self.env['account.payment.line'].search([
+                ('move_line_id', '=', line.move_line_id.id)])
+            if rec:
+                self.check_duedates_payment = True
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ORM METHODS OVERRIDE - begin
