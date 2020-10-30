@@ -73,19 +73,6 @@ class AccountInvoice(models.Model):
     @api.multi
     def write(self, values):
         result = super().write(values)
-
-        for invoice in self:
-
-            duedate_mgr_miss = not invoice.duedate_manager_id
-            payment_terms_updated = 'payment_term_id' in values
-
-            # Compute the due dates if payment terms was changed or duedates
-            # manager was missing
-            # if duedate_mgr_miss or payment_terms_updated:
-            #     invoice.generate_duedates()
-            # # end if
-        # end for
-
         return result
     # end write
 

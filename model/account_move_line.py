@@ -91,45 +91,33 @@ class AccountMoveLine(models.Model):
 
     @api.model
     def create(self, values):
-        print('account.move.line - create - begin')
-        print('\t', values)
         res = super().create(values)
-        print('account.move.line - create - end')
         return res
     # end create
 
     @api.multi
     def write(self, values):
-        print('account.move.line - write - begin')
-        print('\t', values)
 
-        print('account.move.line - write - super() - begin')
         result = super().write(values)
-        print('account.move.line - write - super() - end')
 
         if not self.env.context.get('RecStop'):
             if 'date_maturity' in values:
                 for move in self:
-                    print('account.move.line - write - move({}).update_date_maturity() - begin'.format(move.id))
                     move.with_context(
                         RecStop=True
                     ).update_date_maturity()
-                    print('account.move.line - write - move({}).update_date_maturity() - end'.format(move.id))
                 # end for
             # end if
 
             if 'payment_method' in values:
                 for move in self:
-                    print('account.move.line - write - move({}).update_payment_method() - begin'.format(move.id))
                     move.with_context(
                         RecStop=True
                     ).update_payment_method()
-                    print('account.move.line - write - move({}).update_payment_method() - end'.format(move.id))
                 # end for
             # end if
         # end if
 
-        print('account.move.line - write - end')
         return result
     # end write
 

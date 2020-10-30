@@ -65,8 +65,6 @@ class DueDateLine(models.Model):
     @api.model
     def create(self, values):
 
-        print('account.duedate_plus.line - create - begin')
-
         # Check if fields are empty
         dd_miss = not values['due_date']
         pm_miss = not values['payment_method_id']
@@ -76,26 +74,17 @@ class DueDateLine(models.Model):
         # otherwise return the newly created record
         if dd_miss and pm_miss and da_miss:
             empty_recordset = self.env['account.duedate_plus.line']
-            print('account.duedate_plus.line - create.1 - end')
             return empty_recordset.search([])
         else:
-            print('account.duedate_plus.line - create.2 - super() - begin')
-            print('\t', values)
             result = super().create(values)
-            print('account.duedate_plus.line - create.2 - super() - end')
-            print('account.duedate_plus.line - create.2 - end')
             return result
         # end if
     # end create
 
     @api.multi
     def write(self, values):
-        print('account.duedate_plus.line - write - begin')
-        print('\t', values)
 
-        print('account.duedate_plus.line - write - super() - enter')
         result = super().write(values)
-        print('account.duedate_plus.line - write - super() - return')
 
         if not self.env.context.get('RecStop'):
             if 'due_date' in values:
@@ -114,8 +103,6 @@ class DueDateLine(models.Model):
                 # end for
             # end if
         # end if
-
-        print('account.duedate_plus.line - write - end')
 
         return result
     # end write

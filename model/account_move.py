@@ -56,19 +56,6 @@ class AccountMove(models.Model):
     @api.multi
     def write(self, values):
         result = super().write(values)
-
-        for move in self:
-
-            duedate_mgr_miss = not move.duedate_manager_id
-            payment_terms_updated = 'payment_term_id' in values
-
-            # Compute the due dates if payment terms was changed or duedates
-            # manager was missing
-            # if duedate_mgr_miss:
-            #     move.generate_duedates()
-            # end if
-        # end for
-
         return result
     # end write
 
