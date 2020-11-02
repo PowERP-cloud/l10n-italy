@@ -149,6 +149,21 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.0.1.24 (2020-11-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] corretto calcolo ammontare fattura in account.move
+
+12.0.0.1.23 (2020-11-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] gestione cancellazione ultima scadenza rimasta (mette una nuova riga di scadenza e una nuova riga contabile con scadenza parti alla data fattura e importo pari all'imposto dattura)
+
+12.0.0.1.22 (2020-11-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] corretta gestione scadenze per fatture in stato bozza
+
 12.0.0.1.21 (2020-11-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

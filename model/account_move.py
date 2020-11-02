@@ -41,6 +41,11 @@ class AccountMove(models.Model):
         compute='_compute_duedates_amounts'
     )
 
+    invoice_amount = fields.Monetary(
+        string='Ammontare fattura',
+        compute='_compute_invoice_amount'
+    )
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ORM METHODS OVERRIDE - begin
 
@@ -76,7 +81,7 @@ class AccountMove(models.Model):
         self._update_credit_debit_move_lines()
     # end _onchange_duedate_line_ids
 
-    @api.onchange('amount')
+    @api.onchange('invoice_amount')
     def _onchange_amount(self):
 
         if not self.duedate_line_ids:
@@ -132,11 +137,14 @@ class AccountMove(models.Model):
     #_update_credit_debit_move_lines
     @api.model
     def update_duedates_and_move_lines(self):
-        # Update account.duedate_plus.line records
-        self._update_duedates()
+        # Only perform the action if there are move lines
+        if self.line_ids:
+            # Update account.duedate_plus.line records
+            self._update_duedates()
 
-        # Update account.move.line records according to account.duedate_plus.line records
-        self._update_credit_debit_move_lines()
+            # Update account.move.line records according to account.duedate_plus.line records
+            self._update_credit_debit_move_lines()
+        # end if
     # end update_duedates_and_move_lines
 
 
@@ -155,7 +163,34 @@ class AccountMove(models.Model):
     # COMPUTE METHODS - begin
 
     @api.multi
-    @api.depends('duedate_line_ids')
+    @api.depends('line_ids')
+    def _compute_invoice_amount(self):
+
+        for move in self:
+            credit_amount = sum([
+                line.credit
+                for line in move.line_ids
+                if line.tax_ids or line.tax_line_id
+            ])
+
+            debit_amount = sum([
+                line.debit
+                for line in move.line_ids
+                if line.tax_ids or line.tax_line_id
+            ])
+
+            if move.move_type in ('receivable', 'payable_refund'):
+                invoice_amount = credit_amount - debit_amount
+            else:
+                invoice_amount = debit_amount - credit_amount
+            # end if
+
+            move.invoice_amount = invoice_amount
+        # end for
+    # end _compute_invoice_amount
+
+    @api.multi
+    @api.depends('duedate_line_ids', 'invoice_amount')
     def _compute_duedates_amounts(self):
 
         for inv in self:
@@ -169,7 +204,8 @@ class AccountMove(models.Model):
             self.duedates_amount_current = lines_total
 
             # Aggiornamento campo ammontare non assegnato a scadenze
-            self.duedates_amount_unassigned = self.amount - lines_total
+            #self.duedates_amount_unassigned = self.amount - lines_total
+            self.duedates_amount_unassigned = self.invoice_amount - lines_total
         # end for
     # end _compute_duedate_lines_amount
 
@@ -308,6 +344,7 @@ class AccountMove(models.Model):
         self.update({'duedate_manager_id': duedate_manager})
     # end _create_duedate_manager
 
+    @api.model
     def _ensure_duedate(self):
         '''
         Ensures that there is always a duedate set, if no duedate
@@ -315,10 +352,11 @@ class AccountMove(models.Model):
         the invoice date.
         :return:
         '''
-        if not self.duedate_line_ids:
+        if not self.duedate_line_ids and self.line_ids:
             new_duedate_line = {
                 'due_date': self.invoice_date,
-                'due_amount': self.amount,
+                #'due_amount': self.amount,
+                'due_amount': self.invoice_amount,
                 'duedate_manager_id': self.duedate_manager_id.id,
             }
 
