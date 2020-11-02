@@ -232,9 +232,9 @@ class DueDateManager(models.Model):
         # if no due date has been defined yet skip the validation
         if duedates_amounts and (difference != 0):  # Validation FAILED
             return {
-                'title': 'Scadenze - Totale import',
+                'title': 'Scadenze - Totale importi',
                 'message': 'Il totale degli importi delle scadenze deve coincidere'
-                'con il totale della registrazione ({})'.format(amount_total)
+                ' con il totale della registrazione ({})'.format(amount_total)
             }
 
         else:  # Validation succesful!

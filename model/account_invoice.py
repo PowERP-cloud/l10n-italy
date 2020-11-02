@@ -12,6 +12,7 @@
 
 from odoo import models, api, fields
 from odoo.tools.float_utils import float_is_zero
+from odoo.exceptions import UserError
 
 
 class AccountInvoice(models.Model):
@@ -74,8 +75,13 @@ class AccountInvoice(models.Model):
     def write(self, values):
         result = super().write(values)
         if self.state == 'open':
-            if self.duedate_manager_id:
-                ret = self.duedate_manager_id.validate_duedates()
+            # check validation (amount and dates)
+            ret = self.duedate_manager_id.validate_duedates()
+            if ret:
+                msg = ret['title'] + '\n' + ret['message']
+                raise UserError(msg)
+            if 'duedate_line_ids' in values:
+                self._update_credit_debit_move_lines()
         return result
     # end write
 
