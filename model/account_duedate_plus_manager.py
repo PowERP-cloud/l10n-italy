@@ -126,7 +126,7 @@ class DueDateManager(models.Model):
     # VALIDATION METHODS - begin
 
     @api.model
-    def _validate_duedates(self):
+    def validate_duedates(self):
 
         # ID not set, delay validation to when the
         # object creation is completed
