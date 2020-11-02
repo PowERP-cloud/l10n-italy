@@ -250,64 +250,48 @@ class DueDateManager(models.Model):
 
     @api.model
     def _duedates_from_move(self):
-        # Compute payment terms and total
-        # amount from the move
+        # Compute payment terms and total amount from the move
         payment_terms = self.move_id.payment_term_id
-        move_type = self.move_id.move_type
+        doc_type = self.move_id.move_type
         invoice_date = self.move_id.invoice_date
         total_amount = self.move_id.amount
+        type_error_msg = 'move_type for move must be one of: receivable, payable_refund, payable, receivable_refund'
 
-        new_dudate_lines = list()
-
-        if not invoice_date:
-            return new_dudate_lines
-        # end if
-
-        # If no payment terms generate only ONE due date line
-        if not payment_terms:
-            new_dudate_lines.append({
-                'duedate_manager_id': self.id,
-                'due_date': invoice_date,
-                'due_amount': total_amount,
-                'payment_method_id': False,
-            })
-
-        else:
-            due_dates = payment_terms.compute(total_amount, invoice_date)[0]
-
-            for due_date in due_dates:
-
-                if move_type in ('receivable', 'payable_refund'):
-                    payment_method = due_date[2]['credit']
-                elif move_type in ('payable', 'receivable_refund'):
-                    payment_method = due_date[2]['debit']
-                else:
-                    assert False, 'move_type for move must ' \
-                                  'be receivable, payable, ' \
-                                  'receivable_refund or payable_refund'
-                # end if
-
-                new_dudate_lines.append({
-                    'duedate_manager_id': self.id,
-                    'payment_method_id': payment_method.id,
-                    'due_date': due_date[0],
-                    'due_amount': due_date[1]
-                })
-            # end for
-        # end if
-
-        return new_dudate_lines
+        return self._duedates_common(
+            payment_terms, doc_type, invoice_date, total_amount, type_error_msg
+        )
     # end _duedates_from_move
 
     @api.model
     def _duedates_from_invoice(self):
-
-        # Compute payment terms and total
-        # amount from the invoice
+        # Compute payment terms and total amount from the invoice
         payment_terms = self.invoice_id.payment_term_id
+        doc_type = self.invoice_id.account_id.user_type_id.type
         invoice_date = self.invoice_id.date_invoice
         total_amount = self.invoice_id.amount_total
+        type_error_msg = 'account for invoice must be one of: receivable, payable_refund, payable, receivable_refund'
 
+        return self._duedates_common(
+            payment_terms, doc_type, invoice_date, total_amount, type_error_msg
+        )
+    # end _duedates_from_invoice
+
+    @api.model
+    def _duedates_common(
+        self,
+        payment_terms, doc_type, invoice_date, total_amount, type_error_msg
+    ):
+        '''
+        Duedates generation function: this is the part of the algorithm in
+        common between move and invoice
+        :param payment_terms: payment terms record
+        :param doc_type: type of "document"
+        (receivable, payable, receivable_refund, payable_refund)
+        :param invoice_date: date of the invoice
+        :param total_amount: total amount of the invoice
+        :param type_error_msg: msg to be displayed if the doc_type is invalid
+        :return: a list of dictionary, each dict represents a duedate record
+        '''
         new_dudate_lines = list()
 
         if not invoice_date:
@@ -315,6 +299,7 @@ class DueDateManager(models.Model):
         # end if
 
         # If no payment terms generate only ONE due date line
+        # with due_date equal to the invoice date
         if not payment_terms:
             new_dudate_lines.append({
                 'duedate_manager_id': self.id,
@@ -325,19 +310,15 @@ class DueDateManager(models.Model):
 
         else:
             due_dates = payment_terms.compute(total_amount, invoice_date)[0]
-            new_dudate_lines = list()
 
             for due_date in due_dates:
 
-                invoice_type = self.invoice_id.account_id.user_type_id.type
-
-                if invoice_type == 'receivable':
+                if doc_type in ('receivable', 'payable_refund'):
                     payment_method = due_date[2]['credit']
-                elif invoice_type == 'payable':
+                elif doc_type in ('payable', 'receivable_refund'):
                     payment_method = due_date[2]['debit']
                 else:
-                    assert False, 'account_id for invoice must' \
-                                  'be receivable or payable'
+                    assert False, type_error_msg
                 # end if
 
                 new_dudate_lines.append({
@@ -350,7 +331,7 @@ class DueDateManager(models.Model):
         # end if
 
         return new_dudate_lines
-    # end _duedates_from_invoice
+    # end _duedates_common
 
     # PRIVATE METHODS - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

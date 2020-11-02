@@ -206,23 +206,36 @@ class AccountInvoice(models.Model):
         self._compute_duedates_amounts()
     # end _onchange_duedate_line_ids
 
-    @api.onchange('payment_term_id', 'date_invoice')
-    def _onchange_payment_term_id_date_invoice(self):
+    @api.onchange('payment_term_id')
+    def _onchange_payment_term_id(self):
         self.update_duedates_and_move_lines()
-    # end _onchange_payment_term_id_date_invoice
+    # end _onchange_payment_term_id
+
+    @api.onchange('date_invoice')
+    def _onchange_date_invoice(self):
+        self.update_duedates_and_move_lines()
+    # end _onchange_date_invoice
 
     @api.onchange('amount_total')
     def _onchange_amount_total(self):
 
-        if self.duedates_amount_current == 0:
-            ratio = 0
-        else:
-            ratio = self.duedates_amount_unassigned / self.duedates_amount_current
-        # end if
+        if not self.duedate_line_ids:
+            # If no duedate generate duedates
+            self.update_duedates_and_move_lines()
 
-        for line in self.duedate_line_ids:
-            line.proposed_new_value = line.due_amount * (1 + ratio)
-        # end for
+        else:
+            # Else set the proposed modification to the duedates amount
+
+            if self.duedates_amount_current == 0:
+                ratio = 0
+            else:
+                ratio = self.duedates_amount_unassigned / self.duedates_amount_current
+            # end if
+
+            for line in self.duedate_line_ids:
+                line.proposed_new_value = line.due_amount * (1 + ratio)
+            # end for
+        # end if
     # end _onchange_amount_total
 
     @api.onchange('duedates_amount_unassigned')

@@ -149,6 +149,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.0.1.21 (2020-11-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] corretta gestione scadenze per fatture in stato bozza
+
 12.0.0.1.21 (2020-10-28)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -72,15 +72,23 @@ class AccountMove(models.Model):
 
     @api.onchange('amount')
     def _onchange_amount(self):
-        if self.duedates_amount_current == 0:
-            ratio = 0
-        else:
-            ratio = self.duedates_amount_unassigned / self.duedates_amount_current
-        # end if
 
-        for line in self.duedate_line_ids:
-            line.proposed_new_value = line.due_amount * (1 + ratio)
-        # end for
+        if not self.duedate_line_ids:
+            # If no duedate generate duedates
+            self.update_duedates_and_move_lines()
+
+        else:
+            # Else set the proposed modification to the duedates amount
+            if self.duedates_amount_current == 0:
+                ratio = 0
+            else:
+                ratio = self.duedates_amount_unassigned / self.duedates_amount_current
+            # end if
+
+            for line in self.duedate_line_ids:
+                line.proposed_new_value = line.due_amount * (1 + ratio)
+            # end for
+        # end if
     # end _onchange_amount
 
     @api.onchange('duedates_amount_unassigned')
@@ -104,6 +112,11 @@ class AccountMove(models.Model):
     def _onchange_payment_term_id(self):
         self.update_duedates_and_move_lines()
     # end _onchange_duedate_line_ids
+
+    @api.onchange('invoice_date')
+    def _onchange_invoice_date(self):
+        self.update_duedates_and_move_lines()
+    # end _onchange_invoice_date
 
     # ONCHANGE METHODS - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
