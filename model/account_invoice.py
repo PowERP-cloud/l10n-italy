@@ -73,8 +73,15 @@ class AccountInvoice(models.Model):
     @api.multi
     def write(self, values):
         result = super().write(values)
+        if self.state == 'open':
+            if self.duedate_manager_id:
+                ret = self.duedate_manager_id.validate_duedates()
         return result
     # end write
+
+    def post(self):
+        result = super().post()
+        return result
 
     # ORM METHODS OVERRIDE - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
