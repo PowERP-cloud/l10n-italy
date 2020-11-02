@@ -67,7 +67,13 @@ class AccountMove(models.Model):
 
     @api.onchange('duedate_line_ids')
     def _onchange_duedate_line_ids(self):
+        # Ensure at least one duedate is always there
+        self._ensure_duedate()
+        # Aggiorno il totale delle righe
         self._compute_duedates_amounts()
+        # Aggiornamento della registrazione contabile
+        # (account.move.line)
+        self._update_credit_debit_move_lines()
     # end _onchange_duedate_line_ids
 
     @api.onchange('amount')
@@ -123,7 +129,7 @@ class AccountMove(models.Model):
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # PUBLIC METHODS - begin
-
+    #_update_credit_debit_move_lines
     @api.model
     def update_duedates_and_move_lines(self):
         # Update account.duedate_plus.line records
@@ -137,8 +143,8 @@ class AccountMove(models.Model):
     @api.multi
     def action_update_duedates_and_move_lines(self):
         # Update account.duedate_plus.line records
-        for invoice in self:
-            invoice.update_duedates_and_move_lines()
+        for move in self:
+            move.update_duedates_and_move_lines()
         # end for
     # end update_duedates_and_move_lines
 
@@ -231,24 +237,33 @@ class AccountMove(models.Model):
 
         # Add the new move lines
         for duedate_line in self.duedate_line_ids:
-            new_data = move_line_template.copy()
 
-            # Set the linked account.duedate_plus.line record
-            new_data['duedate_line_id'] = duedate_line.id
+            has_duedate = (duedate_line.due_date and True) or False
+            has_amount = (duedate_line.due_amount and True) or False
 
-            # Set the date_maturity field
-            new_data['date_maturity'] = duedate_line.due_date
+            if has_duedate and has_amount:
+                new_data = move_line_template.copy()
 
-            # Set the amount
-            if new_data['credit'] > 0:
-                new_data['credit'] = duedate_line.due_amount
+                # Set the linked account.duedate_plus.line record
+                new_data['duedate_line_id'] = duedate_line.id
+
+                # Set the date_maturity field
+                new_data['date_maturity'] = duedate_line.due_date
+
+                # Set the amount
+                if new_data['credit'] > 0:
+                    new_data['credit'] = duedate_line.due_amount
+                else:
+                    new_data['debit'] = duedate_line.due_amount
+                # end if
+
+                move_lines_mods.append(
+                    (0, False, new_data)
+                )
+
             else:
-                new_data['debit'] = duedate_line.due_amount
-            # end if
-
-            move_lines_mods.append(
-                (0, False, new_data)
-            )
+                # Duedate lines without duedate or without amount are ignored
+                pass
         # end for
 
         # Schedule deletion of old lines
@@ -292,6 +307,26 @@ class AccountMove(models.Model):
 
         self.update({'duedate_manager_id': duedate_manager})
     # end _create_duedate_manager
+
+    def _ensure_duedate(self):
+        '''
+        Ensures that there is always a duedate set, if no duedate
+        is found creates a new one and set the due date equal to
+        the invoice date.
+        :return:
+        '''
+        if not self.duedate_line_ids:
+            new_duedate_line = {
+                'due_date': self.invoice_date,
+                'due_amount': self.amount,
+                'duedate_manager_id': self.duedate_manager_id.id,
+            }
+
+            self.update(
+                {'duedate_line_ids': [(0, 0, new_duedate_line)]}
+            )
+        # end if
+    # end _ensure_duedate
 
     # PROTECTED METHODS - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
