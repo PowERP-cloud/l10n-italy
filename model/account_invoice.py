@@ -74,14 +74,20 @@ class AccountInvoice(models.Model):
     @api.multi
     def write(self, values):
         result = super().write(values)
-        if self.state == 'open':
-            # check validation (amount and dates)
-            ret = self.duedate_manager_id.validate_duedates()
-            if ret:
-                msg = ret['title'] + '\n' + ret['message']
-                raise UserError(msg)
-            if 'duedate_line_ids' in values:
-                self._update_credit_debit_move_lines()
+
+        for invoice in self:
+            if invoice.state == 'open':
+                # check validation (amount and dates)
+                ret = invoice.duedate_manager_id.validate_duedates()
+                if ret:
+                    msg = ret['title'] + '\n' + ret['message']
+                    raise UserError(msg)
+                if 'duedate_line_ids' in values and invoice.move_id:
+                    invoice.move_id.write_credit_debit_move_lines()
+                # end if
+            # end if
+        # end for
+
         return result
     # end write
 
@@ -99,9 +105,6 @@ class AccountInvoice(models.Model):
     def update_duedates_and_move_lines(self):
         # Update account.duedate_plus.line records
         self._update_duedates()
-
-        # Update account.move.line records according to account.duedate_plus.line records
-        #self._update_credit_debit_move_lines()
     # end update_duedates_and_move_lines
 
 
@@ -305,67 +308,67 @@ class AccountInvoice(models.Model):
         # end if
     # end _update_duedates
 
-    @api.model
-    def _update_credit_debit_move_lines(self):
-
-        # Should not be necessary ...just in case
-        if not self.line_ids:
-            return
-        # end if
-
-        # Extract credit and debit lines
-        lines_cd = list()
-        lines_other = list()
-
-        for line in self.line_ids:
-            line._compute_line_type()
-            line_type = line.line_type
-            if line_type in ('credit', 'debit'):
-                lines_cd.append(line)
-            else:
-                lines_other.append(line)
-            # end if
-        # end for
-
-        # Build the move line template dictionary
-        move_line_template = lines_cd[0].copy_data()[0]
-        del move_line_template['move_id']  # 'move_id' removed because it will be automatically set by the update method
-
-        # List of modifications to move lines one2many field
-        move_lines_mods = list()
-
-        # Add the new move lines
-        for duedate_line in self.duedate_line_ids:
-            new_data = move_line_template.copy()
-
-            # Set the linked account.duedate_plus.line record
-            new_data['duedate_line_id'] = duedate_line.id
-
-            # Set the date_maturity field
-            new_data['date_maturity'] = duedate_line.due_date
-
-            # Set the amount
-            if new_data['credit'] > 0:
-                new_data['credit'] = duedate_line.due_amount
-            else:
-                new_data['debit'] = duedate_line.due_amount
-            # end if
-
-            move_lines_mods.append(
-                (0, False, new_data)
-            )
-        # end for
-
-        # Schedule deletion of old lines
-        move_lines_mods += [(4, line.id) for line in lines_other]
-
-        # Schedule deletion of old lines
-        move_lines_mods += [(2, line.id) for line in lines_cd]
-
-        # Save changes
-        self.update({'line_ids': move_lines_mods})
-
-    # end _update_credit_debit_move_lines
+    # @api.model
+    # def _update_credit_debit_move_lines(self):
+    #
+    #     # Should not be necessary ...just in case
+    #     if not self.line_ids:
+    #         return
+    #     # end if
+    #
+    #     # Extract credit and debit lines
+    #     lines_cd = list()
+    #     lines_other = list()
+    #
+    #     for line in self.line_ids:
+    #         line._compute_line_type()
+    #         line_type = line.line_type
+    #         if line_type in ('credit', 'debit'):
+    #             lines_cd.append(line)
+    #         else:
+    #             lines_other.append(line)
+    #         # end if
+    #     # end for
+    #
+    #     # Build the move line template dictionary
+    #     move_line_template = lines_cd[0].copy_data()[0]
+    #     del move_line_template['move_id']  # 'move_id' removed because it will be automatically set by the update method
+    #
+    #     # List of modifications to move lines one2many field
+    #     move_lines_mods = list()
+    #
+    #     # Add the new move lines
+    #     for duedate_line in self.duedate_line_ids:
+    #         new_data = move_line_template.copy()
+    #
+    #         # Set the linked account.duedate_plus.line record
+    #         new_data['duedate_line_id'] = duedate_line.id
+    #
+    #         # Set the date_maturity field
+    #         new_data['date_maturity'] = duedate_line.due_date
+    #
+    #         # Set the amount
+    #         if new_data['credit'] > 0:
+    #             new_data['credit'] = duedate_line.due_amount
+    #         else:
+    #             new_data['debit'] = duedate_line.due_amount
+    #         # end if
+    #
+    #         move_lines_mods.append(
+    #             (0, False, new_data)
+    #         )
+    #     # end for
+    #
+    #     # Schedule deletion of old lines
+    #     move_lines_mods += [(4, line.id) for line in lines_other]
+    #
+    #     # Schedule deletion of old lines
+    #     move_lines_mods += [(2, line.id) for line in lines_cd]
+    #
+    #     # Save changes
+    #     self.update({'line_ids': move_lines_mods})
+    #
+    # # end _update_credit_debit_move_lines
 
     @api.model
     def _get_duedate_manager(self):

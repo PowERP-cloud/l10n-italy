@@ -140,6 +140,19 @@ class AccountMove(models.Model):
     # end update_duedates_and_move_lines
 
 
+    @api.model
+    def write_credit_debit_move_lines(self):
+
+        # Compute the modifications to be performed
+        move_lines_mods = self._compute_new_credit_debit_move_lines()
+
+        # Save changes
+        if move_lines_mods:
+            self.write({'line_ids': move_lines_mods})
+        # end if
+    # end write_credit_debit_move_lines
+
+
     @api.multi
     def action_update_duedates_and_move_lines(self):
         # Update account.duedate_plus.line records
@@ -207,7 +220,7 @@ class AccountMove(models.Model):
     # end _update_duedates
 
     @api.model
-    def _update_credit_debit_move_lines(self):
+    def _compute_new_credit_debit_move_lines(self):
 
         # Should not be necessary ...just in case
         if not self.line_ids:
@@ -257,6 +270,9 @@ class AccountMove(models.Model):
                     new_data['debit'] = duedate_line.due_amount
                 # end if
 
+                # Set payment method
+                new_data['payment_method_id'] = duedate_line.payment_method_id.id
+
                 move_lines_mods.append(
                     (0, False, new_data)
                 )
@@ -272,11 +288,20 @@ class AccountMove(models.Model):
         # Schedule deletion of old lines
         move_lines_mods += [(2, line.id) for line in lines_cd]
 
-        # Save changes
+        # Return the modifications to be performed
+        return {'line_ids': move_lines_mods}
+    # end _compute_new_credit_debit_move_lines
+
+    @api.model
+    def _update_credit_debit_move_lines(self):
+
+        # Compute the modifications to be performed
+        move_lines_mods = self._compute_new_credit_debit_move_lines()
+
+        # Apply changes
         if move_lines_mods:
             self.update({'line_ids': move_lines_mods})
         # end if
-
     # end _update_credit_debit_move_lines
 
     @api.model
