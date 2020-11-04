@@ -57,10 +57,11 @@ class AccountMove(models.Model):
     def write(self, values):
         result = super().write(values)
         for move in self:
-            if not self.env.context.get('RecStop'):
-                move.with_context(
-                    RecStop=True
-                ).write_credit_debit_move_lines()
+            if 'duedate_line_ids' in values:
+                if not self.env.context.get('RecStop'):
+                    move.with_context(
+                        RecStop=True
+                    ).write_credit_debit_move_lines()
         return result
     # end write
 

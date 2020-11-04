@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.0.1.21
+|icon| Due dates 12.0.0.1.25
 ============================
 
 
@@ -152,6 +152,11 @@ ChangeLog History / Cronologia modifiche
 12.0.0.1.24 (2020-11-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+* [FIX] gestito validazione fattura da ordine di vendita
+
+12.0.0.1.24 (2020-11-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
 * [FIX] corretto calcolo ammontare fattura in account.move
 
 12.0.0.1.23 (2020-11-02)
@@ -160,11 +165,6 @@ ChangeLog History / Cronologia modifiche
 * [FIX] gestione cancellazione ultima scadenza rimasta (mette una nuova riga di scadenza e una nuova riga contabile con scadenza parti alla data fattura e importo pari all'imposto dattura)
 
 12.0.0.1.22 (2020-11-02)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] corretta gestione scadenze per fatture in stato bozza
-
-12.0.0.1.21 (2020-11-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] corretta gestione scadenze per fatture in stato bozza
@@ -266,7 +266,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2020-10-28
+Last Update / Ultimo aggiornamento: 2020-11-04
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status
