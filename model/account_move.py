@@ -148,7 +148,8 @@ class AccountMove(models.Model):
 
         # Save changes
         if move_lines_mods:
-            self.write({'line_ids': move_lines_mods})
+            self.write(move_lines_mods)
+        print('PASSATO....')
         # end if
     # end write_credit_debit_move_lines
 
@@ -300,7 +301,7 @@ class AccountMove(models.Model):
 
         # Apply changes
         if move_lines_mods:
-            self.update({'line_ids': move_lines_mods})
+            self.update(move_lines_mods)
         # end if
     # end _update_credit_debit_move_lines
 
