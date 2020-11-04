@@ -316,6 +316,8 @@ class DueDateManager(models.Model):
                     'due_amount': total_amount,
                     'payment_method_id': False,
                 })
+            else:
+                return new_dudate_lines
             # end if
 
         else:

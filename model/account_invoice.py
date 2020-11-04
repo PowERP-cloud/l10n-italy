@@ -154,7 +154,7 @@ class AccountInvoice(models.Model):
         if len(head_lines) == 0:
             return move_lines
 
-        # Altre linee che vanno MANTENNUTE
+        # Altre linee che vanno MANTENUTE
         new_lines = [
             ml
             for ml in move_lines
