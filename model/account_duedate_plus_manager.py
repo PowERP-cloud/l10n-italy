@@ -210,10 +210,10 @@ class DueDateManager(models.Model):
 
         if self.invoice_id:
             precision = self.invoice_id.currency_id.decimal_places
-            amount_total = self.amount_total
+            amount_total = self.invoice_id.amount_total
         elif self.move_id:
             precision = self.move_id.currency_id.decimal_places
-            amount_total = self.amount
+            amount_total = self.move_id.amount
         else:
             assert False
         # end if
@@ -221,7 +221,7 @@ class DueDateManager(models.Model):
         # Get the list of the other due_dates, ordered by due_date ascending
         duedates_amounts = [
             round(duedate.due_amount, precision)
-            for duedate in self.duedate_ids
+            for duedate in self.duedate_line_ids
         ]
 
         # If there are duedates check the amounts
@@ -232,9 +232,9 @@ class DueDateManager(models.Model):
         # if no due date has been defined yet skip the validation
         if duedates_amounts and (difference != 0):  # Validation FAILED
             return {
-                'title': 'Scadenze - Totale import',
+                'title': 'Scadenze - Totale importi',
                 'message': 'Il totale degli importi delle scadenze deve coincidere'
-                'con il totale della registrazione ({})'.format(amount_total)
+                ' con il totale della registrazione ({})'.format(amount_total)
             }
 
         else:  # Validation succesful!
