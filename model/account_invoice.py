@@ -141,6 +141,8 @@ class AccountInvoice(models.Model):
 
         self.ensure_one()
 
+        self._create_duedate_manager()
+
         move_lines = super().finalize_invoice_move_lines(move_lines)
 
         # Linee di testata che rappresentano le scadenze da RIMPIAZZARE
@@ -163,6 +165,9 @@ class AccountInvoice(models.Model):
 
         # Dati relativi al conto
         prototype_line = head_lines[0][2]
+
+        if not self.duedate_manager_id.duedate_line_ids:
+            self.duedate_manager_id.write_duedate_lines()
 
         for duedate in self.duedate_manager_id.duedate_line_ids:
 

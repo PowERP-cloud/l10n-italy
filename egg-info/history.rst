@@ -1,6 +1,11 @@
 12.0.0.1.24 (2020-11-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+* [FIX] gestito validazione fattura da ordine di vendita
+
+12.0.0.1.24 (2020-11-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
 * [FIX] corretto calcolo ammontare fattura in account.move
 
 12.0.0.1.23 (2020-11-02)
