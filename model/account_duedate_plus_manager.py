@@ -257,9 +257,14 @@ class DueDateManager(models.Model):
         total_amount = self.move_id.amount
         type_error_msg = 'move_type for move must be one of: receivable, payable_refund, payable, receivable_refund'
 
-        return self._duedates_common(
-            payment_terms, doc_type, invoice_date, total_amount, type_error_msg
-        )
+        # Do something only if there are move lines to use for calculations
+        if self.move_id.line_ids:
+            return self._duedates_common(
+                payment_terms, doc_type, invoice_date, total_amount, type_error_msg
+            )
+        else:
+            return list()
+        # end if
     # end _duedates_from_move
 
     @api.model
@@ -301,12 +306,17 @@ class DueDateManager(models.Model):
         # If no payment terms generate only ONE due date line
         # with due_date equal to the invoice date
         if not payment_terms:
-            new_dudate_lines.append({
-                'duedate_manager_id': self.id,
-                'due_date': invoice_date,
-                'due_amount': total_amount,
-                'payment_method_id': False,
-            })
+
+            # Generate a default duedate line only if the
+            # invoice amount is not zero
+            if total_amount > 0:
+                new_dudate_lines.append({
+                    'duedate_manager_id': self.id,
+                    'due_date': invoice_date,
+                    'due_amount': total_amount,
+                    'payment_method_id': False,
+                })
+            # end if
 
         else:
             due_dates = payment_terms.compute(total_amount, invoice_date)[0]

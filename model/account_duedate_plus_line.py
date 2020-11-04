@@ -67,12 +67,11 @@ class DueDateLine(models.Model):
 
         # Check if fields are empty
         dd_miss = not values['due_date']
-        pm_miss = not values['payment_method_id']
         da_miss = not values['due_amount']
 
         # If all fields are empty return an empty recordset,
         # otherwise return the newly created record
-        if dd_miss and pm_miss and da_miss:
+        if dd_miss or da_miss:
             empty_recordset = self.env['account.duedate_plus.line']
             return empty_recordset.search([])
         else:

@@ -51,14 +51,6 @@ class AccountInvoice(models.Model):
         compute='_compute_duedates_amounts'
     )
 
-    def checks_payment(self):
-        self.check_duedates_payment = False
-        for line in self.duedate_line_ids:
-            rec = self.env['account.payment.line'].search([
-                ('move_line_id', '=', line.move_line_id.id)])
-            if rec:
-                self.check_duedates_payment = True
-
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ORM METHODS OVERRIDE - begin
 
@@ -83,7 +75,7 @@ class AccountInvoice(models.Model):
                     msg = ret['title'] + '\n' + ret['message']
                     raise UserError(msg)
                 if 'duedate_line_ids' in values and invoice.move_id:
-                    invoice.move_id.write_credit_debit_move_lines()
+                    invoice.move_id.gen_duedates_and_write()
                 # end if
             # end if
         # end for
@@ -101,21 +93,13 @@ class AccountInvoice(models.Model):
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # PUBLIC METHODS - begin
 
-    @api.model
-    def update_duedates_and_move_lines(self):
-        # Update account.duedate_plus.line records
-        self._update_duedates()
-    # end update_duedates_and_move_lines
-
-
     @api.multi
     def action_update_duedates_and_move_lines(self):
         # Update account.duedate_plus.line records
         for invoice in self:
-            invoice.update_duedates_and_move_lines()
+            invoice.update_duedates()
         # end for
     # end update_duedates_and_move_lines
-
 
     @api.multi
     def action_move_create(self):
@@ -211,6 +195,50 @@ class AccountInvoice(models.Model):
         return new_lines
     # end finalize_invoice_move_lines
 
+    @api.multi
+    def update_duedates(self):
+
+        # Do nothing if invoice date is not set
+        if not self.date_invoice:
+            return
+        # end if
+
+        # Ensure duedate_manager is configured
+        self._get_duedate_manager()
+
+        # Generate duedates
+        duedate_line_list = self.duedate_manager_id.generate_duedate_lines()
+
+        # Generate the commands list for the ORM update method
+        updates_list = list()
+
+        # Remove old records
+        if self.duedate_line_ids:
+            updates_list += [(2, duedate_line.id, 0) for duedate_line in self.duedate_line_ids]
+        # end if
+
+        # Create new records
+        if duedate_line_list:
+            updates_list += [(0, 0, duedate_line) for duedate_line in duedate_line_list]
+        # end if
+
+        # Update the record
+        if updates_list:
+            self.update({'duedate_line_ids': updates_list})
+        # end if
+    # end update_duedates
+
+    def checks_payment(self):
+        self.check_duedates_payment = False
+        for line in self.duedate_line_ids:
+            rec = self.env['account.payment.line'].search([
+                ('move_line_id', '=', line.move_line_id.id)])
+            if rec:
+                self.check_duedates_payment = True
+            # end if
+        # end for
+    # end checks_payment
+
     # PUBLIC METHODS - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -229,7 +257,7 @@ class AccountInvoice(models.Model):
 
     @api.onchange('date_invoice')
     def _onchange_date_invoice(self):
-        self.update_duedates_and_move_lines()
+        self.update_duedates()
     # end _onchange_date_invoice
 
     @api.onchange('amount_total')
@@ -237,7 +265,7 @@ class AccountInvoice(models.Model):
 
         if not self.duedate_line_ids:
             # If no duedate generate duedates
-            self.update_duedates_and_move_lines()
+            self.update_duedates()
 
         else:
             # Else set the proposed modification to the duedates amount
@@ -275,39 +303,6 @@ class AccountInvoice(models.Model):
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # PROTECTED METHODS - begin
 
-    @api.multi
-    def _update_duedates(self):
-
-        # Do nothing if invoice date is not set
-        if not self.date_invoice:
-            return
-        # end if
-
-        # Ensure duedate_manager is configured
-        self._get_duedate_manager()
-
-        # Generate duedates
-        duedate_line_list = self.duedate_manager_id.generate_duedate_lines()
-
-        # Generate the commands list for the ORM update method
-        updates_list = list()
-
-        # Remove old records
-        if self.duedate_line_ids:
-            updates_list += [(2, duedate_line.id, 0) for duedate_line in self.duedate_line_ids]
-        # end if
-
-        # Create new records
-        if duedate_line_list:
-            updates_list += [(0, 0, duedate_line) for duedate_line in duedate_line_list]
-        # end if
-
-        # Update the record
-        if updates_list:
-            self.update({'duedate_line_ids': updates_list})
-        # end if
-    # end _update_duedates
-
     # @api.model
     # def _update_credit_debit_move_lines(self):
     #
@@ -332,7 +327,8 @@ class AccountInvoice(models.Model):
     #
     #     # Build the move line template dictionary
     #     move_line_template = lines_cd[0].copy_data()[0]
-    #     del move_line_template['move_id']  # 'move_id' removed because it will be automatically set by the update method
+    #     # 'move_id' removed because it will be automatically set by the update method
+    #     del move_line_template['move_id']
     #
     #     # List of modifications to move lines one2many field
     #     move_lines_mods = list()
@@ -408,14 +404,14 @@ class AccountInvoice(models.Model):
             # Somma ammontare di ciascuna scadenza
             lines_total = sum(
                 # Estrazione ammontare da ciascuna scadenza
-                map(lambda l: l.due_amount, self.duedate_line_ids)
+                map(lambda l: l.due_amount, inv.duedate_line_ids)
             )
 
             # Aggiornamento campo ammontare scadenze
-            self.duedates_amount_current = lines_total
+            inv.duedates_amount_current = lines_total
 
             # Aggiornamento campo ammontare non assegnato a scadenze
-            self.duedates_amount_unassigned = self.amount_total - lines_total
+            inv.duedates_amount_unassigned = inv.amount_total - lines_total
         # end for
     # end _compute_duedate_lines_amount
 
