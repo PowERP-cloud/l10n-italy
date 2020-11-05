@@ -257,7 +257,7 @@ class AccountInvoice(models.Model):
 
     @api.onchange('payment_term_id')
     def _onchange_payment_term_id(self):
-        self.update_duedates_and_move_lines()
+        self.update_duedates()
     # end _onchange_payment_term_id
 
     @api.onchange('date_invoice')
