@@ -11,6 +11,10 @@
                 <field name="payment_method"/>
             </xpath>
 
+            <xpath expr="//field[@name='payment_term_id']" position="before">
+                <field name="payment_line_ids" widget="many2many_tags" readonly="1"/>
+            </xpath>
+
             <xpath expr="//field[@name='debit']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>

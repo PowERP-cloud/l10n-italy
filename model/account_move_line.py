@@ -88,7 +88,6 @@ class AccountMoveLine(models.Model):
                     elif account_type.type == 'receivable':
                         rec.calculate_field = 'credit'
 
-
     @api.model
     def create(self, values):
         res = super().create(values)

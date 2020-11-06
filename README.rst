@@ -149,6 +149,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.0.1.25 (2020-11-06)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] impostato campo ordine di pagamento nella view
+
 12.0.0.1.24 (2020-11-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -266,7 +271,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2020-11-04
+Last Update / Ultimo aggiornamento: 2020-11-06
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status
