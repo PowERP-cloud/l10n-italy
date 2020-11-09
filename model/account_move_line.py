@@ -31,6 +31,11 @@ class AccountMoveLine(models.Model):
         indexed=True,
     )
 
+    payment_order_name = fields.Char(
+        'Ordine di pagamento',
+        related='payment_line_ids.order_id.name',
+        readonly=True)
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ONCHANGE METHODS
 
