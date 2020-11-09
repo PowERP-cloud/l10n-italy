@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.0.1.25
+|icon| Due dates 12.0.0.1.26
 ============================
 
 
@@ -149,6 +149,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.0.1.26 (2020-11-09)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] impostato ricerca per ordine di pagamento
+
 12.0.0.1.25 (2020-11-06)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -271,7 +276,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2020-11-06
+Last Update / Ultimo aggiornamento: 2020-11-09
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status
