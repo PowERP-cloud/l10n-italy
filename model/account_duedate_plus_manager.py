@@ -165,7 +165,8 @@ class DueDateManager(models.Model):
         if self.invoice_id:
             invoice_date = self.invoice_id.date_invoice
         elif self.move_id:
-            invoice_date = self.move_id.invoice_date
+            invoice_date = self.move_id.date_invoice
+
         else:
             assert False
         # end if
@@ -253,7 +254,11 @@ class DueDateManager(models.Model):
         # Compute payment terms and total amount from the move
         payment_terms = self.move_id.payment_term_id
         doc_type = self.move_id.move_type
-        invoice_date = self.move_id.invoice_date
+        if self.move_id.date_effective:
+            invoice_date = self.move_id.date_effective
+        else:
+            invoice_date = self.move_id.invoice_date
+
         total_amount = self.move_id.amount
         type_error_msg = 'move_type for move must be one of: receivable, payable_refund, payable, receivable_refund'
 
@@ -272,7 +277,11 @@ class DueDateManager(models.Model):
         # Compute payment terms and total amount from the invoice
         payment_terms = self.invoice_id.payment_term_id
         doc_type = self.invoice_id.account_id.user_type_id.type
-        invoice_date = self.invoice_id.date_invoice
+        if self.invoice_id.date_effective:
+            invoice_date = self.invoice_id.date_effective
+        else:
+            invoice_date = self.invoice_id.date_invoice
+
         total_amount = self.invoice_id.amount_total
         type_error_msg = 'account for invoice must be one of: receivable, payable_refund, payable, receivable_refund'
 

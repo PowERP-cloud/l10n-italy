@@ -41,6 +41,10 @@ class AccountMove(models.Model):
         compute='_compute_duedates_amounts'
     )
 
+    date_effective = fields.Date(string='Data di decorrenza', readonly=True,
+                                 states={'draft': [('readonly', False)]},
+                                 )
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ORM METHODS OVERRIDE - begin
 
@@ -131,6 +135,13 @@ class AccountMove(models.Model):
 
     @api.onchange('invoice_date')
     def _onchange_invoice_date(self):
+        self.gen_duedates_and_update()
+    # end _onchange_invoice_date
+
+    @api.onchange('date_effective')
+    def _onchange_date_effective(self):
+        if not self.date_effective:
+            self.date_effective = self.invoice_date
         self.gen_duedates_and_update()
     # end _onchange_invoice_date
 

@@ -7,6 +7,10 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='date']" position="before">
+                <field name="date_effective" />
+            </xpath>
+
             <xpath expr="/form/sheet/notebook/page[1]" position="after">
                 <page string="Scadenze">
                     <field name="duedate_line_ids">

@@ -51,6 +51,12 @@ class AccountInvoice(models.Model):
         compute='_compute_duedates_amounts'
     )
 
+    date_effective = fields.Date(
+        string='Data di decorrenza',
+        states={"draft": [("readonly", False)]},
+        readonly=True
+    )
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ORM METHODS OVERRIDE - begin
 
@@ -119,6 +125,12 @@ class AccountInvoice(models.Model):
 
             # Data fattura
             updates['invoice_date'] = inv.date_invoice
+
+            # Data decorrenza
+            if inv.date_effective:
+                updates['date_effective'] = inv.date_effective
+            else:
+                updates['date_effective'] = inv.date_invoice
 
             # Termini di pagamento
             pt = inv.payment_term_id
@@ -262,6 +274,8 @@ class AccountInvoice(models.Model):
 
     @api.onchange('date_invoice')
     def _onchange_date_invoice(self):
+        if not self.date_effective:
+            self.date_effective = self.date_invoice
         self.update_duedates()
     # end _onchange_date_invoice
 
@@ -301,6 +315,44 @@ class AccountInvoice(models.Model):
             # end for
         # end if
     # end _onchange_duedates_amount_unassigned
+
+    @api.onchange('payment_term_id', 'date_invoice')
+    def _onchange_payment_term_date_invoice(self):
+        # res = super()._onchange_payment_term_date_invoice()
+        if self.date_effective:
+            date_invoice = self.date_effective
+        else:
+            date_invoice = self.date_invoice
+        if not date_invoice:
+            date_invoice = fields.Date.context_today(self)
+        if self.payment_term_id:
+            pterm = self.payment_term_id
+            pterm_list = pterm.with_context(
+                currency_id=self.company_id.currency_id.id).compute(
+                value=1, date_ref=date_invoice)[0]
+            self.date_due = max(line[0] for line in pterm_list)
+        elif self.date_due and (date_invoice > self.date_due):
+            self.date_due = date_invoice
+
+    @api.onchange('date_effective')
+    def _onchange_date_effective(self):
+        print(self.date_effective)
+        date_invoice = False
+        if self.date_effective:
+            date_invoice = self.date_effective
+        elif self.date_invoice:
+            date_invoice = self.date_invoice
+        if date_invoice:
+            if self.payment_term_id:
+                pterm = self.payment_term_id
+                pterm_list = pterm.with_context(
+                    currency_id=self.company_id.currency_id.id).compute(
+                    value=1, date_ref=date_invoice)[0]
+                self.date_due = max(line[0] for line in pterm_list)
+            elif self.date_due and (date_invoice > self.date_due):
+                self.date_due = date_invoice
+
+    # end _onchange_date_effective
 
     # ONCHANGE METHODS - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
