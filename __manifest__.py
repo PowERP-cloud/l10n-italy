@@ -14,7 +14,7 @@
         'base',
         'date_range',
         'account_fiscal_year',
-        'account_invoice_entry_dates',
+        # 'account_invoice_entry_dates',
     ],
     'data': [
         'views/account_move_view.xml',
