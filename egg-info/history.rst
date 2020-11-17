@@ -1,3 +1,8 @@
+12.0.0.1.28 (2020-11-17)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Added missing dependency / inserita dipendenza mancante
+
 12.0.0.1.27 (2020-11-12)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
