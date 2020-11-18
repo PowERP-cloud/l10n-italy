@@ -54,7 +54,8 @@ class AccountInvoice(models.Model):
     date_effective = fields.Date(
         string='Data di decorrenza',
         states={"draft": [("readonly", False)]},
-        readonly=True
+        readonly=True,
+        default=fields.Date.context_today
     )
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -336,7 +337,6 @@ class AccountInvoice(models.Model):
 
     @api.onchange('date_effective')
     def _onchange_date_effective(self):
-        print(self.date_effective)
         date_invoice = False
         if self.date_effective:
             date_invoice = self.date_effective
@@ -351,6 +351,8 @@ class AccountInvoice(models.Model):
                 self.date_due = max(line[0] for line in pterm_list)
             elif self.date_due and (date_invoice > self.date_due):
                 self.date_due = date_invoice
+            self.update_duedates()
+    # end _onchange_payment_term_id
 
     # end _onchange_date_effective
 

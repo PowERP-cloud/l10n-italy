@@ -1,3 +1,8 @@
+12.0.0.1.29 (2020-11-18)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Set default date effective / Impostato default data decorrenza
+
 12.0.0.1.28 (2020-11-17)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
