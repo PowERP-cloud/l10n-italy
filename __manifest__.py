@@ -16,6 +16,7 @@
         'account_due_list',
         'account_move_plus',
         'account_payment_order',
+
     ],
     'data': [
         'security/ir.model.access.csv',
