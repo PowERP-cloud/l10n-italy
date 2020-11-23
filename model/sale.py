@@ -15,4 +15,3 @@ class SaleOrder(models.Model):
                 if invoice.payment_term_id:
                     manager = invoice._get_duedate_manager()
                     manager.write_duedate_lines()
-
