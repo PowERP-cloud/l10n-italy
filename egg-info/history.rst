@@ -1,3 +1,8 @@
+12.0.0.1.31 (2020-11-23)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Set duedates creation from sale order / Impostato creazione scadenze da ordine di vendita
+
 12.0.0.1.30 (2020-11-23)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

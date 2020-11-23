@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.0.1.30
+|icon| Due dates 12.0.0.1.31
 ============================
 
 
@@ -148,6 +148,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.0.1.31 (2020-11-23)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Set duedates creation from sale order / Impostato creazione scadenze da ordine di vendita
 
 12.0.0.1.30 (2020-11-23)
 ~~~~~~~~~~~~~~~~~~~~~~~~
