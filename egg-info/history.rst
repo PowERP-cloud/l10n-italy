@@ -1,3 +1,8 @@
+12.0.0.1.30 (2020-11-23)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Set account invoice 13 more dependency / Inserita dipendenza modulo transizione
+
 12.0.0.1.29 (2020-11-18)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

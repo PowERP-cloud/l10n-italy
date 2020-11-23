@@ -6,7 +6,7 @@
 {
     'name': 'Due dates',
     'summary': 'Due dates management',
-    'version': '12.0.0.1.29',
+    'version': '12.0.0.1.30',
     'category': 'Accounting',
     'author': 'Axitec Srl',
     'website': '',
@@ -16,6 +16,7 @@
         'account_due_list',
         'account_move_plus',
         'account_payment_order',
+        'account_invoice_13_more',
 
     ],
     'data': [

@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.0.1.29
+|icon| Due dates 12.0.0.1.30
 ============================
 
 
@@ -149,6 +149,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.0.1.30 (2020-11-23)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Set account invoice 13 more dependency / Inserita dipendenza modulo transizione
+
 12.0.0.1.29 (2020-11-18)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -291,7 +296,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2020-11-18
+Last Update / Ultimo aggiornamento: 2020-11-23
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status
