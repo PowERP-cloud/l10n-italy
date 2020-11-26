@@ -44,7 +44,7 @@
                             <field name="due_amount" sum="Totale" attrs="{'readonly':[('schedule_payment', '=', True)]}"/>
                             <field name="is_paid"/>
                             <field name="schedule_payment"/>
-                            <field name="proposed_new_value" attrs="{'invisible':[('proposed_new_value', '=', 0)]}"/>
+<!--                            <field name="proposed_new_value" attrs="{'invisible':[('proposed_new_value', '=', 0)]}"/>-->
                             <!-- Shown only in debug mode -->
                             <field name="move_line_id" groups="base.group_no_one" readonly="1"/>
                         </tree>
@@ -105,7 +105,7 @@
                             <field name="due_amount" sum="Totale"/>
                             <field name="is_paid"/>
                             <field name="schedule_payment"/>
-                            <field name="proposed_new_value" attrs="{'invisible':[('proposed_new_value', '=', 0)]}" readonly="1"/>
+<!--                            <field name="proposed_new_value" attrs="{'invisible':[('proposed_new_value', '=', 0)]}" readonly="1"/>-->
                             <!-- Shown in debug mode only -->
                             <field name="move_line_id" groups="base.group_no_one" readonly="1"/>
                         </tree>

@@ -263,6 +263,36 @@ class AccountInvoice(models.Model):
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ONCHANGE METHODS - begin
 
+    @api.onchange('invoice_line_ids')
+    def _onchange_invoice_line_ids(self):
+        if not self.invoice_line_ids:
+            return
+        super()._onchange_invoice_line_ids()
+        self.update_duedates()
+
+    # @api.onchange('invoice_line_ids')
+    # def _onchange_invoice_line_ids(self):
+    #     if not self.invoice_line_ids:
+    #         return
+    #     super()._onchange_invoice_line_ids()
+    #     if not self.duedate_line_ids:
+    #         # If no duedate generate duedates
+    #         self.update_duedates()
+    #     else:
+    #         # Else set the proposed modification to the duedates amount
+    #         if self.duedates_amount_current == 0:
+    #             ratio = 0
+    #         else:
+    #             ratio = self.duedates_amount_unassigned / \
+    #                     self.duedates_amount_current
+    #         # end if
+    #
+    #         for line in self.duedate_line_ids:
+    #             line.proposed_new_value = line.due_amount * (1 + ratio)
+    #         # end for
+    #
+    #
+
     @api.onchange('duedate_line_ids')
     def _onchange_duedate_line_ids(self):
         self._compute_duedates_amounts()
@@ -280,27 +310,27 @@ class AccountInvoice(models.Model):
         self.update_duedates()
     # end _onchange_date_invoice
 
-    @api.onchange('amount_total')
-    def _onchange_amount_total(self):
-
-        if not self.duedate_line_ids:
-            # If no duedate generate duedates
-            self.update_duedates()
-
-        else:
-            # Else set the proposed modification to the duedates amount
-
-            if self.duedates_amount_current == 0:
-                ratio = 0
-            else:
-                ratio = self.duedates_amount_unassigned / self.duedates_amount_current
-            # end if
-
-            for line in self.duedate_line_ids:
-                line.proposed_new_value = line.due_amount * (1 + ratio)
-            # end for
-        # end if
-    # end _onchange_amount_total
+    # @api.onchange('amount_total')
+    # def _onchange_amount_total(self):
+    #
+    #     if not self.duedate_line_ids:
+    #         # If no duedate generate duedates
+    #         self.update_duedates()
+    #
+    #     else:
+    #         # Else set the proposed modification to the duedates amount
+    #
+    #         if self.duedates_amount_current == 0:
+    #             ratio = 0
+    #         else:
+    #             ratio = self.duedates_amount_unassigned / self.duedates_amount_current
+    #         # end if
+    #
+    #         for line in self.duedate_line_ids:
+    #             line.proposed_new_value = line.due_amount * (1 + ratio)
+    #         # end for
+    #     # end if
+    # # end _onchange_amount_total
 
     @api.onchange('duedates_amount_unassigned')
     def _onchange_duedates_amount_unassigned(self):
