@@ -73,14 +73,6 @@ class AccountMove(models.Model):
         track_visibility='always',
         required=True,
     )
-    date_apply_vat = fields.Date(
-        string='Data applicazione IVA',
-        # readonly=True,
-        # states={'draft': [('readonly', False)]},
-        # index=True,
-        # help="Keep empty to use the current date",
-        # copy=False
-    )
     date_apply_balance = fields.Date(
         string='Data competenza',
         # readonly=True,

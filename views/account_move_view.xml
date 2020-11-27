@@ -28,7 +28,6 @@
             </xpath>
 
             <xpath expr="//field[@name='date']" position="after">
-                <field name="date_apply_vat"/>
                 <field name="date_apply_balance"/>
             </xpath>
 
