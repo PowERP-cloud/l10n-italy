@@ -1,3 +1,8 @@
+12.0.0.1.33 (2020-12-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Rimossa creazione righe scadenze se almeno una in pagamento
+
 12.0.0.1.32 (2020-11-30)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

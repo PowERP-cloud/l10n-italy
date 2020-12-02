@@ -22,7 +22,7 @@
                             <field name="due_date"/>
                             <field name="payment_method_id"/>
                             <field name="due_amount"/>
-                            <field name="proposed_new_value" attrs="{'invisible':[('proposed_new_value', '=', 0)]}" readonly="1"/>
+<!--                            <field name="proposed_new_value" attrs="{'invisible':[('proposed_new_value', '=', 0)]}" readonly="1"/>-->
                             <!-- Shown in debug mode only -->
                             <field name="move_line_id" groups="base.group_no_one" readonly="1"/>
                         </tree>

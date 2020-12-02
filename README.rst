@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.0.1.32
+|icon| Due dates 12.0.0.1.33
 ============================
 
 
@@ -148,6 +148,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.0.1.33 (2020-12-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Rimossa creazione righe scadenze se almeno una in pagamento
 
 12.0.0.1.32 (2020-11-30)
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -306,7 +311,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2020-11-30
+Last Update / Ultimo aggiornamento: 2020-12-02
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status

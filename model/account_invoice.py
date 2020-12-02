@@ -81,8 +81,17 @@ class AccountInvoice(models.Model):
                 if ret:
                     msg = ret['title'] + '\n' + ret['message']
                     raise UserError(msg)
-                if 'duedate_line_ids' in values and invoice.move_id:
-                    invoice.move_id.gen_duedates_and_write()
+                if 'duedate_line_ids' in values and invoice.move_id and \
+                        invoice.check_duedates_payment is False:
+
+                    # riporta la move in bozza
+                    invoice.move_id.button_cancel()
+
+                    # aggiorna le scadenze e i movimenti
+                    invoice.move_id.write_credit_debit_move_lines()
+
+                    # riporta in stato confermato la move
+                    invoice.move_id.post()
                 # end if
             # end if
         # end for
