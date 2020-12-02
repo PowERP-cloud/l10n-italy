@@ -134,6 +134,11 @@ class AccountPaymentTerm(models.Model):
     holiday_ids = fields.One2many(
         string='Holidays', comodel_name='account.payment.term.holiday',
         inverse_name='payment_id')
+    first_duedate_tax = fields.Boolean(
+        string='First duedate tax amount',
+        default=False,
+        help='If this checkbox is ticked, this entry put tax into '
+             'the first duedate amount.')
 
     def apply_holidays(self, date):
         holiday = self.holiday_ids.search([

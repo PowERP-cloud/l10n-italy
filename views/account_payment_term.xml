@@ -18,6 +18,7 @@
         <field name="inherit_id" ref="account.view_payment_term_form"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
+                <field name="first_duedate_tax" />
                 <field name="sequential_lines"/>
             </field>
             <field name="line_ids" position="after">
