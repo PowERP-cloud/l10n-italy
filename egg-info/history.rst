@@ -1,3 +1,8 @@
+12.0.0.1.34 (2020-12-04)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Set vat on first duedate according to payment term flag / Impostato gestione iva sulla prima scadenza
+
 12.0.0.1.33 (2020-12-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

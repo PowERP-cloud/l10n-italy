@@ -6,9 +6,9 @@
 {
     'name': 'Due dates',
     'summary': 'Due dates management',
-    'version': '12.0.0.1.33',
+    'version': '12.0.0.1.34',
     'category': 'Accounting',
-    'author': 'Axitec Srl',
+    'author': 'PowErp Srl',
     'website': '',
     'license': 'LGPL-3',
     'depends': [

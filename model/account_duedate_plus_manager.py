@@ -330,8 +330,18 @@ class DueDateManager(models.Model):
             # end if
 
         else:
-            due_dates = payment_terms.compute(total_amount, invoice_date)[0]
+            add_tax = False
+            if payment_terms.first_duedate_tax and self.invoice_id:
+                amount_to_compute = self.invoice_id.amount_untaxed
+                tax = self.invoice_id.amount_tax
+                add_tax = True
+            else:
+                amount_to_compute = total_amount
+                tax = 0.0
+                amount_to_compute = 0.0
+            # end if
 
+            due_dates = payment_terms.compute(amount_to_compute, invoice_date)[0]
             for due_date in due_dates:
 
                 if doc_type in ('receivable', 'payable_refund'):
@@ -341,12 +351,18 @@ class DueDateManager(models.Model):
                 else:
                     assert False, type_error_msg
                 # end if
+                if add_tax:
+                    due_amount = due_date[1] + tax
+                    add_tax = False
+                else:
+                    due_amount = due_date[1]
+                # end if
 
                 new_dudate_lines.append({
                     'duedate_manager_id': self.id,
                     'payment_method_id': payment_method.id,
                     'due_date': due_date[0],
-                    'due_amount': due_date[1]
+                    'due_amount': due_amount
                 })
             # end for
         # end if
