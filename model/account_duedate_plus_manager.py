@@ -337,7 +337,7 @@ class DueDateManager(models.Model):
                 add_tax = True
             else:
                 tax = 0.0
-                amount_to_compute = 0.0
+                amount_to_compute = total_amount
             # end if
 
             due_dates = payment_terms.compute(amount_to_compute, invoice_date)[0]
