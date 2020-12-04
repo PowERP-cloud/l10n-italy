@@ -4,7 +4,7 @@
 {
     'name': 'Account Move Plus',
     'summary': 'Account move extension for Italian Localization',
-    'version': '12.0.0.1.3',
+    'version': '12.0.0.1.4',
     'category': 'Accounting',
     'author': 'Didotech srl',
     'website': 'https://www.didotech.com/',
