@@ -336,7 +336,6 @@ class DueDateManager(models.Model):
                 tax = self.invoice_id.amount_tax
                 add_tax = True
             else:
-                amount_to_compute = total_amount
                 tax = 0.0
                 amount_to_compute = 0.0
             # end if
