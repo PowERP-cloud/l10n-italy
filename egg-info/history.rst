@@ -1,3 +1,11 @@
+12.0.0.1.6 (2020-12-04)
+~~~~~~~~~~~~~~~~~~~~~~~~
+* [IMP] Added field boolean for vat duedate  / Inserito campo flag per la gestione iva nella prima scadenza
+
+12.0.0.1.5 (2020-12-04)
+~~~~~~~~~~~~~~~~~~~~~~~~
+* [REF] Refactoring compute  / Verifica calcolo scadenze
+
 12.0.0.1.4 (2020-10-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 * [FIX] Checked all occurrences of inbound/outbound / Sostituite le occorrenze di inbound/outbound

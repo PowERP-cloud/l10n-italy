@@ -1,12 +1,12 @@
 
 =============================================
-|icon| Payment Term Extension Plus 12.0.0.1.4
+|icon| Payment Term Extension Plus 12.0.0.1.5
 =============================================
 
 
 **Adds rounding, months, weeks and multiple payment days properties on payment term lines**
 
-.. |icon| image:: https://raw.githubusercontent.com/axitec/accounting/12.0/account_payment_term_plus/static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/zeroincombenze/accounting/12.0/account_payment_term_plus/static/description/icon.png
 
 |Maturity| |Build Status| |Codecov Status| |license gpl| |Try Me|
 
@@ -78,7 +78,7 @@ Installation / Installazione
     ./install_tools.sh -p
     source /opt/odoo/dev/activate_tools
     # Odoo installation
-    odoo_install_repository accounting -b 12.0 -O axitec
+    odoo_install_repository accounting -b 12.0 -O zero
     vem create /opt/odoo/VENV-12.0 -O 12.0 -DI
 
 From UI: go to:
@@ -111,12 +111,21 @@ Upgrade / Aggiornamento
     ./install_tools.sh -p
     source /opt/odoo/dev/activate_tools
     # Odoo upgrade
-    odoo_install_repository accounting -b 12.0 -O axitec -U
+    odoo_install_repository accounting -b 12.0 -O zero -U
     vem amend /opt/odoo/VENV-12.0 -O 12.0 -DI
     # Adjust following statements as per your system
     sudo systemctl restart odoo
 
 From UI: go to:
+
+|
+
+Support / Supporto
+------------------
+
+
+|Zeroincombenze| This module is maintained by the `SHS-AV s.r.l. <https://www.zeroincombenze.it/>`__
+
 
 |
 |
@@ -126,12 +135,29 @@ Get involved / Ci mettiamo in gioco
 
 Bug reports are welcome! You can use the issue tracker to report bugs,
 and/or submit pull requests on `GitHub Issues
-<https://github.com/axitec/accounting/issues>`_.
+<https://github.com/zeroincombenze/accounting/issues>`_.
 
 In case of trouble, please check there if your issue has already been reported.
 
+Proposals for enhancement
+-------------------------
+
+
+|en| If you have a proposal to change this module, you may want to send an email to <cc@shs-av.com> for initial feedback.
+An Enhancement Proposal may be submitted if your idea gains ground.
+
+|it| Se hai proposte per migliorare questo modulo, puoi inviare una mail a <cc@shs-av.com> per un iniziale contatto.
+
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.0.1.6 (2020-12-04)
+~~~~~~~~~~~~~~~~~~~~~~~
+* [IMP] Added field boolean for vat duedate  / Inserito campo flag per la gestione iva nella prima scadenza
+
+12.0.0.1.5 (2020-12-04)
+~~~~~~~~~~~~~~~~~~~~~~~
+* [REF] Refactoring compute  / Verifica calcolo scadenze
 
 12.0.0.1.4 (2020-10-14)
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -206,13 +232,13 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2020-10-15
+Last Update / Ultimo aggiornamento: 2020-12-04
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status
     :alt: Alfa
-.. |Build Status| image:: https://travis-ci.org/axitec/accounting.svg?branch=12.0
-    :target: https://travis-ci.org/axitec/accounting
+.. |Build Status| image:: https://travis-ci.org/zeroincombenze/accounting.svg?branch=12.0
+    :target: https://travis-ci.org/zeroincombenze/accounting
     :alt: github.com
 .. |license gpl| image:: https://img.shields.io/badge/licence-LGPL--3-7379c3.svg
     :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
@@ -220,11 +246,11 @@ Last Update / Ultimo aggiornamento: 2020-10-15
 .. |license opl| image:: https://img.shields.io/badge/licence-OPL-7379c3.svg
     :target: https://www.odoo.com/documentation/user/9.0/legal/licenses/licenses.html
     :alt: License: OPL
-.. |Coverage Status| image:: https://coveralls.io/repos/github/axitec/accounting/badge.svg?branch=12.0
-    :target: https://coveralls.io/github/axitec/accounting?branch=12.0
+.. |Coverage Status| image:: https://coveralls.io/repos/github/zeroincombenze/accounting/badge.svg?branch=12.0
+    :target: https://coveralls.io/github/zeroincombenze/accounting?branch=12.0
     :alt: Coverage
-.. |Codecov Status| image:: https://codecov.io/gh/axitec/accounting/branch/12.0/graph/badge.svg
-    :target: https://codecov.io/gh/axitec/accounting/branch/12.0
+.. |Codecov Status| image:: https://codecov.io/gh/zeroincombenze/accounting/branch/12.0/graph/badge.svg
+    :target: https://codecov.io/gh/zeroincombenze/accounting/branch/12.0
     :alt: Codecov
 .. |Tech Doc| image:: https://www.zeroincombenze.it/wp-content/uploads/ci-ct/prd/button-docs-12.svg
     :target: https://wiki.zeroincombenze.org/en/Odoo/12.0/dev
