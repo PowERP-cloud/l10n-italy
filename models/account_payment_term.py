@@ -134,6 +134,7 @@ class AccountPaymentTerm(models.Model):
     holiday_ids = fields.One2many(
         string='Holidays', comodel_name='account.payment.term.holiday',
         inverse_name='payment_id')
+
     first_duedate_tax = fields.Boolean(
         string='First duedate tax amount',
         default=False,
