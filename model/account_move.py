@@ -145,6 +145,20 @@ class AccountMove(models.Model):
         self.gen_duedates_and_update()
     # end _onchange_invoice_date
 
+    @api.onchange('type')
+    def _onchange_type(self):
+        if self.type == 'out_invoice':
+            self.move_type = 'receivable'
+        elif self.type == 'out_refund':
+            self.move_type = 'receivable_refund'
+        elif self.type == 'in_invoice':
+            self.move_type = 'payable'
+        elif self.type == 'in_refund':
+            self.move_type = 'payable_refund'
+        return super()._onchange_type()
+        # end if
+    # end def _onchange_type
+
     # ONCHANGE METHODS - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
