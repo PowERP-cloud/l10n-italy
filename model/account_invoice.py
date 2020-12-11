@@ -55,7 +55,7 @@ class AccountInvoice(models.Model):
         string='Data di decorrenza',
         states={"draft": [("readonly", False)]},
         readonly=True,
-        default=fields.Date.context_today
+        default=''
     )
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -73,7 +73,6 @@ class AccountInvoice(models.Model):
     @api.multi
     def write(self, values):
         result = super().write(values)
-
         for invoice in self:
             if invoice.state == 'open':
                 # check validation (amount and dates)
@@ -102,6 +101,16 @@ class AccountInvoice(models.Model):
     def post(self):
         result = super().post()
         return result
+
+    @api.multi
+    def invoice_validate(self):
+        for invoice in self:
+            if not invoice.date_effective:
+                invoice.date_effective = invoice.date_invoice
+            # end if
+        # end for
+        return super().invoice_validate()
+    # end invoice_validate
 
     # ORM METHODS OVERRIDE - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -226,8 +235,8 @@ class AccountInvoice(models.Model):
     def update_duedates(self):
 
         # Do nothing if invoice date is not set
-        if not self.date_invoice:
-            return
+        # if not self.date_invoice:
+        #     return
         # end if
 
         # Ensure duedate_manager is configured
@@ -316,6 +325,11 @@ class AccountInvoice(models.Model):
     def _onchange_date_invoice(self):
         if not self.date_effective:
             self.date_effective = self.date_invoice
+        else:
+            if self._origin.date_invoice == self.date_effective:
+                self.date_effective = self.date_invoice
+            # end if
+        # end if
         self.update_duedates()
     # end _onchange_date_invoice
 

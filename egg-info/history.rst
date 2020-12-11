@@ -1,3 +1,8 @@
+12.0.0.1.35 (2020-12-11)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Refactoring date effective / Aggiornato gestione data decorrenza
+
 12.0.0.1.34 (2020-12-04)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

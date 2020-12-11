@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.0.1.33
+|icon| Due dates 12.0.0.1.35
 ============================
 
 
@@ -149,10 +149,15 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.0.1.35 (2020-12-11)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Refactoring date effective / Aggiornato gestione data decorrenza
+
 12.0.0.1.34 (2020-12-04)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-* [IMP] Set vat on first duedate / Impostato gestione iva sulla prima scadenza
+* [IMP] Set vat on first duedate according to payment term flag / Impostato gestione iva sulla prima scadenza
 
 12.0.0.1.33 (2020-12-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -316,7 +321,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2020-12-04
+Last Update / Ultimo aggiornamento: 2020-12-11
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status

@@ -279,8 +279,10 @@ class DueDateManager(models.Model):
         doc_type = self.invoice_id.account_id.user_type_id.type
         if self.invoice_id.date_effective:
             invoice_date = self.invoice_id.date_effective
-        else:
+        elif self.invoice_id.date_invoice:
             invoice_date = self.invoice_id.date_invoice
+        else:
+            invoice_date = fields.Date.today()
 
         total_amount = self.invoice_id.amount_total
         type_error_msg = 'account for invoice must be one of: receivable, payable_refund, payable, receivable_refund'
