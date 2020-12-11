@@ -275,6 +275,14 @@ class AccountInvoice(models.Model):
         # end for
     # end checks_payment
 
+    @api.multi
+    def action_invoice_cancel(self):
+        if self.check_duedates_payment:
+            raise UserError('Attenzione!\nNon è possibile effettuare '
+                            'l\'annullamento perchè alcune scadenze sono '
+                            'state inserite in una distinta.')
+        return super().action_invoice_cancel()
+
     # PUBLIC METHODS - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

@@ -1,3 +1,8 @@
+12.0.0.1.36 (2020-12-11)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Warning on check duedate payments / Segnalazione al tentativo di annullamento con scadenze in pagamento
+
 12.0.0.1.35 (2020-12-11)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

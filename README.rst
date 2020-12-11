@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.0.1.35
+|icon| Due dates 12.0.0.1.36
 ============================
 
 
@@ -148,6 +148,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.0.1.36 (2020-12-11)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Warning on check duedate payments / Segnalazione al tentativo di annullamento con scadenze in pagamento
 
 12.0.0.1.35 (2020-12-11)
 ~~~~~~~~~~~~~~~~~~~~~~~~
