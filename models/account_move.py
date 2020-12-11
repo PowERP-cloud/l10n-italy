@@ -31,6 +31,7 @@ class AccountMove(models.Model):
         help="Keep empty to use the current date"
     )
     # Naming of 13.0 same as account.invoice.type
+    # From 14.0 this field is renamed to move_type
     type = fields.Selection(
         [
             ('entry', 'Journal Entry'),
