@@ -8,6 +8,7 @@
 
 import logging
 from odoo import api, fields, models
+from odoo.addons import decimal_precision as dp
 
 _logger = logging.getLogger(__name__)
 
@@ -36,6 +37,18 @@ class AccountMoveLine(models.Model):
         related='payment_line_ids.order_id.name',
         readonly=True)
 
+    state = fields.Selection(
+        string='Stato',
+        related='payment_line_ids.order_id.state',
+        readonly=True)
+
+    in_order = fields.Boolean(
+        string='In distinta',
+        compute='_has_order',
+        inverse='_inverse_has_order',
+        search='_search_has_order',
+    )
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ONCHANGE METHODS
 
@@ -49,16 +62,11 @@ class AccountMoveLine(models.Model):
                 [('id', '=', self.account_id.user_type_id.id)])
             if account_type:
                 if account_type.type == 'payable':
-                    # self.due_dc = 'D'
                     domain = ['|', ('debit_credit', '=', 'debit'),
                               ('debit_credit', '=', False)]
                 elif account_type.type == 'receivable':
-                    # self.due_dc = 'C'
                     domain = ['|', ('debit_credit', '=', 'credit'),
                               ('debit_credit', '=', False)]
-                # else:
-                #     self.due_dc = ''
-                # end if
             # end if
         # end if
 
@@ -68,6 +76,29 @@ class AccountMoveLine(models.Model):
 
     # ONCHANGE METHODS - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    def _has_order(self):
+        for line in self:
+            rec = self.env['account.payment.line'].search([
+                ('move_line_id', '=', line.id)])
+            if rec:
+                line.in_order = True
+            else:
+                line.in_order = False
+
+    def _inverse_has_order(self):
+        for line in self:
+            rec = self.env['account.payment.line'].search([
+                ('move_line_id', '=', line.id)])
+            if rec:
+                line.in_order = True
+            else:
+                line.in_order = False
+
+    def _search_has_order(self, operator, value):
+        recs = self.search([]).filtered(lambda x: x.in_order is False)
+        if recs:
+            return [('id', 'in', [x.id for x in recs])]
 
     @api.model
     def _compute_is_dudate(self):

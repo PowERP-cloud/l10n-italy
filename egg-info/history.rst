@@ -1,3 +1,8 @@
+12.0.0.1.37 (2020-12-14)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Added filter 'not in order' and state field / Impostato filtro 'Non in scadenza' e campo stato
+
 12.0.0.1.36 (2020-12-11)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

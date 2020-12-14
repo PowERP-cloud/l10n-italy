@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.0.1.36
+|icon| Due dates 12.0.0.1.37
 ============================
 
 
@@ -148,6 +148,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.0.1.37 (2020-12-14)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Added filter 'not in order' and state field / Impostato filtro 'Non in scadenza' e campo stato
 
 12.0.0.1.36 (2020-12-11)
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -326,7 +331,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2020-12-11
+Last Update / Ultimo aggiornamento: 2020-12-14
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status

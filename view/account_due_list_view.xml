@@ -9,6 +9,7 @@
 
             <xpath expr="//field[@name='payment_term_id']" position="after">
                 <field name="payment_method"/>
+                <field name="state"/>
             </xpath>
 
             <xpath expr="//field[@name='payment_term_id']" position="before">
@@ -42,6 +43,11 @@
             </xpath>
             <xpath expr="//filter[@name='overdue']" position="after">
                 <field name="payment_order_name" />
+            </xpath>
+            <xpath expr="//filter[@name='unreconciled']" position="after">
+                <filter string="Non in distinta"
+                        domain="[('in_order', '=', False)]"
+                        name="not_in_distinta"/>
             </xpath>
         </field>
     </record>
