@@ -1,0 +1,1 @@
+Common stuff used by payment methods

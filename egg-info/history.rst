@@ -1,0 +1,129 @@
+12.0.0.1.37 (2020-12-14)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Added filter 'not in order' and state field / Impostato filtro 'Non in scadenza' e campo stato
+
+12.0.0.1.36 (2020-12-11)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Warning on check duedate payments / Segnalazione al tentativo di annullamento con scadenze in pagamento
+
+12.0.0.1.35 (2020-12-11)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Refactoring date effective / Aggiornato gestione data decorrenza
+
+12.0.0.1.34 (2020-12-04)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Set vat on first duedate according to payment term flag / Impostato gestione iva sulla prima scadenza
+
+12.0.0.1.33 (2020-12-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Rimossa creazione righe scadenze se almeno una in pagamento
+
+12.0.0.1.32 (2020-11-30)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Rimossa creazione righe scadenze se almeno una in pagamento
+
+12.0.0.1.31 (2020-11-23)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Set duedates creation from sale order / Impostato creazione scadenze da ordine di vendita
+
+12.0.0.1.30 (2020-11-23)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Set account invoice 13 more dependency / Inserita dipendenza modulo transizione
+
+12.0.0.1.29 (2020-11-18)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Set default date effective / Impostato default data decorrenza
+
+12.0.0.1.28 (2020-11-17)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Added missing dependency / inserita dipendenza mancante
+
+12.0.0.1.27 (2020-11-12)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Added date effective / inserita data di decorrenza
+
+12.0.0.1.26 (2020-11-09)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] impostato ricerca per ordine di pagamento
+
+12.0.0.1.25 (2020-11-06)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] impostato campo ordine di pagamento nella view
+
+12.0.0.1.24 (2020-11-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] gestito validazione fattura da ordine di vendita
+
+12.0.0.1.24 (2020-11-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] corretto calcolo ammontare fattura in account.move
+
+12.0.0.1.23 (2020-11-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] gestione cancellazione ultima scadenza rimasta (mette una nuova riga di scadenza e una nuova riga contabile con scadenza parti alla data fattura e importo pari all'imposto dattura)
+
+12.0.0.1.22 (2020-11-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] corretta gestione scadenze per fatture in stato bozza
+
+12.0.0.1.21 (2020-10-28)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Update model, removed unused fields
+
+12.0.0.1.18 (2020-10-23)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [MOD] Correzioni di forma la codice per adeguamento a segnalazioni Flake8
+
+12.0.0.1.17 (2020-10-22)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Eliminazione righe di scadenza vuote, calcolo proposta per importo scadenze dopo modifica fattura, ricalcolo automaticp scadenze al cambio dei termini di pagamento
+
+12.0.0.1.16 (2020-10-21)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Implementato totalizzazione totale scadenze e differenza tra scadenze e totale fattura
+
+12.0.0.1.15 (2020-10-15)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Aggiornato duedate manager
+
+12.0.0.1.14 (2020-10-14)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Rimosso campo duplicato (termine di pagamento)
+
+12.0.0.1.13 (2020-10-12)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Aggiornamento bidirezionale di data scadenza e metodo di pagamento tra account.move.line e account.duedate_plus.line
+
+12.0.0.1.12 (2020-10-12)
+~~~~~~~~~~~~~~~~~~~~~~~~
+* [FIX] Inserita dipendenza modulo OCA Scadenziario account_due_list
+
+
+12.0.0.1.11 (2020-10-12)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Rimossi controlli non validi

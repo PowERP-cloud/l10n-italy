@@ -1,0 +1,1 @@
+Funzionalità utilizzate dai metodi di pagamento

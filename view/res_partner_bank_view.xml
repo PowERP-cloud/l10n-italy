@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  © 2013-2016 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
+  License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+    
+    <record id="payment_config_notebook_res_partner_bank_form" model="ir.ui.view">
+        <field name="name">payment_config_notebook.res.partner.bank.form</field>
+        <field name="model">res.partner.bank</field>
+        <field name="inherit_id" ref="base.view_partner_bank_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form/group" position="inside">
+                <group string="Configurazione pagamenti" colspan="2">
+                    <notebook name="payment_config"></notebook>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    
+</odoo>
