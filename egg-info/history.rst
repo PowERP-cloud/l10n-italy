@@ -1,3 +1,7 @@
+12.0.0.1.7 (2020-12-23)
+~~~~~~~~~~~~~~~~~~~~~~~~
+* [IMP] Added duedates simulator  / Inserito simulatore scadenze
+
 12.0.0.1.6 (2020-12-04)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 * [IMP] Added field boolean for vat duedate  / Inserito campo flag per la gestione iva nella prima scadenza

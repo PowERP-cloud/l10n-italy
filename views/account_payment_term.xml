@@ -21,6 +21,16 @@
                 <field name="first_duedate_tax" />
                 <field name="sequential_lines"/>
             </field>
+            <field name="note" position="after">
+                <separator string="Simulatore di scadenze" style="margin-top: 15px;"/>
+                <div>
+                    <button type='action'
+                            name="%(account_payment_term_plus.action_load_simulator)d"
+                            string="Apri"/>
+                </div>
+                <separator />
+            </field>
+
             <field name="line_ids" position="after">
                 <separator string="Holidays"/>
                 <p class="text-muted">

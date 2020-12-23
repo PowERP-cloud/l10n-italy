@@ -5,7 +5,7 @@
 
 {
     'name': 'Payment Term Extension Plus',
-    'version': '12.0.0.1.6',
+    'version': '12.0.0.1.7',
     'category': 'Accounting & Finance',
     'summary': 'Adds rounding, months, weeks and multiple payment days '
                'properties on payment term lines',
@@ -17,7 +17,9 @@
     'depends': ['account', 'account_payment_method'],
     'data': [
         'security/ir.model.access.csv',
-        'views/account_payment_term.xml'],
+        'wizard/wizard_duedates_simulator.xml',
+        'views/account_payment_term.xml',
+    ],
     'installable': True,
     'pre_init_hook': 'pre_init_hook',
 }
