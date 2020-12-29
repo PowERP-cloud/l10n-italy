@@ -5,7 +5,7 @@
 {
     'name': 'Account Banking Common',
     'summary': 'Common stuff for payment modules',
-    'version': '12.0.1.1.1',
+    'version': '12.0.2.2.2',
     'category': 'Accounting',
     'author': 'PowErp Srl',
     'website': '',
@@ -15,7 +15,8 @@
     ],
     'data': [
         'views/res_partner_bank_view.xml',
-        "views/action_insoluto.xml"
+        "views/action_insoluto.xml",
+        "wizard/wizard_insoluto.xml",
     ],
     'installable': True,
 }
