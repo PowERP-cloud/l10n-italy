@@ -7,4 +7,5 @@ conto_effetti_attivi = [
 
 banca_conto_effetti = [('nature', 'in', ['A', 'P'])]
 
-expenses_account = [('user_type_id.name', '=', 'Expenses')]
+# expenses_account = [('user_type_id.name', '=', 'Expenses')]
+expenses_account = [('internal_group', '=', 'expense')]
