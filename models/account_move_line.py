@@ -19,7 +19,7 @@ class AccountMoveLine(models.Model):
         validate_selection.same_payment_method(lines)
         validate_selection.allowed_payment_method(lines, self.INSOLUTO_PM)
         validate_selection.assigned_to_payment_order(lines, assigned=True)
-        validate_selection.allowed_payment_order_status(lines, ['uploaded'])
+        validate_selection.allowed_payment_order_status(lines, ['done'])
         
         # Open the wizard
         return {

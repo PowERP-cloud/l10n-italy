@@ -87,6 +87,7 @@ def allowed_payment_order_status(account_move_lines, payment_order_status: typin
     Ensures that all the payment orders referenced by the lines are in one of
     the valid statuses listed in the payment_order_status parameter
     '''
+    
     for line in account_move_lines:
 
         if line.state not in payment_order_status:
