@@ -32,6 +32,7 @@ def same_payment_method(account_move_lines):
 
 
 def allowed_payment_method(account_move_lines, payment_method_codes: typing.List):
+    '''Ensures the selected lines have a supported payment method'''
     
     for line in account_move_lines:
         
@@ -49,6 +50,16 @@ def allowed_payment_method(account_move_lines, payment_method_codes: typing.List
 
 
 def assigned_to_payment_order(account_move_lines, assigned: bool):
+    '''
+    Check if the selected lines are assigned to a payment order or not.
+    If the "assigned" parameters is:
+    
+      - True the method requires that all lines have been assigned to a
+        payment order, raises an exception otherwise
+    
+      - False the method requires that all lines have NOT been assigned to a
+        payment order, raises an exception otherwise
+    '''
     
     for line in account_move_lines:
 
@@ -72,6 +83,10 @@ def assigned_to_payment_order(account_move_lines, assigned: bool):
 
 
 def allowed_payment_order_status(account_move_lines, payment_order_status: typing.List):
+    '''
+    Ensures that all the payment orders referenced by the lines are in one of
+    the valid statuses listed in the payment_order_status parameter
+    '''
     for line in account_move_lines:
 
         if line.state not in payment_order_status:
