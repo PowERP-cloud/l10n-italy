@@ -72,14 +72,14 @@ class WizardPaymentOrderConfirm(models.TransientModel):
 
     @api.model
     def _raise_on_errors(self, lines):
-        busy_lines = list()
+        not_busy_lines = list()
         payment_methods = defaultdict(lambda: {'count': 0, 'name': None})
 
         for line in lines:
 
             # Detect lines already assigned to a payment order
-            if line.payment_line_ids:
-                busy_lines.append(line)
+            if not line.payment_line_ids:
+                not_busy_lines.append(line)
             # end if
 
             # Check same payment method
@@ -91,14 +91,14 @@ class WizardPaymentOrderConfirm(models.TransientModel):
                 payment_methods[-1]['name'] = 'Non impostato'
         # end for
 
-        error_busy = len(busy_lines) > 0
+        error_not_busy = len(not_busy_lines) > 0
         error_method = len(payment_methods) > 1
 
-        if error_busy or error_method:
+        if error_not_busy or error_method:
 
             error_msg_busy = ''
-            if error_busy:
-                error_msg_busy = self._error_msg_busy(busy_lines)
+            if error_not_busy:
+                error_msg_busy = self._error_msg_busy(not_busy_lines)
             # end if
 
             error_msg_method = ''
@@ -108,7 +108,7 @@ class WizardPaymentOrderConfirm(models.TransientModel):
 
             # Separate error messages with two newlines if both error
             # messages should be displayed
-            error_msg_busy += (error_busy and error_method and '\n\n\n') or ''
+            error_msg_busy += (error_not_busy and error_method and '\n\n\n') or ''
 
             raise UserError(error_msg_busy + error_msg_method)
         # end if
@@ -117,7 +117,7 @@ class WizardPaymentOrderConfirm(models.TransientModel):
     @staticmethod
     def _error_msg_busy(busy_lines):
         msg = 'ATTENZIONE!\nLe seguenti righe' \
-              'sono già parte di una distinta:\n\n - '
+              ' non sono parte di una distinta:\n\n - '
 
         msg += '\n - '.join(
             map(

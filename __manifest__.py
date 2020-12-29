@@ -15,7 +15,8 @@
     ],
     'data': [
         'views/res_partner_bank_view.xml',
-        "views/action_insoluto.xml"
+        "views/action_insoluto.xml",
+        "wizard/wizard_payment_order_confirm.xml",
     ],
     'installable': True,
 }
