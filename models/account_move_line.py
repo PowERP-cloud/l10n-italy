@@ -38,7 +38,7 @@ class AccountMoveLine(models.Model):
 
         # conti e sezionale
         self._validate_config('invoice_financing')
-        
+
         for line in lines_set:
             print(f'\tmove line id:{line.id}')
 

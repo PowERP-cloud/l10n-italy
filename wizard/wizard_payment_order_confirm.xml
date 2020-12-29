@@ -21,15 +21,4 @@
         </field>
     </record>
 
-<!--    <record id="action_confirm_payment_order" model="ir.actions.act_window">-->
-<!--        <field name="name">Conferma pagamento</field>-->
-<!--        <field name="type">ir.actions.act_window</field>-->
-<!--        <field name="res_model">wizard.payment.order.confirm</field>-->
-<!--        <field name="view_type">form</field>-->
-<!--        <field name="view_mode">form</field>-->
-<!--        <field name="view_id" ref="wizard_payment_order_confirm"/>-->
-<!--        <field name="target">new</field>-->
-<!--        <field name="binding_model_id" ref="account.model_account_move_line" />-->
-<!--    </record>-->
-
 </odoo>
