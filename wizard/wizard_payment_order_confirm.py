@@ -17,17 +17,11 @@ class WizardPaymentOrderConfirm(models.TransientModel):
     _name = 'wizard.payment.order.confirm'
     _description = 'Create confirm payment wizard from due dates tree view'
 
-    def _account_expense_domain(self):
-        accounts = []
-
-        return {'domain': {
-            'account_expense': [('id', 'in', tuple(accounts))]}
-        }
-
     account_expense = fields.Many2one(
         'account.account',
         string='Conto spese',
-        domain=_account_expense_domain
+        domain=[(
+            'internal_group', '=', 'expense')]
     )
 
     amount_expense = fields.Float(string='Importo', )
