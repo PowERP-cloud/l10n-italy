@@ -1,5 +1,4 @@
 from odoo import models, api
-from odoo.exceptions import UserError
 from ..utils import validate_selection
 
 
@@ -72,26 +71,5 @@ class AccountMoveLine(models.Model):
             "binding_model_id": "account.model_account_move_line"
         }
     # end validate_selection
-
-    def _validate_config(self, payment_method_code):
-        bank = self.env['res.partner.bank'].search([(
-            'partner_id', '=', self.partner_id.id)])
-        account_config = bank.get_payment_method_config(
-            payment_method_code)
-        config_errors = ''
-        if not account_config['sezionale']:
-            config_errors += "Non è stato impostato il registro per " \
-                             "la registrazione contabile.\n"
-
-        if not account_config['conto_effetti_attivi']:
-            config_errors += "Non è stato impostato il conto effetti attivi.\n"
-
-        if not account_config['banca_conto_effetti']:
-            config_errors += "Non è stato impostato il conto " \
-                             "'banca conto effetti'"
-        if config_errors:
-            config_errors = "Attenzione, configurazione incompleta\n\n" + \
-                            config_errors
-            raise UserError(config_errors)
 
 # end AccountMoveLine
