@@ -1,7 +1,7 @@
 from odoo import models, api
 from odoo.exceptions import UserError
 
-from .utils import validate_selection
+from ..utils import validate_selection
 
 
 class AccountMoveLine(models.Model):
