@@ -6,8 +6,15 @@
         <field name="model">account.move.line</field>
         <field name="inherit_id" ref="account.view_move_line_form" />
         <field name="arch" type="xml">
-            <field name="quantity" position="after">
-                <field name="payment_method" />
+            <xpath expr="//group[@groups='base.group_multi_currency']" position="before">
+                <group name="additional" string="Altre Informazioni">
+                    <field name="payment_method" />
+                    <field name="state" />
+                </group>
+            </xpath>
+
+            <field name="invoice_id" position="after">
+                <field name="payment_order_name" />
             </field>
         </field>
     </record>
