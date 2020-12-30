@@ -123,4 +123,3 @@ def except_payment_order_status(account_move_lines,
     # end for
 
 # end except_payment_order_status
-

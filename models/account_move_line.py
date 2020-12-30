@@ -1,4 +1,3 @@
-from collections import defaultdict
 from odoo import models, api
 from odoo.exceptions import UserError
 from ..utils import validate_selection
