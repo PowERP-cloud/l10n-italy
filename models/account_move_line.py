@@ -39,15 +39,15 @@ class AccountMoveLine(models.Model):
         lines_set = self.env['account.move.line'].browse(
             self._context['active_ids'])
 
+        payment_methods_allowed = ['invoice_financing', 'riba_cbi',
+                                   'sepa_direct_debit']
+
         # ----------------------------------------------------------------------
         # controlli
         # ----------------------------------------------------------------------
 
         # conti e sezionale
         self._validate_config('invoice_financing')
-
-        # same payment method
-        self._check_payment_methods(lines_set)
 
         for line in lines_set:
             print(f'\tmove line id:{line.id}')
@@ -87,32 +87,5 @@ class AccountMoveLine(models.Model):
             config_errors = "Attenzione, configurazione incompleta\n\n" + \
                             config_errors
             raise UserError(config_errors)
-
-    def _check_payment_methods(self, lines):
-        payment_methods = defaultdict(lambda: {'count': 0, 'name': None})
-        for line in lines:
-
-            # Check same payment method
-            if line.payment_method:
-                payment_methods[line.payment_method.id]['count'] += 1
-                payment_methods[line.payment_method.id][
-                    'name'] = line.payment_method.name
-            else:
-                payment_methods[-1]['count'] += 1
-                payment_methods[-1]['name'] = 'Non impostato'
-        # end for
-
-        error_method = len(payment_methods) > 1
-        if error_method:
-            msg = 'ATTENZIONE!\nSono state selezionate righe' \
-                  ' con più metodi di pagamento:\n\n - '
-
-            msg += '\n - '.join(
-                map(
-                    lambda x: x['name'],
-                    payment_methods.values()
-                )
-            )
-            raise UserError(msg)
 
 # end AccountMoveLine
