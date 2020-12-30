@@ -47,6 +47,11 @@ class AccountMoveLine(models.Model):
         inverse='_inverse_has_order',
         search='_search_has_order',
     )
+    
+    payment_order_lines = fields.One2many(
+        comodel_name='account.payment.line',
+        inverse_name='move_line_id',
+    )
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ONCHANGE METHODS
