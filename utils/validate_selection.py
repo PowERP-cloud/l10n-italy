@@ -6,6 +6,8 @@ from odoo.exceptions import UserError
 def same_payment_method(account_move_lines):
     '''Ensures all lines have the same payment method'''
     
+    assert len(account_move_lines) > 0
+    
     pay_code = None
     
     for line in account_move_lines:
@@ -34,6 +36,12 @@ def same_payment_method(account_move_lines):
 def allowed_payment_method(account_move_lines, payment_method_codes: typing.List[str]):
     '''Ensures the selected lines have a supported payment method'''
     
+    assert len(account_move_lines) > 0
+    
+    assert len(payment_method_codes) > 0, \
+        'At least one payment method code must be specified ' \
+        '...otherwise what are you calling this function for????'
+    
     for line in account_move_lines:
         
         if line.payment_method.code not in payment_method_codes:
@@ -61,6 +69,8 @@ def assigned_to_payment_order(account_move_lines, assigned: bool):
         payment order, raises an exception otherwise
     '''
     
+    assert len(account_move_lines) > 0
+    
     for line in account_move_lines:
 
         if assigned and not line.in_order:
@@ -82,11 +92,35 @@ def assigned_to_payment_order(account_move_lines, assigned: bool):
 # end assigned_to_payment_order
 
 
+def same_payment_order(account_move_lines):
+    '''Ensures that all the move lines are in the same payment_order'''
+    
+    assert len(account_move_lines) > 0
+    
+    po_name = account_move_lines[0].payment_order_name
+    
+    for line in account_move_lines:
+        
+        if line.payment_order_name != po_name:
+            raise UserError(
+                'Per poter procedere con l\'operazione tutte le righe '
+                'selezionate devono appartenere allo stesso ordine di '
+                'pagamento'
+            )
+        # end if
+        
+    # end for
+    
+# end same_payment_order
+
+
 def allowed_payment_order_status(account_move_lines, payment_order_status: typing.List[str]):
     '''
     Ensures that all the payment orders referenced by the lines are in one of
     the valid statuses listed in the payment_order_status parameter
     '''
+    
+    assert len(account_move_lines) > 0
     
     assert len(payment_order_status) > 0, \
         'At least one state must be specified ' \
