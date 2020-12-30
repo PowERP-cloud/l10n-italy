@@ -31,7 +31,7 @@ def same_payment_method(account_move_lines):
 # end same_payment_method
 
 
-def allowed_payment_method(account_move_lines, payment_method_codes: typing.List):
+def allowed_payment_method(account_move_lines, payment_method_codes: typing.List[str]):
     '''Ensures the selected lines have a supported payment method'''
     
     for line in account_move_lines:
@@ -82,19 +82,33 @@ def assigned_to_payment_order(account_move_lines, assigned: bool):
 # end assigned_to_payment_order
 
 
-def allowed_payment_order_status(account_move_lines, payment_order_status: typing.List):
+def allowed_payment_order_status(account_move_lines, payment_order_status: typing.List[str]):
     '''
     Ensures that all the payment orders referenced by the lines are in one of
     the valid statuses listed in the payment_order_status parameter
     '''
     
+    assert len(payment_order_status) > 0, \
+        'At least one state must be specified ' \
+        '...otherwise what are you calling this function for????'
+    
     for line in account_move_lines:
 
         if line.state not in payment_order_status:
+            
+            # Translate the values to user friendly labels
+            val_to_label = dict(line.fields_get(['state'])['state']['selection'])
+            labels_list = [val_to_label[x] for x in payment_order_status]
+            
+            if len(payment_order_status) > 1:
+                msg = 'in uno dei seguenti stati: ' + ', '.join(labels_list)
+            else:
+                msg = 'nello stato: ' + labels_list[0]
+            # end if
+            
             raise UserError(
-                'Per poter procedere con l\'operazione l\'ordine '
-                'di pagamento di ciascuna scadenza selezionata deve '
-                'essere nello stato "Documento Caricato"'
+                'Per poter procedere con l\'operazione l\'ordine di pagamento '
+                'di ciascuna scadenza selezionata deve essere ' + msg
             )
         # end if
         
