@@ -1,3 +1,8 @@
+12.0.1.1.37 (2020-12-30)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [MOD] Added convenience field to retrieve the related payment order lines
+
 12.0.0.1.37 (2020-12-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
