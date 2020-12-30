@@ -9,6 +9,9 @@ class AccountMoveLine(models.Model):
     
     INSOLUTO_PM = ['riba_cbi', 'sepa_direct_debit']
 
+    PAYMENT_METHODS_ALLOWED = ['invoice_financing', 'riba_cbi',
+                               'sepa_direct_debit']
+
     @api.multi
     def open_wizard_insoluto(self):
         
@@ -54,10 +57,11 @@ class AccountMoveLine(models.Model):
         # restanti controlli
         validate_selection.same_payment_method(lines)
         validate_selection.allowed_payment_method(lines,
-                                                  payment_methods_allowed)
+                                                  self.PAYMENT_METHODS_ALLOWED)
         validate_selection.assigned_to_payment_order(lines, assigned=True)
-        validate_selection.allowed_payment_order_status(lines, ['done'])
+        validate_selection.except_payment_order_status(lines, ['done'])
 
+        # apertura wizard
         return {
             'type': 'ir.actions.act_window',
             'name': 'Conferma pagamento',

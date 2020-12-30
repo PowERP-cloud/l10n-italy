@@ -1,3 +1,8 @@
+12.0.2.2.3 (2020-12-30)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Set wizard confirm payment / Impostato il wizard per conferma pagamento
+
 12.0.0.1.37 (2020-12-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

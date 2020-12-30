@@ -1,12 +1,12 @@
 
-============================
-|icon| Due dates 12.0.0.1.37
-============================
+========================================
+|icon| Account Banking Common 12.0.2.2.3
+========================================
 
 
-**Due dates management**
+**Common stuff for payment modules**
 
-.. |icon| image:: https://raw.githubusercontent.com/zeroincombenze/accounting/12.0/account_duedates/static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/powerp/accounting/12.0/account_banking_common/static/description/icon.png
 
 |Maturity| |Build Status| |Codecov Status| |license gpl| |Try Me|
 
@@ -17,11 +17,11 @@
 Overview / Panoramica
 =====================
 
-|en| 
+|en| Common stuff used by payment methods
 
 |
 
-|it| 
+|it| Funzionalità utilizzate dai metodi di pagamento
 
 |
 
@@ -54,9 +54,9 @@ Installation / Installazione
 +---------------------------------+------------------------------------------+
 | |en|                            | |it|                                     |
 +---------------------------------+------------------------------------------+
-| These instruction are just an   | Istruzioni di esempio valide solo per    |
-| example to remember what        | distribuzioni Linux CentOS 7, Ubuntu 14+ |
-| you have to do on Linux.        | e Debian 8+                              |
+| These instructions are just an  | Istruzioni di esempio valide solo per    |
+| example; use on Linux CentOS 7+ | distribuzioni Linux CentOS 7+,           |
+| Ubuntu 14+ and Debian 8+        | Ubuntu 14+ e Debian 8+                   |
 |                                 |                                          |
 | Installation is built with:     | L'installazione è costruita con:         |
 +---------------------------------+------------------------------------------+
@@ -64,26 +64,32 @@ Installation / Installazione
 +---------------------------------+------------------------------------------+
 | Suggested deployment is:        | Posizione suggerita per l'installazione: |
 +---------------------------------+------------------------------------------+
-| /home/fabio/12.0/accounting/                                               |
+| $HOME/12.0                                                                 |
 +----------------------------------------------------------------------------+
 
 ::
 
     cd $HOME
-    # Tools installation & activation: skip if you have installed this tool
+    # *** Tools installation & activation ***
+    # Case 1: you have not installed zeroincombenze tools
     git clone https://github.com/zeroincombenze/tools.git
-    cd ./tools
+    cd $HOME/tools
     ./install_tools.sh -p
-    source /opt/odoo/dev/activate_tools
-    # Odoo installation
-    odoo_install_repository accounting -b 12.0 -O zero
-    vem create /opt/odoo/VENV-12.0 -O 12.0 -DI
+    source $HOME/devel/activate_tools
+    # Case 2: you have already installed zeroincombenze tools
+    cd $HOME/tools
+    ./install_tools.sh -U
+    source $HOME/devel/activate_tools
+    # *** End of tools installation or upgrade ***
+    # Odoo repository installation; OCB repository must be installed
+    odoo_install_repository accounting -b 12.0 -O powerp -o $HOME/12.0
+    vem create $HOME/12.0/venv_odoo -O 12.0 -a "*" -DI -o $HOME/12.0
 
 From UI: go to:
 
 * |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
-* |menu| Setting > Apps |right_do| Select **account_duedates** > Install
+* |menu| Setting > Apps |right_do| Select **account_banking_common** > Install
 
 
 |
@@ -92,38 +98,27 @@ Upgrade / Aggiornamento
 -----------------------
 
 
-+---------------------------------+------------------------------------------+
-| |en|                            | |it|                                     |
-+---------------------------------+------------------------------------------+
-| When you want upgrade and you   | Per aggiornare, se avete installato con  |
-| installed using above           | le istruzioni di cui sopra:              |
-| statements:                     |                                          |
-+---------------------------------+------------------------------------------+
-
 ::
 
     cd $HOME
-    # Tools installation & activation: skip if you have installed this tool
+    # *** Tools installation & activation ***
+    # Case 1: you have not installed zeroincombenze tools
     git clone https://github.com/zeroincombenze/tools.git
-    cd ./tools
+    cd $HOME/tools
     ./install_tools.sh -p
-    source /opt/odoo/dev/activate_tools
-    # Odoo upgrade
-    odoo_install_repository accounting -b 12.0 -O zero -U
-    vem amend /opt/odoo/VENV-12.0 -O 12.0 -DI
+    source $HOME/devel/activate_tools
+    # Case 2: you have already installed zeroincombenze tools
+    cd $HOME/tools
+    ./install_tools.sh -U
+    source $HOME/devel/activate_tools
+    # *** End of tools installation or upgrade ***
+    # Odoo repository upgrade
+    odoo_install_repository accounting -b 12.0 -o $HOME/12.0 -U
+    vem amend $HOME/12.0/venv_odoo -o $HOME/12.0
     # Adjust following statements as per your system
     sudo systemctl restart odoo
 
 From UI: go to:
-
-|
-
-Support / Supporto
-------------------
-
-
-|Zeroincombenze| This module is maintained by the `SHS-AV s.r.l. <https://www.zeroincombenze.it/>`__
-
 
 |
 |
@@ -133,21 +128,17 @@ Get involved / Ci mettiamo in gioco
 
 Bug reports are welcome! You can use the issue tracker to report bugs,
 and/or submit pull requests on `GitHub Issues
-<https://github.com/zeroincombenze/accounting/issues>`_.
+<https://github.com/powerp/accounting/issues>`_.
 
 In case of trouble, please check there if your issue has already been reported.
 
-Proposals for enhancement
--------------------------
-
-
-|en| If you have a proposal to change this module, you may want to send an email to <cc@shs-av.com> for initial feedback.
-An Enhancement Proposal may be submitted if your idea gains ground.
-
-|it| Se hai proposte per migliorare questo modulo, puoi inviare una mail a <cc@shs-av.com> per un iniziale contatto.
-
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.2.2.3 (2020-12-30)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Set wizard confirm payment / Impostato il wizard per conferma pagamento
 
 12.0.0.1.37 (2020-12-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -307,6 +298,16 @@ Contributors / Collaboratori
 
 * Antonio Maria Vigliotti <antoniomaria.vigliotti@gmail.com>
 * Marco Tosato <marco.tosato@didotech.com>
+* Fabio Giovannelli <fabio.giovannelli@didotech.com>
+
+
+Maintainer / Manutenzione
+-------------------------
+
+
+This module is maintained by the **Powerp**.
+
+Questo modulo è mantenuto dalla rete di imprese **Powerp**.
 
 
 |
@@ -314,14 +315,23 @@ Contributors / Collaboratori
 ----------------
 
 
-|en| **zeroincombenze®** is a trademark of `SHS-AV s.r.l. <https://www.shs-av.com/>`__
-which distributes and promotes ready-to-use **Odoo** on own cloud infrastructure.
-`Zeroincombenze® distribution of Odoo <https://wiki.zeroincombenze.org/en/Odoo>`__
-is mainly designed to cover Italian law and markeplace.
+|en| **Powerp** is the Italian Enterprises Network born in 2020, whose mission is promote use of Odoo to cover Italian law and markeplace.
 
-|it| **zeroincombenze®** è un marchio registrato da `SHS-AV s.r.l. <https://www.shs-av.com/>`__
-che distribuisce e promuove **Odoo** pronto all'uso sulla propria infrastuttura.
-La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ è progettata per le esigenze del mercato italiano.
+`Powerp <http://www.powerp.it/>`__ distributes code under `LGPL <https://www.gnu.org/licenses/lgpl-3.0.html>`__ or `OPL <https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html>`__ licenses.
+
+Read carefully published README for more info about authors.
+
+|it| `Powerp <http://www.powerp.it/>`__ è una rete di imprese, nata nel 2020 che rilascia moduli per la localizzazione italiana evoluta.
+
+`Powerp <http://www.powerp.it/>`__ distribuisce il codice con licenze `LGPL <https://www.gnu.org/licenses/lgpl-3.0.html>`__ e `OPL <https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html>`__
+
+I soci fondatori sono:
+
+* `Didotech s.r.l. <http://www.didotech.com>`__
+* `SHS-AV s.r.l. <https://www.shs-av.com/>`__
+* `Xplain s.r.l. <http://x-plain.it//>`__
+
+Leggere con attenzione i file README per maggiori informazioni sugli autori.
 
 
 |chat_with_us|
@@ -331,13 +341,13 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2020-12-14
+Last Update / Ultimo aggiornamento: 2020-12-30
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status
     :alt: Alfa
-.. |Build Status| image:: https://travis-ci.org/zeroincombenze/accounting.svg?branch=12.0
-    :target: https://travis-ci.org/zeroincombenze/accounting
+.. |Build Status| image:: https://travis-ci.org/powerp/accounting.svg?branch=12.0
+    :target: https://travis-ci.org/powerp/accounting
     :alt: github.com
 .. |license gpl| image:: https://img.shields.io/badge/licence-LGPL--3-7379c3.svg
     :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
@@ -345,11 +355,11 @@ Last Update / Ultimo aggiornamento: 2020-12-14
 .. |license opl| image:: https://img.shields.io/badge/licence-OPL-7379c3.svg
     :target: https://www.odoo.com/documentation/user/9.0/legal/licenses/licenses.html
     :alt: License: OPL
-.. |Coverage Status| image:: https://coveralls.io/repos/github/zeroincombenze/accounting/badge.svg?branch=12.0
-    :target: https://coveralls.io/github/zeroincombenze/accounting?branch=12.0
+.. |Coverage Status| image:: https://coveralls.io/repos/github/powerp/accounting/badge.svg?branch=12.0
+    :target: https://coveralls.io/github/powerp/accounting?branch=12.0
     :alt: Coverage
-.. |Codecov Status| image:: https://codecov.io/gh/zeroincombenze/accounting/branch/12.0/graph/badge.svg
-    :target: https://codecov.io/gh/zeroincombenze/accounting/branch/12.0
+.. |Codecov Status| image:: https://codecov.io/gh/powerp/accounting/branch/12.0/graph/badge.svg
+    :target: https://codecov.io/gh/powerp/accounting/branch/12.0
     :alt: Codecov
 .. |Tech Doc| image:: https://www.zeroincombenze.it/wp-content/uploads/ci-ct/prd/button-docs-12.svg
     :target: https://wiki.zeroincombenze.org/en/Odoo/12.0/dev

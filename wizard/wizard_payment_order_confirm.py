@@ -35,6 +35,11 @@ class WizardPaymentOrderConfirm(models.TransientModel):
         print('Active ids:', active_ids)
         # Debug - end
 
+        account_config = self.env['res.partner.bank'].get_payment_method_config(
+            'invoice_financing')
+        payment_mode_id = self.env['account.payment.mode'].search([(
+            'payment_method_code', '=', 'invoice_financing')])
+
         if len(active_ids) > 0:
 
             lines = self.env['account.move.line'].browse(active_ids)
@@ -44,13 +49,14 @@ class WizardPaymentOrderConfirm(models.TransientModel):
 
             # Creazione distinta
             payment_order = self.env['account.payment.order'].create({
-                'payment_mode_id': self.payment_mode_id.id,
-                'journal_id': self.journal_id.id,
-                'description': self.description,
+                'payment_mode_id': payment_mode_id.id,
+                'journal_id': account_config['sezionale'].id,
+                'description': '',
             })
 
             # Aggiunta linee a distinta
-            lines.create_payment_line_from_move_line(payment_order)
+            # TODO
+            # lines.create_payment_line_from_move_line(payment_order)
 
             # Apertura ordine di pagamento
             return {
