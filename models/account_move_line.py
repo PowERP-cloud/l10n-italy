@@ -44,9 +44,6 @@ class AccountMoveLine(models.Model):
         lines = self.env['account.move.line'].browse(
             self._context['active_ids'])
 
-        payment_methods_allowed = ['invoice_financing', 'riba_cbi',
-                                   'sepa_direct_debit']
-
         # ----------------------------------------------------------------------
         # controlli
         # ----------------------------------------------------------------------
