@@ -55,6 +55,7 @@ class AccountMoveLine(models.Model):
                                                   self.PAYMENT_METHODS_ALLOWED)
         validate_selection.assigned_to_payment_order(lines, assigned=True)
         validate_selection.except_payment_order_status(lines, ['done'])
+        validate_selection.same_payment_order(lines)
 
         # apertura wizard
         return {
