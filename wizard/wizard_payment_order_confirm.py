@@ -45,14 +45,19 @@ class WizardPaymentOrderConfirm(models.TransientModel):
             lines = self.env['account.move.line'].browse(active_ids)
 
             # Check for errors
-            self._raise_on_errors(lines)
 
-            # Creazione distinta
-            payment_order = self.env['account.payment.order'].create({
-                'payment_mode_id': payment_mode_id.id,
-                'journal_id': account_config['sezionale'].id,
-                'description': '',
-            })
+            # per ogni riga verificare:
+            # - tipo documento f nc
+            # - la banca
+            # - get_payment_method_config
+
+
+            # Creazione registrazione contabile
+            # payment_order = self.env['account.payment.order'].create({
+            #     'payment_mode_id': payment_mode_id.id,
+            #     'journal_id': account_config['sezionale'].id,
+            #     'description': '',
+            # })
 
             # Aggiunta linee a distinta
             # TODO

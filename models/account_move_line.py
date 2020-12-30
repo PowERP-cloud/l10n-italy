@@ -21,7 +21,7 @@ class AccountMoveLine(models.Model):
         validate_selection.same_payment_method(lines)
         validate_selection.allowed_payment_method(lines, self.INSOLUTO_PM)
         validate_selection.assigned_to_payment_order(lines, assigned=True)
-        validate_selection.allowed_payment_order_status(lines, ['done'])
+        validate_selection.allowed_payment_order_status(lines, ['uploaded'])
         
         # Open the wizard
         return {
@@ -48,7 +48,7 @@ class AccountMoveLine(models.Model):
         # ----------------------------------------------------------------------
 
         # conti e sezionale
-        self._validate_config('invoice_financing')
+        # self._validate_config('invoice_financing')
 
         # restanti controlli
         validate_selection.same_payment_method(lines)
@@ -74,7 +74,9 @@ class AccountMoveLine(models.Model):
     # end validate_selection
 
     def _validate_config(self, payment_method_code):
-        account_config = self.env['res.partner.bank'].get_payment_method_config(
+        bank = self.env['res.partner.bank'].search([(
+            'partner_id', '=', self.partner_id.id)])
+        account_config = bank.get_payment_method_config(
             payment_method_code)
         config_errors = ''
         if not account_config['sezionale']:
