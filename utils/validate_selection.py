@@ -106,8 +106,8 @@ def allowed_payment_order_status(account_move_lines, payment_order_status: typin
 def except_payment_order_status(account_move_lines,
                                 payment_order_status: typing.List):
     '''
-    Ensures that all the payment orders referenced by the lines are in one of
-    the valid statuses listed in the payment_order_status parameter
+    Ensures that all the payment orders referenced by the lines are not in
+    one of the valid statuses listed in the payment_order_status parameter
     '''
 
     for line in account_move_lines:
@@ -115,7 +115,7 @@ def except_payment_order_status(account_move_lines,
         if line.state in payment_order_status:
             raise UserError(
                 'Per poter procedere con l\'operazione l\'ordine '
-                'di pagamento di ciascuna scadenza selezionata deve '
+                'di pagamento di ciascuna scadenza selezionata non deve '
                 'essere nello stato "Documento Caricato"'
             )
         # end if
@@ -123,3 +123,4 @@ def except_payment_order_status(account_move_lines,
     # end for
 
 # end except_payment_order_status
+

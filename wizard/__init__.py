@@ -6,3 +6,4 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 #
 from . import wizard_payment_order_confirm
+from . import wizard_insoluto
