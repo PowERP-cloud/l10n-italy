@@ -3,13 +3,14 @@ sezionale = [
 ]
 
 conto_effetti_attivi = [
-    ('nature', 'in', ['A', 'P']),
-    (
-        'user_type_id.name',
-        'in',
-        ['Receivable', 'Bank and Cash', 'Current Assets']
-    ),
-]
+        ('nature', 'in', ['A', 'P']),
+        ('user_type_id.name', 'in', [
+            'Receivable',
+            'Bank and Cash',
+            'Current Assets',
+            'Credito',
+            'Banca e cassa',
+            'Attività correnti']), ]
 
 banca_conto_effetti = [('nature', 'in', ['A', 'P'])]
 
