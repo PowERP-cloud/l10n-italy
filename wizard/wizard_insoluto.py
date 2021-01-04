@@ -31,29 +31,28 @@ class WizardInsoluto(models.TransientModel):
         
         for r in recordset:
             
-            # Retrieve payment order for the line
-            pol = r.payment_order_lines[0]
-            pol_partner = pol.partner_id
+            # - - - - - - - - - - - - - - - - -
+            # Retrieve the payment order data
+            # - - - - - - - - - - - - - - - - -
             
-            # Retrieve payment order object
-            po = pol.order_id
-            po_journal = po.journal_id
+            pol = r.payment_order_lines[0]  # Payment order line
+            po = pol.order_id  # Payment order
             
-            # Company bank
-            bank = po.company_partner_bank_id
-
-            # Configuration account.journal to be used fo the new
-            # account.move
+            pol_partner = pol.partner_id  # Partner for this duedate
+            po_journal = po.journal_id  # Journal selected in the po
+            bank = po.company_partner_bank_id  # Bank selected in the po
+            
+            # - - - - - - - - - - - - - - -
+            # Payment method configuration
+            # - - - - - - - - - - - - - - -
+            
+            # Get the account.journal to be used fo the new account.move
             mv_journal = bank.get_payment_method_config()['sezionale']
             if not mv_journal:
                 raise UserError(
                     f'"Sezionale" non configurato per c/c {bank.acc_number}'
                 )
             # end if
-            
-            # - - - - - - - - - - - - - - - - - - - - - - - - -
-            # Get the account.account involved in the new move
-            # - - - - - - - - - - - - - - - - - - - - - - - - -
             
             # account.account -> Bank
             acct_acct_bank = po_journal.default_credit_account_id
