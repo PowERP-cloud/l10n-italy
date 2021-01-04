@@ -41,13 +41,16 @@ class WizardInsoluto(models.TransientModel):
             pol_partner = pol.partner_id  # Partner for this duedate
             po_journal = po.journal_id  # Journal selected in the po
             bank = po.company_partner_bank_id  # Bank selected in the po
+
+            # The payment method of the payment order
+            pm = po.payment_method_id
             
             # - - - - - - - - - - - - - - -
             # Payment method configuration
             # - - - - - - - - - - - - - - -
             
             # Get the account.journal to be used fo the new account.move
-            mv_journal = bank.get_payment_method_config()['sezionale']
+            mv_journal = bank.get_payment_method_config(pm.code)['sezionale']
             if not mv_journal:
                 raise UserError(
                     f'"Sezionale" non configurato per c/c {bank.acc_number}'
@@ -105,9 +108,6 @@ class WizardInsoluto(models.TransientModel):
                 'ref': 'Insoluto',
                 'line_ids': move_lines,
             })
-            
-            # 3 - Post the account.move
-            # account_move.post()
             
         # end for
         
