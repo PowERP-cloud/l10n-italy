@@ -20,16 +20,20 @@ class AccountMoveLine(models.Model):
         validate_selection.same_payment_method(lines)
         validate_selection.allowed_payment_method(lines, self.INSOLUTO_PM)
         validate_selection.assigned_to_payment_order(lines, assigned=True)
+        validate_selection.same_payment_order(lines)
         validate_selection.allowed_payment_order_status(lines, ['uploaded'])
         
         # Open the wizard
+        wiz_view = self.env.ref(
+            'account_banking_common.wizard_account_banking_common_insoluto'
+        )
         return {
             'type': 'ir.actions.act_window',
             'name': 'Registra Insoluto',
             'res_model': 'wizard.account.banking.common.insoluto',
             'view_type': 'form',
             'view_mode': 'form',
-            'view_id': False,
+            'view_id': wiz_view.id,
             'target': 'new',
             'res_id': False,
             'binding_model_id': 'account_banking_common.model_account_move_line',
