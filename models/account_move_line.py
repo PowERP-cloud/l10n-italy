@@ -72,7 +72,7 @@ class AccountMoveLine(models.Model):
                 'account_banking_common.wizard_payment_order_confirm').id,
             'target': 'new',
             'res_id': False,
-            "domain": [('id', 'in', self._context['active_ids'])],
+            'context': {'active_ids': self._context['active_ids']},
             "binding_model_id": "account.model_account_move_line"
         }
     # end validate_selection

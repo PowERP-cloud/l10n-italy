@@ -1,3 +1,8 @@
+12.0.2.2.4 (2021-01-04)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Update wizard confirm payment / Completato il wizard per conferma pagamento
+
 12.0.2.2.3 (2020-12-30)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
