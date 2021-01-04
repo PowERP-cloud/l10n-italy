@@ -100,7 +100,8 @@ class WizardInsoluto(models.TransientModel):
             # end if
             
             # 2 - New account.move as draft
-            account_move = self.env['account.move'].create({
+            # account_move = self.env['account.move'].create({
+            self.env['account.move'].create({
                 'type': 'entry',
                 'date': fields.Date.today(),
                 'journal_id': mv_journal.id,

@@ -59,6 +59,7 @@ class AccountMoveLine(models.Model):
                                                   self.PAYMENT_METHODS_ALLOWED)
         validate_selection.assigned_to_payment_order(lines, assigned=True)
         validate_selection.except_payment_order_status(lines, ['done'])
+        validate_selection.same_payment_order(lines)
 
         # apertura wizard
         return {
@@ -71,7 +72,7 @@ class AccountMoveLine(models.Model):
                 'account_banking_common.wizard_payment_order_confirm').id,
             'target': 'new',
             'res_id': False,
-            "domain": [('id', 'in', self._context['active_ids'])],
+            'context': {'active_ids': self._context['active_ids']},
             "binding_model_id": "account.model_account_move_line"
         }
     # end validate_selection

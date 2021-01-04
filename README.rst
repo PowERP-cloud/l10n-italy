@@ -1,6 +1,6 @@
 
 ========================================
-|icon| Account Banking Common 12.0.2.2.3
+|icon| Account Banking Common 12.0.2.2.4
 ========================================
 
 
@@ -134,6 +134,11 @@ In case of trouble, please check there if your issue has already been reported.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.2.2.4 (2021-01-04)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Update wizard confirm payment / Completato il wizard per conferma pagamento
 
 12.0.2.2.3 (2020-12-30)
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -341,7 +346,7 @@ Leggere con attenzione i file README per maggiori informazioni sugli autori.
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2020-12-30
+Last Update / Ultimo aggiornamento: 2021-01-04
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status
