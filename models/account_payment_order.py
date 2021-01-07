@@ -1,7 +1,7 @@
 #
 # Copyright (c) 2021
 #
-from odoo import models, api, fields
+from odoo import models, api
 from odoo.exceptions import UserError
 
 
@@ -33,3 +33,19 @@ class AccountPaymentOrder(models.Model):
                     'res_id': False,
                     "binding_model_id": "account.model_account_payment_order"
                 }
+
+    @api.multi
+    def unlink(self):
+        
+        for order in self:
+            if order.state != 'cancel':
+                raise UserError(
+                    f'L\'ordine di pagamento {order.name} non può essere'
+                    f'eliminato perché non è nello stato "Annullato"'
+                )
+            # end if
+        # end for
+        
+        return super(AccountPaymentOrder, self).unlink()
+    # end unlink
+# end AccountPaymentOrder
