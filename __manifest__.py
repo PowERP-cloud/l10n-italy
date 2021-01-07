@@ -5,7 +5,7 @@
 {
     'name': 'Account Banking Common',
     'summary': 'Common stuff for payment modules',
-    'version': '12.0.2.3.6',
+    'version': '12.0.2.3.7',
     'category': 'Accounting',
     'author': 'PowErp Srl',
     'website': '',
@@ -13,13 +13,16 @@
     'depends': [
         'account',
         'account_duedates',
+        'account_payment_order',
     ],
     'data': [
         'views/res_partner_bank_view.xml',
         "views/action_insoluto.xml",
         "wizard/wizard_insoluto.xml",
         "views/action_payment_confirm.xml",
+        "views/account_payment_order.xml",
         "wizard/wizard_payment_order_confirm.xml",
+        "wizard/wizard_payment_order_credit.xml",
     ],
     'installable': True,
 }
