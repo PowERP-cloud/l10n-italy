@@ -7,6 +7,7 @@
             <form string="Registra Insoluto">
                 <group>
                     <field name="expenses_account"/>
+                    <field name="charge_client"   attrs="{'invisible': [('expenses_account', '=', False)]}"/>
                     <field name="expenses_amount" attrs="{'invisible': [('expenses_account', '=', False)]}"/>
                 </group>
 

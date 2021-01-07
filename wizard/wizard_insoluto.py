@@ -21,6 +21,11 @@ class WizardInsoluto(models.TransientModel):
     
     expenses_amount = fields.Float(string='Importo spese')
     
+    charge_client = fields.Boolean(
+        string='Addebito spese a cliente',
+        default=False,
+    )
+    
     @api.multi
     def registra_insoluto(self):
         '''Create on new account.move for each line of insoluto'''
@@ -58,8 +63,8 @@ class WizardInsoluto(models.TransientModel):
             # end if
             
             # account.account -> Bank
-            acct_acct_bank = po_journal.default_credit_account_id
-            if not acct_acct_bank:
+            acct_acct_bank_credit = po_journal.default_credit_account_id
+            if not acct_acct_bank_credit:
                 raise UserError(
                     f'Conto "avere" non configurato per non configurato per '
                     f'sezionale di banca '
@@ -78,25 +83,69 @@ class WizardInsoluto(models.TransientModel):
             # - - - - - - - - - - - - - -
             
             # 1 - Move lines
-            move_lines = [
-                (0, 0, {
-                    'account_id': acct_acct_part.id,
-                    'partner_id': pol_partner.id,
-                    'credit': 0, 'debit': r.debit
-                }),
-                (0, 0, {
-                    'account_id': acct_acct_bank.id,
-                    'credit': r.debit + self.expenses_amount, 'debit': 0
-                }),
-            ]
-            
+
             if acct_acct_expe:
-                move_lines.append(
-                    (0, 0, {
-                        'account_id': acct_acct_expe.id,
-                        'credit': 0, 'debit': self.expenses_amount
-                    }),
-                )
+
+                # --> Spese addebitate al cliente
+                if self.charge_client:
+                
+                    move_lines = [
+                        # Banca c/c
+                        {
+                            'account_id': acct_acct_bank_credit.id,
+                            'debit': 0, 'credit': r.debit + self.expenses_amount,
+                        },
+                        
+                        # Cliente
+                        {
+                            'account_id': acct_acct_part.id,
+                            'partner_id': pol_partner.id,
+                            'debit': r.debit + self.expenses_amount, 'credit': 0,
+                        },
+                    ]
+
+                # --> Spese a nostro carico
+                else:
+                
+                    move_lines = [
+                        # Banca c/c
+                        {
+                            'account_id': acct_acct_bank_credit.id,
+                            'debit': 0, 'credit': r.debit + self.expenses_amount,
+                        },
+                        
+                        # Spese bancarie
+                        {
+                            'account_id': acct_acct_expe.id,
+                            'debit': self.expenses_amount, 'credit': 0
+                        },
+
+                        # Cliente
+                        {
+                            'account_id': acct_acct_part.id,
+                            'partner_id': pol_partner.id,
+                            'debit': r.debit, 'credit': 0,
+                        },
+                    ]
+                
+                # end if
+
+            # --> Niente spese
+            else:
+                move_lines = [
+                    # Banca c/c
+                    {
+                        'account_id': acct_acct_bank_credit.id,
+                        'debit': 0, 'credit': r.debit
+                    },
+
+                    # Cliente
+                    {
+                        'account_id': acct_acct_part.id,
+                        'partner_id': pol_partner.id,
+                        'debit': r.debit, 'credit': 0,
+                    },
+                ]
             # end if
             
             # 2 - New account.move as draft
@@ -107,7 +156,7 @@ class WizardInsoluto(models.TransientModel):
                 'journal_id': mv_journal.id,
                 'state': 'draft',
                 'ref': 'Insoluto',
-                'line_ids': move_lines,
+                'line_ids': [(0, 0, line) for line in move_lines],
             })
             
         # end for
