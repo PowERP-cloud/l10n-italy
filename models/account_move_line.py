@@ -1,4 +1,4 @@
-from odoo import models, api, fields
+from odoo import models, api
 from ..utils import validate_selection
 
 
