@@ -46,12 +46,23 @@ class WizardPaymentOrderCredit(models.TransientModel):
             payment_order = self.env['account.payment.order'].browse(active_id)
 
             # conto di compensazione / effetti salvo buon fine
-            offsetting_account = payment_order.payment_mode_id.\
+            check_offsetting_account = payment_order.payment_mode_id.\
                 offsetting_account
 
-            if not offsetting_account.id:
-                raise UserError("Attenzione!\nConto di compensazione non è "
+            if not check_offsetting_account:
+                raise UserError("Attenzione!\nConto di compensazione non "
                                 "impostato.")
+            else:
+                if check_offsetting_account == 'bank_account':
+                    offsetting_account = payment_order.company_partner_bank_id
+                elif check_offsetting_account == 'transfer_account':
+                    if not payment_order.payment_mode_id.transfer_account_id:
+                        raise UserError(
+                            "Attenzione!\nConto di trasferimento non "
+                            "impostato.")
+                    else:
+                        offsetting_account = payment_order.payment_mode_id.\
+                            transfer_account_id
 
             # spese banca
             bank_account = payment_order.journal_id. \
