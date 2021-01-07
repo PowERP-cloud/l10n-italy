@@ -1,4 +1,4 @@
-from odoo import models, api
+from odoo import models, api, fields
 from ..utils import validate_selection
 
 
@@ -50,15 +50,14 @@ class AccountMoveLine(models.Model):
         # controlli
         # ----------------------------------------------------------------------
 
-        # conti e sezionale
-        # self._validate_config('invoice_financing')
+        # incasso effettuato deve essere False
+        validate_selection.lines_has_payment(lines, paid=False)
 
-        # restanti controlli
         validate_selection.same_payment_method(lines)
         validate_selection.allowed_payment_method(lines,
                                                   self.PAYMENT_METHODS_ALLOWED)
         validate_selection.assigned_to_payment_order(lines, assigned=True)
-        validate_selection.except_payment_order_status(lines, ['done'])
+        validate_selection.allowed_payment_order_status(lines, ['done'])
         validate_selection.same_payment_order(lines)
 
         # apertura wizard

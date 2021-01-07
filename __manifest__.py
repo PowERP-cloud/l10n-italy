@@ -5,13 +5,14 @@
 {
     'name': 'Account Banking Common',
     'summary': 'Common stuff for payment modules',
-    'version': '12.0.2.2.4',
+    'version': '12.0.2.2.5',
     'category': 'Accounting',
     'author': 'PowErp Srl',
     'website': '',
     'license': 'LGPL-3',
     'depends': [
         'account',
+        'account_duedates',
     ],
     'data': [
         'views/res_partner_bank_view.xml',

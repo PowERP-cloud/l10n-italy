@@ -45,6 +45,17 @@ class WizardPaymentOrderConfirm(models.TransientModel):
 
             for line in lines:
 
+                if not line.payment_order_lines or \
+                        line.payment_order_lines[0].order_id.id:
+                    raise UserError("Attenzione!\nDistinta non rilevata.")
+
+                payment_order = line.payment_order_lines[0].order_id
+
+                if not payment_order.journal_id.default_debit_account_id.id:
+                    raise UserError("Attenzione!\nConto banca non impostato.")
+
+                bank_account = payment_order.journal_id.default_debit_account_id
+
                 # CONFIG
                 #   banca
                 bank = line.payment_line_ids.order_id.company_partner_bank_id
@@ -77,17 +88,14 @@ class WizardPaymentOrderConfirm(models.TransientModel):
                 line_ids = []
 
                 # tipo documento
+                # per ora si gestiscono solo le fatture attive
                 document_type = line.invoice_id.type
 
-                # - Avere / credit -> Banca Conto Effetti + partner
-                # per importo della scadenza(attenzione a NC, il segno
-                # dare/avere è opposto alla registrazione di account.move.line)
+                if document_type != 'out_invoice':
+                    raise UserError('Attenzione!\nLa conferma del pagamento '
+                                    'si effettua solo per le fatture attive.')
 
-                # - Dare / debit -> Conto Effetti Attivi
-                # con il totale delle righe precedenti(attenzione
-                # ai segni)
-
-                # se fattura
+                # se fattura attiva
                 if document_type in ['out_invoice']:
 
                     # se ci sono spese le aggiungo
@@ -111,60 +119,43 @@ class WizardPaymentOrderConfirm(models.TransientModel):
                     conto_effetti_attivi = {
                         'account_id': account_config['conto_effetti_attivi'].id,
                         'credit': 0,
-                        'debit': line.debit - amount_expense
+                        'debit': line.debit
                     }
                     line_ids.append((0, 0, conto_effetti_attivi))
 
-                # se Nota di Credito
-                elif document_type in ['out_refund']:
-
-                    # se ci sono spese le aggiungo
-                    if amount_expense > 0:
-                        expense_move_line = {
-                            'account_id': self.account_expense.id,
-                            'credit': 0,
-                            'debit': amount_expense,
-                        }
-                        line_ids.append((0, 0, expense_move_line))
-
-                    # banca conto effetti
-                    banca_conto_effetti = {
-                        'account_id': account_config['banca_conto_effetti'].id,
-                        'partner_id': line.partner_id.id,
-                        'credit': 0,
-                        'debit': line.credit,
-                    }
-                    line_ids.append((0, 0, banca_conto_effetti))
-
-                    conto_effetti_attivi = {
-                        'account_id': account_config['conto_effetti_attivi'].id,
-                        'credit': line.credit + amount_expense,
+                    conto_banca = {
+                        'account_id': bank_account.id,
+                        'credit': amount_expense,
                         'debit': 0
                     }
-                    line_ids.append((0, 0, conto_effetti_attivi))
+                    line_ids.append((0, 0, conto_banca))
 
-                vals = self.env['account.move'].default_get([
-                    'date_apply_balance',
-                    'date_effective',
-                    'fiscalyear_id',
-                    'invoice_date',
-                    'narration',
-                    'payment_term_id',
-                    'reverse_date',
-                    'tax_type_domain',
-                ])
-                vals.update({
-                    'date': fields.Date.today(),
-                    'date_apply_vat': fields.Date.today(),
-                    'journal_id': account_config['sezionale'].id,
-                    'type': 'entry',
-                    'ref': "Conferma pagamento ",
-                    'state': 'draft',
-                    'line_ids': line_ids
-                })
-                # Creazione registrazione contabile
+                    vals = self.env['account.move'].default_get([
+                        'date_apply_balance',
+                        'date_effective',
+                        'fiscalyear_id',
+                        'invoice_date',
+                        'narration',
+                        'payment_term_id',
+                        'reverse_date',
+                        'tax_type_domain',
+                    ])
+                    vals.update({
+                        'date': fields.Date.today(),
+                        'date_apply_vat': fields.Date.today(),
+                        'journal_id': account_config['sezionale'].id,
+                        'type': 'entry',
+                        'ref': "Conferma pagamento ",
+                        'state': 'draft',
+                        'line_ids': line_ids
+                    })
+                    # Creazione registrazione contabile
 
-                self.env['account.move'].create(vals)
+                    self.env['account.move'].create(vals)
+
+                    line.write({
+                        'incasso_effettuato': True
+                    })
 
             return {'type': 'ir.actions.act_window_close'}
         # end if

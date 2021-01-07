@@ -1,3 +1,8 @@
+12.0.2.2.5 (2021-01-07)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Refactor wizard confirm payment / Reimplementato il wizard per conferma pagamento
+
 12.0.2.2.4 (2021-01-04)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

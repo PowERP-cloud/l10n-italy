@@ -171,3 +171,38 @@ def except_payment_order_status(account_move_lines,
     # end for
 
 # end except_payment_order_status
+
+
+def lines_has_payment(account_move_lines, paid: bool):
+    """
+    Check if the selected lines are paid or not.
+    If the "paid" parameters is:
+
+      - True check against incasso_effettuato must be the same,
+        raises an exception otherwise
+
+      - False check against incasso_effettuato must be the same,
+        raises an exception otherwise
+    """
+
+    assert len(account_move_lines) > 0
+
+    for line in account_move_lines:
+
+        if paid and not line.incasso_effettuato:
+            raise UserError(
+                'Le scadenze selezionate devono avere '
+                'l\'incasso effettuato'
+            )
+        elif not paid and line.incasso_effettuato:
+            raise UserError(
+                'Le scadenze selezionate non devono avere '
+                'l\'incasso effettuato'
+            )
+        else:
+            pass
+        # end if
+
+    # end for
+
+# end lines_has_payment
