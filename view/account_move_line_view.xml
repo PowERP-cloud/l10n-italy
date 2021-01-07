@@ -15,6 +15,7 @@
 
             <field name="invoice_id" position="after">
                 <field name="payment_order_name" />
+                <field name="incasso_effettuato" readonly="1"/>
             </field>
         </field>
     </record>

@@ -53,6 +53,9 @@ class AccountMoveLine(models.Model):
         inverse_name='move_line_id',
     )
 
+    incasso_effettuato = fields.Boolean(string='Incasso effettuato',
+                                        default=False)
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ONCHANGE METHODS
 

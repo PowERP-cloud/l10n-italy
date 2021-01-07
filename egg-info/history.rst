@@ -1,4 +1,9 @@
-12.0.1.1.37 (2020-12-30)
+12.0.1.1.38 (2021-01-07)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Added payment done field / Impostato campo incasso effettuato
+
+12.0.1.1.38 (2020-12-30)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [MOD] Added convenience field to retrieve the related payment order lines
