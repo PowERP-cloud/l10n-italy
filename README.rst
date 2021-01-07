@@ -135,6 +135,11 @@ In case of trouble, please check there if your issue has already been reported.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.2.3.5 (2021-01-07)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Ordine di pagamento può essere eliminato solo se in stato "cancel" ("Annulla")
+
 12.0.2.2.5 (2021-01-07)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
