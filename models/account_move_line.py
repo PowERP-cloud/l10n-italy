@@ -63,7 +63,16 @@ class AccountMoveLine(models.Model):
     @api.multi
     def registra_insoluto_standard(self):
         
+        # Data from wizard
+        expenses_account_id = self._context['expenses_account_id']
+        expenses_amount = self._context['expenses_amount']
+        charge_client = self._context['charge_client']
+        
         for r in self:
+            
+            new_reconcile_needed = False
+            
+            r.unpaid_ctr = r.unpaid_ctr + 1
 
             # - - - - - - - - - - - - - - - - -
             # Retrieve the payment order data
@@ -93,7 +102,9 @@ class AccountMoveLine(models.Model):
             acct_acct_part = r.account_id
 
             # account.account -> Expenses
-            acct_acct_expe = self.expenses_account
+            acct_acct_expe = self.env['account.account'].browse(
+                expenses_account_id
+            )
 
             # - - - - - - - - - - - - - -
             # New account.move creation
@@ -104,20 +115,24 @@ class AccountMoveLine(models.Model):
             if acct_acct_expe:
 
                 # --> Spese addebitate al cliente
-                if self.charge_client:
+                if charge_client:
+            
+                    # Rimozione riconciliazione dall'account.move.line
+                    r.remove_move_reconcile()
+                    new_reconcile_needed = True
 
                     move_lines = [
                         # Banca c/c
                         {
                             'account_id': acct_acct_bank_credit.id,
-                            'debit': 0, 'credit': r.debit + self.expenses_amount,
+                            'debit': 0, 'credit': r.debit + expenses_amount,
                         },
 
                         # Cliente
                         {
                             'account_id': acct_acct_part.id,
                             'partner_id': pol_partner.id,
-                            'debit': r.debit + self.expenses_amount, 'credit': 0,
+                            'debit': r.debit + expenses_amount, 'credit': 0,
                         },
                     ]
 
@@ -128,13 +143,13 @@ class AccountMoveLine(models.Model):
                         # Banca c/c
                         {
                             'account_id': acct_acct_bank_credit.id,
-                            'debit': 0, 'credit': r.debit + self.expenses_amount,
+                            'debit': 0, 'credit': r.debit + expenses_amount,
                         },
 
                         # Spese bancarie
                         {
                             'account_id': acct_acct_expe.id,
-                            'debit': self.expenses_amount, 'credit': 0
+                            'debit': expenses_amount, 'credit': 0
                         },
 
                         # Cliente
@@ -175,6 +190,13 @@ class AccountMoveLine(models.Model):
                 'ref': 'Insoluto',
                 'line_ids': [(0, 0, line) for line in move_lines],
             })
+            
+            if new_reconcile_needed:
+                self.reconcile(
+                    writeoff_acc_id=acct_acct_part,
+                    writeoff_journal_id=po_journal
+                )
+            # end if
 
         # end for
 
@@ -184,7 +206,6 @@ class AccountMoveLine(models.Model):
     def registra_accredito_standard(self):
         pass
     # end registra_accredito_standard
-
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # PAYMENT CONFIRM

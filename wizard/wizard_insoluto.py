@@ -31,7 +31,11 @@ class WizardInsoluto(models.TransientModel):
         ids = self._context['active_ids']
         model = self.env['account.move.line']
         recordset = model.browse(ids)
-        recordset.registra_insoluto()
+        recordset.with_context({
+            'expenses_account_id': self.expenses_account.id,
+            'expenses_amount': self.expenses_amount,
+            'charge_client': self.charge_client,
+        }).registra_insoluto()
     # end registra_insoluto
     
 # end WizardInsoluto
