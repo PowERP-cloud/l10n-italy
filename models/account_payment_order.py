@@ -159,8 +159,6 @@ class AccountPaymentOrder(models.Model):
 
             payment_order.action_done()
 
-            # return {'type': 'ir.actions.act_window_close'}
-
     # end registra_accredito_standard
 
     @api.multi
