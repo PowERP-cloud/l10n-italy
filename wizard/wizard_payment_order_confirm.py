@@ -46,7 +46,7 @@ class WizardPaymentOrderConfirm(models.TransientModel):
             for line in lines:
 
                 if not line.payment_order_lines or \
-                        line.payment_order_lines[0].order_id.id:
+                        not line.payment_order_lines[0].order_id.id:
                     raise UserError("Attenzione!\nDistinta non rilevata.")
 
                 payment_order = line.payment_order_lines[0].order_id
