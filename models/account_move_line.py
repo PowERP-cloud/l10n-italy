@@ -116,10 +116,6 @@ class AccountMoveLine(models.Model):
 
                 # --> Spese addebitate al cliente
                 if charge_client:
-            
-                    # Rimozione riconciliazione dall'account.move.line
-                    r.remove_move_reconcile()
-                    new_reconcile_needed = True
 
                     move_lines = [
                         # Banca c/c
@@ -138,6 +134,7 @@ class AccountMoveLine(models.Model):
 
                 # --> Spese a nostro carico
                 else:
+                    new_reconcile_needed = True
 
                     move_lines = [
                         # Banca c/c
@@ -182,7 +179,7 @@ class AccountMoveLine(models.Model):
 
             # 2 - New account.move as draft
             # account_move = self.env['account.move'].create({
-            self.env['account.move'].create({
+            new_move = self.env['account.move'].create({
                 'type': 'entry',
                 'date': fields.Date.today(),
                 'journal_id': po_journal.id,
@@ -192,21 +189,38 @@ class AccountMoveLine(models.Model):
             })
             
             if new_reconcile_needed:
-                self.reconcile(
-                    writeoff_acc_id=acct_acct_part,
-                    writeoff_journal_id=po_journal
+                # Ottenimento riga riconciliata con r
+                r_rec_lines = r.full_reconcile_id.reconciled_line_ids
+                rec_line_r = r_rec_lines[0].id != r.id and r_rec_lines[0] or r_rec_lines[1]
+                
+                # Ottenimento riga cliente da nuova registrazione contabile
+                rec_line_new = None
+                
+                for move_line in new_move.line_ids:
+                    acct_match = move_line.account_id.id == acct_acct_part.id
+                    prtn_match = move_line.partner_id.id == pol_partner.id
+                    if acct_match and prtn_match:
+                        rec_line_new = move_line
+                        break
+                    # end if
+                # end for
+                
+                assert rec_line_new
+                
+                # Eliminazione riconciliazione
+                r.remove_move_reconcile()
+                
+                # Creeazione recordset con righe da riconciliare
+                rows_to_reconcile = self.browse(
+                    [rec_line_r.id, rec_line_new.id]
                 )
+                rows_to_reconcile.reconcile()
             # end if
 
         # end for
 
     # end registra_insoluto_standard
-
-    @api.multi
-    def registra_accredito_standard(self):
-        pass
-    # end registra_accredito_standard
-
+    
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # PAYMENT CONFIRM
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
