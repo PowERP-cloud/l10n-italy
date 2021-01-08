@@ -1,3 +1,8 @@
+12.0.2.3.7 (2021-01-08)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Effettuato refactoring sul metodo di accreditamento
+
 12.0.2.3.5 (2021-01-07)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
