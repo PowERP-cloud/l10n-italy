@@ -43,26 +43,21 @@ class WizardPaymentOrderCredit(models.TransientModel):
 
         if active_id:
 
+            sezionale = False
+
             payment_order = self.env['account.payment.order'].browse(active_id)
 
             # conto di compensazione / effetti salvo buon fine
             check_offsetting_account = payment_order.payment_mode_id.\
                 offsetting_account
 
-            if not check_offsetting_account:
-                raise UserError("Attenzione!\nConto di compensazione non "
+            if check_offsetting_account == 'bank_account':
+                raise UserError("Attenzione!\nConto di trasferimento non "
                                 "impostato.")
-            else:
-                if check_offsetting_account == 'bank_account':
-                    offsetting_account = payment_order.company_partner_bank_id
-                elif check_offsetting_account == 'transfer_account':
-                    if not payment_order.payment_mode_id.transfer_account_id:
-                        raise UserError(
-                            "Attenzione!\nConto di trasferimento non "
-                            "impostato.")
-                    else:
-                        offsetting_account = payment_order.payment_mode_id.\
-                            transfer_account_id
+            elif check_offsetting_account == 'transfer_account':
+                offsetting_account = payment_order.payment_mode_id.\
+                    transfer_account_id
+                sezionale = payment_order.payment_mode_id.transfer_journal_id
 
             # spese banca
             bank_account = payment_order.journal_id. \
@@ -80,9 +75,6 @@ class WizardPaymentOrderCredit(models.TransientModel):
 
             # validazione conti e sezionale
             config_errors = ''
-            if not account_config['sezionale']:
-                config_errors += "Non è stato impostato il registro per " \
-                                 "la registrazione contabile.\n"
 
             if not account_config['banca_conto_effetti']:
                 config_errors += "Non è stato impostato il conto " \
@@ -148,7 +140,7 @@ class WizardPaymentOrderCredit(models.TransientModel):
                 vals.update({
                     'date': fields.Date.today(),
                     'date_apply_vat': fields.Date.today(),
-                    'journal_id': account_config['sezionale'].id,
+                    'journal_id': sezionale.id,
                     'type': 'entry',
                     'ref': "Accreditamento ",
                     'state': 'draft',
