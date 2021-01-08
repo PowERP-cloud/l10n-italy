@@ -8,23 +8,23 @@ def same_payment_method(account_move_lines):
     
     assert len(account_move_lines) > 0
     
-    pay_code = None
+    pay_method = None
     
     for line in account_move_lines:
         
-        line_pay_code = line.payment_method.code
+        line_pay_method = line.payment_method
         
-        if pay_code is None:
-            pay_code = line_pay_code
+        if pay_method is None:
+            pay_method = line_pay_method
             
-        elif line_pay_code != pay_code:
+        elif line_pay_method.id != pay_method.id:
             raise UserError(
                 'Le scadenze selezionate devono avere '
                 'tutte lo stesso metodo di pagamento'
             )
         
         else:
-            pass
+            return pay_method
         
         # end if
         
@@ -107,6 +107,8 @@ def same_payment_order(account_move_lines):
                 'selezionate devono appartenere allo stesso ordine di '
                 'pagamento'
             )
+        else:
+            return po_name
         # end if
         
     # end for
