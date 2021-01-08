@@ -4,7 +4,7 @@
         <field name="name">wizard.payment.order.credit.form</field>
         <field name="model">wizard.payment.order.credit</field>
         <field name="arch"  type="xml">
-            <form string="Accreditamento">
+            <form string="Accredito">
                 <group>
                     <field name="account_expense" />
                     <field name="amount_expense"
@@ -12,7 +12,7 @@
                 </group>
 
                 <footer>
-                    <button type="object" name="confirm"
+                    <button type="object" name="registra_accredito"
                             string="Conferma"
                             class="oe_highlight"/>
                     <button special="cancel" string="Annulla" class="oe_link"/>

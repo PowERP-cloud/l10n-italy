@@ -180,12 +180,6 @@ class AccountMoveLine(models.Model):
 
     # end registra_insoluto_standard
 
-    @api.multi
-    def registra_accredito_standard(self):
-        pass
-    # end registra_accredito_standard
-
-
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # PAYMENT CONFIRM
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

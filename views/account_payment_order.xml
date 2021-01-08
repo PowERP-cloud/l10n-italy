@@ -10,7 +10,7 @@
 
              <xpath expr="//button[@name='action_cancel']" position="before">
                 <button name="action_accreditato" type="object" states="uploaded"
-                        string="Accreditato" class="oe_highlight"/>
+                        string="Accredito" class="oe_highlight"/>
              </xpath>
 
         </field>
