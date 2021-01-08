@@ -24,11 +24,13 @@ def same_payment_method(account_move_lines):
             )
         
         else:
-            return pay_method
+            pass
         
         # end if
         
     # end for
+    
+    return pay_method
     
 # end same_payment_method
 
@@ -108,10 +110,13 @@ def same_payment_order(account_move_lines):
                 'pagamento'
             )
         else:
-            return po_name
+            pass
+        
         # end if
         
     # end for
+
+    return po_name
     
 # end same_payment_order
 
