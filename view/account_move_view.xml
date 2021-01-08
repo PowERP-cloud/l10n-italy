@@ -10,6 +10,11 @@
             <xpath expr="//field[@name='date']" position="before">
                 <field name="date_effective" />
             </xpath>
+            
+            <xpath expr="//field[@name='line_ids']/tree/field[@name='credit']" position="after">
+                <field name="calculate_field" invisible="1"/>
+                <field name="payment_method" domain="[('debit_credit', '=', calculate_field)]"/>
+            </xpath>
 
             <xpath expr="/form/sheet/notebook/page[1]" position="after">
                 <page string="Scadenze">

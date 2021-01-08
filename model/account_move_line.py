@@ -56,6 +56,10 @@ class AccountMoveLine(models.Model):
     incasso_effettuato = fields.Boolean(string='Incasso effettuato',
                                         default=False)
 
+    prorogation_ctr = fields.Integer(string='Numero di proroghe')
+
+    unpaid_ctr = fields.Integer(string='Numero di insoluti')
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ONCHANGE METHODS
 

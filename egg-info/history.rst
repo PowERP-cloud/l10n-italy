@@ -1,4 +1,9 @@
-12.0.1.1.38 (2021-01-07)
+12.0.2.1.40 (2021-01-08)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [MOD] Spostati campi "prorogation_ctr" e "unpaid_ctr" di account.move.line da modulo account_banking_invoice_financing a account_duedates
+
+12.0.1.1.39 (2021-01-07)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Added payment done field / Impostato campo incasso effettuato
