@@ -1,7 +1,7 @@
 #
 # Copyright (c) 2021
 #
-from odoo import models, api
+from odoo import models, api, fields
 from odoo.exceptions import UserError
 
 
@@ -45,15 +45,13 @@ class AccountPaymentOrder(models.Model):
 
     @api.multi
     def registra_accredito_standard(self):
+
+        account_expense_id = self._context.get('expenses_account_id')
+        amount_expense = self._context.get('expenses_amount')
+
         for payment_order in self:
 
-            # spese qualora ce ne siano
-            if self.account_expense and self.account_expense.id:
-                if self.amount_expense > 0:
-                    amount_expense = self.amount_expense
-            else:
-                amount_expense = 0
-
+            # impostazione sezionale dal conto di compensazione
             sezionale = False
 
             # conto di compensazione / effetti salvo buon fine
@@ -107,7 +105,7 @@ class AccountPaymentOrder(models.Model):
                 # se ci sono spese le aggiungo
                 if amount_expense > 0:
                     expense_move_line = {
-                        'account_id': self.account_expense.id,
+                        'account_id': account_expense_id,
                         'credit': 0,
                         'debit': amount_expense,
                     }

@@ -29,11 +29,14 @@ class WizardPaymentOrderCredit(models.TransientModel):
 
         model = self.env['account.payment.order']
         recordset = model.browse(self._context['active_id'])
-        recordset.registra_accredito()
+        recordset.with_context({
+            'expenses_account_id': self.expenses_account.id,
+            'expenses_amount': self.expenses_amount,
+        }).registra_accredito()
 
         return {'type': 'ir.actions.act_window_close'}
 
-    # end registra_insoluto
+    # end registra_accredito
 
     # @api.multi
     # def confirm(self):
