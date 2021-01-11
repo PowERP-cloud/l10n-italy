@@ -29,6 +29,7 @@ class AccountMoveLine(models.Model):
         validate_selection.same_payment_order(lines)
         validate_selection.allowed_payment_order_status(lines, ['done'])
         validate_selection.lines_has_payment(lines, paid=True)
+        validate_selection.lines_check_invoice_type(lines, ['out_invoice'])
         
         # Open the wizard
         wiz_view = self.env.ref(
