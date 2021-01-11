@@ -41,7 +41,7 @@ class AccountPaymentOrder(models.Model):
             f'Procedura di registrazione accredito non definita '
             f'per il metodo di pagamento {self.payment_mode_id.name}'
         )
-    # end registra_accredito_standard
+    # end registra_accredito
 
     @api.multi
     def registra_accredito_standard(self):

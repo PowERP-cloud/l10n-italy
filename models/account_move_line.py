@@ -201,6 +201,7 @@ class AccountMoveLine(models.Model):
         validate_selection.assigned_to_payment_order(lines, assigned=True)
         validate_selection.allowed_payment_order_status(lines, ['done'])
         validate_selection.same_payment_order(lines)
+        validate_selection.lines_check_invoice_type(lines, ['out-invoice'])
 
         # apertura wizard
         return {
@@ -217,6 +218,19 @@ class AccountMoveLine(models.Model):
             "binding_model_id": "account.model_account_move_line"
         }
     # end validate_payment_confirm
+
+    @api.multi
+    def registra_incasso(self):
+
+        # The payment method of the selected lines
+        p_method = self.get_payment_method()
+
+        raise UserError(
+            f'Procedura di registrazione d\'incasso non definita '
+            f'per il metodo di pagamento {p_method.name}'
+        )
+
+    # end registra_incasso
     
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Metodi di utilità
