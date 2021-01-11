@@ -27,7 +27,7 @@ class WizardPaymentOrderConfirm(models.TransientModel):
     @api.multi
     def registra_incasso(self):
         model = self.env['account.move.line']
-        recordset = model.browse(self._context['active_id'])
+        recordset = model.browse(self._context['active_ids'])
         recordset.with_context({
             'expenses_account_id': self.account_expense.id,
             'expenses_amount': self.amount_expense,

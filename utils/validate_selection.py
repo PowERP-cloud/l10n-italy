@@ -226,10 +226,10 @@ def lines_check_invoice_type(account_move_lines,
     documents_allowed = []
 
     document_labels = {
-        'out-invoice': 'Fattura attiva',
-        'in-invoice': 'Fattura passiva',
-        'out-refund': 'Nota di credito cliente',
-        'in-refund': 'Nota di credito fornitore',
+        'out_invoice': 'Fattura attiva',
+        'in_invoice': 'Fattura passiva',
+        'out_refund': 'Nota di credito cliente',
+        'in_refund': 'Nota di credito fornitore',
     }
 
     for inv_type in allowed_documents:

@@ -12,7 +12,7 @@
                 </group>
 
                 <footer>
-                    <button type="object" name="confirm"
+                    <button type="object" name="registra_incasso"
                             string="Conferma"
                             class="oe_highlight"/>
                     <button special="cancel" string="Annulla" class="oe_link"/>
