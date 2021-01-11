@@ -213,3 +213,39 @@ def lines_has_payment(account_move_lines, paid: bool):
     # end for
 
 # end lines_has_payment
+
+
+def lines_check_invoice_type(account_move_lines,
+                             allowed_documents: typing.List[str]):
+    """
+    Check if the selected lines document type is in the list.
+    """
+
+    assert len(account_move_lines) > 0
+
+    documents_allowed = []
+
+    document_labels = {
+        'out-invoice': 'Fattura attiva',
+        'in-invoice': 'Fattura passiva',
+        'out-refund': 'Nota di credito cliente',
+        'in-refund': 'Nota di credito fornitore',
+    }
+
+    for inv_type in allowed_documents:
+        documents_allowed.append(document_labels[inv_type])
+    # end for
+
+    for line in account_move_lines:
+
+        if line.invoice_id.type not in allowed_documents:
+            raise UserError(
+                'La funzione è supportata solo '
+                'per i tipi di documento: '
+                ' ' + ', '.join(documents_allowed)
+            )
+        # end if
+
+    # end for
+
+# end lines_check_invoice_type
