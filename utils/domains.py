@@ -1,17 +1,30 @@
-sezionale = [
+from . import misc
+
+
+BANK_EXPENSES_ACCOUNT_EXTERNAL_ID = 'account.data_account_type_expenses'
+
+
+transfer_journal = [
     ('type', 'not in', ['sale', 'sale_refund', 'purchase', 'purchase_refund'])
 ]
+sezionale = transfer_journal
 
-conto_effetti_attivi = [
-        ('nature', 'in', ['A', 'P']),
-        ('user_type_id.name', 'in', [
-            'Receivable',
-            'Bank and Cash',
-            'Current Assets',
-            'Credito',
-            'Banca e cassa',
-            'Attività correnti']), ]
+transfer_account = [
+    ('user_type_id.type', '=', 'receivable')
+]
+conto_effetti_attivi = transfer_account
 
-banca_conto_effetti = [('nature', 'in', ['A', 'P'])]
+banca_conto_effetti = [
+    ('user_type_id.type', 'in', ['bank', 'receivable'])
+]
 
-expenses_account = [('internal_group', '=', 'expense')]
+
+def get_bank_expenses_account(env):
+    acct_type_id = misc.external_id_to_id(
+        env, BANK_EXPENSES_ACCOUNT_EXTERNAL_ID
+    )
+    return [('user_type_id', '=', acct_type_id)]
+# end get_bank_expenses_account
+
+
+get_expenses_account = get_bank_expenses_account

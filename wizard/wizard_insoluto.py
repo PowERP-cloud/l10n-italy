@@ -15,7 +15,7 @@ class WizardInsoluto(models.TransientModel):
     expenses_account = fields.Many2one(
         'account.account',
         string='Conto Spese',
-        domain=domains.expenses_account,
+        domain=lambda self: domains.get_bank_expenses_account(self.env),
     )
     
     expenses_amount = fields.Float(string='Importo spese')
