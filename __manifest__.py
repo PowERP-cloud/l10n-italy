@@ -6,7 +6,7 @@
 {
     'name': 'Due dates',
     'summary': 'Due dates management',
-    'version': '12.0.2.1.41',
+    'version': '12.0.3.1.41',
     'category': 'Accounting',
     'author': 'PowErp Srl',
     'website': '',

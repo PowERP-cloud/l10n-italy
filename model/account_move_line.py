@@ -26,13 +26,19 @@ class AccountMoveLine(models.Model):
     )
 
     duedate_line_id = fields.Many2one(
-        'account.duedate_plus.line',
+        comodel_name='account.duedate_plus.line',
         string='Riferimento riga scadenza',
         indexed=True,
     )
 
+    payment_order = fields.Many2one(
+        string='Record ordine di pagamento',
+        related='payment_line_ids.order_id',
+        readonly=True
+    )
+
     payment_order_name = fields.Char(
-        'Ordine di pagamento',
+        string='Ordine di pagamento',
         related='payment_line_ids.order_id.name',
         readonly=True)
 
