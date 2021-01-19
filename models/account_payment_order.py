@@ -51,46 +51,25 @@ class AccountPaymentOrder(models.Model):
 
         for payment_order in self:
 
-            # impostazione sezionale dal conto di compensazione
-            sezionale = False
+            cfg = payment_order.get_move_config()
 
-            # conto di compensazione / effetti salvo buon fine
-            check_offsetting_account = payment_order.payment_mode_id. \
-                offsetting_account
+            # validazione conti impostati
 
-            if check_offsetting_account == 'bank_account':
-                raise UserError("Attenzione!\nConto di trasferimento non "
+            if not cfg['sezionale'].id:
+                raise UserError("Attenzione!\nSezionale non "
                                 "impostato.")
-            elif check_offsetting_account == 'transfer_account':
-                offsetting_account = payment_order.payment_mode_id. \
-                    transfer_account_id
-                sezionale = payment_order.payment_mode_id.transfer_journal_id
 
-            # spese banca
-            bank_account = payment_order.journal_id. \
-                default_credit_account_id
+            if not cfg['banca_conto_effetti'].id:
+                raise UserError("Attenzione!\nBanca conto effetti "
+                                "non impostato.")
 
-            if not bank_account.id:
-                raise UserError("Attenzione!\nConto banca non impostato.")
+            if not cfg['conto_effetti_attivi'].id:
+                raise UserError("Attenzione!\nConto effetti attivi "
+                                "non impostato.")
 
-            # CONFIG
-            #   banca
-            bank = payment_order.company_partner_bank_id
-            #   conti e sezionale
-            account_config = bank.get_payment_method_config(
-                payment_order.payment_method_code)
-
-            # validazione conti e sezionale
-            config_errors = ''
-
-            if not account_config['banca_conto_effetti']:
-                config_errors += "Non è stato impostato il conto " \
-                                 "'banca conto effetti'"
-            if config_errors:
-                config_errors = "Attenzione, configurazione " \
-                                "incompleta\n\n" + \
-                                config_errors
-                raise UserError(config_errors)
+            if amount_expense > 0:
+                if not cfg['bank_journal'].id:
+                    raise UserError("Attenzione!\nConto banca non impostato.")
 
             lines = self.env['account.payment.line'].search(
                 [('order_id', '=', payment_order.id)])
@@ -112,7 +91,7 @@ class AccountPaymentOrder(models.Model):
                     line_ids.append((0, 0, expense_move_line))
 
                     bank_expense_line = {
-                        'account_id': bank_account.id,
+                        'account_id': cfg['bank_journal'].id,
                         'credit': amount_expense,
                         'debit': 0,
                     }
@@ -120,7 +99,7 @@ class AccountPaymentOrder(models.Model):
 
                 # banca conto effetti
                 banca_conto_effetti = {
-                    'account_id': account_config['banca_conto_effetti'].id,
+                    'account_id': cfg['banca_conto_effetti'].id,
                     'partner_id': line.partner_id.id,
                     'credit': 0,
                     'debit': line.amount_currency,
@@ -128,7 +107,7 @@ class AccountPaymentOrder(models.Model):
                 line_ids.append((0, 0, banca_conto_effetti))
 
                 effetti_attivi = {
-                    'account_id': offsetting_account.id,
+                    'account_id': cfg['conto_effetti_attivi'].id,
                     'credit': line.amount_currency,
                     'debit': 0
                 }
@@ -147,7 +126,7 @@ class AccountPaymentOrder(models.Model):
                 vals.update({
                     'date': fields.Date.today(),
                     'date_apply_vat': fields.Date.today(),
-                    'journal_id': sezionale.id,
+                    'journal_id': cfg['sezionale'].id,
                     'type': 'entry',
                     'ref': "Accreditamento ",
                     'state': 'draft',
