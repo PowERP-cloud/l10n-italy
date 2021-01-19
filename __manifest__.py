@@ -18,7 +18,6 @@
     'data': [
         'views/res_partner_bank_view.xml',
         "views/action_insoluto.xml",
-        "views/action_test.xml",  # TODO: rimouovere questa action, serve solo per lo sviluppo
         "wizard/wizard_insoluto.xml",
         "views/action_payment_confirm.xml",
         "views/account_payment_order.xml",

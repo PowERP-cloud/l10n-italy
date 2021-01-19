@@ -282,24 +282,4 @@ class AccountMoveLine(models.Model):
         return validate_selection.same_payment_method(self)
     # end get_payment_method_code
 
-    @api.model
-    def get_move_config(self):
-        '''Returns the journals and accounts to be used for creating new account.move records'''
-
-        print('x')
-        #po =
-
-        #res_bank_acc
-
-        # 1 - get default config from res_bank_account
-
-        # 2 - get overrides from payment mode
-
-        # 3 - Add bank journal
-
-        # 4 - If something is missing raise an exception
-
-        pass
-    # end get_move_config
-
 # end AccountMoveLine

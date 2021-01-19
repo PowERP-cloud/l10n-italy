@@ -175,4 +175,35 @@ class AccountPaymentOrder(models.Model):
         
         return super(AccountPaymentOrder, self).unlink()
     # end unlink
+
+
+
+    @api.model
+    def get_move_config(self):
+        '''Returns the journals and accounts to be used for creating new account.move records'''
+
+        po = self
+        pay_mode = po.payment_mode_id
+        pay_method = po.payment_method_id
+        res_bank_acc = po.company_partner_bank_id
+
+        # 1 - Get default config from res_bank_account
+        cfg = res_bank_acc.get_payment_method_config(pay_method.code)
+
+        # 2 - Get overrides from payment mode
+        if pay_mode.offsetting_account == 'transfer_account':
+            assert pay_mode.transfer_journal_id.id
+            cfg['transfer_journal'] = pay_mode.transfer_journal_id
+            cfg['sezionale'] = cfg['transfer_journal']
+
+            assert pay_mode.transfer_account_id.id
+            cfg['transfer_account'] = pay_mode.transfer_account_id
+            cfg['conto_effetti_attivi'] = cfg['transfer_account']
+        # end if
+
+        # 3 - Add bank journal
+        cfg['bank_journal'] = po.journal_id
+
+        return cfg
+    # end get_move_config
 # end AccountPaymentOrder
