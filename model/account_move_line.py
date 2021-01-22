@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 
 
 class AccountMoveLine(models.Model):
-    _inherit = "account.move.line"
+    _inherit = 'account.move.line'
 
     payment_method = fields.Many2one('account.payment.method',
                                      string="Metodo di pagamento")
