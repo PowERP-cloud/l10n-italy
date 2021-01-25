@@ -8,14 +8,18 @@ from odoo.exceptions import UserError
 class AccountPaymentOrder(models.Model):
     _inherit = 'account.payment.order'
 
+    payment_method_code = fields.Char(
+        string='Codice metodo di pagamento',
+        related='payment_method_id.code', )
+
     @api.multi
     def action_accreditato(self):
 
         for order in self:
             if order.state == 'uploaded':
                 # validation
-                if order.payment_mode_id.payment_method_code not in [
-                    'invoice_financing', 'riba_cbi', 'sepa_direct_debit'
+                if order.payment_method_code not in [
+                    'riba_cbi', 'sepa_direct_debit'
                 ]:
                     raise UserError('Attenzione!\nIl metodo di pagamento non '
                                     'permette l\'accreditamento.')
@@ -63,13 +67,14 @@ class AccountPaymentOrder(models.Model):
                 raise UserError("Attenzione!\nBanca conto effetti "
                                 "non impostato.")
 
-            if not cfg['conto_effetti_attivi'].id:
-                raise UserError("Attenzione!\nConto effetti attivi "
-                                "non impostato.")
+            # if not cfg['conto_effetti_attivi'].id:
+            #     raise UserError("Attenzione!\nConto effetti attivi "
+            #                     "non impostato.")
 
-            if amount_expense > 0:
-                if not cfg['bank_journal'].id:
-                    raise UserError("Attenzione!\nConto banca non impostato.")
+            if not cfg['bank_journal'].id:
+                raise UserError("Attenzione!\nConto di costo non impostato.")
+
+            bank_account = cfg['bank_journal'].default_credit_account_id
 
             lines = self.env['account.payment.line'].search(
                 [('order_id', '=', payment_order.id)])
@@ -91,16 +96,16 @@ class AccountPaymentOrder(models.Model):
                     line_ids.append((0, 0, expense_move_line))
 
                     bank_expense_line = {
-                        'account_id': cfg['bank_journal'].id,
+                        'account_id': bank_account.id,
                         'credit': amount_expense,
                         'debit': 0,
                     }
                     line_ids.append((0, 0, bank_expense_line))
+                # end if
 
                 # banca conto effetti
                 banca_conto_effetti = {
                     'account_id': cfg['banca_conto_effetti'].id,
-                    'partner_id': line.partner_id.id,
                     'credit': 0,
                     'debit': line.amount_currency,
                 }
@@ -108,6 +113,7 @@ class AccountPaymentOrder(models.Model):
 
                 effetti_attivi = {
                     'account_id': cfg['conto_effetti_attivi'].id,
+                    'partner_id': line.partner_id.id,
                     'credit': line.amount_currency,
                     'debit': 0
                 }
@@ -154,8 +160,6 @@ class AccountPaymentOrder(models.Model):
         
         return super(AccountPaymentOrder, self).unlink()
     # end unlink
-
-
 
     @api.model
     def get_move_config(self):
