@@ -14,11 +14,23 @@ _logger = logging.getLogger(__name__)
 class WizardPaymentOrderCredit(models.TransientModel):
     _name = 'wizard.payment.order.credit'
 
+    def _set_default_mode(self):
+
+        payment_order = self.env['account.payment.order'].browse(
+            self._context.get('active_id'))
+
+        if payment_order and payment_order.id:
+            cfg = payment_order.get_move_config()
+            if 'conto_spese_bancarie' in cfg and cfg['conto_spese_bancarie'].id:
+                return cfg['conto_spese_bancarie'].id
+        return False
+
     account_expense = fields.Many2one(
         'account.account',
         string='Conto spese',
         domain=[(
-            'internal_group', '=', 'expense')]
+            'internal_group', '=', 'expense')],
+        default=_set_default_mode
     )
 
     amount_expense = fields.Float(string='Importo', )

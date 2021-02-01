@@ -15,11 +15,28 @@ class WizardPaymentOrderConfirm(models.TransientModel):
     _name = 'wizard.payment.order.confirm'
     _description = 'Create confirm payment wizard from due dates tree view'
 
+    def _set_default_mode(self):
+        active_ids = self._context.get('active_ids')
+
+        payment_order = False
+
+        if len(active_ids) > 0:
+            lines = self.env['account.move.line'].browse(active_ids)
+            for line in lines:
+                payment_order = line.payment_order
+                break
+
+        cfg = payment_order.get_move_config()
+        if 'conto_spese_bancarie' in cfg and cfg['conto_spese_bancarie'].id:
+            return cfg['conto_spese_bancarie'].id
+        return False
+
     account_expense = fields.Many2one(
         'account.account',
         string='Conto spese',
         domain=[(
-            'internal_group', '=', 'expense')]
+            'internal_group', '=', 'expense')],
+        default=_set_default_mode
     )
 
     amount_expense = fields.Float(string='Importo', )
