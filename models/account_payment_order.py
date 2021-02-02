@@ -63,13 +63,9 @@ class AccountPaymentOrder(models.Model):
                 raise UserError("Attenzione!\nSezionale non "
                                 "impostato.")
 
-            if not cfg['banca_conto_effetti'].id:
-                raise UserError("Attenzione!\nBanca conto effetti "
+            if not cfg['effetti_allo_sconto'].id:
+                raise UserError("Attenzione!\nConto effetti allo sconto "
                                 "non impostato.")
-
-            # if not cfg['conto_effetti_attivi'].id:
-            #     raise UserError("Attenzione!\nConto effetti attivi "
-            #                     "non impostato.")
 
             if not cfg['bank_journal'].id:
                 raise UserError("Attenzione!\nConto di costo non impostato.")
@@ -103,13 +99,13 @@ class AccountPaymentOrder(models.Model):
                     line_ids.append((0, 0, bank_expense_line))
                 # end if
 
-                # banca conto effetti
-                banca_conto_effetti = {
-                    'account_id': cfg['banca_conto_effetti'].id,
+                # conto effetti allo sconto
+                effetti_allo_sconto = {
+                    'account_id': cfg['effetti_allo_sconto'].id,
                     'credit': 0,
                     'debit': line.amount_currency,
                 }
-                line_ids.append((0, 0, banca_conto_effetti))
+                line_ids.append((0, 0, effetti_allo_sconto))
 
                 effetti_attivi = {
                     'account_id': cfg['conto_effetti_attivi'].id,

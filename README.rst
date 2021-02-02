@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.4.10
+|icon| Account Banking Common 12.0.3.4.11
 =========================================
 
 
@@ -134,6 +134,11 @@ In case of trouble, please check there if your issue has already been reported.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.3.4.11 (2021-02-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Refactoring
 
 12.0.3.4.10 (2021-02-01)
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -376,7 +381,7 @@ Leggere con attenzione i file README per maggiori informazioni sugli autori.
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-02-01
+Last Update / Ultimo aggiornamento: 2021-02-02
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status
