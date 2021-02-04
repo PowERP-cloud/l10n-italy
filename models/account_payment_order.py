@@ -139,7 +139,6 @@ class AccountPaymentOrder(models.Model):
                 self.env['account.move'].create(vals)
 
             payment_order.action_done()
-
     # end registra_accredito_standard
 
     @api.multi
