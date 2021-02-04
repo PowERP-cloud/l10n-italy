@@ -9,10 +9,12 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 #
 
-
+from datetime import timedelta
 from odoo import models, api, fields
 from odoo.tools.float_utils import float_is_zero
 from odoo.exceptions import UserError
+
+LIMIT_DAYS = 60
 
 
 class AccountInvoice(models.Model):
@@ -404,6 +406,8 @@ class AccountInvoice(models.Model):
         elif self.date_invoice:
             date_invoice = self.date_invoice
         if date_invoice:
+            # check if the date is inside limits + - 60 days
+            throw_warning = self._check_limit_date(date_invoice)
             if self.payment_term_id:
                 pterm = self.payment_term_id
                 pterm_list = pterm.with_context(
@@ -413,15 +417,30 @@ class AccountInvoice(models.Model):
             elif self.date_due and (date_invoice > self.date_due):
                 self.date_due = date_invoice
             self.update_duedates()
-    # end _onchange_payment_term_id
-
+            if throw_warning:
+                return {
+                    'warning': {
+                        'title': 'Attenzione!',
+                        'message': 'Data di decorrenza fuori '
+                                   'limiti (+60 -60 giorni).'}
+                }
     # end _onchange_date_effective
-
     # ONCHANGE METHODS - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # PROTECTED METHODS - begin
+
+    @api.model
+    def _check_limit_date(self, date):
+        if self.date_invoice:
+            upper_limit_date = self.date_invoice + timedelta(days=LIMIT_DAYS)
+            lower_limit_date = self.date_invoice - timedelta(days=LIMIT_DAYS)
+            if date:
+                return not (lower_limit_date < date < upper_limit_date)
+            # end if
+        # end if
+        return False
 
     # @api.model
     # def _update_credit_debit_move_lines(self):
