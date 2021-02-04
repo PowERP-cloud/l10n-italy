@@ -4,10 +4,10 @@
 {
     'name': 'Account Invoice 13 more',
     'summary': 'Account Invoice 13 more',
-    'version': '12.0.1.0.2',
+    'version': '12.0.1.0.3',
     'category': 'Accounting',
-    'author': 'Powerp Srl',
-    'website': '',
+    'author': 'Powerp',
+    'website': 'www.powerp.it',
     'license': 'LGPL-3',
     'depends': [
         'account',

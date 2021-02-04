@@ -66,6 +66,12 @@ class AccountMove(models.Model):
         oldname='payment_id'
     )
 
+    invoice_bank_id = fields.Many2one(
+        string='Invoice Bank',
+        comodel_name='res.partner.bank',
+        default=False
+    )
+
     @api.multi
     def post(self, invoice=False):
         for move in self:
@@ -73,4 +79,5 @@ class AccountMove(models.Model):
                 move.invoice_date = invoice.date_invoice
                 move.type = invoice.type
                 move.payment_term_id = invoice.payment_term_id
+                move.invoice_bank_id = invoice.partner_bank_id
         return super().post(invoice=invoice)
