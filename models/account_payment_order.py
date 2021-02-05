@@ -10,7 +10,8 @@ class AccountPaymentOrder(models.Model):
 
     payment_method_code = fields.Char(
         string='Codice metodo di pagamento',
-        related='payment_method_id.code', )
+        related='payment_method_id.code',
+    )
 
     @api.multi
     def action_accreditato(self):
