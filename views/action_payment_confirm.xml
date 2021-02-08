@@ -8,7 +8,7 @@
             <field name="state">code</field>
             <field name="code">
                 if model._context.get('active_model') == 'account.move.line':
-                    action = model.validate_payment_confirm()
+                    action = model.open_wizard_payment_confirm()
                 # end if
             </field>
             <field

@@ -135,6 +135,11 @@ In case of trouble, please check there if your issue has already been reported.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.5.12 (2021-02-08)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Modifica registrazione contabile degli insoluti
+
 12.0.3.4.11 (2021-02-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

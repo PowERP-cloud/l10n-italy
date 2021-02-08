@@ -1,17 +1,14 @@
+import math
+
 from odoo import models, api, fields
 from odoo.exceptions import UserError
+import odoo.addons.decimal_precision as dp
 
 from ..utils import validate_selection
 
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
-
-    PAYMENT_METHODS_ALLOWED = [
-        'invoice_financing',
-        'riba_cbi',
-        'sepa_direct_debit'
-    ]
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # INSOLUTO
@@ -24,12 +21,7 @@ class AccountMoveLine(models.Model):
         lines = self.env['account.move.line'].browse(self._context['active_ids'])
         
         # Perform validations
-        validate_selection.same_payment_method(lines)
-        validate_selection.assigned_to_payment_order(lines, assigned=True)
-        validate_selection.same_payment_order(lines)
-        validate_selection.allowed_payment_order_status(lines, ['done'])
-        validate_selection.lines_has_payment(lines, paid=True)
-        validate_selection.lines_check_invoice_type(lines, ['out_invoice'])
+        validate_selection.insoluto(lines)
         
         # Open the wizard
         wiz_view = self.env.ref(
@@ -63,189 +55,241 @@ class AccountMoveLine(models.Model):
     
     @api.multi
     def registra_insoluto_standard(self):
-        
+
+        # NB: no need to perform checks on the selected lines, the checks have
+        #     already been performed by the method:
+        #
+        #         account.move.line.open_wizard_insoluto()
+        #
+        #     which gets called by the server action that opens the wizard.
+
+        # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        # Variables
+        # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+        # Sum of insoluti
+        amount_insoluti = 0
+
+        # Modify invoice reconciliation
+        # True if the move line reconciliation must be removed
+        # and a new one registered
+        new_reconcile_needed = False
+
+        # Amount of bank expenses to be charged to the client
+        # Initially set to zero, if needed will be computed later
+        charge_client_for = [0] * len(self)
+
+        # 'account.move.line' model with context to
+        # disable move validity checks
+        move_line_model_no_check = self.env['account.move.line'].with_context(
+            check_move_validity=False
+        )
+
+        # "Normal mode" 'account.move.line.model'
+        move_line_model = self.env['account.move.line']
+
+        # Precision to be used in rounding
+        float_precision = dp.get_precision('Account')(self.env.cr)[1]
+
+        # - - - - - - - - - - - - - - - - -
         # Data from wizard
+        # - - - - - - - - - - - - - - - - -
         expenses_account_id = self._context['expenses_account_id']
         expenses_amount = self._context['expenses_amount']
         charge_client = self._context['charge_client']
-        
-        for r in self:
-            
-            new_reconcile_needed = False
-            
-            r.unpaid_ctr = r.unpaid_ctr + 1
 
-            # - - - - - - - - - - - - - - - - -
-            # Retrieve the payment order data
-            # - - - - - - - - - - - - - - - - -
+        # - - - - - - - - - - - - - - - - -
+        # Data from payment order
+        # - - - - - - - - - - - - - - - - -
 
-            pol = r.payment_order_lines[0]  # Payment order line
-            po = pol.order_id  # Payment order
+        # NB: since the lines are required to belong to the same
+        #     payment order and this constraint has already been
+        #     verified we can pick the payment order of the first
+        #     record in self
 
-            pol_partner = pol.partner_id  # Partner for this duedate
-            po_journal = po.journal_id  # Journal selected in the po
+        pol = self[0].payment_order_lines[0]  # Payment order line
+        po = pol.order_id  # Payment order
 
-            # - - - - - - - - - - - -
-            # Accounts configuration
-            # - - - - - - - - - - - -
+        pol_partner = pol.partner_id  # Partner for this duedate
+        po_journal = po.journal_id  # Journal selected in the po
 
-            # account.account -> Bank
-            acct_acct_bank_credit = po_journal.default_credit_account_id
-            if not acct_acct_bank_credit:
-                raise UserError(
-                    f'Conto "avere" non configurato per non configurato per '
-                    f'sezionale di banca '
-                    f'{po_journal.display_name} ({po_journal.code})'
+        # - - - - - - - - - - - -
+        # Accounts configuration
+        # - - - - - - - - - - - -
+
+        # account.account -> Bank
+        acct_acct_bank_credit = po_journal.default_credit_account_id
+        if not acct_acct_bank_credit:
+            raise UserError(
+                f'Conto "avere" non configurato per non configurato per '
+                f'sezionale di banca '
+                f'{po_journal.display_name} ({po_journal.code})'
+            )
+        # end if
+
+        # account.account -> Expenses
+        acct_acct_expe = self.env['account.account'].browse(
+            expenses_account_id
+        )
+
+        # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        # Creazione registrazione contabile (account.move)
+        # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+        # La registrazione contabile viene creata una modalità che
+        # permette squadrature durante la sua manipolazione.
+        # L'utilizzo di questa modalità è necessario per facilitare
+        # la procedura di creazione di una nuova riconciliazione
+        new_move = self.env['account.move'].create({
+            'type': 'entry',
+            'date': fields.Date.today(),
+            'journal_id': po_journal.id,
+            'state': 'draft',
+            'ref': 'Insoluto',
+        })
+
+        # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        # Eventuali costi bancari
+        # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        if expenses_account_id and expenses_amount > 0:
+
+            if charge_client:
+                # Spread expenses amount equally among the lines.
+                # Avoid rounding problem by adjusting the amount
+                # of the last line processed
+                per_client_amount = round(
+                    expenses_amount / len(self),
+                    float_precision
                 )
+                charge_client_for = [per_client_amount] * len(self)
+
+                # Manage the difference between rounded spread costs
+                # and original cost
+                charge_client_for_sum = round(
+                    per_client_amount * len(self),
+                    float_precision
+                )
+                remain = round(
+                    expenses_amount - charge_client_for_sum,
+                    float_precision
+                )
+                charge_client_for[-1] = round(
+                    charge_client_for[-1] + remain,
+                    float_precision
+                )
+
+            else:
+                # Client is not charged for expenses,
+                # just add two new move lines
+
+                # Line reconcile must be changed
+                new_reconcile_needed = True
+
+                # Banca c/c
+                bank_account_line = move_line_model_no_check.create({
+                    'move_id': new_move.id,
+                    'account_id': acct_acct_bank_credit.id,
+                    'debit': 0,
+                    'credit': expenses_amount,
+                })
+
+                # Spese bancarie
+                expenses_account_line = move_line_model.create({
+                    'move_id': new_move.id,
+                    'account_id': acct_acct_expe.id,
+                    'debit': expenses_amount,
+                    'credit': 0
+                })
             # end if
+        # end if
+
+        # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        # Clienti e nuova riconciliazione
+        # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        for move_line, expenses_charged in zip(self, charge_client_for):
+
+            # Update the total amount of insoluti
+            amount_insoluti = amount_insoluti + move_line.debit
+
+            # Increase the unpaid counter for this line
+            move_line.unpaid_ctr = move_line.unpaid_ctr + 1
 
             # account.account -> Partner
-            acct_acct_part = r.account_id
+            acct_acct_partner = move_line.account_id
 
-            # account.account -> Expenses
-            acct_acct_expe = self.env['account.account'].browse(
-                expenses_account_id
-            )
+            # New move line for the client
+            my_invoice = move_line.invoice_id
 
-            # - - - - - - - - - - - - - -
-            # New account.move creation
-            # - - - - - - - - - - - - - -
+            insoluto_move_line = move_line_model_no_check.create({
+                'move_id': new_move.id,
+                'account_id': acct_acct_partner.id,
+                'partner_id': pol_partner.id,
+                'debit': move_line.debit + expenses_charged,
+                'credit': 0,
+                'name': str(
+                    f'Scadenza {move_line.date_maturity}'
+                    ' - '
+                    f'Fattura {my_invoice.name or "N/A"}'
+                ),
+            })
 
-            # 1 - Move lines
+            # - - - - - - - - - - - - - - - - - - - - - - - -
+            # Modify invoices reconciliation if needed
+            # - - - - - - - - - - - - - - - - - - - - - - - -
+            if new_reconcile_needed:
 
-            if acct_acct_expe:
+                # Ottenimento riga riconciliata con move_line
+                reconcile_line_list = move_line.full_reconcile_id.reconciled_line_ids
 
-                # --> Spese addebitate al cliente
-                if charge_client:
-
-                    move_lines = [
-                        # Banca c/c
-                        {
-                            'account_id': acct_acct_bank_credit.id,
-                            'debit': 0, 'credit': r.debit + expenses_amount,
-                        },
-
-                        # Cliente
-                        {
-                            'account_id': acct_acct_part.id,
-                            'partner_id': pol_partner.id,
-                            'debit': r.debit + expenses_amount, 'credit': 0,
-                        },
-                    ]
-
-                # --> Spese a nostro carico
+                if reconcile_line_list[0].id != move_line.id:
+                    reconcile_line = reconcile_line_list[0]
                 else:
-                    new_reconcile_needed = True
-
-                    move_lines = [
-                        # Banca c/c
-                        {
-                            'account_id': acct_acct_bank_credit.id,
-                            'debit': 0, 'credit': r.debit + expenses_amount,
-                        },
-
-                        # Spese bancarie
-                        {
-                            'account_id': acct_acct_expe.id,
-                            'debit': expenses_amount, 'credit': 0
-                        },
-
-                        # Cliente
-                        {
-                            'account_id': acct_acct_part.id,
-                            'partner_id': pol_partner.id,
-                            'debit': r.debit, 'credit': 0,
-                        },
-                    ]
-
+                    reconcile_line = reconcile_line_list[1]
                 # end if
 
-            # --> Niente spese
-            else:
-                move_lines = [
-                    # Banca c/c
-                    {
-                        'account_id': acct_acct_bank_credit.id,
-                        'debit': 0, 'credit': r.debit
-                    },
-
-                    # Cliente
-                    {
-                        'account_id': acct_acct_part.id,
-                        'partner_id': pol_partner.id,
-                        'debit': r.debit, 'credit': 0,
-                    },
-                ]
-            # end if
-
-            # 2 - New account.move as draft
-            # account_move = self.env['account.move'].create({
-            new_move = self.env['account.move'].create({
-                'type': 'entry',
-                'date': fields.Date.today(),
-                'journal_id': po_journal.id,
-                'state': 'draft',
-                'ref': 'Insoluto',
-                'line_ids': [(0, 0, line) for line in move_lines],
-            })
-            
-            if new_reconcile_needed:
-                # Ottenimento riga riconciliata con r
-                r_rec_lines = r.full_reconcile_id.reconciled_line_ids
-                rec_line_r = r_rec_lines[0].id != r.id and r_rec_lines[0] or r_rec_lines[1]
-                
-                # Ottenimento riga cliente da nuova registrazione contabile
-                rec_line_new = None
-                
-                for move_line in new_move.line_ids:
-                    acct_match = move_line.account_id.id == acct_acct_part.id
-                    prtn_match = move_line.partner_id.id == pol_partner.id
-                    if acct_match and prtn_match:
-                        rec_line_new = move_line
-                        break
-                    # end if
-                # end for
-                
-                assert rec_line_new
-                
                 # Eliminazione riconciliazione
-                r.remove_move_reconcile()
-                
-                # Creeazione recordset con righe da riconciliare
-                rows_to_reconcile = self.browse(
-                    [rec_line_r.id, rec_line_new.id]
-                )
-                rows_to_reconcile.reconcile()
-            # end if
+                move_line.remove_move_reconcile()
 
+                # Creeazione recordset con righe da riconciliare
+                self.browse(
+                    [insoluto_move_line.id, reconcile_line.id]
+                ).reconcile()
+            # end if
         # end for
 
+        # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        # Totale in Banca c/c
+        # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        registered_expenses_amount = round(
+            sum(charge_client_for),
+            float_precision
+        )
+
+        # This time let's use the "normal" account.move.line model so the
+        # program can automatically verify the account.move is balanced
+        move_line_model.create({
+            'move_id': new_move.id,
+            'account_id': acct_acct_bank_credit.id,
+            'debit': 0,
+            'credit': amount_insoluti + registered_expenses_amount,
+        })
     # end registra_insoluto_standard
     
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # PAYMENT CONFIRM
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     @api.multi
-    def validate_payment_confirm(self):
+    def open_wizard_payment_confirm(self):
+
+        # Retrieve the lines
         lines = self.env['account.move.line'].browse(
-            self._context['active_ids'])
+            self._context['active_ids']
+        )
 
-        # ----------------------------------------------------------------------
-        # controlli
-        # ----------------------------------------------------------------------
+        # Controlli
+        validate_selection.payment_confirm(lines)
 
-        # incasso effettuato deve essere False
-        validate_selection.lines_has_payment(lines, paid=False)
-
-        validate_selection.same_payment_method(lines)
-        validate_selection.allowed_payment_method(lines,
-                                                  self.PAYMENT_METHODS_ALLOWED)
-        validate_selection.assigned_to_payment_order(lines, assigned=True)
-        validate_selection.allowed_payment_order_status(lines, ['done'])
-        validate_selection.same_payment_order(lines)
-        validate_selection.lines_check_invoice_type(lines, ['out_invoice'])
-
-        # apertura wizard
+        # Apertura wizard
         return {
             'type': 'ir.actions.act_window',
             'name': 'Conferma pagamento',
@@ -271,7 +315,6 @@ class AccountMoveLine(models.Model):
             f'Procedura di registrazione d\'incasso non definita '
             f'per il metodo di pagamento {p_method.name}'
         )
-
     # end registra_incasso
     
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

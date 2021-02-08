@@ -249,3 +249,33 @@ def lines_check_invoice_type(account_move_lines,
     # end for
 
 # end lines_check_invoice_type
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Validation compounds for specific cases
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+def insoluto(account_move_lines):
+    same_payment_method(account_move_lines)
+    assigned_to_payment_order(account_move_lines, assigned=True)
+    same_payment_order(account_move_lines)
+    allowed_payment_order_status(account_move_lines, ['done'])
+    lines_has_payment(account_move_lines, paid=True)
+    lines_check_invoice_type(account_move_lines, ['out_invoice'])
+# end insoluto
+
+
+def payment_confirm(account_move_lines):
+
+    # incasso effettuato deve essere False
+    lines_has_payment(account_move_lines, paid=False)
+
+    same_payment_method(account_move_lines)
+    allowed_payment_method(
+        account_move_lines,
+        ['invoice_financing', 'riba_cbi', 'sepa_direct_debit'],
+    )
+    assigned_to_payment_order(account_move_lines, assigned=True)
+    allowed_payment_order_status(account_move_lines, ['done'])
+    same_payment_order(account_move_lines)
+    lines_check_invoice_type(account_move_lines, ['out_invoice'])
+# end payment_confirm
