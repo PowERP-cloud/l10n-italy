@@ -125,16 +125,17 @@ class DueDateLine(models.Model):
         # end if
     # end _onchange_due_amount
 
-    @api.onchange('due_date')
-    def _onchange_due_date(self, values=None):
-        # if not self.due_date and values:
-        #     return {
-        #         'warning': {
-        #             'title': 'Data scadenza',
-        #             'message': 'La data non può essere vuota'
-        #         }
-        #     }
-        # end if
+    # @api.onchange('due_date')
+    # def _onchange_due_date(self, values=None):
+    #     pass
+    #     if not self.due_date and values:
+    #         return {
+    #             'warning': {
+    #                 'title': 'Data scadenza',
+    #                 'message': 'La data non può essere vuota'
+    #             }
+    #         }
+    #     end if
     # end _check_due_amount
 
     # @api.onchange('due_amount')
