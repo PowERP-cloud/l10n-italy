@@ -27,6 +27,7 @@
                         'readonly': [('state', 'not in', ['draft',])]
                     }"
                 />
+                <field name="invoice_bank_id" />
             </xpath>
 
         </field>

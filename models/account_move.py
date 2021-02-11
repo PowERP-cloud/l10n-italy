@@ -67,7 +67,7 @@ class AccountMove(models.Model):
     )
 
     invoice_bank_id = fields.Many2one(
-        string='Invoice Bank',
+        string='Banca fattura',
         comodel_name='res.partner.bank',
         default=False
     )

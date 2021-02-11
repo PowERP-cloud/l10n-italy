@@ -1,7 +1,7 @@
 
-=========================================
-|icon| Account Invoice 13 more 12.0.1.0.3
-=========================================
+==========================================
+|icon| Account Invoice 13 more 12.0.2.3.10
+==========================================
 
 
 .. |icon| image:: https://raw.githubusercontent.com/zeroincombenze/accounting/12.0/account_invoice_13_more/static/description/icon.png
@@ -155,6 +155,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.2.3.10 (2021-02-11)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Esposta banca fattura nel dettaglio registrazione
+
 12.0.2.3.9 (2021-02-04)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -220,7 +225,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-02-04
+Last Update / Ultimo aggiornamento: 2021-02-11
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status
