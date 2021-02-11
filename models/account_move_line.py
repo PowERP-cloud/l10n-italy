@@ -1,4 +1,3 @@
-import math
 
 from odoo import models, api, fields
 from odoo.exceptions import UserError
@@ -186,7 +185,8 @@ class AccountMoveLine(models.Model):
                 new_reconcile_needed = True
 
                 # Banca c/c
-                bank_account_line = move_line_model_no_check.create({
+                # bank_account_line = \
+                move_line_model_no_check.create({
                     'move_id': new_move.id,
                     'account_id': acct_acct_bank_credit.id,
                     'debit': 0,
@@ -194,7 +194,8 @@ class AccountMoveLine(models.Model):
                 })
 
                 # Spese bancarie
-                expenses_account_line = move_line_model.create({
+                # expenses_account_line = \
+                move_line_model.create({
                     'move_id': new_move.id,
                     'account_id': acct_acct_expe.id,
                     'debit': expenses_amount,
