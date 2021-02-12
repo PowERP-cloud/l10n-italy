@@ -127,6 +127,7 @@ class DueDateLine(models.Model):
 
     @api.onchange('due_date')
     def _onchange_due_date(self, values=None):
+        pass
         # if not self.due_date and values:
         #     return {
         #         'warning': {
