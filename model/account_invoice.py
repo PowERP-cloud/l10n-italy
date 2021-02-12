@@ -267,14 +267,15 @@ class AccountInvoice(models.Model):
     # end update_duedates
 
     def checks_payment(self):
-        self.check_duedates_payment = False
-        for line in self.duedate_line_ids:
-            rec = self.env['account.payment.line'].search([
-                ('move_line_id', '=', line.move_line_id.id)])
-            if rec:
-                self.check_duedates_payment = True
-            # end if
-        # end for
+        for invoice in self:
+            invoice.check_duedates_payment = False
+            for line in invoice.duedate_line_ids:
+                rec = invoice.env['account.payment.line'].search([
+                    ('move_line_id', '=', line.move_line_id.id)])
+                if rec:
+                    invoice.check_duedates_payment = True
+                # end if
+            # end for
     # end checks_payment
 
     @api.multi
