@@ -2,6 +2,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Tolto onchange su data scadenza
+* [FIX] Errore in annulla fattura con Reverse Charge
 
 12.0.2.1.41 (2021-01-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~
