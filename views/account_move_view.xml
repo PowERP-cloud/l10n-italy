@@ -16,10 +16,6 @@
                 <field name="fiscalyear_id"/>
             </xpath>
 
-            <xpath expr="//field[@name='date']" position="after">
-                <field name="date_apply_balance"/>
-            </xpath>
-
         </field>
     </record>
 

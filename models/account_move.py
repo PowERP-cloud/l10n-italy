@@ -20,9 +20,4 @@ class AccountMove(models.Model):
 
     fiscalyear_id = fields.Many2one('account.fiscal.year',
                                     string="Esercizio contabile")
-
-    date_apply_balance = fields.Date(
-        string='Data competenza',
-    )
-
     lines_count = fields.Integer(compute='count_line_ids')
