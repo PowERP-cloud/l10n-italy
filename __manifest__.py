@@ -5,10 +5,10 @@
 {
     'name': 'Account Banking Common',
     'summary': 'Common stuff for payment modules',
-    'version': '12.0.3.5.13',
+    'version': '12.0.3.5.14',
     'category': 'Accounting',
-    'author': 'PowErp',
-    'website': '',
+    'author': 'powERP, Didotech srl, SHS-AV srl',
+    'website': 'www.powerp.it',
     'license': 'LGPL-3',
     'depends': [
         'account',
@@ -25,4 +25,5 @@
         "wizard/wizard_payment_order_credit.xml",
     ],
     'installable': True,
+    'maintainer': 'powERP enterprise network'
 }

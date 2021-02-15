@@ -117,7 +117,7 @@ class AccountPaymentOrder(models.Model):
                 line_ids.append((0, 0, effetti_attivi))
 
                 vals = self.env['account.move'].default_get([
-                    'date_apply_balance',
+                    # 'date_apply_balance',
                     'date_effective',
                     'fiscalyear_id',
                     'invoice_date',
