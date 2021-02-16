@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.2.1.39
+|icon| Due dates 12.0.3.1.42
 ============================
 
 
@@ -17,11 +17,13 @@
 Overview / Panoramica
 =====================
 
-|en| 
+|en| Manage enhanced due dates
+
 
 |
 
-|it| 
+|it| Gestione evoluta delle scadenze
+
 
 |
 
@@ -134,6 +136,12 @@ In case of trouble, please check there if your issue has already been reported.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.2.1.42 (2021-02-11)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Tolto onchange su data scadenza
+* [FIX] check_payment gestito con @multi causa error mass editing
 
 12.0.2.1.41 (2021-01-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -304,8 +312,9 @@ Odoo is a trademark of `Odoo S.A. <https://www.odoo.com/>`__ (formerly OpenERP)
 Authors / Autori
 ----------------
 
-* `SHS-AV s.r.l. <https://www.zeroincombenze.it/>`__
-* `Didotech srl <http://www.didotech.com>`__
+* `powERP <https://www.powerp.it>`__
+* `SHS-AV s.r.l. <https://www.zeroincombenze.it>`__
+* `Didotech srl <https://www.didotech.com>`__
 
 
 Contributors / Collaboratori
@@ -313,6 +322,7 @@ Contributors / Collaboratori
 
 * Antonio Maria Vigliotti <antoniomaria.vigliotti@gmail.com>
 * Marco Tosato <marco.tosato@didotech.com>
+* Fabio Giovannelli <fabio.giovannelli@didotech.com>
 
 
 Maintainer / Manutenzione
@@ -355,7 +365,7 @@ Leggere con attenzione i file README per maggiori informazioni sugli autori.
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-01-15
+Last Update / Ultimo aggiornamento: 2021-02-14
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status
