@@ -2,7 +2,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Tolto onchange su data scadenza
-* [FIX] Errore in annulla fattura con Reverse Charge
+* [FIX] check_payment gestito con @multi causa error mass editing
 
 12.0.2.1.41 (2021-01-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~
