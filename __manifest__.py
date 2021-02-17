@@ -6,10 +6,10 @@
 {
     'name': 'Due dates',
     'summary': 'Due dates management',
-    'version': '12.0.3.1.41',
+    'version': '12.0.3.1.42',
     'category': 'Accounting',
-    'author': 'PowErp Srl',
-    'website': '',
+    'author': 'powERP, Didotech srl, SHS-AV srl',
+    'website': 'www.powerp.it',
     'license': 'LGPL-3',
     'depends': [
         'account',
@@ -27,5 +27,6 @@
         'view/account_due_list_view.xml',
     ],
     'installable': True,
+    'maintainer': 'powERP enterprise network'
     # 'post_init_hook': 'post_init_hook',
 }
