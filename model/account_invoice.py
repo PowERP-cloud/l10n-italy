@@ -197,7 +197,13 @@ class AccountInvoice(models.Model):
         ]
 
         # Dati relativi al conto
-        prototype_line = head_lines[0][2]
+        for head_line in head_lines:
+            prototype_line = head_line[2]
+            account_type = self.env['account.account'].browse(prototype_line['account_id'])
+            if account_type and account_type.internal_type in ('receivable', 'payable'):
+                break
+        else:
+            prototype_line = head_lines[0][2]
 
         if not self.duedate_manager_id.duedate_line_ids:
             self.duedate_manager_id.write_duedate_lines()
