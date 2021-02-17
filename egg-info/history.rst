@@ -1,3 +1,8 @@
+12.0.3.6.1 (2021-02-17)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Trasferito i wizard per la creazione distinta e inserimento scadenze
+
 12.0.3.5.14 (2021-02-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

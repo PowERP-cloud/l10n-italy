@@ -1,4 +1,4 @@
-
+from collections import defaultdict
 from odoo import models, api, fields
 from odoo.exceptions import UserError
 import odoo.addons.decimal_precision as dp
@@ -325,5 +325,139 @@ class AccountMoveLine(models.Model):
     def get_payment_method(self):
         return validate_selection.same_payment_method(self)
     # end get_payment_method_code
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # ORDER GENERATE
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    @api.multi
+    def open_wizard_payment_order_generate(self):
+
+        # Retrieve the records
+        lines = self.env['account.move.line'].browse(
+            self._context['active_ids']
+        )
+        # Perform validations
+        payment_method = False
+
+        if len(lines) > 0:
+            for line in lines:
+                payment_method = line.payment_method
+                break
+        if payment_method:
+            if payment_method.code == 'invoice_financing':
+                banks = defaultdict(lambda: {'count': 0, 'name': None})
+                msg = 'ATTENZIONE!\nSono state selezionate righe di fatture' \
+                      ' che non hanno la stessa banca.\n\n '
+
+                for line in lines:
+                    if line.move_id.invoice_bank_id.id:
+                        invoice_bank_id = line.move_id.invoice_bank_id.id
+                        invoice_bank_name = line.move_id.invoice_bank_id.bank_name
+
+                        banks[invoice_bank_id]['count'] += 1
+                        banks[invoice_bank_id]['name'] = invoice_bank_name
+                    else:
+                        fattura = line.stored_invoice_id.number
+                        raise UserError('ATTENZIONE!\nConto bancario '
+                                        'nella fattura {fattura} non '
+                                        'impostato.'.format(fattura=fattura))
+                    # end if
+
+                # end for
+
+                error_banks = len(banks) > 1
+                if error_banks:
+                    raise UserError(msg)
+                # end if
+
+            # end if
+        # end if
+
+        # Open the wizard
+        model = 'account_banking_common'
+        wiz_view = self.env.ref(
+            model + '.wizard_account_payment_generate'
+        )
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Genera Distinta',
+            'res_model': 'wizard.account.payment.generate',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': wiz_view.id,
+            'target': 'new',
+            'res_id': False,
+            'binding_model_id': model + '.model_account_move_line',
+            'context': {'active_ids': self._context['active_ids']},
+        }
+
+    # end open_wizard_payment_order_generate
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # ADD LINES TO ORDER
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    @api.multi
+    def open_wizard_payment_order_add_move_lines(self):
+
+        # Retrieve the records
+        lines = self.env['account.move.line'].browse(
+            self._context['active_ids'])
+
+        # Perform validations
+        payment_method = False
+
+        if len(lines) > 0:
+            for line in lines:
+                payment_method = line.payment_method
+                break
+        if payment_method:
+            if payment_method.code == 'invoice_financing':
+                banks = defaultdict(lambda: {'count': 0, 'name': None})
+                msg = 'ATTENZIONE!\nSono state selezionate righe di fatture' \
+                      ' che non hanno la stessa banca.\n\n '
+
+                for line in lines:
+                    if line.move_id.invoice_bank_id.id:
+                        invoice_bank_id = line.move_id.invoice_bank_id.id
+                        invoice_bank_name = line.move_id.invoice_bank_id.bank_name
+
+                        banks[invoice_bank_id]['count'] += 1
+                        banks[invoice_bank_id]['name'] = invoice_bank_name
+                    else:
+                        fattura = line.stored_invoice_id.number
+                        raise UserError('ATTENZIONE!\nConto bancario '
+                                        'nella fattura {fattura} non '
+                                        'impostato.'.format(fattura=fattura))
+                    # end if
+
+                # end for
+                error_banks = len(banks) > 1
+                if error_banks:
+                    raise UserError(msg)
+                # end if
+
+            # end if
+        # end if
+
+        # Open the wizard
+        model = 'account_banking_common'
+        wiz_view = self.env.ref(
+            model + '.wizard_account_payment_add_move_line'
+        )
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Aggiungi a distinta',
+            'res_model': 'wizard.account.payment.add.move.lines',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': wiz_view.id,
+            'target': 'new',
+            'res_id': False,
+            'binding_model_id': model + '.model_account_move_line',
+            'context': {'active_ids': self._context['active_ids']},
+        }
+    # end open_wizard_payment_order_generate
 
 # end AccountMoveLine
