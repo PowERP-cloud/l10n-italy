@@ -67,7 +67,7 @@ class AccountMove(models.Model):
     )
 
     invoice_bank_id = fields.Many2one(
-        string='Banca fattura',
+        string='Conto Bancario',
         comodel_name='res.partner.bank',
         default=False
     )
@@ -80,4 +80,5 @@ class AccountMove(models.Model):
                 move.type = invoice.type
                 move.payment_term_id = invoice.payment_term_id
                 move.invoice_bank_id = invoice.partner_bank_id
+                move.fiscal_position_id = invoice.fiscal_position_id
         return super().post(invoice=invoice)
