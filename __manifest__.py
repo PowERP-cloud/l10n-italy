@@ -17,7 +17,7 @@
         'account_move_plus',
         'account_payment_order',
         'account_invoice_13_more',
-
+        'l10n_it_menu',
     ],
     'data': [
         'security/ir.model.access.csv',

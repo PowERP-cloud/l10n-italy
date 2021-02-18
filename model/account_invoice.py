@@ -173,16 +173,17 @@ class AccountInvoice(models.Model):
     def finalize_invoice_move_lines(self, move_lines):
 
         self.ensure_one()
-
         self._ensure_duedate_manager()
-
         move_lines = super().finalize_invoice_move_lines(move_lines)
 
+        move_lines_model = self.env['account.move.line']
         # Linee di testata che rappresentano le scadenze da RIMPIAZZARE
         head_lines = [
             ml
             for ml in move_lines
-            if (ml[2]['tax_ids'] is False and ml[2]['tax_line_id'] is False)
+            # if (ml[2]['tax_ids'] is False and ml[2]['tax_line_id'] is False)
+            if move_lines_model.get_line_type(
+                ml[2], duedate_mode=True) in ('receivable', 'payable')
         ]
 
         # may be empty if account_total is zero
@@ -193,17 +194,22 @@ class AccountInvoice(models.Model):
         new_lines = [
             ml
             for ml in move_lines
-            if (ml[2]['tax_ids'] or ml[2]['tax_line_id'])
+            # if (ml[2]['tax_ids'] or ml[2]['tax_line_id'])
+            if move_lines_model.get_line_type(
+                ml[2], duedate_mode=True) not in ('receivable', 'payable')
         ]
 
         # Dati relativi al conto
-        for head_line in head_lines:
-            prototype_line = head_line[2]
-            account_type = self.env['account.account'].browse(prototype_line['account_id'])
-            if account_type and account_type.internal_type in ('receivable', 'payable'):
-                break
-        else:
-            prototype_line = head_lines[0][2]
+        # for head_line in head_lines:
+        #     prototype_line = head_line[2]
+        #     # account_type = self.env['account.account'].browse(prototype_line['account_id'])
+        #     # if account_type and account_type.internal_type in ('receivable', 'payable'):
+        #     if prototype_line.get_line_type(duedate_mode=True) in ('receivable',
+        #                                                       'payable'):
+        #         break
+        # else:
+        #     prototype_line = head_lines[0][2]
+        prototype_line = head_lines[0][2]
 
         if not self.duedate_manager_id.duedate_line_ids:
             self.duedate_manager_id.write_duedate_lines()
