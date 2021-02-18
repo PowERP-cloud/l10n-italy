@@ -6,7 +6,7 @@
 {
     'name': 'Due dates',
     'summary': 'Due dates management',
-    'version': '12.0.3.1.42',
+    'version': '12.0.3.1.43',
     'category': 'Accounting',
     'author': 'powERP, Didotech srl, SHS-AV srl',
     'website': 'www.powerp.it',
@@ -17,7 +17,7 @@
         'account_move_plus',
         'account_payment_order',
         'account_invoice_13_more',
-
+        'l10n_it_menu',
     ],
     'data': [
         'security/ir.model.access.csv',
