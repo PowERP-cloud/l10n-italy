@@ -1,7 +1,7 @@
-12.0.2.1.42 (2021-02-11)
+12.0.2.1.43 (2021-02-18)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-* [IMP] Riconoscimento riga contabile da funzione di l10n_it_menu
+* [IMP] Riconoscimento riga contabile da funzione di account_move_line_type
 * [FIX] Errore in validazione fattura con Reverse Charge misto
 
 12.0.2.1.42 (2021-02-11)
