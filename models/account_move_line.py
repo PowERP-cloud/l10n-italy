@@ -347,8 +347,9 @@ class AccountMoveLine(models.Model):
         if payment_method:
             if payment_method.code == 'invoice_financing':
                 banks = defaultdict(lambda: {'count': 0, 'name': None})
-                msg = 'ATTENZIONE!\nSono state selezionate righe di fatture' \
-                      ' che non hanno la stessa banca.\n\n '
+                msg = 'ATTENZIONE!\nSono state selezionate righe di scadenze' \
+                      ' che non hanno lo stesso conto per ' \
+                      'la banca aziendale.\n\n '
 
                 for line in lines:
                     if line.move_id.invoice_bank_id.id:
@@ -359,7 +360,7 @@ class AccountMoveLine(models.Model):
                         banks[invoice_bank_id]['name'] = invoice_bank_name
                     else:
                         fattura = line.stored_invoice_id.number
-                        raise UserError('ATTENZIONE!\nConto bancario '
+                        raise UserError('ATTENZIONE!\nConto bancario aziendale '
                                         'nella fattura {fattura} non '
                                         'impostato.'.format(fattura=fattura))
                     # end if
@@ -427,7 +428,7 @@ class AccountMoveLine(models.Model):
                         banks[invoice_bank_id]['name'] = invoice_bank_name
                     else:
                         fattura = line.stored_invoice_id.number
-                        raise UserError('ATTENZIONE!\nConto bancario '
+                        raise UserError('ATTENZIONE!\nConto bancario aziendale '
                                         'nella fattura {fattura} non '
                                         'impostato.'.format(fattura=fattura))
                     # end if

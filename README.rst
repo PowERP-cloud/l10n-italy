@@ -1,7 +1,7 @@
 
-=========================================
-|icon| Account Banking Common 12.0.3.5.14
-=========================================
+========================================
+|icon| Account Banking Common 12.0.3.6.1
+========================================
 
 
 **Common stuff for payment modules**
@@ -152,6 +152,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.3.6.2 (2021-02-19)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Aggiornato messaggi di errore
 
 12.0.3.6.1 (2021-02-17)
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -407,7 +412,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-02-17
+Last Update / Ultimo aggiornamento: 2021-02-19
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status

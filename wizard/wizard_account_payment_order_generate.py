@@ -271,7 +271,7 @@ class AccountPaymentGenerate(models.TransientModel):
             if line.move_id.invoice_bank_id.id:
                 invoice_bank_id = line.move_id.invoice_bank_id.id
                 if invoice_bank_id != self.journal_id.bank_account_id.id:
-                    raise UserError('ATTENZIONE!\nConto bancario '
+                    raise UserError('ATTENZIONE!\nConto bancario aziendale '
                                     'selezionato non corrispondente a quello '
                                     'impostato nelle scadenze.')
         # end for
