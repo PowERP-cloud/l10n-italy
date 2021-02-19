@@ -234,8 +234,10 @@ class DueDateManager(models.Model):
         if duedates_amounts and (difference != 0):  # Validation FAILED
             return {
                 'title': 'Scadenze - Totale importi',
-                'message': 'Il totale degli importi delle scadenze deve coincidere'
-                ' con il totale della registrazione ({})'.format(amount_total)
+                'message': 'Il totale degli importi delle scadenze ({}) deve coincidere'
+                ' con il totale della registrazione ({}). Differenza: ({})'.format(
+                    amounts_sum, amount_total, difference
+                )
             }
 
         else:  # Validation succesful!
