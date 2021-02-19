@@ -1,6 +1,6 @@
 
 ========================================
-|icon| Account Banking Common 12.0.3.6.1
+|icon| Account Banking Common 12.0.3.6.3
 ========================================
 
 
@@ -152,6 +152,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.3.6.3 (2021-02-19)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Check su dati banca in anticipo fatture
 
 12.0.3.6.2 (2021-02-19)
 ~~~~~~~~~~~~~~~~~~~~~~~

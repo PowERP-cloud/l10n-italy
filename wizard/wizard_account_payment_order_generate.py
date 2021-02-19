@@ -168,6 +168,28 @@ class AccountPaymentGenerate(models.TransientModel):
             # Check for same bank for invoice_financing
             if self.payment_mode_id.payment_method_code == 'invoice_financing':
                 self._check_invoice_financing_line_bank(lines)
+                # verifica dati journal bank_account_id
+                if self.journal_id and self.journal_id.id:
+                    journal = self.journal_id
+                    if not journal.bank_account_id.invoice_financing_evaluate:
+                        raise UserError('Attenzione!\nMetodo calcolo anticipo non '
+                                        'impostato nel conto.')
+                    elif journal.bank_account_id.invoice_financing_evaluate \
+                            not in ['invoice_amount', 'taxable_amount']:
+                        raise UserError('Attenzione!\nMetodo calcolo anticipo '
+                                        'ha un valore sconosciuto.')
+                    # end if
+
+                    if not journal.bank_account_id.invoice_financing_percent:
+                        raise UserError('Attenzione!\nPercentuale di anticipo non '
+                                        'impostata nel conto.')
+                    # end if
+
+                    if journal.bank_account_id.invoice_financing_percent <= 0:
+                        raise UserError('Attenzione!\nLa percentuale di anticipo '
+                                        'impostata nel conto deve essere '
+                                        'maggiore di zero.')
+                    # end if
 
             # Creazione distinta
             payment_order = self.env['account.payment.order'].create({
