@@ -1,7 +1,9 @@
 import logging
+import datetime
 from collections import defaultdict
 from odoo import models, api, fields
 from odoo.exceptions import UserError
+from odoo.tools.misc import format_date
 
 _logger = logging.getLogger(__name__)
 
@@ -121,9 +123,23 @@ class AccountPaymentAddMoveLines(models.TransientModel):
 
             # validate lines against order
             if not line.payment_method.id:
-                check_order_payment_method[line.payment_method.id]['name'] = \
-                    'Metodo di pagamento non inserito'
-                check_order_payment_method[line.payment_method.id]['count'] += 1
+                scadenza = line.move_id.name
+                date_format = datetime.datetime(
+                    year=line.date_maturity.year,
+                    month=line.date_maturity.month,
+                    day=line.date_maturity.day,
+                )
+                date_tz = format_date(
+                    self.env, fields.Date.context_today(
+                        self, date_format))
+                raise UserError('ATTENZIONE!\nMetodo di pagamento non '
+                                'impostato nella scadenza {sk} del {dt}.'
+                                .format(sk=scadenza, dt=date_tz))
+                #
+                #
+                # check_order_payment_method[line.payment_method.id]['name'] = \
+                #     'Metodo di pagamento non inserito'
+                # check_order_payment_method[line.payment_method.id]['count'] += 1
 
             if line.payment_method.id and line.payment_method.id != \
                     order_payment_method_id:
