@@ -1,7 +1,7 @@
-12.0.3.7.1 (2021-02-25)
+12.0.3.7.1 (2021-02-26)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-* [FIX] Check scadenze senza metodo di pagamento
+* [FIX] Aggiornata gestione del registro per l'ordine in caso di anticipo fatture
 
 12.0.3.6.3 (2021-02-19)
 ~~~~~~~~~~~~~~~~~~~~~~~~

@@ -49,7 +49,7 @@ class AccountPaymentGenerate(models.TransientModel):
         # end if
 
         if payment_method and payment_method.code and \
-                payment_method.code == 'invoice_financing':
+                payment_method.code == 'invoice_financing' and invoice_bank_id:
             search_domain = [
                 ('type', '=', 'bank'),
                 ('bank_account_id', '=', invoice_bank_id),
@@ -59,7 +59,7 @@ class AccountPaymentGenerate(models.TransientModel):
                 order='sequence asc',
                 limit=1
             )
-            if len(records) == 1:
+            if len(records) > 0:
                 return search_domain
             else:
                 return default_domain
@@ -85,7 +85,7 @@ class AccountPaymentGenerate(models.TransientModel):
         # end if
 
         if payment_method and payment_method.code and \
-                payment_method.code == 'invoice_financing':
+                payment_method.code == 'invoice_financing' and invoice_bank_id:
             search_domain = [
                 ('type', '=', 'bank'),
                 ('bank_account_id', '=', invoice_bank_id),

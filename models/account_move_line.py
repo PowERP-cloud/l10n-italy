@@ -372,6 +372,19 @@ class AccountMoveLine(models.Model):
                     raise UserError(msg)
                 # end if
 
+                # check for journals linked to invoice bank account
+                invoice_bank_id = lines[0].move_id.invoice_bank_id.id
+                domain = [
+                    ('type', '=', 'bank'),
+                    ('bank_account_id', '=', invoice_bank_id),
+                ]
+                journals = self.env['account.journal'].search(domain)
+                if not journals:
+                    raise UserError(
+                        'ATTENZIONE!\nNon è stato trovato un registro che sia '
+                        'associato al conto bancario aziendale associato '
+                        'nelle scadenze.')
+                # end for
             # end if
         # end if
 
