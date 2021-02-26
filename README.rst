@@ -1,6 +1,6 @@
 
 ========================================
-|icon| Account Banking Common 12.0.3.6.3
+|icon| Account Banking Common 12.0.3.7.1
 ========================================
 
 
@@ -152,6 +152,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.3.7.1 (2021-02-26)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Aggiornata gestione del registro per l'ordine in caso di anticipo fatture
 
 12.0.3.6.3 (2021-02-19)
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -417,7 +422,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-02-19
+Last Update / Ultimo aggiornamento: 2021-02-26
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status

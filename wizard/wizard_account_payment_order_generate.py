@@ -1,7 +1,9 @@
 import logging
+import datetime
 from collections import defaultdict
 from odoo import models, api, fields
 from odoo.exceptions import UserError
+from odoo.tools.misc import format_date
 
 _logger = logging.getLogger(__name__)
 
@@ -47,7 +49,7 @@ class AccountPaymentGenerate(models.TransientModel):
         # end if
 
         if payment_method and payment_method.code and \
-                payment_method.code == 'invoice_financing':
+                payment_method.code == 'invoice_financing' and invoice_bank_id:
             search_domain = [
                 ('type', '=', 'bank'),
                 ('bank_account_id', '=', invoice_bank_id),
@@ -57,7 +59,7 @@ class AccountPaymentGenerate(models.TransientModel):
                 order='sequence asc',
                 limit=1
             )
-            if len(records) == 1:
+            if len(records) > 0:
                 return search_domain
             else:
                 return default_domain
@@ -83,7 +85,7 @@ class AccountPaymentGenerate(models.TransientModel):
         # end if
 
         if payment_method and payment_method.code and \
-                payment_method.code == 'invoice_financing':
+                payment_method.code == 'invoice_financing' and invoice_bank_id:
             search_domain = [
                 ('type', '=', 'bank'),
                 ('bank_account_id', '=', invoice_bank_id),
@@ -230,8 +232,20 @@ class AccountPaymentGenerate(models.TransientModel):
                 payment_methods[line.payment_method.id]['count'] += 1
                 payment_methods[line.payment_method.id]['name'] = line.payment_method.name
             else:
-                payment_methods[-1]['count'] += 1
-                payment_methods[-1]['name'] = 'Non impostato'
+                scadenza = line.move_id.name
+                date_format = datetime.datetime(
+                    year=line.date_maturity.year,
+                    month=line.date_maturity.month,
+                    day=line.date_maturity.day,
+                )
+                date_tz = format_date(
+                    self.env, fields.Date.context_today(
+                        self, date_format))
+                raise UserError('ATTENZIONE!\nMetodo di pagamento non '
+                                'impostato nella scadenza {sk} del {dt}.'
+                                .format(sk=scadenza, dt=date_tz))
+                # payment_methods[-1]['count'] += 1
+                # payment_methods[-1]['name'] = 'Non impostato'
         # end for
 
         error_busy = len(busy_lines) > 0
