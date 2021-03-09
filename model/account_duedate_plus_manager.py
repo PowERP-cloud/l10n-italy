@@ -255,8 +255,7 @@ class DueDateManager(models.Model):
     def _duedates_from_move(self):
         # Compute payment terms and total amount from the move
         payment_terms = self.move_id.payment_term_id
-        # TODO: doc_type deve prendere campo self.move_id.type invece di move_type
-        doc_type = self.move_id.move_type
+        doc_type = self.move_id.type
         if self.move_id.date_effective:
             invoice_date = self.move_id.date_effective
         else:
@@ -279,8 +278,7 @@ class DueDateManager(models.Model):
     def _duedates_from_invoice(self):
         # Compute payment terms and total amount from the invoice
         payment_terms = self.invoice_id.payment_term_id
-        # TODO: doc_type deve prendere self.invoice_id.type invece di account_id.user_type_id.type
-        doc_type = self.invoice_id.account_id.user_type_id.type
+        doc_type = self.invoice_id.type
         if self.invoice_id.date_effective:
             invoice_date = self.invoice_id.date_effective
         elif self.invoice_id.date_invoice:
@@ -348,11 +346,9 @@ class DueDateManager(models.Model):
 
             due_dates = payment_terms.compute(amount_to_compute, invoice_date)[0]
             for due_date in due_dates:
-                # TODO: doc_type in ('out_invoice', in_refund)
-                if doc_type in ('receivable', 'payable_refund'):
+                if doc_type in ('out_invoice', 'in_refund'):
                     payment_method = due_date[2]['credit']
-                # TODO: doc_type in ('in_invoice', out_refund)
-                elif doc_type in ('payable', 'receivable_refund'):
+                elif doc_type in ('in_invoice', 'out_refund'):
                     payment_method = due_date[2]['debit']
                 else:
                     assert False, type_error_msg
