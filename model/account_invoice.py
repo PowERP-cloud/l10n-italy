@@ -346,14 +346,11 @@ class AccountInvoice(models.Model):
 
     @api.onchange('date_invoice')
     def _onchange_date_invoice(self):
-        if not self.date_effective:
-            self.date_effective = self.date_invoice
-        else:
-            if self._origin.date_invoice == self.date_effective:
-                self.date_effective = self.date_invoice
-            # end if
-        # end if
+        # reset
+        self.date_effective = self.date_invoice
+        # update duedates
         self.update_duedates()
+        return super()._onchange_date_invoice()
     # end _onchange_date_invoice
 
     # @api.onchange('amount_total')
