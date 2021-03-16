@@ -10,9 +10,9 @@
 #
 
 from datetime import timedelta
-from typing import Any, Union
+# from typing import Any, Union
 
-from odoo.models import Model
+# from odoo.models import Model
 
 from odoo import models, api, fields
 from odoo.tools.float_utils import float_is_zero
