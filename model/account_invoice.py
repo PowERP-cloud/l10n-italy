@@ -10,6 +10,10 @@
 #
 
 from datetime import timedelta
+from typing import Any, Union
+
+from odoo.models import Model
+
 from odoo import models, api, fields
 from odoo.tools.float_utils import float_is_zero
 from odoo.exceptions import UserError
@@ -66,7 +70,10 @@ class AccountInvoice(models.Model):
     @api.model
     def create(self, values):
         # Apply modifications inside DB transaction
-        new_invoice = super().create(values)
+        new_invoice: AccountInvoice = super().create(values)
+
+        # Set default for date_effective
+        new_invoice._default_date_effective()
 
         # Return the result of the write command
         return new_invoice
@@ -74,28 +81,47 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def write(self, values):
+
         result = super().write(values)
-        for invoice in self:
-            if invoice.state == 'open':
-                # check validation (amount and dates)
-                ret = invoice.duedate_manager_id.validate_duedates()
-                if ret:
-                    msg = ret['title'] + '\n' + ret['message']
-                    raise UserError(msg)
-                if 'duedate_line_ids' in values and invoice.move_id and \
-                        invoice.check_duedates_payment is False:
 
-                    # riporta la move in bozza
-                    invoice.move_id.button_cancel()
+        # Set default values, but avoid the "infinite
+        # recursive calls to write" issue
+        if not self.env.context.get('StopRecursion'):
 
-                    # aggiorna le scadenze e i movimenti
-                    invoice.move_id.write_credit_debit_move_lines()
+            # Set context variable to stop recursion
+            self = self.with_context(StopRecursion=True)
 
-                    # riporta in stato confermato la move
-                    invoice.move_id.post()
+            for invoice in self:
+
+                if invoice.state == 'open':
+                    # check validation (amount and dates)
+                    ret = invoice.duedate_manager_id.validate_duedates()
+                    if ret:
+                        msg = ret['title'] + '\n' + ret['message']
+                        raise UserError(msg)
+                    if 'duedate_line_ids' in values and invoice.move_id and \
+                            invoice.check_duedates_payment is False:
+
+                        # riporta la move in bozza
+                        invoice.move_id.button_cancel()
+
+                        # aggiorna le scadenze e i movimenti
+                        invoice.move_id.write_credit_debit_move_lines()
+
+                        # riporta in stato confermato la move
+                        invoice.move_id.post()
+                    # end if
+                elif invoice.state == 'draft':
+                    # Set default value for date_effective if user did not
+                    # supplied a value. This operation is performed only if
+                    # the invoice is in state draft since invoices in other
+                    # states does NOT allow changing dates.
+                    self._default_date_effective()
                 # end if
-            # end if
-        # end for
+
+            # end for
+
+        # end if "StopRecursion"
 
         return result
     # end write
@@ -103,6 +129,7 @@ class AccountInvoice(models.Model):
     def post(self):
         result = super().post()
         return result
+    # end post
 
     @api.multi
     def invoice_validate(self):
@@ -194,21 +221,11 @@ class AccountInvoice(models.Model):
         new_lines = [
             ml
             for ml in move_lines
-            # if (ml[2]['tax_ids'] or ml[2]['tax_line_id'])
             if move_lines_model.get_line_type(
-                ml[2], duedate_mode=True) not in ('receivable', 'payable')
+                ml[2], duedate_mode=True
+            ) not in ('receivable', 'payable')
         ]
 
-        # Dati relativi al conto
-        # for head_line in head_lines:
-        #     prototype_line = head_line[2]
-        #     # account_type = self.env['account.account'].browse(prototype_line['account_id'])
-        #     # if account_type and account_type.internal_type in ('receivable', 'payable'):
-        #     if prototype_line.get_line_type(duedate_mode=True) in ('receivable',
-        #                                                       'payable'):
-        #         break
-        # else:
-        #     prototype_line = head_lines[0][2]
         prototype_line = head_lines[0][2]
 
         if not self.duedate_manager_id.duedate_line_ids:
@@ -247,11 +264,6 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def update_duedates(self):
-
-        # Do nothing if invoice date is not set
-        # if not self.date_invoice:
-        #     return
-        # end if
 
         # Ensure duedate_manager is configured
         self._get_duedate_manager()
@@ -308,31 +320,10 @@ class AccountInvoice(models.Model):
     def _onchange_invoice_line_ids(self):
         if not self.invoice_line_ids:
             return
+        # end if
         super()._onchange_invoice_line_ids()
         self.update_duedates()
-
-    # @api.onchange('invoice_line_ids')
-    # def _onchange_invoice_line_ids(self):
-    #     if not self.invoice_line_ids:
-    #         return
-    #     super()._onchange_invoice_line_ids()
-    #     if not self.duedate_line_ids:
-    #         # If no duedate generate duedates
-    #         self.update_duedates()
-    #     else:
-    #         # Else set the proposed modification to the duedates amount
-    #         if self.duedates_amount_current == 0:
-    #             ratio = 0
-    #         else:
-    #             ratio = self.duedates_amount_unassigned / \
-    #                     self.duedates_amount_current
-    #         # end if
-    #
-    #         for line in self.duedate_line_ids:
-    #             line.proposed_new_value = line.due_amount * (1 + ratio)
-    #         # end for
-    #
-    #
+    # end _onchange_invoice_line_ids
 
     @api.onchange('duedate_line_ids')
     def _onchange_duedate_line_ids(self):
@@ -346,34 +337,15 @@ class AccountInvoice(models.Model):
 
     @api.onchange('date_invoice')
     def _onchange_date_invoice(self):
-        # reset
-        self.date_effective = self.date_invoice
-        # update duedates
-        self.update_duedates()
+        self._update_date_effective()
         return super()._onchange_date_invoice()
     # end _onchange_date_invoice
 
-    # @api.onchange('amount_total')
-    # def _onchange_amount_total(self):
-    #
-    #     if not self.duedate_line_ids:
-    #         # If no duedate generate duedates
-    #         self.update_duedates()
-    #
-    #     else:
-    #         # Else set the proposed modification to the duedates amount
-    #
-    #         if self.duedates_amount_current == 0:
-    #             ratio = 0
-    #         else:
-    #             ratio = self.duedates_amount_unassigned / self.duedates_amount_current
-    #         # end if
-    #
-    #         for line in self.duedate_line_ids:
-    #             line.proposed_new_value = line.due_amount * (1 + ratio)
-    #         # end for
-    #     # end if
-    # # end _onchange_amount_total
+    @api.onchange('date')
+    def _onchange_date(self):
+        self._update_date_effective()
+        return super()._onchange_date()
+    # end _onchange_date_invoice
 
     @api.onchange('duedates_amount_unassigned')
     def _onchange_duedates_amount_unassigned(self):
@@ -392,13 +364,17 @@ class AccountInvoice(models.Model):
 
     @api.onchange('payment_term_id', 'date_invoice')
     def _onchange_payment_term_date_invoice(self):
-        # res = super()._onchange_payment_term_date_invoice()
+
         if self.date_effective:
             date_invoice = self.date_effective
         else:
             date_invoice = self.date_invoice
+        # end if
+
         if not date_invoice:
             date_invoice = fields.Date.context_today(self)
+        # end if
+
         if self.payment_term_id:
             pterm = self.payment_term_id
             pterm_list = pterm.with_context(
@@ -407,6 +383,9 @@ class AccountInvoice(models.Model):
             self.date_due = max(line[0] for line in pterm_list)
         elif self.date_due and (date_invoice > self.date_due):
             self.date_due = date_invoice
+        # end if
+    # end _onchange_payment_term_date_invoice
+
 
     @api.onchange('date_effective')
     def _onchange_date_effective(self):
@@ -435,6 +414,7 @@ class AccountInvoice(models.Model):
                                    'limiti (+60 -60 giorni).'}
                 }
     # end _onchange_date_effective
+
     # ONCHANGE METHODS - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -451,69 +431,7 @@ class AccountInvoice(models.Model):
             # end if
         # end if
         return False
-
-    # @api.model
-    # def _update_credit_debit_move_lines(self):
-    #
-    #     # Should not be necessary ...just in case
-    #     if not self.line_ids:
-    #         return
-    #     # end if
-    #
-    #     # Extract credit and debit lines
-    #     lines_cd = list()
-    #     lines_other = list()
-    #
-    #     for line in self.line_ids:
-    #         line._compute_line_type()
-    #         line_type = line.line_type
-    #         if line_type in ('credit', 'debit'):
-    #             lines_cd.append(line)
-    #         else:
-    #             lines_other.append(line)
-    #         # end if
-    #     # end for
-    #
-    #     # Build the move line template dictionary
-    #     move_line_template = lines_cd[0].copy_data()[0]
-    #     # 'move_id' removed because it will be automatically set by the update method
-    #     del move_line_template['move_id']
-    #
-    #     # List of modifications to move lines one2many field
-    #     move_lines_mods = list()
-    #
-    #     # Add the new move lines
-    #     for duedate_line in self.duedate_line_ids:
-    #         new_data = move_line_template.copy()
-    #
-    #         # Set the linked account.duedate_plus.line record
-    #         new_data['duedate_line_id'] = duedate_line.id
-    #
-    #         # Set the date_maturity field
-    #         new_data['date_maturity'] = duedate_line.due_date
-    #
-    #         # Set the amount
-    #         if new_data['credit'] > 0:
-    #             new_data['credit'] = duedate_line.due_amount
-    #         else:
-    #             new_data['debit'] = duedate_line.due_amount
-    #         # end if
-    #
-    #         move_lines_mods.append(
-    #             (0, False, new_data)
-    #         )
-    #     # end for
-    #
-    #     # Schedule deletion of old lines
-    #     move_lines_mods += [(4, line.id) for line in lines_other]
-    #
-    #     # Schedule deletion of old lines
-    #     move_lines_mods += [(2, line.id) for line in lines_cd]
-    #
-    #     # Save changes
-    #     self.update({'line_ids': move_lines_mods})
-    #
-    # # end _update_credit_debit_move_lines
+    # end _check_limit_date
 
     @api.model
     def _get_duedate_manager(self):
@@ -576,6 +494,63 @@ class AccountInvoice(models.Model):
             inv.duedates_amount_unassigned = inv.amount_total - lines_total
         # end for
     # end _compute_duedate_lines_amount
+
+    @api.model
+    def _default_date_effective(self):
+        if not self.date_effective:
+            self.date_effective = self.date_invoice
+        # end if
+    # end _default_date_effective
+
+    @api.model
+    def _update_date_effective(self):
+        """
+        Gestione delle regole relative alla data di decorrenza (date_effective)
+        :return:
+        """
+
+        # TODO: rivedere con Antonio!!!!
+
+        if self.type in ('in_invoice', 'in_refund'):
+
+            # Documento ricevuto (inbound)
+            # Regola [2b] - se le due date data fattura e data registrazione
+            # differiscono per più di 15 gg allora:
+            #  - date decorrenza assume il valore della data di registrazione
+            #  - vengono ricalcolate le scadenze
+
+            # Ensure both dates are set before trying
+            # to compute the difference
+            dates_set = self.date_invoice and self.date
+
+            if dates_set and abs(self.date_invoice - self.date).days > 15:
+                self.date_effective = self.date
+                self.update_duedates()
+            else:
+                # TODO: IN QUESTO CASO COSA SUCCEDE???? Ci sono vincoli????
+                pass
+            # end if
+
+        elif self.type in ('out_invoice', 'out_refund'):
+
+            # TODO: verificare con Antonio se questa regola è corretta è da riabilitare - ERA GIA' PRESENTE NEL CODICE
+
+            # Documento emesso (outbound)
+            # self.date_effective = self.date_invoice
+            # self.update_duedates()
+            pass
+
+        else:
+
+            # TODO: meglio lanciare un eccezione o mettere un "assert False"
+            #       o meglio non fare niente per permettere di aggiungere
+            #       nuovi tipi di documento?.
+
+            # Tipo di documento sconosciuto, non faccio niente
+            pass
+        # end if
+
+    # end _update_date_effective
 
     # PROTECTED METHODS - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
