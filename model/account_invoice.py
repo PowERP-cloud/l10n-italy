@@ -527,15 +527,7 @@ class AccountInvoice(models.Model):
             # differiscono per più di 15 gg allora:
             #  - date decorrenza assume il valore della data di registrazione
             #  - vengono ricalcolate le scadenze
-
-            # Ensure both dates are set before trying
-            # to compute the difference
-            dates_set = self.date_invoice and self.date
-
-            if dates_set and abs(self.date_invoice - self.date).days > 15:
-                self.date_effective = self.date
-                self.update_duedates()
-            # end if
+            self.date_effective = self.date
 
         else:
 
