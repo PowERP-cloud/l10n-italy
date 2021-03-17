@@ -511,7 +511,16 @@ class AccountInvoice(models.Model):
 
         # TODO: rivedere con Antonio!!!!
 
-        if self.type in ('in_invoice', 'in_refund'):
+        # Incoming document flag
+        doc_in = self.type in ('in_invoice', 'in_refund')
+
+        # Difference between date_invoice and date in days,
+        # if any of the two dates is not set return 0 as difference
+        dates_set = self.date_invoice and self.date
+        diff_days = dates_set and abs(self.date_invoice - self.date).days or 0
+
+        # Decide which rule to apply
+        if doc_in and diff_days > 15:
 
             # Documento ricevuto (inbound)
             # Regola [2b] - se le due date data fattura e data registrazione
@@ -526,29 +535,17 @@ class AccountInvoice(models.Model):
             if dates_set and abs(self.date_invoice - self.date).days > 15:
                 self.date_effective = self.date
                 self.update_duedates()
-            else:
-                # TODO: IN QUESTO CASO COSA SUCCEDE???? Ci sono vincoli????
-                pass
             # end if
-
-        elif self.type in ('out_invoice', 'out_refund'):
-
-            # TODO: verificare con Antonio se questa regola è corretta è da riabilitare - ERA GIA' PRESENTE NEL CODICE
-
-            # Documento emesso (outbound)
-            # self.date_effective = self.date_invoice
-            # self.update_duedates()
-            pass
 
         else:
 
-            # TODO: meglio lanciare un eccezione o mettere un "assert False"
-            #       o meglio non fare niente per permettere di aggiungere
-            #       nuovi tipi di documento?.
+            # Regola [1f]
+            self.date_effective = self.date_invoice
 
-            # Tipo di documento sconosciuto, non faccio niente
-            pass
         # end if
+
+        # Update duedates
+        self.update_duedates()
 
     # end _update_date_effective
 
