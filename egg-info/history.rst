@@ -1,3 +1,8 @@
+12.0.3.7.2 (2021-03-18)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostato funzionalità aggiornamento metodo di pagamento
+
 12.0.3.7.1 (2021-02-26)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
