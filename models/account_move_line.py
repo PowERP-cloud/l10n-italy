@@ -474,4 +474,56 @@ class AccountMoveLine(models.Model):
         }
     # end open_wizard_payment_order_generate
 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # UPDATE PAYMENT METHOD
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    @api.multi
+    def open_wizard_set_payment_method(self):
+        busy_lines = []
+        # Retrieve the records
+        lines = self.env['account.move.line'].browse(
+            self._context['active_ids'])
+
+        if len(lines) > 0:
+            for line in lines:
+                # Detect lines already assigned to a payment order
+                if line.payment_line_ids:
+                    busy_lines.append(line)
+
+            error_busy = len(busy_lines) > 0
+            if error_busy:
+                msg = 'ATTENZIONE!\nLe seguenti righe ' \
+                      'sono già parte di una distinta:\n\n - '
+
+                msg += '\n - '.join(
+                    map(
+                        lambda x: x.invoice_id.number + '    ' + str(
+                            x.date_maturity),
+                        busy_lines
+                    )
+                )
+                raise UserError(msg)
+            # end if
+
+        # Open the wizard
+        model = 'account_banking_common'
+        wiz_view = self.env.ref(
+            model + '.wizard_set_payment_method'
+        )
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Aggiorna metodi di pagamento',
+            'res_model': 'wizard.set.payment.method',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': wiz_view.id,
+            'target': 'new',
+            'res_id': False,
+            'binding_model_id': model + '.model_account_move_line',
+            'context': {'active_ids': self._context['active_ids']},
+        }
+
+    # end open_wizard_set_payment_method
+
 # end AccountMoveLine
