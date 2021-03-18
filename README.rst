@@ -423,11 +423,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of accounting project.
 
-<<<<<<< HEAD
-Last Update / Ultimo aggiornamento: 2021-02-25
-=======
 Last Update / Ultimo aggiornamento: 2021-02-26
->>>>>>> stage
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status
