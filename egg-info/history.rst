@@ -1,3 +1,8 @@
+12.0.3.7.3 (2021-03-18)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] lint error: F401 'odoo.exceptions.UserError' imported but unused
+
 12.0.3.7.2 (2021-03-18)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -1,6 +1,6 @@
 import logging
 from odoo import models, api, fields
-from odoo.exceptions import UserError
+# from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
