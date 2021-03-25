@@ -453,7 +453,7 @@ class AccountInvoice(models.Model):
         return self.duedate_manager_id
     # end get_duedate_manager
 
-    @ api.model
+    @api.model
     def _create_duedate_manager(self):
         # Add the Duedates Manager
         duedate_manager = self.env['account.duedate_plus.manager'].create({
@@ -463,7 +463,7 @@ class AccountInvoice(models.Model):
         self.update({'duedate_manager_id': duedate_manager})
     # end _create_duedate_manager
 
-    @ api.model
+    @api.model
     def _ensure_duedate_manager(self):
         # check if duedate_amanger is missing
 
