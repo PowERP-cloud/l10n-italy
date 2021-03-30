@@ -338,7 +338,6 @@ class AccountInvoice(models.Model):
     @api.onchange('date_invoice')
     def _onchange_date_invoice(self):
         self._update_date_effective()
-        return super()._onchange_date_invoice()
     # end _onchange_date_invoice
 
     @api.onchange('date')
