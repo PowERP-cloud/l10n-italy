@@ -1,6 +1,6 @@
 
 ===========================
-|icon| Due dates 12.0.3.2.1
+|icon| Due dates 12.0.3.2.2
 ===========================
 
 
@@ -154,6 +154,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.3.2.2 (2021-04-06)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Aggiornamento campi nell'elenco di Pagamenti e scadenze
 
 12.0.3.2.1 (2021-03-30)
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -383,7 +388,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-03-30
+Last Update / Ultimo aggiornamento: 2021-04-06
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status
