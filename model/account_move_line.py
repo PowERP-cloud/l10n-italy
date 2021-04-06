@@ -66,6 +66,12 @@ class AccountMoveLine(models.Model):
 
     unpaid_ctr = fields.Integer(string='Numero di insoluti')
 
+    iban = fields.Char(related='partner_bank_id.acc_number', string='IBAN')
+
+    invoice_bank_id = fields.Many2one(
+        string='Conto Bancario', related='invoice_id.partner_bank_id'
+    )
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ONCHANGE METHODS
 

@@ -25,19 +25,19 @@
         </field>
     </record>
     
-    <record id="account_duedates_view_payments_tree" model="ir.ui.view">
-        <field name="name">Payments</field>
-        <field name="model">account.move.line</field>
-        <field name="inherit_id" ref="account_due_list.view_payments_tree"/>
-        <field name="arch" type="xml">
+<!--    <record id="account_duedates_view_payments_tree" model="ir.ui.view">-->
+<!--        <field name="name">Payments</field>-->
+<!--        <field name="model">account.move.line</field>-->
+<!--        <field name="inherit_id" ref="account_due_list.view_payments_tree"/>-->
+<!--        <field name="arch" type="xml">-->
 
-            <xpath expr="//field[@name='account_id']" position="after">
-                <field name="prorogation_ctr"/>
-                <field name="unpaid_ctr"/>
-            </xpath>
+<!--            <xpath expr="//field[@name='account_id']" position="after">-->
+<!--                <field name="prorogation_ctr"/>-->
+<!--                <field name="unpaid_ctr"/>-->
+<!--            </xpath>-->
 
-        </field>
-    </record>
+<!--        </field>-->
+<!--    </record>-->
 
 </odoo>
 
