@@ -116,7 +116,8 @@ class AccountInvoice(models.Model):
                     # supplied a value. This operation is performed only if
                     # the invoice is in state draft since invoices in other
                     # states does NOT allow changing dates.
-                    self._default_date_effective()
+                    if not invoice.date_effective:
+                        invoice._default_date_effective()
                 # end if
 
             # end for

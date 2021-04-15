@@ -1,7 +1,17 @@
+12.0.3.3.2 (2021-04-15)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Integrazione delle modifiche fatte in 12.0.3.2.1_hot
+
 12.0.3.2.2 (2021-04-06)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Aggiornamento campi nell'elenco di Pagamenti e scadenze
+
+12.0.3.2.1_hot (2021-04-15)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Errore in write (mass editing data decorrenza fatture)
 
 12.0.3.2.1 (2021-03-30)
 ~~~~~~~~~~~~~~~~~~~~~~~~
