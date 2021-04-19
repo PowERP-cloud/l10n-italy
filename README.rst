@@ -1,6 +1,5 @@
-
 ===========================
-|icon| Due dates 12.0.3.3.2
+|icon| Due dates 12.0.3.3.3
 ===========================
 
 
@@ -136,6 +135,16 @@ In case of trouble, please check there if your issue has already been reported.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.3.3.3 (2021-04-19)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Rinominato la colonna 'Saldo' in 'Importo'
+
+12.0.3.3.2 (2021-04-15)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Integrazione delle modifiche fatte in 12.0.3.2.1_hot
 
 12.0.3.3.2 (2021-04-15)
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -392,7 +401,11 @@ Leggere con attenzione i file README per maggiori informazioni sugli autori.
 
 This module is part of accounting project.
 
+<<<<<<< HEAD
 Last Update / Ultimo aggiornamento: 2021-04-15
+=======
+Last Update / Ultimo aggiornamento: 2021-04-19
+>>>>>>> release_0.11
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status
