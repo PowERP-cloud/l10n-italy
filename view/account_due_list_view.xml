@@ -35,7 +35,7 @@
             </xpath>
 
             <xpath expr="//field[@name='account_id']" position="before">
-                <field name="incasso_effettuato" readonly="1"/>
+                <field name="incasso_effettuato" readonly="1" invisible="1"/>
             </xpath>
 
             <xpath expr="//field[@name='account_id']" position="attributes">
