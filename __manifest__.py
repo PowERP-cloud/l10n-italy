@@ -6,7 +6,7 @@
 {
     'name': 'Due dates',
     'summary': 'Due dates management',
-    'version': '12.0.3.3.3',
+    'version': '12.0.3.3.4',
     'category': 'Accounting',
     'author': 'powERP, Didotech srl, SHS-AV srl',
     'website': 'www.powerp.it',

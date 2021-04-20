@@ -21,7 +21,7 @@
             </xpath>
 
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="invoice_bank_id"/>
+                <field name="invoice_bank_id" class="text-wrap"/>
                 <field name="iban"/>
             </xpath>
 
