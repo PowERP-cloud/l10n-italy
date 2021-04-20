@@ -1,5 +1,5 @@
 ===========================
-|icon| Due dates 12.0.3.3.3
+|icon| Due dates 12.0.3.3.4
 ===========================
 
 
@@ -135,6 +135,11 @@ In case of trouble, please check there if your issue has already been reported.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.3.3.4 (2021-04-20)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Tolto la possibilità di andare a capo per il campo Conto
 
 12.0.3.3.3 (2021-04-19)
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -401,11 +406,7 @@ Leggere con attenzione i file README per maggiori informazioni sugli autori.
 
 This module is part of accounting project.
 
-<<<<<<< HEAD
-Last Update / Ultimo aggiornamento: 2021-04-15
-=======
-Last Update / Ultimo aggiornamento: 2021-04-19
->>>>>>> release_0.11
+Last Update / Ultimo aggiornamento: 2021-04-20
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status

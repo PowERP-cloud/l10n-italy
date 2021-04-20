@@ -21,7 +21,7 @@
             </xpath>
 
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="invoice_bank_id"/>
+                <field name="invoice_bank_id" class="text-nowrap"/>
                 <field name="iban"/>
             </xpath>
 
@@ -35,7 +35,7 @@
             </xpath>
 
             <xpath expr="//field[@name='account_id']" position="before">
-                <field name="incasso_effettuato" invisible="1" readonly="1"/>
+                <field name="incasso_effettuato" readonly="1" invisible="1"/>
             </xpath>
 
             <xpath expr="//field[@name='account_id']" position="attributes">
