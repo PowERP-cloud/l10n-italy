@@ -17,3 +17,5 @@ from . import account_payment_term_line
 from . import account_duedate_plus_manager
 from . import account_duedate_plus_line
 from . import sale
+from . import partner_duedates_data_range
+

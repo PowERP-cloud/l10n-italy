@@ -386,7 +386,6 @@ class AccountInvoice(models.Model):
         # end if
     # end _onchange_payment_term_date_invoice
 
-
     @api.onchange('date_effective')
     def _onchange_date_effective(self):
         date_invoice = False

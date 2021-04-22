@@ -262,12 +262,14 @@ class DueDateManager(models.Model):
             invoice_date = self.move_id.invoice_date
 
         total_amount = self.move_id.amount
-        type_error_msg = 'move_type for move must be one of: receivable, payable_refund, payable, receivable_refund'
-
+        type_error_msg = 'move_type for move must be one of: receivable, ' \
+                         'payable_refund, payable, receivable_refund'
+        partner_id = self.move_id.partner_id
         # Do something only if there are move lines to use for calculations
         if self.move_id.line_ids:
             return self._duedates_common(
-                payment_terms, doc_type, invoice_date, total_amount, type_error_msg
+                payment_terms, doc_type, invoice_date, total_amount,
+                type_error_msg, partner_id
             )
         else:
             return list()
@@ -287,17 +289,21 @@ class DueDateManager(models.Model):
             invoice_date = fields.Date.today()
 
         total_amount = self.invoice_id.amount_total
-        type_error_msg = 'account for invoice must be one of: receivable, payable_refund, payable, receivable_refund'
+        type_error_msg = 'account for invoice must be one of: receivable, ' \
+                         'payable_refund, payable, receivable_refund'
+        partner_id = self.invoice_id.partner_id
 
         return self._duedates_common(
-            payment_terms, doc_type, invoice_date, total_amount, type_error_msg
+            payment_terms, doc_type, invoice_date, total_amount, type_error_msg,
+            partner_id
         )
     # end _duedates_from_invoice
 
     @api.model
     def _duedates_common(
         self,
-        payment_terms, doc_type, invoice_date, total_amount, type_error_msg
+        payment_terms, doc_type, invoice_date, total_amount, type_error_msg,
+            partner_id
     ):
         '''
         Duedates generation function: this is the part of the algorithm in
@@ -371,6 +377,9 @@ class DueDateManager(models.Model):
 
         return new_dudate_lines
     # end _duedates_common
+
+    def _is_between_period(self, parent_id, date):
+        pass
 
     # PRIVATE METHODS - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

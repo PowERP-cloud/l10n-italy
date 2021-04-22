@@ -6,18 +6,20 @@
 {
     'name': 'Due dates',
     'summary': 'Due dates management',
-    'version': '12.0.3.3.4',
+    'version': '12.0.3.3.5',
     'category': 'Accounting',
     'author': 'powERP, Didotech srl, SHS-AV srl',
     'website': 'www.powerp.it',
     'license': 'LGPL-3',
     'depends': [
         'account',
+        'base',
         'account_due_list',
         'account_move_plus',
         'account_payment_order',
         'account_invoice_13_more',
         'account_move_line_type',
+        'date_range',
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -25,6 +27,7 @@
         'view/account_move_view.xml',
         'view/account_move_line_view.xml',
         'view/account_due_list_view.xml',
+        'view/partner_view.xml',
     ],
     'installable': True,
     'maintainer': 'powERP enterprise network'

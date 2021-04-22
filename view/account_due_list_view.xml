@@ -22,9 +22,8 @@
 
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="invoice_bank_id" class="text-nowrap"/>
-                <field name="iban"/>
+                <field name="iban" class="text-nowrap"/>
             </xpath>
-
 
             <xpath expr="//field[@name='debit']" position="attributes">
                 <attribute name="invisible">1</attribute>
