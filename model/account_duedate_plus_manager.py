@@ -329,9 +329,10 @@ class DueDateManager(models.Model):
             # Generate a default duedate line only if the
             # invoice amount is not zero
             if total_amount > 0:
+                idate = self._get_split_date_period(partner_id, invoice_date)
                 new_dudate_lines.append({
                     'duedate_manager_id': self.id,
-                    'due_date': invoice_date,
+                    'due_date': idate,
                     'due_amount': total_amount,
                     'payment_method_id': False,
                 })
@@ -366,10 +367,12 @@ class DueDateManager(models.Model):
                     due_amount = due_date[1]
                 # end if
 
+                line_date = self._get_split_date_period(partner_id, due_date[0])
+
                 new_dudate_lines.append({
                     'duedate_manager_id': self.id,
                     'payment_method_id': payment_method.id,
-                    'due_date': due_date[0],
+                    'due_date': line_date,
                     'due_amount': due_amount
                 })
             # end for
@@ -378,8 +381,14 @@ class DueDateManager(models.Model):
         return new_dudate_lines
     # end _duedates_common
 
-    def _is_between_period(self, parent_id, date):
-        pass
+    @api.model
+    def _get_split_date_period(self, parent_id, date):
+        if parent_id.partner_duedates_dr_ids:
+            for record in parent_id.partner_duedates_dr_ids:
+                if record.period_id.date_start <= date <= \
+                        record.period_id.date_end:
+                    return record.split_date
+        return date
 
     # PRIVATE METHODS - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
