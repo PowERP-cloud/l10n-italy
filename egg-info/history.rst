@@ -1,3 +1,8 @@
+12.0.3.3.5 (2021-04-23)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostato e gestito gli intervalli dei giorni di esclusione
+
 12.0.3.3.4 (2021-04-20)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

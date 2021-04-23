@@ -9,7 +9,7 @@ from odoo import models, api, fields
 from odoo.exceptions import UserError
 
 
-class AccountPaymentTermLine(models.Model):
+class PartnerDuedatesDatarange(models.Model):
     _name = "partner.duedates.datarange"
 
     partner_id = fields.Many2one(

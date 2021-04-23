@@ -5,7 +5,7 @@
 #
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 #
-
+import datetime
 from odoo import models, fields, api
 
 
@@ -329,10 +329,11 @@ class DueDateManager(models.Model):
             # Generate a default duedate line only if the
             # invoice amount is not zero
             if total_amount > 0:
-                idate = self._get_split_date_period(partner_id, invoice_date)
+                inv_date = self._get_split_date_period(partner_id, doc_type,
+                                                       invoice_date)
                 new_dudate_lines.append({
                     'duedate_manager_id': self.id,
-                    'due_date': idate,
+                    'due_date': inv_date,
                     'due_amount': total_amount,
                     'payment_method_id': False,
                 })
@@ -367,7 +368,8 @@ class DueDateManager(models.Model):
                     due_amount = due_date[1]
                 # end if
 
-                line_date = self._get_split_date_period(partner_id, due_date[0])
+                line_date = self._get_split_date_period(partner_id, doc_type,
+                                                        due_date[0])
 
                 new_dudate_lines.append({
                     'duedate_manager_id': self.id,
@@ -382,12 +384,21 @@ class DueDateManager(models.Model):
     # end _duedates_common
 
     @api.model
-    def _get_split_date_period(self, parent_id, date):
+    def _get_split_date_period(self, parent_id, doc_type, date):
+        comparison_date = datetime.datetime.strptime(date, "%Y-%m-%d").date()
         if parent_id.partner_duedates_dr_ids:
-            for record in parent_id.partner_duedates_dr_ids:
-                if record.period_id.date_start <= date <= \
-                        record.period_id.date_end:
-                    return record.split_date
+            for period in parent_id.partner_duedates_dr_ids:
+                enable_period = False
+                if doc_type in ('out_invoice', 'in_refund'):
+                    enable_period = period.enable_customer
+                elif doc_type in ('in_invoice', 'out_refund'):
+                    enable_period = period.enable_supplier
+
+                if enable_period and (
+                        period.period_id.date_start <= comparison_date <=
+                        period.period_id.date_end
+                ):
+                    return period.split_date.strftime('%Y-%m-%d')
         return date
 
     # PRIVATE METHODS - end
