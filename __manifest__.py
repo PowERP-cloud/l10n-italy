@@ -5,7 +5,7 @@
 {
     'name': 'Account Banking Common',
     'summary': 'Common stuff for payment modules',
-    'version': '12.0.3.7.3',
+    'version': '12.0.3.7.4',
     'category': 'Accounting',
     'author': 'powERP, Didotech srl, SHS-AV srl',
     'website': 'www.powerp.it',

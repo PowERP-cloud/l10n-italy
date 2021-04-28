@@ -1,3 +1,8 @@
+12.0.3.7.4 (2021-04-28)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostato nella tab [Transfer journal entries] il riferimento a alla registrazione di accredito
+
 12.0.3.7.3 (2021-03-18)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

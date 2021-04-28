@@ -133,7 +133,8 @@ class AccountPaymentOrder(models.Model):
                     'type': 'entry',
                     'ref': "Accreditamento ",
                     'state': 'draft',
-                    'line_ids': line_ids
+                    'line_ids': line_ids,
+                    'payment_order_id': payment_order.id
                 })
 
                 # Creazione registrazione contabile
