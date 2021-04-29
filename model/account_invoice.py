@@ -265,30 +265,31 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def update_duedates(self):
+        for inv in self:
 
-        # Ensure duedate_manager is configured
-        self._get_duedate_manager()
+            # Ensure duedate_manager is configured
+            inv._get_duedate_manager()
 
-        # Generate duedates
-        duedate_line_list = self.duedate_manager_id.generate_duedate_lines()
+            # Generate duedates
+            duedate_line_list = inv.duedate_manager_id.generate_duedate_lines()
 
-        # Generate the commands list for the ORM update method
-        updates_list = list()
+            # Generate the commands list for the ORM update method
+            updates_list = list()
 
-        # Remove old records
-        if self.duedate_line_ids:
-            updates_list += [(2, duedate_line.id, 0) for duedate_line in self.duedate_line_ids]
-        # end if
+            # Remove old records
+            if inv.duedate_line_ids:
+                updates_list += [(2, duedate_line.id, 0) for duedate_line in inv.duedate_line_ids]
+            # end if
 
-        # Create new records
-        if duedate_line_list:
-            updates_list += [(0, 0, duedate_line) for duedate_line in duedate_line_list]
-        # end if
+            # Create new records
+            if duedate_line_list:
+                updates_list += [(0, 0, duedate_line) for duedate_line in duedate_line_list]
+            # end if
 
-        # Update the record
-        if updates_list:
-            self.update({'duedate_line_ids': updates_list})
-        # end if
+            # Update the record
+            if updates_list:
+                inv.update({'duedate_line_ids': updates_list})
+            # end if
     # end update_duedates
 
     def checks_payment(self):
