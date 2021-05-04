@@ -1,6 +1,6 @@
 
 ===========================
-|icon| Due dates 12.0.3.3.5
+|icon| Due dates 12.0.3.3.7
 ===========================
 
 
@@ -136,6 +136,16 @@ In case of trouble, please check there if your issue has already been reported.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.3.3.7 (2021-05-04)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Corretto bug nel metodo che verifica l'intervallo delle esclusioni
+
+12.0.3.3.6 (2021-04-29)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Gestito loop in tutti i multi
 
 12.0.3.3.5 (2021-04-23)
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -407,7 +417,7 @@ Leggere con attenzione i file README per maggiori informazioni sugli autori.
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-04-23
+Last Update / Ultimo aggiornamento: 2021-05-04
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status

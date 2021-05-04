@@ -329,8 +329,9 @@ class DueDateManager(models.Model):
             # Generate a default duedate line only if the
             # invoice amount is not zero
             if total_amount > 0:
+                idate = invoice_date.strftime('%Y-%m-%d')
                 inv_date = self._get_split_date_period(partner_id, doc_type,
-                                                       invoice_date)
+                                                       idate)
                 new_dudate_lines.append({
                     'duedate_manager_id': self.id,
                     'due_date': inv_date,

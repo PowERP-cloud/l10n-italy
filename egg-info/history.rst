@@ -1,3 +1,8 @@
+12.0.3.3.7 (2021-05-04)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Corretto bug nel metodo che verifica l'intervallo delle esclusioni
+
 12.0.3.3.6 (2021-04-29)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
