@@ -1,6 +1,6 @@
 
 ===========================
-|icon| Due dates 12.0.3.3.7
+|icon| Due dates 12.0.3.3.8
 ===========================
 
 
@@ -136,6 +136,11 @@ In case of trouble, please check there if your issue has already been reported.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.3.3.8 (2021-05-04)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostato cron che aggiorna i periodi dedicati all'esclusione delle scadenze
 
 12.0.3.3.7 (2021-05-04)
 ~~~~~~~~~~~~~~~~~~~~~~~

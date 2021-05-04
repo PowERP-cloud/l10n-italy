@@ -1,3 +1,8 @@
+12.0.3.3.8 (2021-05-04)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostato cron che aggiorna i periodi dedicati all'esclusione delle scadenze
+
 12.0.3.3.7 (2021-05-04)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
