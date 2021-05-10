@@ -83,31 +83,34 @@ class PartnerDuedatesDatarange(models.Model):
 
     def _update_year_task(self):
         current_year = fields.Date.context_today(self).year
-        records = self.env['partner.duedates.datarange'].search([])
+        # update periods
+        records = self.env['partner.duedates.datarange'].read_group(
+            [], fields=['period_id'], groupby=['period_id'])
         for item in records:
-            if item.period_id.type_id.name == 'Duedate':
-                _logger.info('current year = {cy}'.format(cy=current_year))
-                start_date_year = item.period_id.date_start.year
+            drange = self.env['date.range'].browse(item['period_id'][0])
+            if drange.type_id.name == 'Duedate':
+                # _logger.info('current year = {cy}'.format(cy=current_year))
+                start_date_year = drange.date_start.year
                 if current_year > start_date_year:
-                    _logger.info('update id {id}'.format(id=item.period_id.id))
+                    _logger.info('update id {id}'.format(id=drange.id))
                     # update period
-                    start = item.period_id.date_start + relativedelta(years=1)
-                    end = item.period_id.date_end + relativedelta(years=1)
-                    item.period_id.write({
+                    start = drange.date_start + relativedelta(years=1)
+                    end = drange.date_end + relativedelta(years=1)
+                    drange.write({
                         'date_start': start,
                         'date_end': end,
                     })
-                    # update split date
-                    spl = item.split_date + relativedelta(years=1)
-                    _logger.info('update split ')
-                    _logger.info('from ')
-                    _logger.info(fields.Date.to_string(item.split_date))
-                    _logger.info('to ')
-                    _logger.info(fields.Date.to_string(spl))
-                    item.write({
-                        'split_date': spl
-                    })
                 # end if
+            # end if
+        # end for
+        # update split date
+        records = self.env['partner.duedates.datarange'].search([])
+        for item in records:
+            if item.period_id.date_end > item.split_date:
+                spl = item.split_date + relativedelta(years=1)
+                item.write({
+                    'split_date': spl
+                })
             # end if
         # end for
     # end _update_year_task
