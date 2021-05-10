@@ -101,9 +101,9 @@ class PartnerDuedatesDatarange(models.Model):
                     spl = item.split_date + relativedelta(years=1)
                     _logger.info('update split ')
                     _logger.info('from ')
-                    _logger.info(item.split_date)
+                    _logger.info(fields.Date.to_string(item.split_date))
                     _logger.info('to ')
-                    _logger.info(spl)
+                    _logger.info(fields.Date.to_string(spl))
                     item.write({
                         'split_date': spl
                     })
