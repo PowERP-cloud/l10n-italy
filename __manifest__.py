@@ -12,7 +12,7 @@
     'depends': [
         'account',
         'base',
-        'date_range',
+        'date_range_plus',
         'account_fiscal_year',
         # 'account_invoice_entry_dates',
     ],
