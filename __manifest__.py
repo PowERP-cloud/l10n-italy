@@ -19,7 +19,7 @@
         'account_payment_order',
         'account_invoice_13_more',
         'account_move_line_type',
-        'date_range',
+        'date_range_plus',
     ],
     'data': [
         'security/ir.model.access.csv',
