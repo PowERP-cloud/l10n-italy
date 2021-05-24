@@ -1,16 +1,18 @@
-# Copyright 2020 SHS-AV s.r.l. <https://www.zeroincombenze.it>
-# Copyright 2020 Didotech s.r.l. <https://www.didotech.com>
+# Copyright 2021 powERP enterprise network <https://www.powerp.it>
+# Copyright 2021 SHS-AV s.r.l. <https://www.zeroincombenze.it>
+# Copyright 2021 Didotech s.r.l. <https://www.didotech.com>
 #
-# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
+# License OPL-1 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
 #
 {
     'name': 'Due dates',
-    'summary': 'Due dates management',
     'version': '12.0.3.4.8',
     'category': 'Accounting',
-    'author': 'powERP, Didotech srl, SHS-AV srl',
-    'website': 'www.powerp.it',
-    'license': 'LGPL-3',
+    'summary': 'Due dates management',
+    'author': 'powERP enterprise network and other partners',
+    'website': 'https://www.powerp.it',
+    'development_status': 'Beta',
+    'license': 'OPL-1',
     'depends': [
         'account',
         'base',
@@ -31,7 +33,7 @@
         'data/update_year_cron.xml',
         'data/date_range_type.xml',
     ],
-    'installable': True,
     'maintainer': 'powERP enterprise network',
+    'installable': True,
     'post_init_hook': 'post_init_hook',
 }

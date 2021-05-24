@@ -17,27 +17,27 @@
                 <field name="payment_order_name" />
                 <field name="incasso_effettuato" readonly="1"/>
             </field>
-            
-             <xpath expr="//field[@name='quantity']" position="after">
+
+            <xpath expr="//field[@name='quantity']" position="after">
                 <field name="prorogation_ctr"/>
                 <field name="unpaid_ctr"/>
-             </xpath>
+            </xpath>
         </field>
     </record>
-    
-<!--    <record id="account_duedates_view_payments_tree" model="ir.ui.view">-->
-<!--        <field name="name">Payments</field>-->
-<!--        <field name="model">account.move.line</field>-->
-<!--        <field name="inherit_id" ref="account_due_list.view_payments_tree"/>-->
-<!--        <field name="arch" type="xml">-->
 
-<!--            <xpath expr="//field[@name='account_id']" position="after">-->
-<!--                <field name="prorogation_ctr"/>-->
-<!--                <field name="unpaid_ctr"/>-->
-<!--            </xpath>-->
+    <!-- <record id="account_duedates_view_payments_tree" model="ir.ui.view">-->
+    <!-- <field name="name">Payments</field>-->
+    <!-- <field name="model">account.move.line</field>-->
+    <!-- <field name="inherit_id" ref="account_due_list.view_payments_tree"/>-->
+    <!-- <field name="arch" type="xml">-->
 
-<!--        </field>-->
-<!--    </record>-->
+    <!-- <xpath expr="//field[@name='account_id']" position="after">-->
+    <!-- <field name="prorogation_ctr"/>-->
+    <!-- <field name="unpaid_ctr"/>-->
+    <!-- </xpath>-->
+
+    <!-- </field>-->
+    <!-- </record>-->
 
 </odoo>
 

@@ -1,9 +1,10 @@
+# Copyright 2020-21 Didotech s.r.l. <https://www.didotech.com>
 #
-# Copyright 2020 Didotech s.r.l. <https://www.didotech.com>
+# Copyright 2020-21 SHS-AV s.r.l. <https://www.zeroincombenze.it>
 #
-# Copyright 2020 SHS-AV s.r.l. <https://www.zeroincombenze.it>
+# Copyright 2021 powERP enterprise network <https://www.powerp.it>
 #
-# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
+# License OPL-1 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
 #
 
 from odoo import models, fields, api
