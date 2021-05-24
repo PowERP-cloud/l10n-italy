@@ -1,3 +1,7 @@
+# Copyright 2021 powERP enterprise network <https://www.powerp.it>
+#
+# License OPL-1 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
+#
 from collections import defaultdict
 from odoo import models, api, fields
 from odoo.exceptions import UserError
@@ -185,7 +189,8 @@ class AccountMoveLine(models.Model):
                 new_reconcile_needed = True
 
                 # Banca c/c
-                # bank_account_line = \
+                # bank_account_line =
+
                 move_line_model_no_check.create({
                     'move_id': new_move.id,
                     'account_id': acct_acct_bank_credit.id,
@@ -194,7 +199,8 @@ class AccountMoveLine(models.Model):
                 })
 
                 # Spese bancarie
-                # expenses_account_line = \
+                # expenses_account_line =
+
                 move_line_model.create({
                     'move_id': new_move.id,
                     'account_id': acct_acct_expe.id,

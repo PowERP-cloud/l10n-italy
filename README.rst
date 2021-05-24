@@ -6,12 +6,13 @@
 
 **Common stuff for payment modules**
 
-.. |icon| image:: https://raw.githubusercontent.com/powerp/accounting/12.0/account_banking_common/static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/accounting/12.0/account_banking_common/static/description/icon.png
 
-|Maturity| |Build Status| |Codecov Status| |license gpl| |Try Me|
+|Maturity| |Build Status| |license opl|
 
 
 .. contents::
+
 
 
 Overview / Panoramica
@@ -121,6 +122,20 @@ Upgrade / Aggiornamento
 From UI: go to:
 
 |
+
+Support / Supporto
+------------------
+
+
+This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
+
+Developer companies are / I soci sviluppatoro sono:
+
+* `Didotech s.r.l. <http://www.didotech.com>`__
+* `SHS-AV s.r.l. <https://www.shs-av.com/>`__
+
+
+|
 |
 
 Get involved / Ci mettiamo in gioco
@@ -128,9 +143,17 @@ Get involved / Ci mettiamo in gioco
 
 Bug reports are welcome! You can use the issue tracker to report bugs,
 and/or submit pull requests on `GitHub Issues
-<https://github.com/powerp/accounting/issues>`_.
+<https://github.com/PowERP-cloud/accounting/issues>`_.
 
 In case of trouble, please check there if your issue has already been reported.
+
+Proposals for enhancement
+-------------------------
+
+
+If you have a proposal to change this module, you may want to send an email to <info@powerp.it> for initial feedback.
+An Enhancement Proposal may be submitted if your idea gains ground.
+
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
@@ -195,170 +218,6 @@ ChangeLog History / Cronologia modifiche
 
 * [IMP] Impostato spese di default
 
-12.0.3.4.9 (2021-01-19)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Aggiornato history
-
-12.0.2.3.9 (2021-01-19)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Effettuato refactoring configurazione sul metodo di accreditamento
-
-12.0.2.3.7 (2021-01-08)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Effettuato refactoring sul metodo di accreditamento
-
-12.0.2.3.5 (2021-01-07)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Ordine di pagamento può essere eliminato solo se in stato "cancel" ("Annulla")
-
-12.0.2.2.5 (2021-01-07)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Refactor wizard confirm payment / Reimplementato il wizard per conferma pagamento
-
-12.0.2.2.4 (2021-01-04)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Update wizard confirm payment / Completato il wizard per conferma pagamento
-
-12.0.2.2.3 (2020-12-30)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Set wizard confirm payment / Impostato il wizard per conferma pagamento
-
-12.0.0.1.37 (2020-12-14)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Added filter 'not in order' and state field / Impostato filtro 'Non in scadenza' e campo stato
-
-12.0.0.1.36 (2020-12-11)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Warning on check duedate payments / Segnalazione al tentativo di annullamento con scadenze in pagamento
-
-12.0.0.1.35 (2020-12-11)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Refactoring date effective / Aggiornato gestione data decorrenza
-
-12.0.0.1.34 (2020-12-04)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Set vat on first duedate according to payment term flag / Impostato gestione iva sulla prima scadenza
-
-12.0.0.1.33 (2020-12-02)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Rimossa creazione righe scadenze se almeno una in pagamento
-
-12.0.0.1.32 (2020-11-30)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Rimossa creazione righe scadenze se almeno una in pagamento
-
-12.0.0.1.31 (2020-11-23)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Set duedates creation from sale order / Impostato creazione scadenze da ordine di vendita
-
-12.0.0.1.30 (2020-11-23)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Set account invoice 13 more dependency / Inserita dipendenza modulo transizione
-
-12.0.0.1.29 (2020-11-18)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Set default date effective / Impostato default data decorrenza
-
-12.0.0.1.28 (2020-11-17)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Added missing dependency / inserita dipendenza mancante
-
-12.0.0.1.27 (2020-11-12)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Added date effective / inserita data di decorrenza
-
-12.0.0.1.26 (2020-11-09)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] impostato ricerca per ordine di pagamento
-
-12.0.0.1.25 (2020-11-06)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] impostato campo ordine di pagamento nella view
-
-12.0.0.1.24 (2020-11-02)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] gestito validazione fattura da ordine di vendita
-
-12.0.0.1.24 (2020-11-02)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] corretto calcolo ammontare fattura in account.move
-
-12.0.0.1.23 (2020-11-02)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] gestione cancellazione ultima scadenza rimasta (mette una nuova riga di scadenza e una nuova riga contabile con scadenza parti alla data fattura e importo pari all'imposto dattura)
-
-12.0.0.1.22 (2020-11-02)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] corretta gestione scadenze per fatture in stato bozza
-
-12.0.0.1.21 (2020-10-28)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Update model, removed unused fields
-
-12.0.0.1.18 (2020-10-23)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [MOD] Correzioni di forma la codice per adeguamento a segnalazioni Flake8
-
-12.0.0.1.17 (2020-10-22)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Eliminazione righe di scadenza vuote, calcolo proposta per importo scadenze dopo modifica fattura, ricalcolo automaticp scadenze al cambio dei termini di pagamento
-
-12.0.0.1.16 (2020-10-21)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Implementato totalizzazione totale scadenze e differenza tra scadenze e totale fattura
-
-12.0.0.1.15 (2020-10-15)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Aggiornato duedate manager
-
-12.0.0.1.14 (2020-10-14)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Rimosso campo duplicato (termine di pagamento)
-
-12.0.0.1.13 (2020-10-12)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Aggiornamento bidirezionale di data scadenza e metodo di pagamento tra account.move.line e account.duedate_plus.line
-
-12.0.0.1.12 (2020-10-12)
-~~~~~~~~~~~~~~~~~~~~~~~~
-* [FIX] Inserita dipendenza modulo OCA Scadenziario account_due_list
-
-
-12.0.0.1.11 (2020-10-12)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Rimossi controlli non validi
 
 
 |
@@ -379,6 +238,7 @@ Odoo is a trademark of `Odoo S.A. <https://www.odoo.com/>`__ (formerly OpenERP)
 Authors / Autori
 ----------------
 
+* `powERP <https://www.powerp.it/>`__
 * `SHS-AV s.r.l. <https://www.zeroincombenze.it/>`__
 * `Didotech srl <http://www.didotech.com>`__
 
@@ -395,9 +255,12 @@ Maintainer / Manutenzione
 -------------------------
 
 
-This module is maintained by the **Powerp**.
+This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
 
-Questo modulo è mantenuto dalla rete di imprese **Powerp**.
+Developer companies are / I soci sviluppatoro sono:
+
+* `Didotech s.r.l. <http://www.didotech.com>`__
+* `SHS-AV s.r.l. <https://www.shs-av.com/>`__
 
 
 |
@@ -405,15 +268,13 @@ Questo modulo è mantenuto dalla rete di imprese **Powerp**.
 ----------------
 
 
-|en| **Powerp** is the Italian Enterprises Network born in 2020, whose mission is promote use of Odoo to cover Italian law and markeplace.
+|en| **Powerp** is an Italian enterprises network, whose mission is to develop high-level addons designed for Italian enterprise companies.
 
-`Powerp <http://www.powerp.it/>`__ distributes code under `LGPL <https://www.gnu.org/licenses/lgpl-3.0.html>`__ or `OPL <https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html>`__ licenses.
+`Powerp <http://www.powerp.it/>`__ code adds new enhanced features to Italian localization and it released under `LGPL <https://www.gnu.org/licenses/lgpl-3.0.html>`__ or `OPL <https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html>`__ licenses.
 
-Read carefully published README for more info about authors.
+|it| `Powerp <http://www.powerp.it/>`__ è una rete di imprese italiane, nata con la missione di sviluppare moduli per le PMI.
 
-|it| `Powerp <http://www.powerp.it/>`__ è una rete di imprese, nata nel 2020 che rilascia moduli per la localizzazione italiana evoluta.
-
-`Powerp <http://www.powerp.it/>`__ distribuisce il codice con licenze `LGPL <https://www.gnu.org/licenses/lgpl-3.0.html>`__ e `OPL <https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html>`__
+Il codice di `Powerp <http://www.powerp.it/>`__ aggiunge caratteristiche evolute alla localizzazione italiana; il codice è rilasciato con licenze `LGPL <https://www.gnu.org/licenses/lgpl-3.0.html>`__ e `OPL <https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html>`__
 
 I soci fondatori sono:
 
@@ -421,7 +282,6 @@ I soci fondatori sono:
 * `SHS-AV s.r.l. <https://www.shs-av.com/>`__
 * `Xplain s.r.l. <http://x-plain.it//>`__
 
-Leggere con attenzione i file README per maggiori informazioni sugli autori.
 
 
 |chat_with_us|
@@ -431,25 +291,25 @@ Leggere con attenzione i file README per maggiori informazioni sugli autori.
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-04-28
+Last Update / Ultimo aggiornamento: 2021-05-24
 
-.. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
+.. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status
-    :alt: Alfa
-.. |Build Status| image:: https://travis-ci.org/powerp/accounting.svg?branch=12.0
-    :target: https://travis-ci.org/powerp/accounting
+    :alt: 
+.. |Build Status| image:: https://travis-ci.org/PowERP-cloud/accounting.svg?branch=12.0
+    :target: https://travis-ci.com/PowERP-cloud/accounting
     :alt: github.com
 .. |license gpl| image:: https://img.shields.io/badge/licence-LGPL--3-7379c3.svg
     :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
     :alt: License: LGPL-3
 .. |license opl| image:: https://img.shields.io/badge/licence-OPL-7379c3.svg
-    :target: https://www.odoo.com/documentation/user/9.0/legal/licenses/licenses.html
+    :target: https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html
     :alt: License: OPL
-.. |Coverage Status| image:: https://coveralls.io/repos/github/powerp/accounting/badge.svg?branch=12.0
-    :target: https://coveralls.io/github/powerp/accounting?branch=12.0
+.. |Coverage Status| image:: https://coveralls.io/repos/github/PowERP-cloud/accounting/badge.svg?branch=12.0
+    :target: https://coveralls.io/github/PowERP-cloud/accounting?branch=12.0
     :alt: Coverage
-.. |Codecov Status| image:: https://codecov.io/gh/powerp/accounting/branch/12.0/graph/badge.svg
-    :target: https://codecov.io/gh/powerp/accounting/branch/12.0
+.. |Codecov Status| image:: https://codecov.io/gh/PowERP-cloud/accounting/branch/12.0/graph/badge.svg
+    :target: https://codecov.io/gh/PowERP-cloud/accounting/branch/12.0
     :alt: Codecov
 .. |Tech Doc| image:: https://www.zeroincombenze.it/wp-content/uploads/ci-ct/prd/button-docs-12.svg
     :target: https://wiki.zeroincombenze.org/en/Odoo/12.0/dev

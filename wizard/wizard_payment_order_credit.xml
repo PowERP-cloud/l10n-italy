@@ -3,7 +3,7 @@
     <record id="wizard_payment_order_credit" model="ir.ui.view">
         <field name="name">wizard.payment.order.credit.form</field>
         <field name="model">wizard.payment.order.credit</field>
-        <field name="arch"  type="xml">
+        <field name="arch" type="xml">
             <form string="Accredito">
                 <group>
                     <field name="account_expense" />
@@ -22,3 +22,4 @@
     </record>
 
 </odoo>
+

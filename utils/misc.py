@@ -1,3 +1,7 @@
+# Copyright 2021 powERP enterprise network <https://www.powerp.it>
+#
+# License OPL-1 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
+#
 def external_id_to_res_model_data(env, external_id):
     module, name = external_id.split('.')
     resource = env['ir.model.data'].search([

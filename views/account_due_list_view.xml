@@ -8,8 +8,8 @@
         <field name="arch" type="xml">
             <button name="%(account.action_account_invoice_payment)d" type="action" position="after">
                 <button name="action_generate_payment_order" type="action"
-                    string="Add to Debit Order"
-                    groups="account_payment_order.group_account_payment" />
+                        string="Add to Debit Order"
+                        groups="account_payment_order.group_account_payment" />
             </button>
         </field>
     </record>

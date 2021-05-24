@@ -3,7 +3,7 @@
     <record id="wizard_account_payment_generate" model="ir.ui.view">
         <field name="name">wizard.account.payment.generate.form</field>
         <field name="model">wizard.account.payment.generate</field>
-        <field name="arch"  type="xml">
+        <field name="arch" type="xml">
             <form string="Create Payment Lines">
                 <group>
                     <field name="payment_mode_id" />
@@ -20,3 +20,4 @@
     </record>
 
 </odoo>
+

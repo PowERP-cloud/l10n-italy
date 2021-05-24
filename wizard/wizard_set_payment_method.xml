@@ -3,7 +3,7 @@
     <record id="wizard_set_payment_method" model="ir.ui.view">
         <field name="name">wizard.set.payment.method.form</field>
         <field name="model">wizard.set.payment.method</field>
-        <field name="arch"  type="xml">
+        <field name="arch" type="xml">
             <form string="Aggiorna metodi di pagamento">
                 <group>
                     <field name="payment_method" />
@@ -19,3 +19,4 @@
     </record>
 
 </odoo>
+
