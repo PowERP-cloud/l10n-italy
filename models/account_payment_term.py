@@ -1,9 +1,12 @@
-# Copyright 2013-2016 Camptocamp SA (Yannick Vaucher)
-# Copyright 2004-2016 Odoo S.A. (www.odoo.com)
-# Copyright 2015-2016 Akretion
+# Copyright 2013-16 Camptocamp SA (Yannick Vaucher)
+# Copyright 2004-16 Odoo S.A. (www.odoo.com)
+# Copyright 2015-16 Akretion
 # (Alexis de Lattre <alexis.delattre@akretion.com>)
 # Copyright 2018 Simone Rubino - Agile Business Group
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# Copyright 2021 powERP enterprise network <https://www.powerp.it>
+#
+# License OPL-1 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
+#
 
 from functools import reduce
 from dateutil.relativedelta import relativedelta

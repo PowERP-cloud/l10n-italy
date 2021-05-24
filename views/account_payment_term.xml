@@ -34,7 +34,7 @@
             <field name="line_ids" position="after">
                 <separator string="Holidays"/>
                 <p class="text-muted">
-                    When a payment term coincides with a holiday, it is postponed to the chosen date.
+                   When a payment term coincides with a holiday, it is postponed to the chosen date.
                 </p>
                 <field name="holiday_ids">
                     <tree editable="top">
@@ -56,7 +56,7 @@
                 <div attrs="{'invisible':[('value','=', 'balance')]}" class="o_row">
                     <label for="amount_round" attrs="{'invisible':[('value','=', 'balance')]}"/>
                     <field name="amount_round"
-                       attrs="{'invisible':[('value','=','balance')]}" class="oe_inline"/>
+                           attrs="{'invisible':[('value','=','balance')]}" class="oe_inline"/>
                 </div>
             </xpath>
 
@@ -84,7 +84,7 @@
         <field name="name">account.payment.term.line.tree.extension</field>
         <field name="model">account.payment.term.line</field>
         <field name="inherit_id" ref="account.view_payment_term_line_tree" />
-        <field name="arch"  type="xml">
+        <field name="arch" type="xml">
             <field name="value_amount" position="after">
                 <field name="amount_round"/>
             </field>
@@ -101,3 +101,4 @@
     </record>
 
 </odoo>
+
