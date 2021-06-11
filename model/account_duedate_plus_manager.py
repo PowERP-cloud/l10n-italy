@@ -10,6 +10,9 @@ import datetime
 from odoo import models, fields, api
 
 
+MOVE_TYPE_INV_CN = ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')
+
+
 class DueDateManager(models.Model):
     _name = 'account.duedate_plus.manager'
     _description = 'Gestore scadenze fatture/note di credito'
@@ -254,27 +257,42 @@ class DueDateManager(models.Model):
 
     @api.model
     def _duedates_from_move(self):
-        # Compute payment terms and total amount from the move
-        payment_terms = self.move_id.payment_term_id
-        doc_type = self.move_id.type
-        if self.move_id.date_effective:
-            invoice_date = self.move_id.date_effective
-        else:
-            invoice_date = self.move_id.invoice_date
 
-        total_amount = self.move_id.amount
-        type_error_msg = 'move_type for move must be one of: receivable, ' \
-                         'payable_refund, payable, receivable_refund'
-        partner_id = self.move_id.partner_id
+        # Check if the move is an invoice or a credit note
+        is_invoice_or_credit_note = self.move_id.move_type in MOVE_TYPE_INV_CN
+
         # Do something only if there are move lines to use for calculations
-        if self.move_id.line_ids:
+        # and the move is an invoice or a credit note
+        if not is_invoice_or_credit_note:
+            return list()
+
+        elif not self.move_id.line_ids:
+            return list()
+
+        else:
+
+            # Compute payment terms and total amount from the move
+            payment_terms = self.move_id.payment_term_id
+            doc_type = self.move_id.type
+
+            if self.move_id.date_effective:
+                invoice_date = self.move_id.date_effective
+            else:
+                invoice_date = self.move_id.invoice_date
+            # end if
+
+            total_amount = self.move_id.amount
+            type_error_msg = 'move_type for move must be one of: receivable, ' \
+                             'payable_refund, payable, receivable_refund'
+            partner_id = self.move_id.partner_id
+
             return self._duedates_common(
                 payment_terms, doc_type, invoice_date, total_amount,
                 type_error_msg, partner_id
             )
-        else:
-            return list()
+
         # end if
+
     # end _duedates_from_move
 
     @api.model

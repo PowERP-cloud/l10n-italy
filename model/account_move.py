@@ -60,13 +60,22 @@ class AccountMove(models.Model):
 
     @api.multi
     def write(self, values):
+
         result = super().write(values)
+
         for move in self:
-            if 'duedate_line_ids' in values:
+
+            ddls = self.duedate_line_ids
+            move_has_duedates = ddls and len(ddls) > 0
+
+            if move_has_duedates:
                 if not self.env.context.get('RecStop'):
-                    move.with_context(
-                        RecStop=True
-                    ).write_credit_debit_move_lines()
+                    move = move.with_context(RecStop=True)
+                    move.write_credit_debit_move_lines()
+                # end if
+            # end if
+        # end for
+
         return result
     # end write
 
@@ -245,6 +254,12 @@ class AccountMove(models.Model):
 
     @api.model
     def _gen_duedates(self):
+        '''
+            Compute the duedates.
+            Note: this method only returns a list of modifications to be performed to the duedates, it does NOT:
+                - call write() or update() methods to store the generated modifications
+                - modify the lines of the move object
+        '''
         # Ensure duedate_manager is configured
         self._get_duedate_manager()
 
@@ -274,75 +289,85 @@ class AccountMove(models.Model):
 
     @api.model
     def _compute_new_credit_debit_move_lines(self):
+        '''Rewrite move lines generating the new lines from the duedates.'''
 
-        # Should not be necessary ...just in case
-        if not self.line_ids:
-            return
-        # end if
+        move_has_duedates = self.duedate_line_ids and len(self.duedate_line_ids) > 0
+        move_has_lines = self.line_ids and len(self.line_ids) > 0
 
-        # Extract credit and debit lines
-        lines_cd = list()
-        lines_other = list()
+        if not move_has_duedates:
+            # If no duedate lines nothing should be done
+            return None
 
-        for line in self.line_ids:
-            line._compute_line_type()
-            line_type = line.line_type
-            if line_type in ('credit', 'debit'):
-                lines_cd.append(line)
-            else:
-                lines_other.append(line)
-            # end if
-        # end for
+        elif not move_has_lines:
+            # Should not be necessary ...just in case
+            return None
 
-        # Build the move line template dictionary
-        move_line_template = lines_cd[0].copy_data()[0]
-        del move_line_template['move_id']  # 'move_id' removed because it will be automatically set by the update method
+        else:
+            # Extract credit and debit lines
+            lines_cd = list()
+            lines_other = list()
 
-        # List of modifications to move lines one2many field
-        move_lines_mods = list()
-
-        # Add the new move lines
-        for duedate_line in self.duedate_line_ids:
-
-            has_duedate = (duedate_line.due_date and True) or False
-            has_amount = (duedate_line.due_amount and True) or False
-
-            if has_duedate and has_amount:
-                new_data = move_line_template.copy()
-
-                # Set the linked account.duedate_plus.line record
-                new_data['duedate_line_id'] = duedate_line.id
-
-                # Set the date_maturity field
-                new_data['date_maturity'] = duedate_line.due_date
-
-                # Set the amount
-                if new_data['credit'] > 0:
-                    new_data['credit'] = duedate_line.due_amount
+            for line in self.line_ids:
+                line._compute_line_type()
+                line_type = line.line_type
+                if line_type in ('credit', 'debit'):
+                    lines_cd.append(line)
                 else:
-                    new_data['debit'] = duedate_line.due_amount
+                    lines_other.append(line)
                 # end if
+            # end for
 
-                # Set payment method
-                new_data['payment_method_id'] = duedate_line.payment_method_id.id
+            # Build the move line template dictionary
+            move_line_template = lines_cd[0].copy_data()[0]
+            # remove 'move_id' because it is automatically set by the update method
+            del move_line_template['move_id']
 
-                move_lines_mods.append(
-                    (0, False, new_data)
-                )
+            # List of modifications to move lines one2many field
+            move_lines_mods = list()
 
-            else:
-                # Duedate lines without duedate or without amount are ignored
-                pass
-        # end for
+            # Add the new move lines
+            for duedate_line in self.duedate_line_ids:
 
-        # Schedule deletion of old lines
-        move_lines_mods += [(4, line.id) for line in lines_other]
+                has_duedate = (duedate_line.due_date and True) or False
+                has_amount = (duedate_line.due_amount and True) or False
 
-        # Schedule deletion of old lines
-        move_lines_mods += [(2, line.id) for line in lines_cd]
+                if has_duedate and has_amount:
+                    new_data = move_line_template.copy()
 
-        # Return the modifications to be performed
-        return {'line_ids': move_lines_mods}
+                    # Set the linked account.duedate_plus.line record
+                    new_data['duedate_line_id'] = duedate_line.id
+
+                    # Set the date_maturity field
+                    new_data['date_maturity'] = duedate_line.due_date
+
+                    # Set the amount
+                    if new_data['credit'] > 0:
+                        new_data['credit'] = duedate_line.due_amount
+                    else:
+                        new_data['debit'] = duedate_line.due_amount
+                    # end if
+
+                    # Set payment method
+                    new_data['payment_method_id'] = duedate_line.payment_method_id.id
+
+                    move_lines_mods.append(
+                        (0, False, new_data)
+                    )
+
+                else:
+                    # Duedate lines without duedate or without amount are ignored
+                    pass
+            # end for
+
+            # Schedule deletion of old lines
+            move_lines_mods += [(4, line.id) for line in lines_other]
+
+            # Schedule deletion of old lines
+            move_lines_mods += [(2, line.id) for line in lines_cd]
+
+            # Return the modifications to be performed
+            return {'line_ids': move_lines_mods}
+        # end if
     # end _compute_new_credit_debit_move_lines
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
