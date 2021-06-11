@@ -28,10 +28,6 @@ class AccountMove(models.Model):
         readonly=False
     )
 
-    duedate_lines_amount = fields.Float(
-        related='duedate_manager_id.duedate_lines_amount'
-    )
-
     duedates_amount_current = fields.Monetary(
         string='Ammontare scadenze',
         compute='_compute_duedates_amounts'
@@ -68,7 +64,7 @@ class AccountMove(models.Model):
             ddls = self.duedate_line_ids
             move_has_duedates = ddls and len(ddls) > 0
 
-            if move_has_duedates:
+            if move_has_duedates and move.state == 'draft':
                 if not self.env.context.get('RecStop'):
                     move = move.with_context(RecStop=True)
                     move.write_credit_debit_move_lines()
@@ -179,13 +175,18 @@ class AccountMove(models.Model):
     @api.model
     def write_credit_debit_move_lines(self):
 
-        # Compute the modifications to be performed
-        move_lines_mods = self._compute_new_credit_debit_move_lines()
+        if self.state == 'draft':
 
-        # Save changes
-        if move_lines_mods:
-            self.write(move_lines_mods)
+            # Compute the modifications to be performed
+            move_lines_mods = self._compute_new_credit_debit_move_lines()
+
+            # Save changes
+            if move_lines_mods:
+                self.write(move_lines_mods)
+            # end if
+
         # end if
+
     # end write_credit_debit_move_lines
 
 

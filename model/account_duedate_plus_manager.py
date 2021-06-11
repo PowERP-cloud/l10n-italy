@@ -38,11 +38,6 @@ class DueDateManager(models.Model):
         requred=False
     )
 
-    duedate_lines_amount = fields.Float(
-        sring="Ammontare scadenze",
-        compute='_compute_duedate_lines_amount'
-    )
-
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ORM METHODS OVERRIDE - begin
 
@@ -259,7 +254,7 @@ class DueDateManager(models.Model):
     def _duedates_from_move(self):
 
         # Check if the move is an invoice or a credit note
-        is_invoice_or_credit_note = self.move_id.move_type in MOVE_TYPE_INV_CN
+        is_invoice_or_credit_note = self.move_id.type in MOVE_TYPE_INV_CN
 
         # Do something only if there are move lines to use for calculations
         # and the move is an invoice or a credit note
