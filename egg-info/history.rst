@@ -1,3 +1,8 @@
+12.0.4.7.8 (2021-06-15)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] account_duedates: corretto bug che impediva di salvare correttamente registrazioni contabili di tipo diverso da fattura / nota di credito
+
 12.0.3.3.8 (2021-05-04)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
