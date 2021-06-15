@@ -20,7 +20,8 @@ class DueDateLine(models.Model):
     duedate_manager_id = fields.Many2one(
         comodel_name='account.duedate_plus.manager',
         string='Gestore scadenze',
-        requred=True
+        requred=True,
+        ondelete='cascade',
     )
 
     due_date = fields.Date('Data di scadenza', requred=True)

@@ -1,0 +1,1 @@
+MOVE_TYPE_INV_CN = ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')

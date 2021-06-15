@@ -7,9 +7,10 @@
 # License OPL-1 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
 #
 
-
 from odoo import models, fields, api
 from odoo.tools.float_utils import float_is_zero
+
+from ..utils.misc import MOVE_TYPE_INV_CN
 
 
 class AccountMove(models.Model):
@@ -59,18 +60,11 @@ class AccountMove(models.Model):
 
         result = super().write(values)
 
-        for move in self:
+        writing_c_d_m_l = self.env.context.get('writing_c_d_m_l', False)
 
-            ddls = self.duedate_line_ids
-            move_has_duedates = ddls and len(ddls) > 0
-
-            if move_has_duedates and move.state == 'draft':
-                if not self.env.context.get('RecStop'):
-                    move = move.with_context(RecStop=True)
-                    move.write_credit_debit_move_lines()
-                # end if
-            # end if
-        # end for
+        if not writing_c_d_m_l:
+            self.write_credit_debit_move_lines()
+        # end if
 
         return result
     # end write
@@ -172,18 +166,39 @@ class AccountMove(models.Model):
     # PUBLIC METHODS - begin
 
 
-    @api.model
+    @api.multi
     def write_credit_debit_move_lines(self):
 
-        if self.state == 'draft':
+        writing_c_d_m_l = self.env.context.get('writing_c_d_m_l', False)
 
-            # Compute the modifications to be performed
-            move_lines_mods = self._compute_new_credit_debit_move_lines()
+        if not writing_c_d_m_l:
 
-            # Save changes
-            if move_lines_mods:
-                self.write(move_lines_mods)
-            # end if
+            # Add new context variable and use the "move" object
+            # which has the new context variable set.
+            self = self.with_context(writing_c_d_m_l=True)
+
+            for move in self:
+
+                # Check if the move is an invoice or a credit note
+                move_type_ok = move.type in MOVE_TYPE_INV_CN
+
+                is_draft = move.state == 'draft'
+                has_duedates = (
+                    move.duedate_line_ids and len(move.duedate_line_ids) > 0
+                )
+
+                if move_type_ok and is_draft and has_duedates:
+
+                    # Compute the modifications to be performed
+                    move_lines_mods = move._compute_new_credit_debit_move_lines()
+
+                    # Save changes
+                    if move_lines_mods:
+                        move.write(move_lines_mods)
+                    # end if
+
+                # end if
+            # end for
 
         # end if
 
@@ -292,8 +307,14 @@ class AccountMove(models.Model):
     def _compute_new_credit_debit_move_lines(self):
         '''Rewrite move lines generating the new lines from the duedates.'''
 
+        # Check if the move is an invoice or a credit note
+        move_type_ok = self.type in MOVE_TYPE_INV_CN
         move_has_duedates = self.duedate_line_ids and len(self.duedate_line_ids) > 0
         move_has_lines = self.line_ids and len(self.line_ids) > 0
+
+        if not move_type_ok:
+            # If move is not an invoice or credit note do nothing
+            return None
 
         if not move_has_duedates:
             # If no duedate lines nothing should be done
