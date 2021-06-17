@@ -2,10 +2,12 @@
 # Copyright 2015-2016  Lorenzo Battistini - Agile Business Group
 # Copyright 2016  Alessio Gerace - Agile Business Group
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
+import logging
 import odoo.addons.decimal_precision as dp
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
+
+_logger = logging.getLogger(__file__)
 
 
 class AccountFiscalPosition(models.Model):
@@ -16,6 +18,14 @@ class AccountFiscalPosition(models.Model):
 
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
+
+    @api.multi
+    def _compute_net_pay(self):
+        for inv in self:
+            inv.amount_net_pay = inv.amount_total - inv.amount_sp
+        # end for
+
+    # end _compute_net_pay
 
     amount_sp = fields.Float(
         string='Split Payment',
@@ -36,10 +46,11 @@ class AccountInvoice(models.Model):
     def _compute_amount(self):
         super(AccountInvoice, self)._compute_amount()
         self.amount_sp = 0
+        self.amount_total = self.amount_untaxed + self.amount_tax
         if self.fiscal_position_id.split_payment:
             self.amount_sp = self.amount_tax
             self.amount_tax = 0
-        self.amount_total = self.amount_untaxed + self.amount_tax
+        # self.amount_total = self.amount_untaxed + self.amount_tax
 
     def _build_debit_line(self):
         if not self.company_id.sp_account_id:
@@ -54,10 +65,25 @@ class AccountInvoice(models.Model):
             'date': self.date_invoice,
             'debit': self.amount_sp,
             'credit': 0,
-            }
+        }
         if self.type == 'out_refund':
             vals['debit'] = 0
             vals['credit'] = self.amount_sp
+        return vals
+
+    def _build_client_credit_line(self):
+        vals = {
+            'name': 'Iva in scissione pagamenti',
+            'partner_id': self.partner_id.id,
+            'account_id': self.account_id.id,
+            'journal_id': self.journal_id.id,
+            'date': self.date_invoice,
+            'debit': 0,
+            'credit': self.amount_sp,
+        }
+        if self.type == 'out_refund':
+            vals['credit'] = 0
+            vals['debit'] = self.amount_sp
         return vals
 
     @api.multi
@@ -67,35 +93,61 @@ class AccountInvoice(models.Model):
         return self.move_id.line_ids.filtered(
             lambda r: r.account_id.id == self.account_id.id).ids
 
-    @api.multi
-    def _compute_split_payments(self):
-        for invoice in self:
-            receivable_line_ids = invoice.get_receivable_line_ids()
-            move_line_pool = self.env['account.move.line']
-            for receivable_line in move_line_pool.browse(receivable_line_ids):
-                inv_total = invoice.amount_sp + invoice.amount_total
-                if invoice.type == 'out_invoice':
-                    if inv_total:
-                        receivable_line_amount = (
-                            invoice.amount_total * receivable_line.debit
-                            ) / inv_total
-                    else:
-                        receivable_line_amount = 0
-                    receivable_line.with_context(
-                        check_move_validity=False
-                    ).write(
-                        {'debit': receivable_line_amount})
-                elif invoice.type == 'out_refund':
-                    if inv_total:
-                        receivable_line_amount = (
-                            invoice.amount_total * receivable_line.credit
-                            ) / inv_total
-                    else:
-                        receivable_line_amount = 0
-                    receivable_line.with_context(
-                        check_move_validity=False
-                    ).write(
-                        {'credit': receivable_line_amount})
+    @api.model
+    def _update_residual(self):
+        residual = 0.0
+        residual_company_signed = 0.0
+        sign = self.type in ['in_refund', 'out_refund'] and -1 or 1
+        move_line_ids = self.get_receivable_line_ids()
+        for line in self.env['account.move.line'].browse(move_line_ids):
+            residual_company_signed += line.amount_residual
+            if line.currency_id == self.currency_id:
+                residual += line.amount_residual_currency if line.currency_id \
+                    else line.amount_residual
+            else:
+                if line.currency_id:
+                    residual += line.currency_id._convert(
+                        line.amount_residual_currency, self.currency_id,
+                        line.company_id, line.date or fields.Date.today())
+                else:
+                    residual += line.company_id.currency_id._convert(
+                        line.amount_residual, self.currency_id, line.company_id,
+                        line.date or fields.Date.today())
+        self.residual_company_signed = abs(residual_company_signed) * sign
+        self.residual_signed = abs(residual) * sign
+        self.residual = abs(residual)
+
+    # @api.multi
+    # def _compute_split_payments(self):
+    #     for invoice in self:
+    #         receivable_line_ids = invoice.get_receivable_line_ids()
+    #         move_line_pool = self.env['account.move.line']
+    #         for receivable_line in move_line_pool.browse(receivable_line_ids):
+    #             # inv_total = invoice.amount_sp + invoice.amount_total
+    #             inv_total = invoice.amount_total
+    #             inv_to_pay = invoice.amount_total - invoice.amount_sp
+    #             if invoice.type == 'out_invoice':
+    #                 if inv_total:
+    #                     receivable_line_amount = (
+    #                         inv_to_pay * receivable_line.debit
+    #                         ) / inv_total
+    #                 else:
+    #                     receivable_line_amount = 0
+    #                 receivable_line.with_context(
+    #                     check_move_validity=False
+    #                 ).write(
+    #                     {'debit': receivable_line_amount})
+    #             elif invoice.type == 'out_refund':
+    #                 if inv_total:
+    #                     receivable_line_amount = (
+    #                         inv_to_pay * receivable_line.credit
+    #                         ) / inv_total
+    #                 else:
+    #                     receivable_line_amount = 0
+    #                 receivable_line.with_context(
+    #                     check_move_validity=False
+    #                 ).write(
+    #                     {'credit': receivable_line_amount})
 
     @api.multi
     def action_move_create(self):
@@ -108,13 +160,48 @@ class AccountInvoice(models.Model):
                 if invoice.move_id.state == 'posted':
                     posted = True
                     invoice.move_id.state = 'draft'
-                self._compute_split_payments()
+
                 line_model = self.env['account.move.line']
+
+                tax_duedate = invoice.move_id.line_ids.filtered(
+                    lambda x: x.account_id.id == self.account_id.id and x.debit
+                              == self.amount_sp and x.partner_id.id ==
+                              self.partner_id.id
+                )
+
+                # for mvline in invoice.move_id.line_ids:
+                #     if mvline.credit == self.amount_sp and \
+                #         mvline.date == self.date_invoice:
+                #         tax_duedate = mvline
+
+                # tax_duedate = self.env['account.move.line'].search([
+                #     ('account_id', '=', self.account_id),
+                #     ('credit', '=', self.amount_sp),
+                #     ('partner_id', '=', self.partner_id),
+                #     ('journal_id', '=', self.journal_id),
+                #     ('date', '=', self.date_invoice),
+                # ])
+
+                #
+                transfer_line_vals = invoice._build_client_credit_line()
+                transfer_line_vals['move_id'] = invoice.move_id.id
+                tranfer = line_model.with_context(
+                    check_move_validity=False
+                ).create(transfer_line_vals)
+
                 write_off_line_vals = invoice._build_debit_line()
                 write_off_line_vals['move_id'] = invoice.move_id.id
                 line_model.with_context(
                     check_move_validity=False
                 ).create(write_off_line_vals)
+
+                lines_to_rec = line_model.browse([
+                    tax_duedate.id,
+                    tranfer.id
+                ])
+                lines_to_rec.reconcile()
+
                 if posted:
                     invoice.move_id.state = 'posted'
+                invoice._compute_residual()
         return res

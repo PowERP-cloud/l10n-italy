@@ -16,10 +16,12 @@
     'license': 'AGPL-3',
     'depends': [
         'account',
+        'l10n_it_account',
     ],
     'data': [
         'views/account_view.xml',
         'views/config_view.xml',
     ],
     'installable': True,
+    "maintainer": "powERP enterprise network",
 }
