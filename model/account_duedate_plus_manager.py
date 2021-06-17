@@ -335,6 +335,15 @@ class DueDateManager(models.Model):
             return new_dudate_lines
         # end if
 
+        # split payment
+        if self.invoice_id.split_payment:
+            is_split_payment = self.invoice_id.split_payment
+            amount_sp = self.invoice_id.amount_sp
+            total_amount = total_amount - amount_sp
+        else:
+            is_split_payment = False
+            amount_sp = 0.0
+
         # If no payment terms generate only ONE due date line
         # with due_date equal to the invoice date
         if not payment_terms:
@@ -351,6 +360,14 @@ class DueDateManager(models.Model):
                     'due_amount': total_amount,
                     'payment_method_id': False,
                 })
+
+                if is_split_payment:
+                    new_dudate_lines.append({
+                        'duedate_manager_id': self.id,
+                        'due_date': inv_date,
+                        'due_amount': amount_sp,
+                        'payment_method_id': False,
+                    })
             else:
                 return new_dudate_lines
             # end if
@@ -361,6 +378,9 @@ class DueDateManager(models.Model):
                 amount_to_compute = self.invoice_id.amount_untaxed
                 tax = self.invoice_id.amount_tax
                 add_tax = True
+            elif is_split_payment and self.invoice_id:
+                amount_to_compute = self.invoice_id.amount_untaxed
+                add_tax = False
             else:
                 tax = 0.0
                 amount_to_compute = total_amount
@@ -392,6 +412,17 @@ class DueDateManager(models.Model):
                     'due_amount': due_amount
                 })
             # end for
+            if is_split_payment:
+                split_date = self._get_split_date_period(
+                    partner_id, doc_type, invoice_date.strftime('%Y-%m-%d'))
+
+                new_dudate_lines.append({
+                    'duedate_manager_id': self.id,
+                    'payment_method_id': payment_method.id,
+                    'due_date': split_date,
+                    'due_amount': amount_sp
+                })
+
         # end if
 
         return new_dudate_lines
