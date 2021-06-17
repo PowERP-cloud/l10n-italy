@@ -2,6 +2,11 @@
 # Copyright 2017 Alex Comba - Agile Business Group
 # Copyright 2017 Lorenzo Battistini - Agile Business Group
 # Copyright 2017 Marco Calcagni - Dinamiche Aziendali srl
+# Copyright 2021 Antonio M. Vigliotti - SHS-Av srl
+# Copyright 2021 powERP enterprise network <https://www.powerp.it>
+#
+# License OPL-1 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
+#
 
 from odoo import fields, models, _, api
 from odoo.exceptions import ValidationError
