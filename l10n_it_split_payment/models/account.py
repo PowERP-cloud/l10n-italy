@@ -87,69 +87,6 @@ class AccountInvoice(models.Model):
         return vals
 
     @api.multi
-    def get_receivable_line_ids(self):
-        # return the move line ids with the same account as the invoice self
-        self.ensure_one()
-        return self.move_id.line_ids.filtered(
-            lambda r: r.account_id.id == self.account_id.id).ids
-
-    @api.model
-    def _update_residual(self):
-        residual = 0.0
-        residual_company_signed = 0.0
-        sign = self.type in ['in_refund', 'out_refund'] and -1 or 1
-        move_line_ids = self.get_receivable_line_ids()
-        for line in self.env['account.move.line'].browse(move_line_ids):
-            residual_company_signed += line.amount_residual
-            if line.currency_id == self.currency_id:
-                residual += line.amount_residual_currency if line.currency_id \
-                    else line.amount_residual
-            else:
-                if line.currency_id:
-                    residual += line.currency_id._convert(
-                        line.amount_residual_currency, self.currency_id,
-                        line.company_id, line.date or fields.Date.today())
-                else:
-                    residual += line.company_id.currency_id._convert(
-                        line.amount_residual, self.currency_id, line.company_id,
-                        line.date or fields.Date.today())
-        self.residual_company_signed = abs(residual_company_signed) * sign
-        self.residual_signed = abs(residual) * sign
-        self.residual = abs(residual)
-
-    # @api.multi
-    # def _compute_split_payments(self):
-    #     for invoice in self:
-    #         receivable_line_ids = invoice.get_receivable_line_ids()
-    #         move_line_pool = self.env['account.move.line']
-    #         for receivable_line in move_line_pool.browse(receivable_line_ids):
-    #             # inv_total = invoice.amount_sp + invoice.amount_total
-    #             inv_total = invoice.amount_total
-    #             inv_to_pay = invoice.amount_total - invoice.amount_sp
-    #             if invoice.type == 'out_invoice':
-    #                 if inv_total:
-    #                     receivable_line_amount = (
-    #                         inv_to_pay * receivable_line.debit
-    #                         ) / inv_total
-    #                 else:
-    #                     receivable_line_amount = 0
-    #                 receivable_line.with_context(
-    #                     check_move_validity=False
-    #                 ).write(
-    #                     {'debit': receivable_line_amount})
-    #             elif invoice.type == 'out_refund':
-    #                 if inv_total:
-    #                     receivable_line_amount = (
-    #                         inv_to_pay * receivable_line.credit
-    #                         ) / inv_total
-    #                 else:
-    #                     receivable_line_amount = 0
-    #                 receivable_line.with_context(
-    #                     check_move_validity=False
-    #                 ).write(
-    #                     {'credit': receivable_line_amount})
-
-    @api.multi
     def action_move_create(self):
         res = super(AccountInvoice, self).action_move_create()
         for invoice in self:
@@ -169,20 +106,6 @@ class AccountInvoice(models.Model):
                               self.partner_id.id
                 )
 
-                # for mvline in invoice.move_id.line_ids:
-                #     if mvline.credit == self.amount_sp and \
-                #         mvline.date == self.date_invoice:
-                #         tax_duedate = mvline
-
-                # tax_duedate = self.env['account.move.line'].search([
-                #     ('account_id', '=', self.account_id),
-                #     ('credit', '=', self.amount_sp),
-                #     ('partner_id', '=', self.partner_id),
-                #     ('journal_id', '=', self.journal_id),
-                #     ('date', '=', self.date_invoice),
-                # ])
-
-                #
                 transfer_line_vals = invoice._build_client_credit_line()
                 transfer_line_vals['move_id'] = invoice.move_id.id
                 tranfer = line_model.with_context(
