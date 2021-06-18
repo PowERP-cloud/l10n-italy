@@ -8,7 +8,7 @@
 {
     'name': 'ITA - Contabilità base',
     'summary': 'Modulo base usato come dipendenza di altri moduli contabili',
-    'version': '12.0.1.4.5',
+    'version': '12.0.1.4.6',
     'category': 'Hidden',
     'author': "Agile Business Group, Abstract, "
               "Odoo Community Association (OCA)",
@@ -28,7 +28,9 @@
         'views/res_config_settings_views.xml',
         'reports/account_reports_view.xml',
         'views/account_view.xml',
+        'views/account_invoice_view.xml',
     ],
     'installable': True,
     "post_init_hook": "_l10n_it_account_post_init",
+    "maintainer": "powERP enterprise network",
 }
