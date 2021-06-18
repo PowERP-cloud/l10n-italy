@@ -19,12 +19,13 @@ class AccountFiscalPosition(models.Model):
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    @api.multi
+    @api.depends('amount_total', 'amount_sp')
     def _compute_net_pay(self):
+        res = super()._compute_net_pay()
         for inv in self:
-            inv.amount_net_pay = inv.amount_total - inv.amount_sp
+            if inv.split_payment:
+                inv.amount_net_pay = inv.amount_total - inv.amount_sp
         # end for
-
     # end _compute_net_pay
 
     amount_sp = fields.Float(

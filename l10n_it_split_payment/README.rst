@@ -1,6 +1,6 @@
 
 ===============================
-|icon| Split Payment 12.0.1.0.2
+|icon| Split Payment 12.0.1.0.3
 ===============================
 
 
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.0.3 (2021-06-18)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Inserito in fattura il campo "netto a pagare" e relativo calcolo
+
 12.0.1.0.2 (2021-06-17)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -236,7 +241,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-06-17
+Last Update / Ultimo aggiornamento: 2021-06-18
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status
