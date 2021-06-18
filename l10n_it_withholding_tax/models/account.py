@@ -370,15 +370,18 @@ class AccountInvoice(models.Model):
     @api.depends(
         'invoice_line_ids.price_subtotal', 'withholding_tax_line_ids.tax',
         'currency_id', 'company_id', 'date_invoice', 'payment_move_line_ids')
-    def _amount_withholding_tax(self):
+    # def _amount_withholding_tax(self):
+    def _compute_net_pay(self):
+        res = super()._compute_net_pay()
         dp_obj = self.env['decimal.precision']
         for invoice in self:
             withholding_tax_amount = 0.0
             for wt_line in invoice.withholding_tax_line_ids:
                 withholding_tax_amount += round(
                     wt_line.tax, dp_obj.precision_get('Account'))
-            invoice.amount_net_pay = invoice.amount_total - \
-                withholding_tax_amount
+            if withholding_tax_amount:
+                invoice.amount_net_pay = invoice.amount_total - \
+                    withholding_tax_amount
             amount_net_pay_residual = invoice.amount_net_pay
             invoice.withholding_tax_amount = withholding_tax_amount
             for line in invoice.payment_move_line_ids:
@@ -394,15 +397,15 @@ class AccountInvoice(models.Model):
         'Withholding Tax Lines', copy=True,
         readonly=True, states={'draft': [('readonly', False)]})
     withholding_tax_amount = fields.Float(
-        compute='_amount_withholding_tax',
+        compute='_compute_net_pay',
         digits=dp.get_precision('Account'), string='Withholding tax Amount',
         store=True, readonly=True)
-    amount_net_pay = fields.Float(
-        compute='_amount_withholding_tax',
-        digits=dp.get_precision('Account'), string='Net To Pay',
-        store=True, readonly=True)
+    # amount_net_pay = fields.Float(
+    #     compute='_compute_net_pay',
+    #     digits=dp.get_precision('Account'), string='Net To Pay',
+    #     store=True, readonly=True)
     amount_net_pay_residual = fields.Float(
-        compute='_amount_withholding_tax',
+        compute='_compute_net_pay',
         digits=dp.get_precision('Account'), string='Residual Net To Pay',
         store=True, readonly=True)
 

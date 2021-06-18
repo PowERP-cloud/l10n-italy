@@ -5,7 +5,7 @@
 
 {
     'name': 'Italian Withholding Tax',
-    'version': '12.0.2.1.0',
+    'version': '12.0.2.1.1',
     'category': 'Account',
     'author': 'Openforce, Odoo Italia Network, '
               'Odoo Community Association (OCA)',
@@ -14,6 +14,7 @@
     "depends": [
         'account',
         'l10n_it_fatturapa',
+        'l10n_it_account',
     ],
     "data": [
         'views/account.xml',
@@ -25,5 +26,7 @@
     'qweb': [
         "static/src/xml/account_payment.xml",
     ],
-    "installable": True
+    "installable": True,
+    "maintainer": "powERP enterprise network",
+
 }
