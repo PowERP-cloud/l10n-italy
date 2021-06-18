@@ -129,3 +129,40 @@ class AccountInvoice(models.Model):
                     invoice.move_id.state = 'posted'
                 invoice._compute_residual()
         return res
+
+    @api.multi
+    def get_receivable_line_ids(self):
+        # return the move line ids with the same account as the invoice self
+        self.ensure_one()
+        return self.move_id.line_ids.filtered(
+            lambda r: r.account_id.id == self.account_id.id).ids
+
+    @api.multi
+    def _compute_split_payments(self):
+        for invoice in self:
+            receivable_line_ids = invoice.get_receivable_line_ids()
+            move_line_pool = self.env['account.move.line']
+            for receivable_line in move_line_pool.browse(receivable_line_ids):
+                inv_total = invoice.amount_sp + invoice.amount_total
+                if invoice.type == 'out_invoice':
+                    if inv_total:
+                        receivable_line_amount = (
+                            invoice.amount_total * receivable_line.debit
+                            ) / inv_total
+                    else:
+                        receivable_line_amount = 0
+                    receivable_line.with_context(
+                        check_move_validity=False
+                    ).write(
+                        {'debit': receivable_line_amount})
+                elif invoice.type == 'out_refund':
+                    if inv_total:
+                        receivable_line_amount = (
+                            invoice.amount_total * receivable_line.credit
+                            ) / inv_total
+                    else:
+                        receivable_line_amount = 0
+                    receivable_line.with_context(
+                        check_move_validity=False
+                    ).write(
+                        {'credit': receivable_line_amount})
