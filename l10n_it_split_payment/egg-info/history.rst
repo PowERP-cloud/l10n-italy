@@ -1,3 +1,8 @@
+12.0.1.0.1_3 (2021-06-21)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestita azienda per riconciliazione movimenti contabili
+
 12.0.1.0.1_2 (2021-06-21)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 

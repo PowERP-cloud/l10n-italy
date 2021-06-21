@@ -1,6 +1,6 @@
 
 =================================
-|icon| Split Payment 12.0.1.0.1_2
+|icon| Split Payment 12.0.1.0.1_3
 =================================
 
 
@@ -157,6 +157,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.1.0.1_3 (2021-06-21)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestita azienda per riconciliazione movimenti contabili
 
 12.0.1.0.1_2 (2021-06-21)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
