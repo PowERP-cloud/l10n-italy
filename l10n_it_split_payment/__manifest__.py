@@ -24,4 +24,5 @@
     ],
     'installable': True,
     "maintainer": "powERP enterprise network",
+    'pre_init_hook': 'pre_init_hook',
 }
