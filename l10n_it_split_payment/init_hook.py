@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 def pre_init_hook(cr):
     """
     The objective of this hook is to detect the installation
-    of the module 'l10n_it_account' on an
+    of the module 'l10n_it_withholding_tax' on an
     existing Odoo instance.
     """
 
@@ -21,12 +21,12 @@ def pre_init_hook(cr):
 
     if not parameter or not eval(parameter.value):
         installed_module = env['ir.module.module'].search([
-            ('name', '=', 'l10n_it_account')
+            ('name', '=', 'l10n_it_withholding_tax')
         ])
         if installed_module and installed_module.maintainer.lower() \
             != 'powerp enterprise network':
             raise UserError('Questo modulo non è installabile poichè è '
                             'presente un\'altra versione di '
-                            '(l10n_it_account).')
+                            '(l10n_it_withholding_tax).')
         # end if
     # end if

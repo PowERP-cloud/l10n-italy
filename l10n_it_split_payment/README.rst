@@ -1,7 +1,7 @@
 
-===============================
-|icon| Split Payment 12.0.1.0.3
-===============================
+=================================
+|icon| Split Payment 12.0.1.0.1_2
+=================================
 
 
 .. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/l10n-italy/12.0/l10n_it_split_payment/static/description/icon.png
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.0.1_2 (2021-06-21)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Aggiornato numero versione
+
 12.0.1.0.3 (2021-06-18)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -241,7 +246,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-06-18
+Last Update / Ultimo aggiornamento: 2021-06-21
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status

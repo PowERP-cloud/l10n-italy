@@ -1,7 +1,7 @@
 
-========================================
-|icon| ITA - Contabilità base 12.0.1.4.6
-========================================
+==========================================
+|icon| ITA - Contabilità base 12.0.1.4.5_1
+==========================================
 
 
 **Modulo base usato come dipendenza di altri moduli contabili**
@@ -160,6 +160,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.4.5_1 (2021-06-21)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostato numero di versione"
+
 12.0.1.4.6 (2021-06-18)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -238,7 +243,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-06-18
+Last Update / Ultimo aggiornamento: 2021-06-21
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status

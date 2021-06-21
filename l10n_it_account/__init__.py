@@ -2,6 +2,7 @@
 
 from . import models
 from . import tools
+from .init_hook import pre_init_hook
 from odoo import api, SUPERUSER_ID
 
 

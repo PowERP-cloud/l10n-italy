@@ -6,7 +6,7 @@
 
 {
     'name': 'Split Payment',
-    'version': '12.0.1.0.3',
+    'version': '12.0.1.0.1_2',
     'category': 'Localization/Italy',
     'summary': 'Split Payment',
     'author': 'Abstract, Agile Business Group, '
@@ -24,4 +24,5 @@
     ],
     'installable': True,
     "maintainer": "powERP enterprise network",
+    'pre_init_hook': 'pre_init_hook',
 }
