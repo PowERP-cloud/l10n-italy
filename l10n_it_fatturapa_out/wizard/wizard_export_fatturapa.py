@@ -48,8 +48,10 @@ from odoo.addons.l10n_it_fatturapa.bindings.fatturapa import (
     AllegatiType,
     ScontoMaggiorazioneType,
     CodiceArticoloType,
-    AltriDatiGestionaliType
+    AltriDatiGestionaliType,
+    DataFatturaType
 )
+from datetime import date
 from odoo.addons.l10n_it_fatturapa.models.account import (
     RELATED_DOCUMENT_TYPES)
 
@@ -80,6 +82,8 @@ class FatturapaBDS(domutils.BindingDOMSupport):
             # We have to use directly the string value
             # instead of letting PyXB edit it
             return str(value)
+        elif isinstance(value, (DataFatturaType, date)):
+            value = value.date()
         return super(FatturapaBDS, self) \
             .valueAsText(value, enable_default_namespace)
 
