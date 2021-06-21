@@ -102,10 +102,7 @@ class AccountInvoice(models.Model):
                 line_model = self.env['account.move.line']
 
                 tax_duedate = invoice.move_id.line_ids.filtered(
-                    lambda x: x.account_id.id == self.account_id.id and x.debit
-                              == self.amount_sp and x.partner_id.id ==
-                              self.partner_id.id
-                )
+                    lambda x: x.account_id.id == self.account_id.id and x.debit == self.amount_sp and x.partner_id.id == self.partner_id.id and self.company_id.id == x.company_id.id)
 
                 transfer_line_vals = invoice._build_client_credit_line()
                 transfer_line_vals['move_id'] = invoice.move_id.id
@@ -119,11 +116,12 @@ class AccountInvoice(models.Model):
                     check_move_validity=False
                 ).create(write_off_line_vals)
 
-                lines_to_rec = line_model.browse([
-                    tax_duedate.id,
-                    tranfer.id
-                ])
-                lines_to_rec.reconcile()
+                if tax_duedate and tax_duedate.id:
+                    lines_to_rec = line_model.browse([
+                        tax_duedate.id,
+                        tranfer.id
+                    ])
+                    lines_to_rec.reconcile()
 
                 if posted:
                     invoice.move_id.state = 'posted'
