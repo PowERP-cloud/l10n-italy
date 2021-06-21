@@ -385,7 +385,7 @@ class DueDateManager(models.Model):
                 tax = 0.0
                 amount_to_compute = total_amount
             # end if
-
+            payment_method = False
             due_dates = payment_terms.compute(amount_to_compute, invoice_date)[0]
             for due_date in due_dates:
                 if doc_type in ('out_invoice', 'in_refund'):
@@ -412,7 +412,7 @@ class DueDateManager(models.Model):
                     'due_amount': due_amount
                 })
             # end for
-            if is_split_payment:
+            if is_split_payment and payment_method:
                 split_date = self._get_split_date_period(
                     partner_id, doc_type, invoice_date.strftime('%Y-%m-%d'))
 

@@ -1,3 +1,7 @@
+12.0.4.7.10 (2021-06-21)
+~~~~~~~~~~~~~~~~~~~~~~~~
+* [FIX] account_duedates: corretto bug nella creazione fattura
+
 12.0.4.7.9 (2021-06-18)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

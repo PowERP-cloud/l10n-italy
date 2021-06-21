@@ -1,7 +1,7 @@
 
-===========================
-|icon| Due dates 12.0.4.7.9
-===========================
+============================
+|icon| Due dates 12.0.4.7.10
+============================
 
 
 **Due dates management**
@@ -160,6 +160,10 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.4.7.10 (2021-06-21)
+~~~~~~~~~~~~~~~~~~~~~~~~
+* [FIX] account_duedates: corretto bug nella creazione fattura
+
 12.0.4.7.9 (2021-06-18)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -214,11 +218,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Errore in write (mass editing data decorrenza fatture)
-
-12.0.3.2.1 (2021-03-30)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Errore in onchange
 
 
 
@@ -293,7 +292,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-06-18
+Last Update / Ultimo aggiornamento: 2021-06-21
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
