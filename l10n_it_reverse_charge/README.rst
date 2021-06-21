@@ -1,7 +1,7 @@
 
-============================================
-|icon| ITA - Inversione contabile 12.0.1.2.8
-============================================
+==============================================
+|icon| ITA - Inversione contabile 12.0.1.2.7_1
+==============================================
 
 
 **Inversione contabile**
@@ -246,6 +246,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_1 (2021-06-21)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Aggiornato numero di versione
+
 12.0.1.2.8 (2021-05-17)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -341,7 +346,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-06-17
+Last Update / Ultimo aggiornamento: 2021-06-21
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
