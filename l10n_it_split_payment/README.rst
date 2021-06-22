@@ -1,6 +1,6 @@
 
 =================================
-|icon| Split Payment 12.0.1.0.1_4
+|icon| Split Payment 12.0.1.0.1_5
 =================================
 
 
@@ -157,6 +157,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.1.0.1_5 (2021-06-22)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestita riga di storno dell'iva per stampa registro
 
 12.0.1.0.1_4 (2021-06-22)
 ~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -53,7 +53,7 @@ class AccountInvoice(models.Model):
             self.amount_tax = 0
         # self.amount_total = self.amount_untaxed + self.amount_tax
 
-    def _build_debit_line(self):
+    def _build_debit_line(self, tax_id):
         if not self.company_id.sp_account_id:
             raise UserError(
                 _("Please set 'Split Payment Write-off Account' field in"
@@ -66,6 +66,7 @@ class AccountInvoice(models.Model):
             'date': self.date_invoice,
             'debit': self.amount_sp,
             'credit': 0,
+            'tax_line_id': tax_id,
         }
         if self.type == 'out_refund':
             vals['debit'] = 0
@@ -115,7 +116,7 @@ class AccountInvoice(models.Model):
                     check_move_validity=False
                 ).create(transfer_line_vals)
 
-                write_off_line_vals = invoice._build_debit_line()
+                write_off_line_vals = invoice._build_debit_line(tax_line.tax_line_id.id)
                 write_off_line_vals['move_id'] = invoice.move_id.id
                 line_model.with_context(
                     check_move_validity=False
