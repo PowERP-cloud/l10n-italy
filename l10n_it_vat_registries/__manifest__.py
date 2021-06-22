@@ -6,7 +6,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    'version': '12.0.1.2.5',
+    'version': '12.0.1.2.5_1',
     'name': 'ITA - Registri IVA',
     'category': 'Localization/Italy',
     "author": "Agile Business Group, Odoo Community Association (OCA)"
@@ -22,6 +22,7 @@
         'web',
         'account_tax_balance',
         'date_range',
+        'account_move_line_type',
     ],
     "data": [
         'security/ir.model.access.csv',

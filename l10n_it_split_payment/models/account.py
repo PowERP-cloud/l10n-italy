@@ -53,7 +53,7 @@ class AccountInvoice(models.Model):
             self.amount_tax = 0
         # self.amount_total = self.amount_untaxed + self.amount_tax
 
-    def _build_debit_line(self):
+    def _build_debit_line(self, tax_id):
         if not self.company_id.sp_account_id:
             raise UserError(
                 _("Please set 'Split Payment Write-off Account' field in"
@@ -66,13 +66,14 @@ class AccountInvoice(models.Model):
             'date': self.date_invoice,
             'debit': self.amount_sp,
             'credit': 0,
+            'tax_line_id': tax_id,
         }
         if self.type == 'out_refund':
             vals['debit'] = 0
             vals['credit'] = self.amount_sp
         return vals
 
-    def _build_client_credit_line(self):
+    def _build_client_credit_line(self, tax_id):
         vals = {
             'name': 'Iva in scissione pagamenti',
             'partner_id': self.partner_id.id,
@@ -81,6 +82,7 @@ class AccountInvoice(models.Model):
             'date': self.date_invoice,
             'debit': 0,
             'credit': self.amount_sp,
+            'tax_line_id': tax_id
         }
         if self.type == 'out_refund':
             vals['credit'] = 0
@@ -101,29 +103,31 @@ class AccountInvoice(models.Model):
 
                 line_model = self.env['account.move.line']
 
-                tax_duedate = invoice.move_id.line_ids.filtered(
-                    lambda x: x.account_id.id == self.account_id.id and x.debit
-                              == self.amount_sp and x.partner_id.id ==
-                              self.partner_id.id
-                )
+                tax_line = invoice.move_id.line_ids.filtered(
+                    lambda x: x.credit == self.amount_sp and x.partner_id.id == self.partner_id.id and self.company_id.id == x.company_id.id and x.line_type == 'tax')
 
-                transfer_line_vals = invoice._build_client_credit_line()
+                tax_duedate = invoice.move_id.line_ids.filtered(
+                    lambda x: x.account_id.id == self.account_id.id and x.debit == self.amount_sp and x.partner_id.id == self.partner_id.id and self.company_id.id == x.company_id.id)
+
+                transfer_line_vals = invoice._build_client_credit_line(
+                    tax_line.tax_line_id.id)
                 transfer_line_vals['move_id'] = invoice.move_id.id
                 tranfer = line_model.with_context(
                     check_move_validity=False
                 ).create(transfer_line_vals)
 
-                write_off_line_vals = invoice._build_debit_line()
+                write_off_line_vals = invoice._build_debit_line(tax_line.tax_line_id.id)
                 write_off_line_vals['move_id'] = invoice.move_id.id
                 line_model.with_context(
                     check_move_validity=False
                 ).create(write_off_line_vals)
 
-                lines_to_rec = line_model.browse([
-                    tax_duedate.id,
-                    tranfer.id
-                ])
-                lines_to_rec.reconcile()
+                if tax_duedate and tax_duedate.id:
+                    lines_to_rec = line_model.browse([
+                        tax_duedate.id,
+                        tranfer.id
+                    ])
+                    lines_to_rec.reconcile()
 
                 if posted:
                     invoice.move_id.state = 'posted'
