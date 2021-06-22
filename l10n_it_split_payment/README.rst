@@ -1,6 +1,6 @@
 
 =================================
-|icon| Split Payment 12.0.1.0.1_3
+|icon| Split Payment 12.0.1.0.1_4
 =================================
 
 
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.0.1_4 (2021-06-22)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestita riga di storno dell'iva inclusa nel totale fattura
+
 12.0.1.0.1_3 (2021-06-21)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -251,7 +256,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-06-21
+Last Update / Ultimo aggiornamento: 2021-06-22
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status

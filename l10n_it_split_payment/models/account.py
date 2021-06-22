@@ -72,7 +72,7 @@ class AccountInvoice(models.Model):
             vals['credit'] = self.amount_sp
         return vals
 
-    def _build_client_credit_line(self):
+    def _build_client_credit_line(self, tax_id):
         vals = {
             'name': 'Iva in scissione pagamenti',
             'partner_id': self.partner_id.id,
@@ -81,6 +81,7 @@ class AccountInvoice(models.Model):
             'date': self.date_invoice,
             'debit': 0,
             'credit': self.amount_sp,
+            'tax_line_id': tax_id
         }
         if self.type == 'out_refund':
             vals['credit'] = 0
@@ -101,10 +102,14 @@ class AccountInvoice(models.Model):
 
                 line_model = self.env['account.move.line']
 
+                tax_line = invoice.move_id.line_ids.filtered(
+                    lambda x: x.credit == self.amount_sp and x.partner_id.id == self.partner_id.id and self.company_id.id == x.company_id.id and x.line_type == 'tax')
+
                 tax_duedate = invoice.move_id.line_ids.filtered(
                     lambda x: x.account_id.id == self.account_id.id and x.debit == self.amount_sp and x.partner_id.id == self.partner_id.id and self.company_id.id == x.company_id.id)
 
-                transfer_line_vals = invoice._build_client_credit_line()
+                transfer_line_vals = invoice._build_client_credit_line(
+                    tax_line.tax_line_id.id)
                 transfer_line_vals['move_id'] = invoice.move_id.id
                 tranfer = line_model.with_context(
                     check_move_validity=False

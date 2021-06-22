@@ -1,3 +1,8 @@
+12.0.1.0.1_4 (2021-06-22)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestita riga di storno dell'iva inclusa nel totale fattura
+
 12.0.1.0.1_3 (2021-06-21)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
