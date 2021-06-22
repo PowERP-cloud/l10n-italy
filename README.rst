@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.4.7.10
+|icon| Due dates 12.0.4.7.11
 ============================
 
 
@@ -160,6 +160,10 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.4.7.11 (2021-06-21)
+~~~~~~~~~~~~~~~~~~~~~~~~
+* [FIX] account_duedates: campo non duplicabile 'Data di decorrenza'
+
 12.0.4.7.10 (2021-06-21)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 * [FIX] account_duedates: corretto bug nella creazione fattura
@@ -213,11 +217,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Aggiornamento campi nell'elenco di Pagamenti e scadenze
-
-12.0.3.2.1_hot (2021-04-15)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Errore in write (mass editing data decorrenza fatture)
 
 
 
@@ -292,7 +291,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-06-21
+Last Update / Ultimo aggiornamento: 2021-06-22
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

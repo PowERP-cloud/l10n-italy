@@ -62,7 +62,8 @@ class AccountInvoice(models.Model):
         string='Data di decorrenza',
         states={"draft": [("readonly", False)]},
         readonly=True,
-        default=''
+        default='',
+        copy=False,
     )
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
