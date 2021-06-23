@@ -307,6 +307,12 @@ l10n_it_split_payment: 12.0.1.0.1_4 (2021-06-22)
 * [FIX] Gestita riga di storno dell'iva inclusa nel totale fattura
 
 
+l10n_it_reverse_charge: 12.0.1.2.7_2 (2021-06-22)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Aggiornato context per la funzione di riporto in bozza della fattura
+
+
 l10n_it_withholding_tax: 12.0.2.1.0_1 (2021-06-21)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

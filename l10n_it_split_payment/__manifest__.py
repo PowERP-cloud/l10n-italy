@@ -6,7 +6,7 @@
 
 {
     'name': 'Split Payment',
-    'version': '12.0.1.0.1_5',
+    'version': '12.0.1.0.1_6',
     'category': 'Localization/Italy',
     'summary': 'Split Payment',
     'author': 'Abstract, Agile Business Group, '
