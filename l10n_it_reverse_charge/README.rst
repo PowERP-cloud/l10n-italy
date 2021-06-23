@@ -246,6 +246,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_2 (2021-06-22)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Aggiornato context per la funzione di riporto in bozza della fattura
+
 12.0.1.2.7_1 (2021-06-21)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -346,7 +351,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-06-21
+Last Update / Ultimo aggiornamento: 2021-06-23
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

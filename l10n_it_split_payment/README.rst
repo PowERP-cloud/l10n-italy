@@ -1,6 +1,6 @@
 
 =================================
-|icon| Split Payment 12.0.1.0.1_5
+|icon| Split Payment 12.0.1.0.1_6
 =================================
 
 
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.0.1_6 (2021-06-22)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestita iva multipla
+
 12.0.1.0.1_5 (2021-06-22)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -261,7 +266,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-06-22
+Last Update / Ultimo aggiornamento: 2021-06-23
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status
