@@ -53,7 +53,7 @@ class AccountInvoice(models.Model):
             self.amount_tax = 0
         # self.amount_total = self.amount_untaxed + self.amount_tax
 
-    def _build_debit_line(self, tax_id):
+    def _build_debit_line(self, tax):
         if not self.company_id.sp_account_id:
             raise UserError(
                 _("Please set 'Split Payment Write-off Account' field in"
@@ -64,16 +64,16 @@ class AccountInvoice(models.Model):
             'account_id': self.company_id.sp_account_id.id,
             'journal_id': self.journal_id.id,
             'date': self.date_invoice,
-            'debit': self.amount_sp,
+            'debit': tax.credit,
             'credit': 0,
-            'tax_line_id': tax_id,
+            'tax_line_id': tax.tax_line_id.id,
         }
         if self.type == 'out_refund':
             vals['debit'] = 0
-            vals['credit'] = self.amount_sp
+            vals['credit'] = tax.credit
         return vals
 
-    def _build_client_credit_line(self, tax_id):
+    def _build_client_credit_line(self, tax):
         vals = {
             'name': 'Iva in scissione pagamenti',
             'partner_id': self.partner_id.id,
@@ -81,12 +81,12 @@ class AccountInvoice(models.Model):
             'journal_id': self.journal_id.id,
             'date': self.date_invoice,
             'debit': 0,
-            'credit': self.amount_sp,
-            'tax_line_id': tax_id
+            'credit': tax.credit,
+            'tax_line_id': tax.tax_line_id.id
         }
         if self.type == 'out_refund':
             vals['credit'] = 0
-            vals['debit'] = self.amount_sp
+            vals['debit'] = tax.credit
         return vals
 
     @api.multi
@@ -102,31 +102,33 @@ class AccountInvoice(models.Model):
                     invoice.move_id.state = 'draft'
 
                 line_model = self.env['account.move.line']
+                transfer_ids = list()
 
                 tax_line = invoice.move_id.line_ids.filtered(
-                    lambda x: x.credit == self.amount_sp and x.partner_id.id == self.partner_id.id and self.company_id.id == x.company_id.id and x.line_type == 'tax')
+                    lambda x: x.partner_id.id == self.partner_id.id and self.company_id.id == x.company_id.id and x.line_type == 'tax')
 
                 tax_duedate = invoice.move_id.line_ids.filtered(
                     lambda x: x.account_id.id == self.account_id.id and x.debit == self.amount_sp and x.partner_id.id == self.partner_id.id and self.company_id.id == x.company_id.id)
 
-                transfer_line_vals = invoice._build_client_credit_line(
-                    tax_line.tax_line_id.id)
-                transfer_line_vals['move_id'] = invoice.move_id.id
-                tranfer = line_model.with_context(
-                    check_move_validity=False
-                ).create(transfer_line_vals)
+                transfer_ids.append(tax_duedate.id)
 
-                write_off_line_vals = invoice._build_debit_line(tax_line.tax_line_id.id)
-                write_off_line_vals['move_id'] = invoice.move_id.id
-                line_model.with_context(
-                    check_move_validity=False
-                ).create(write_off_line_vals)
+                for tl in tax_line:
+                    transfer_line_vals = invoice._build_client_credit_line(tl)
+                    transfer_line_vals['move_id'] = invoice.move_id.id
+                    tranfer = line_model.with_context(
+                        check_move_validity=False
+                    ).create(transfer_line_vals)
+
+                    transfer_ids.append(tranfer.id)
+
+                    write_off_line_vals = invoice._build_debit_line(tl)
+                    write_off_line_vals['move_id'] = invoice.move_id.id
+                    line_model.with_context(
+                        check_move_validity=False
+                    ).create(write_off_line_vals)
 
                 if tax_duedate and tax_duedate.id:
-                    lines_to_rec = line_model.browse([
-                        tax_duedate.id,
-                        tranfer.id
-                    ])
+                    lines_to_rec = line_model.browse(transfer_ids)
                     lines_to_rec.reconcile()
 
                 if posted:
