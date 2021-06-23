@@ -1,3 +1,8 @@
+12.0.1.2.7_2 (2021-06-22)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Aggiornato context per la funzione di riporto in bozza della fattura
+
 12.0.1.2.7_1 (2021-06-21)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
