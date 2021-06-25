@@ -58,10 +58,24 @@ class AccountMove(models.Model):
     @api.multi
     def write(self, values):
 
-        result = super().write(values)
-
+        # Avoid calling the write_credit_debit_move_lines() method in the
+        # super().write() call ...THIS IS NECESSARY TO ENSURE THAT
+        # write_credit_debit_move_lines()
+        # - gets executed only one time
+        # - gets executed only when every other modification to the move
+        #   object has been completed.
+        #
+        # NOTE: since for security reasons the method
+        #       write_credit_debit_move_lines() performs an independent check
+        #       of the "writing_c_d_m_l" context variable it is necessary
+        #       to restore the original value of "writing_c_d_m_l" before
+        #       calling write_credit_debit_move_lines()
         writing_c_d_m_l = self.env.context.get('writing_c_d_m_l', False)
+        self = self.with_context(writing_c_d_m_l=True)
+        result = super().write(values)
+        self = self.with_context(writing_c_d_m_l=writing_c_d_m_l)
 
+        # Avoid infinite recursion
         if not writing_c_d_m_l:
             self.write_credit_debit_move_lines()
         # end if
