@@ -1,3 +1,7 @@
+12.0.4.8.11 (2021-06-25)
+~~~~~~~~~~~~~~~~~~~~~~~~
+ * [FIX] account_duedates: corretto errore che impediva il salvataggio di una registrazione contabile una volta modificata
+
 12.0.4.7.11 (2021-06-22)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 * [FIX] account_duedates: campo non duplicabile 'Data di decorrenza'
