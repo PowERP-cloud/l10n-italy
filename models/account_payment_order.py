@@ -181,6 +181,7 @@ class AccountPaymentOrder(models.Model):
             assert pay_mode.transfer_account_id.id
             cfg['transfer_account'] = pay_mode.transfer_account_id
             cfg['conto_effetti_attivi'] = cfg['transfer_account']
+            cfg['effetti_allo_sconto'] = cfg['transfer_account']
         # end if
 
         # 3 - Add bank journal

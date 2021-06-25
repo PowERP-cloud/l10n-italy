@@ -1,6 +1,6 @@
 
 ========================================
-|icon| Account Banking Common 12.0.3.7.4
+|icon| Account Banking Common 12.0.3.7.5
 ========================================
 
 
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.5 (2021-06-25)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] POW-401 Aggiornamento configurazione conto "Effetti allo sconto"
+
 12.0.3.7.4 (2021-04-28)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -213,11 +218,6 @@ ChangeLog History / Cronologia modifiche
 
 * [IMP] Refactoring
 
-12.0.3.4.10 (2021-02-01)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Impostato spese di default
-
 
 
 |
@@ -238,9 +238,9 @@ Odoo is a trademark of `Odoo S.A. <https://www.odoo.com/>`__ (formerly OpenERP)
 Authors / Autori
 ----------------
 
-* `powERP <https://www.powerp.it/>`__
+* `powERP <https://www.powerp.it>`__
 * `SHS-AV s.r.l. <https://www.zeroincombenze.it/>`__
-* `Didotech srl <http://www.didotech.com>`__
+* `Didotech s.r.l. <https://www.didotech.com>`__
 
 
 Contributors / Collaboratori
@@ -291,9 +291,9 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-05-24
+Last Update / Ultimo aggiornamento: 2021-06-25
 
-.. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
+.. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
     :alt: 
 .. |Build Status| image:: https://travis-ci.org/PowERP-cloud/accounting.svg?branch=12.0

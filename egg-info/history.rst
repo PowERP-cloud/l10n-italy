@@ -1,3 +1,8 @@
+12.0.3.7.5 (2021-06-25)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] POW-401 Aggiornamento configurazione conto "Effetti allo sconto"
+
 12.0.3.7.4 (2021-04-28)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
