@@ -1,3 +1,7 @@
+12.0.4.8.12 (2021-06-28)
+~~~~~~~~~~~~~~~~~~~~~~~~
+ * [IMP] account_duedates: Impostato manager per la gestione delle scadenze
+
 12.0.4.8.11 (2021-06-25)
 ~~~~~~~~~~~~~~~~~~~~~~~~
  * [FIX] account_duedates: corretto errore che impediva il salvataggio di una registrazione contabile una volta modificata

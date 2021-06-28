@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.4.8.11
+|icon| Due dates 12.0.4.8.12
 ============================
 
 
@@ -160,6 +160,10 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.4.8.12 (2021-06-28)
+~~~~~~~~~~~~~~~~~~~~~~~~
+ * [IMP] account_duedates: Impostato manager per la gestione delle scadenze
+
 12.0.4.8.11 (2021-06-25)
 ~~~~~~~~~~~~~~~~~~~~~~~~
  * [FIX] account_duedates: corretto errore che impediva il salvataggio di una registrazione contabile una volta modificata
@@ -211,11 +215,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Rinominato la colonna 'Saldo' in 'Importo'
-
-12.0.3.3.2 (2021-04-15)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Integrazione delle modifiche fatte in 12.0.3.2.1_hot
 
 
 
@@ -290,7 +289,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-06-25
+Last Update / Ultimo aggiornamento: 2021-06-28
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
