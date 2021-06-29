@@ -5,12 +5,13 @@
 # Copyright 2021 Antonio M. Vigliotti - SHS-Av srl
 # Copyright 2021 powERP enterprise network <https://www.powerp.it>
 #
-# License OPL-1 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 #
 
 from odoo import api, fields, models
 from odoo.exceptions import Warning as UserError
 from odoo.tools.translate import _
+import odoo.addons.decimal_precision as dp
 
 
 class AccountInvoiceLine(models.Model):
@@ -20,22 +21,26 @@ class AccountInvoiceLine(models.Model):
     def _set_rc_flag(self, invoice):
         self.ensure_one()
         if invoice.type in ['in_invoice', 'in_refund']:
-            fposition = invoice.fiscal_position_id
-            rc = bool(fposition.rc_type_id)
-            if rc:
-                for tax in self.invoice_line_tax_ids:
-                    if not tax.kind_id:
-                        rc = False
-                        break
-                    elif tax.kind_id and tax.kind_id.code != 'N3.5':
-                        if (not tax.kind_id.code.startswith('N6') and
-                                not tax.kind_id.code.startswith('N3')):
-                            rc = False
-                            break
-                        # end if
-                    # end if
-                # end for
-            self.rc = rc
+            for tax in self.invoice_line_tax_ids:
+                if tax.rc_type:
+                    self.rc = True
+
+            # fposition = invoice.fiscal_position_id
+            # rc = bool(fposition.rc_type_id)
+            # if rc:
+            #     for tax in self.invoice_line_tax_ids:
+            #         if not tax.kind_id:
+            #             rc = False
+            #             break
+            #         elif tax.kind_id and tax.kind_id.code != 'N3.5':
+            #             if (not tax.kind_id.code.startswith('N6') and
+            #                     not tax.kind_id.code.startswith('N3')):
+            #                 rc = False
+            #                 break
+            #             # end if
+            #         # end if
+            #     # end for
+            # self.rc = rc
 
     @api.onchange('invoice_line_tax_ids')
     def onchange_invoice_line_tax_id(self):
@@ -51,6 +56,23 @@ class AccountInvoiceLine(models.Model):
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
+    # TODO implementare correttamente
+    def _compute_amount_rc(self):
+        self.amount_rc = 0.0
+        for tax in self.invoice_line_tax_ids:
+            self.amount_rc += 0
+        # end for
+    # end _compute_amount_rc
+
+    @api.depends('amount_total', 'amount_rc')
+    def _compute_net_pay(self):
+        res = super()._compute_net_pay()
+        for inv in self:
+            if inv.split_payment:
+                inv.amount_net_pay = inv.amount_total - inv.amount_rc
+        # end for
+    # end _compute_net_pay
+
     rc_self_invoice_id = fields.Many2one(
         comodel_name='account.invoice',
         string='RC Self Invoice',
@@ -61,6 +83,13 @@ class AccountInvoice(models.Model):
     rc_self_purchase_invoice_id = fields.Many2one(
         comodel_name='account.invoice',
         string='RC Self Purchase Invoice', copy=False, readonly=True)
+
+    amount_rc = fields.Float(
+        string='Amount RC',
+        digits=dp.get_precision('Account'),
+        store=True,
+        readonly=True,
+        compute='_compute_amount_rc')
 
     @api.onchange('invoice_line_ids')
     def _onchange_invoice_line_ids(self):
@@ -498,7 +527,7 @@ class AccountInvoice(models.Model):
     @api.multi
     def action_cancel(self):
         for inv in self:
-            rc_type = inv.fiscal_position_id.rc_type_id
+            rc_type = inv.fiscal_position_id.rc_type
             if (
                 rc_type and
                 rc_type.method == 'selfinvoice' and

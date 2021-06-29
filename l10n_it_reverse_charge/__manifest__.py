@@ -17,6 +17,7 @@
         'account',
         'account_cancel',
         'l10n_it_account_tax_kind',
+        'account_move_line_type',
     ],
     'data': [
         'security/ir.model.access.csv',
