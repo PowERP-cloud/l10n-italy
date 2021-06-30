@@ -408,6 +408,7 @@ class AccountInvoice(models.Model):
         compute='_compute_net_pay',
         digits=dp.get_precision('Account'), string='Residual Net To Pay',
         store=True, readonly=True)
+    # enable_wht = fields.Bool("Ritenuta d'acconto", default=False)
 
     @api.model
     def create(self, vals):
@@ -602,3 +603,24 @@ class AccountInvoiceWithholdingTax(models.Model):
     tax_coeff = fields.Float(
         'Tax Coeff', compute='_compute_coeff', store=True, help="Coeff used\
          to compute amount competence in the riconciliation")
+
+
+class AccountPayment(models.Model):
+    _inherit = 'account.payment'
+
+    @api.model
+    def default_get(self, fields):
+        """
+        Compute amount to pay proportionally to amount total - wt
+        """
+        rec = super(AccountPayment, self).default_get(fields)
+        invoice_defaults = self.resolve_2many_commands('invoice_ids',
+                                                       rec.get('invoice_ids'))
+        if invoice_defaults and len(invoice_defaults) == 1:
+            invoice = invoice_defaults[0]
+            if 'withholding_tax_amount' in invoice \
+                    and invoice['withholding_tax_amount']:
+                coeff_net = invoice['residual'] / invoice['amount_total']
+                rec['amount'] = invoice['amount_net_pay_residual'] * coeff_net
+        return rec
+
