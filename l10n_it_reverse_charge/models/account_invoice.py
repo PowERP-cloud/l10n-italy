@@ -24,23 +24,29 @@ class AccountInvoiceLine(models.Model):
             for tax in self.invoice_line_tax_ids:
                 if tax.rc_type:
                     self.rc = True
+                # end if
+            # end for
+        # end fi
+    # end _set_rc_flag
 
-            # fposition = invoice.fiscal_position_id
-            # rc = bool(fposition.rc_type_id)
-            # if rc:
-            #     for tax in self.invoice_line_tax_ids:
-            #         if not tax.kind_id:
-            #             rc = False
-            #             break
-            #         elif tax.kind_id and tax.kind_id.code != 'N3.5':
-            #             if (not tax.kind_id.code.startswith('N6') and
-            #                     not tax.kind_id.code.startswith('N3')):
-            #                 rc = False
-            #                 break
-            #             # end if
-            #         # end if
-            #     # end for
-            # self.rc = rc
+    # previous calculation
+    # if a line has rc
+    # fposition = invoice.fiscal_position_id
+    # rc = bool(fposition.rc_type_id)
+    # if rc:
+    #     for tax in self.invoice_line_tax_ids:
+    #         if not tax.kind_id:
+    #             rc = False
+    #             break
+    #         elif tax.kind_id and tax.kind_id.code != 'N3.5':
+    #             if (not tax.kind_id.code.startswith('N6') and
+    #                     not tax.kind_id.code.startswith('N3')):
+    #                 rc = False
+    #                 break
+    #             # end if
+    #         # end if
+    #     # end for
+    # self.rc = rc
 
     @api.onchange('invoice_line_tax_ids')
     def onchange_invoice_line_tax_id(self):
@@ -56,11 +62,42 @@ class AccountInvoiceLine(models.Model):
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    # TODO implementare correttamente
+    @api.multi
+    def _is_local_rc(self):
+        for inv in self:
+            if inv.fiscal_position_id.rc_type:
+                if inv.fiscal_position_id.rc_type == 'local':
+                    inv.is_local_rc = True
+                # end if
+            else:
+                inv.is_local_rc = False
+            # end if
+        # end for
+    # end _is_local_rc
+
+    @api.multi
+    def _is_self_rc(self):
+        for inv in self:
+            if inv.fiscal_position_id.rc_type:
+                if inv.fiscal_position_id.rc_type == 'self':
+                    inv.is_self_rc = True
+                # end if
+            else:
+                inv.is_self_rc = False
+            # end if
+        # end for
+    # end _has_reverse_charge
+
+    @api.depends('invoice_line_ids')
     def _compute_amount_rc(self):
-        self.amount_rc = 0.0
-        for tax in self.invoice_line_tax_ids:
-            self.amount_rc += 0
+        for inv in self:
+            inv.amount_rc = 0.0
+            for line in inv.invoice_line_ids:
+                for tax in line.invoice_line_tax_ids:
+                    if tax.rc_type:
+                        inv.amount_rc += line.price_tax
+                    # end if
+            # end for
         # end for
     # end _compute_amount_rc
 
@@ -68,8 +105,9 @@ class AccountInvoice(models.Model):
     def _compute_net_pay(self):
         res = super()._compute_net_pay()
         for inv in self:
-            if inv.split_payment:
+            if inv.is_local_rc:
                 inv.amount_net_pay = inv.amount_total - inv.amount_rc
+            # end if
         # end for
     # end _compute_net_pay
 
@@ -85,11 +123,16 @@ class AccountInvoice(models.Model):
         string='RC Self Purchase Invoice', copy=False, readonly=True)
 
     amount_rc = fields.Float(
-        string='Amount RC',
+        string='Iva RC',
         digits=dp.get_precision('Account'),
         store=True,
         readonly=True,
         compute='_compute_amount_rc')
+
+    is_local_rc = fields.Boolean('Reverse charge locale', compute='_is_local_rc')
+
+    is_self_rc = fields.Boolean('Reverse charge nazionalizzato',
+                                compute='_is_self_rc')
 
     @api.onchange('invoice_line_ids')
     def _onchange_invoice_line_ids(self):

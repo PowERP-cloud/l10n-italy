@@ -11,12 +11,29 @@
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account.invoice_supplier_form"/>
         <field name="arch" type="xml">
-            <field name="move_id"
+
+            <xpath expr="//group[hasclass('oe_subtotal_footer', 'oe_right')]/field[@name='amount_total']" position="after">
+                <field name="amount_rc" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"
+                    attrs="{'invisible': [('amount_total', '=', False)]}"/>
+            </xpath>
+
+            <field name="fiscal_position_id"
                    position="after">
-                <field name="rc_self_invoice_id" readonly="True"
-                       context="{'form_view_ref': 'account.invoice_form'}"/>
-                <field name="rc_self_purchase_invoice_id" readonly="True"
-                       context="{'form_view_ref': 'account.supplier_invoice_form'}"/>
+
+                <field name="is_local_rc" groups="base.group_no_one"/>
+
+                <field name="is_self_rc" groups="base.group_no_one"/>
+
+            </field>
+
+            <field name="move_id"
+               position="after">
+            <field name="rc_self_invoice_id" readonly="True"
+                   context="{'form_view_ref': 'account.invoice_form'}"/>
+            <field name="rc_self_purchase_invoice_id" readonly="True"
+                   context="{'form_view_ref': 'account.supplier_invoice_form'}"/>
+
+
             </field>
             <field name="price_subtotal"
                    position="after">
