@@ -1,6 +1,6 @@
 
 ===========================================
-|icon| Italian Withholding Tax 12.0.2.1.0_1
+|icon| Italian Withholding Tax 12.0.2.1.0_2
 ===========================================
 
 
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.2.1.0_2 (2021-07-01)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato l'importo corretto nel wizard del pagamento
+
 12.0.2.1.0_1 (2021-06-21)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -241,7 +246,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-06-21
+Last Update / Ultimo aggiornamento: 2021-07-01
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status
