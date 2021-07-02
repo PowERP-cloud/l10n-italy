@@ -1,3 +1,8 @@
+12.0.2.1.0_3 (2021-07-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato filtro corretto sui movimenti contabili per la registrazione del pagamento
+
 12.0.2.1.0_2 (2021-07-01)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
