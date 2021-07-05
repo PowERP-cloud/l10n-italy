@@ -6,7 +6,7 @@
 #
 {
     'name': 'ITA - Inversione contabile',
-    'version': '12.0.1.2.7_2',
+    'version': '12.0.1.2.7_3',
     'category': 'Localization/Italy',
     'summary': 'Inversione contabile',
     'author': 'powERP enterprise network and other partners',
@@ -17,6 +17,7 @@
         'account',
         'account_cancel',
         'l10n_it_account_tax_kind',
+        'account_move_line_type',
     ],
     'data': [
         'security/ir.model.access.csv',

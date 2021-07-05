@@ -14,6 +14,7 @@
         <field name="arch" type="xml">
             <field name="country_group_id" position="after">
                 <field name="rc_type_id"/>
+                <field name="rc_type"/>
             </field>
         </field>
     </record>

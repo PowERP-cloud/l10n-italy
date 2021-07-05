@@ -5,12 +5,13 @@
 # Copyright 2021 Antonio M. Vigliotti - SHS-Av srl
 # Copyright 2021 powERP enterprise network <https://www.powerp.it>
 #
-# License OPL-1 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 #
 
 from odoo import api, fields, models
 from odoo.exceptions import Warning as UserError
 from odoo.tools.translate import _
+import odoo.addons.decimal_precision as dp
 
 
 class AccountInvoiceLine(models.Model):
@@ -20,26 +21,56 @@ class AccountInvoiceLine(models.Model):
     def _set_rc_flag(self, invoice):
         self.ensure_one()
         if invoice.type in ['in_invoice', 'in_refund']:
-            fposition = invoice.fiscal_position_id
-            rc = bool(fposition.rc_type_id)
-            if rc:
-                for tax in self.invoice_line_tax_ids:
-                    if not tax.kind_id:
-                        rc = False
-                        break
-                    elif tax.kind_id and tax.kind_id.code != 'N3.5':
-                        if (not tax.kind_id.code.startswith('N6') and
-                                not tax.kind_id.code.startswith('N3')):
-                            rc = False
-                            break
-                        # end if
-                    # end if
-                # end for
-            self.rc = rc
+            for tax in self.invoice_line_tax_ids:
+                if tax.rc_type:
+                    self.rc = True
+                # end if
+            # end for
+        # end fi
+    # end _set_rc_flag
+
+    # previous calculation
+    # if a line has rc
+    # fposition = invoice.fiscal_position_id
+    # rc = bool(fposition.rc_type_id)
+    # if rc:
+    #     for tax in self.invoice_line_tax_ids:
+    #         if not tax.kind_id:
+    #             rc = False
+    #             break
+    #         elif tax.kind_id and tax.kind_id.code != 'N3.5':
+    #             if (not tax.kind_id.code.startswith('N6') and
+    #                     not tax.kind_id.code.startswith('N3')):
+    #                 rc = False
+    #                 break
+    #             # end if
+    #         # end if
+    #     # end for
+    # self.rc = rc
 
     @api.onchange('invoice_line_tax_ids')
     def onchange_invoice_line_tax_id(self):
-        self._set_rc_flag(self.invoice_id)
+        res = dict()
+
+        invoice_rc_type = self.invoice_id.fiscal_position_id.rc_type
+        if self.invoice_id.type in ['in_invoice', 'in_refund']:
+            for tax in self.invoice_line_tax_ids:
+                if tax.rc_type and invoice_rc_type and \
+                    tax.rc_type != invoice_rc_type:
+                    res.update({'warning': {
+                        'title': 'Tassa non consentita', 'message':
+                            'La tassa impostata non ha la natura esenzione '
+                            'corretta.'}})
+                    break
+                # end if
+            # end for
+        # end if
+
+        if not res:
+            self._set_rc_flag(self.invoice_id)
+        # end if
+
+        return res
 
     rc = fields.Boolean("RC")
 
@@ -51,6 +82,55 @@ class AccountInvoiceLine(models.Model):
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
+    @api.multi
+    def _is_local_rc(self):
+        for inv in self:
+            if inv.fiscal_position_id.rc_type:
+                if inv.fiscal_position_id.rc_type == 'local':
+                    inv.is_local_rc = True
+                # end if
+            else:
+                inv.is_local_rc = False
+            # end if
+        # end for
+    # end _is_local_rc
+
+    @api.multi
+    def _is_self_rc(self):
+        for inv in self:
+            if inv.fiscal_position_id.rc_type:
+                if inv.fiscal_position_id.rc_type == 'self':
+                    inv.is_self_rc = True
+                # end if
+            else:
+                inv.is_self_rc = False
+            # end if
+        # end for
+    # end _has_reverse_charge
+
+    @api.depends('invoice_line_ids')
+    def _compute_amount_rc(self):
+        for inv in self:
+            inv.amount_rc = 0.0
+            for line in inv.invoice_line_ids:
+                for tax in line.invoice_line_tax_ids:
+                    if tax.rc_type:
+                        inv.amount_rc += line.price_tax
+                    # end if
+            # end for
+        # end for
+    # end _compute_amount_rc
+
+    @api.depends('amount_total', 'amount_rc')
+    def _compute_net_pay(self):
+        res = super()._compute_net_pay()
+        for inv in self:
+            if inv.is_local_rc:
+                inv.amount_net_pay = inv.amount_total - inv.amount_rc
+            # end if
+        # end for
+    # end _compute_net_pay
+
     rc_self_invoice_id = fields.Many2one(
         comodel_name='account.invoice',
         string='RC Self Invoice',
@@ -61,6 +141,18 @@ class AccountInvoice(models.Model):
     rc_self_purchase_invoice_id = fields.Many2one(
         comodel_name='account.invoice',
         string='RC Self Purchase Invoice', copy=False, readonly=True)
+
+    amount_rc = fields.Float(
+        string='Iva RC',
+        digits=dp.get_precision('Account'),
+        store=True,
+        readonly=True,
+        compute='_compute_amount_rc')
+
+    is_local_rc = fields.Boolean('Reverse charge locale', compute='_is_local_rc')
+
+    is_self_rc = fields.Boolean('Reverse charge nazionalizzato',
+                                compute='_is_self_rc')
 
     @api.onchange('invoice_line_ids')
     def _onchange_invoice_line_ids(self):
@@ -498,7 +590,7 @@ class AccountInvoice(models.Model):
     @api.multi
     def action_cancel(self):
         for inv in self:
-            rc_type = inv.fiscal_position_id.rc_type_id
+            rc_type = inv.fiscal_position_id.rc_type
             if (
                 rc_type and
                 rc_type.method == 'selfinvoice' and
