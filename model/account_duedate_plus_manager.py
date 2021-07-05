@@ -560,9 +560,8 @@ class DueDateManager(models.Model):
         # end if
 
         if types['is_rc']:
-            if self.invoice_id.fiscal_position_id.rc_type == 'local':
-                amount -= self.invoice_id.amount_rc
-            # end if
+            amount -= self.invoice_id.amount_rc
+        # end if
 
         # end if
 

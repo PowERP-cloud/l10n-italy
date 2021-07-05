@@ -1,3 +1,7 @@
+12.0.4.8.13 (2021-07-05)
+~~~~~~~~~~~~~~~~~~~~~~~~
+ * [IMP] account_duedates: Impostato manager per la gestione delle scadenze Reverse charge
+
 12.0.4.8.12 (2021-06-28)
 ~~~~~~~~~~~~~~~~~~~~~~~~
  * [IMP] account_duedates: Impostato manager per la gestione delle scadenze

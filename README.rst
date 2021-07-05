@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.4.8.12
+|icon| Due dates 12.0.4.8.13
 ============================
 
 
@@ -160,6 +160,10 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.4.8.13 (2021-07-05)
+~~~~~~~~~~~~~~~~~~~~~~~~
+ * [IMP] account_duedates: Impostato manager per la gestione delle scadenze Reverse charge
+
 12.0.4.8.12 (2021-06-28)
 ~~~~~~~~~~~~~~~~~~~~~~~~
  * [IMP] account_duedates: Impostato manager per la gestione delle scadenze
@@ -210,11 +214,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Tolto la possibilità di andare a capo per il campo Conto
-
-12.0.3.3.3 (2021-04-19)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Rinominato la colonna 'Saldo' in 'Importo'
 
 
 
@@ -289,7 +288,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-06-28
+Last Update / Ultimo aggiornamento: 2021-07-05
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
