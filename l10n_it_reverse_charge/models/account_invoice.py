@@ -50,7 +50,27 @@ class AccountInvoiceLine(models.Model):
 
     @api.onchange('invoice_line_tax_ids')
     def onchange_invoice_line_tax_id(self):
-        self._set_rc_flag(self.invoice_id)
+        res = dict()
+
+        invoice_rc_type = self.invoice_id.fiscal_position_id.rc_type
+        if self.invoice_id.type in ['in_invoice', 'in_refund']:
+            for tax in self.invoice_line_tax_ids:
+                if tax.rc_type and invoice_rc_type and \
+                    tax.rc_type != invoice_rc_type:
+                    res.update({'warning': {
+                        'title': 'Tassa non consentita', 'message':
+                            'La tassa impostata non ha la natura esenzione '
+                            'corretta.'}})
+                    break
+                # end if
+            # end for
+        # end if
+
+        if not res:
+            self._set_rc_flag(self.invoice_id)
+        # end if
+
+        return res
 
     rc = fields.Boolean("RC")
 
