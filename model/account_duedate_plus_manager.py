@@ -540,15 +540,13 @@ class DueDateManager(models.Model):
 
     # end _extra_duedate_line
 
-    #
     @api.model
     def _set_amount_total(self, types, amount):
         """
             Compute invoice total according to tax type
             - split payment (subtract from total)
-            - ra (subtract from total)
+            - wt (subtract from total)
             - rc local  (subtract from total)
-
         """
 
         if types['is_split']:
@@ -561,8 +559,6 @@ class DueDateManager(models.Model):
 
         if types['is_rc']:
             amount -= self.invoice_id.amount_rc
-        # end if
-
         # end if
 
         return amount
