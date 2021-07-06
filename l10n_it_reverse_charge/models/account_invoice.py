@@ -29,25 +29,6 @@ class AccountInvoiceLine(models.Model):
         # end fi
     # end _set_rc_flag
 
-    # previous calculation
-    # if a line has rc
-    # fposition = invoice.fiscal_position_id
-    # rc = bool(fposition.rc_type_id)
-    # if rc:
-    #     for tax in self.invoice_line_tax_ids:
-    #         if not tax.kind_id:
-    #             rc = False
-    #             break
-    #         elif tax.kind_id and tax.kind_id.code != 'N3.5':
-    #             if (not tax.kind_id.code.startswith('N6') and
-    #                     not tax.kind_id.code.startswith('N3')):
-    #                 rc = False
-    #                 break
-    #             # end if
-    #         # end if
-    #     # end for
-    # self.rc = rc
-
     @api.onchange('invoice_line_tax_ids')
     def onchange_invoice_line_tax_id(self):
         res = dict()
@@ -82,42 +63,11 @@ class AccountInvoiceLine(models.Model):
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    @api.multi
-    def _is_local_rc(self):
-        for inv in self:
-            if inv.fiscal_position_id.rc_type:
-                if inv.fiscal_position_id.rc_type == 'local':
-                    inv.is_local_rc = True
-                # end if
-            else:
-                inv.is_local_rc = False
-            # end if
-        # end for
-    # end _is_local_rc
-
-    @api.multi
-    def _is_self_rc(self):
-        for inv in self:
-            if inv.fiscal_position_id.rc_type:
-                if inv.fiscal_position_id.rc_type == 'self':
-                    inv.is_self_rc = True
-                # end if
-            else:
-                inv.is_self_rc = False
-            # end if
-        # end for
-    # end _has_reverse_charge
-
     @api.depends('invoice_line_ids')
     def _compute_amount_rc(self):
         for inv in self:
-            inv.amount_rc = 0.0
-            for line in inv.invoice_line_ids:
-                for tax in line.invoice_line_tax_ids:
-                    if tax.rc_type:
-                        inv.amount_rc += line.price_tax
-                    # end if
-            # end for
+            inv.amount_rc = inv.compute_rc_amount_tax()
+            inv.amount_tax -= inv.amount_rc
         # end for
     # end _compute_amount_rc
 
@@ -125,9 +75,7 @@ class AccountInvoice(models.Model):
     def _compute_net_pay(self):
         res = super()._compute_net_pay()
         for inv in self:
-            if inv.is_local_rc:
-                inv.amount_net_pay = inv.amount_total - inv.amount_rc
-            # end if
+            inv.amount_net_pay = inv.amount_total - inv.amount_rc
         # end for
     # end _compute_net_pay
 
@@ -148,11 +96,6 @@ class AccountInvoice(models.Model):
         store=True,
         readonly=True,
         compute='_compute_amount_rc')
-
-    is_local_rc = fields.Boolean('Reverse charge locale', compute='_is_local_rc')
-
-    is_self_rc = fields.Boolean('Reverse charge nazionalizzato',
-                                compute='_is_self_rc')
 
     @api.onchange('invoice_line_ids')
     def _onchange_invoice_line_ids(self):
@@ -433,6 +376,8 @@ class AccountInvoice(models.Model):
         rc_lines_to_rec.reconcile()
 
     def generate_self_invoice(self):
+        # update fields
+
         rc_type = self.fiscal_position_id.rc_type_id
         if not rc_type.payment_journal_id.default_credit_account_id:
             raise UserError(
@@ -588,9 +533,72 @@ class AccountInvoice(models.Model):
             payment_move.unlink()
 
     @api.multi
+    def action_move_create(self):
+        res = super(AccountInvoice, self).action_move_create()
+        for invoice in self:
+
+            if invoice.move_id.state == 'posted':
+                posted = True
+                invoice.move_id.state = 'draft'
+            # end if
+
+            invoice_rc_type = invoice.fiscal_position_id.rc_type
+
+            line_model = self.env['account.move.line']
+            transfer_ids = list()
+
+            if invoice_rc_type and invoice_rc_type == 'local':
+                # tax no rc
+                # tax rc
+                pass
+            elif invoice_rc_type and invoice_rc_type == 'self':
+                # tax rc
+                pass
+            else:
+                pass
+            # end if
+
+
+            # tax no rc
+            # tax rc
+            #
+            #     tax_line = invoice.move_id.line_ids.filtered(
+            #         lambda x: x.partner_id.id == self.partner_id.id and self.company_id.id == x.company_id.id and x.line_type == 'tax')
+            #
+            #     tax_duedate = invoice.move_id.line_ids.filtered(
+            #         lambda x: x.account_id.id == self.account_id.id and x.debit == self.amount_sp and x.partner_id.id == self.partner_id.id and self.company_id.id == x.company_id.id)
+            #
+            #     transfer_ids.append(tax_duedate.id)
+            #
+            #     for tl in tax_line:
+            #         transfer_line_vals = invoice._build_client_credit_line(tl)
+            #         transfer_line_vals['move_id'] = invoice.move_id.id
+            #         tranfer = line_model.with_context(
+            #             check_move_validity=False
+            #         ).create(transfer_line_vals)
+            #
+            #         transfer_ids.append(tranfer.id)
+            #
+            #         write_off_line_vals = invoice._build_debit_line(tl)
+            #         write_off_line_vals['move_id'] = invoice.move_id.id
+            #         line_model.with_context(
+            #             check_move_validity=False
+            #         ).create(write_off_line_vals)
+            #
+            #     if tax_duedate and tax_duedate.id:
+            #         lines_to_rec = line_model.browse(transfer_ids)
+            #         lines_to_rec.reconcile()
+            #
+            #     if posted:
+            #         invoice.move_id.state = 'posted'
+            #     invoice._compute_residual()
+        return res
+
+
+    @api.multi
     def action_cancel(self):
         for inv in self:
-            rc_type = inv.fiscal_position_id.rc_type
+            rc_type = inv.fiscal_position_id.rc_type_id
             if (
                 rc_type and
                 rc_type.method == 'selfinvoice' and
