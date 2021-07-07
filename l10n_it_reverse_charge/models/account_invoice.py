@@ -24,6 +24,8 @@ class AccountInvoiceLine(models.Model):
             for tax in self.invoice_line_tax_ids:
                 if tax.rc_type:
                     self.rc = True
+                else:
+                    self.rc = False
                 # end if
             # end for
         # end fi
@@ -36,13 +38,15 @@ class AccountInvoiceLine(models.Model):
         invoice_rc_type = self.invoice_id.fiscal_position_id.rc_type
         if self.invoice_id.type in ['in_invoice', 'in_refund']:
             for tax in self.invoice_line_tax_ids:
-                if tax.rc_type and invoice_rc_type and \
+                if invoice_rc_type and invoice_rc_type == 'self' and \
                     tax.rc_type != invoice_rc_type:
-                    res.update({'warning': {
-                        'title': 'Tassa non consentita', 'message':
-                            'La tassa impostata non ha la natura esenzione '
-                            'corretta.'}})
-                    break
+                    raise UserError('La tassa impostata non ha la natura '
+                                    'esenzione corretta.')
+                    # res.update({'warning': {
+                    #     'title': 'Tassa non consentita', 'message':
+                    #         'La tassa impostata non ha la natura esenzione '
+                    #         'corretta.'}})
+                    # break
                 # end if
             # end for
         # end if
@@ -67,7 +71,6 @@ class AccountInvoice(models.Model):
     def _compute_amount_rc(self):
         for inv in self:
             inv.amount_rc = inv.compute_rc_amount_tax()
-            inv.amount_tax -= inv.amount_rc
         # end for
     # end _compute_amount_rc
 
@@ -116,6 +119,22 @@ class AccountInvoice(models.Model):
         # before than being changed by this method.
         self.onchange_rc_fiscal_position_id()
         return res
+
+    def _compute_amount(self):
+        super()._compute_amount()
+        self.amount_total = self.amount_untaxed + self.amount_tax
+        if self.fiscal_position_id.rc_type:
+            if self.fiscal_position_id.rc_type == 'self':
+                self.amount_tax = 0
+            elif self.fiscal_position_id.rc_type == 'local':
+                self.amount_tax = self.amount_tax - self.amount_rc
+            else:
+                assert False, \
+                    "Anomalia sulla posizione fiscale: valore inatteso " \
+                    "{unatt} ".format(unatt=self.fiscal_position_id.rc_type)
+            # end if
+        # end if
+    # end _compute_amount
 
     def rc_inv_line_vals(self, line):
         return {

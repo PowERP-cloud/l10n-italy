@@ -35,8 +35,3 @@ class AccountFiscalPosition(models.Model):
         default='',
     )
 
-    rc_sale_tax_id = fields.Many2one(
-        comodel_name='account.tax',
-        string='Conto RC di vendita',
-        domain=[('type_tax_use', '=', 'sale')],
-    )

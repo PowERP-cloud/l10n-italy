@@ -1,6 +1,6 @@
 
 ==============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_4
+|icon| ITA - Inversione contabile 12.0.1.2.7_5
 ==============================================
 
 
@@ -246,6 +246,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_5 (2021-07-07)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Ricalcolo totale fattura
+
 12.0.1.2.7_4 (2021-07-06)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -361,7 +366,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-07-06
+Last Update / Ultimo aggiornamento: 2021-07-07
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
