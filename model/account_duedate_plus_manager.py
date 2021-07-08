@@ -508,7 +508,7 @@ class DueDateManager(models.Model):
 
         if bool(types_amount['is_ra_amount']):
             if self.invoice_id.date:
-                ra_date_fifteen = self.invoice_id.date + \
+                ra_date_fifteen = self.invoice_id.date_due + \
                                   datetime.timedelta(days=15)
                 ra_date = self._get_split_date_period(
                     param_cm['partner_id'], param_cm['doc_type'],
