@@ -147,6 +147,20 @@ class WizardImportFatturapa(models.TransientModel):
     def getPartnerBase(self, DatiAnagrafici, supplier=True):
         if not DatiAnagrafici:
             return False
+
+        def search_partner(domain):
+            if (
+                self.env.context.get('from_attachment') and
+                res_partner_rule and res_partner_rule.active
+            ):
+                att = self.env.context.get('from_attachment')
+                domain.extend([
+                    '|',
+                    ('company_id', 'child_of', att.company_id.id),
+                    ('company_id', '=', False)
+                ])
+            return partner_model.search(domain)
+
         partner_model = self.env['res.partner']
         cf = DatiAnagrafici.CodiceFiscale or False
         vat = False
@@ -169,32 +183,19 @@ class WizardImportFatturapa(models.TransientModel):
         partners = partner_model
         res_partner_rule = self.env['ir.model.data'].sudo().xmlid_to_object(
             "base.res_partner_rule", raise_if_not_found=False)
-        if vat:
+
+        if vat and cf:
+            domain = [
+                ('sanitized_vat', '=', vat),
+                ('fiscalcode', '=', cf)
+            ]
+            partners = search_partner(domain)
+        if not partners and vat:
             domain = [('sanitized_vat', '=', vat)]
-            if (
-                self.env.context.get('from_attachment') and
-                res_partner_rule and res_partner_rule.active
-            ):
-                att = self.env.context.get('from_attachment')
-                domain.extend([
-                    '|',
-                    ('company_id', 'child_of', att.company_id.id),
-                    ('company_id', '=', False)
-                ])
-            partners = partner_model.search(domain)
+            partners = search_partner(domain)
         if not partners and cf:
             domain = [('fiscalcode', '=', cf)]
-            if (
-                self.env.context.get('from_attachment') and
-                res_partner_rule and res_partner_rule.active
-            ):
-                att = self.env.context.get('from_attachment')
-                domain.extend([
-                    '|',
-                    ('company_id', 'child_of', att.company_id.id),
-                    ('company_id', '=', False)
-                ])
-            partners = partner_model.search(domain)
+            partners = search_partner(domain)
         commercial_partner_id = False
         if len(partners) > 1:
             for partner in partners:

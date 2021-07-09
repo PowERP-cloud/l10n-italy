@@ -445,6 +445,12 @@ class StockPickingPackagePreparation(models.Model):
             if not td.to_be_invoiced or td.invoice_id:
                 continue
 
+            for line in td.line_ids:
+                if line.sale_line_id.invoice_status != 'invoiced':
+                    break
+            else:
+                continue
+
             group_key = td.get_td_group_key()
             if group_key not in grouped_invoices:
                 inv_data = td._prepare_invoice()
@@ -465,7 +471,7 @@ class StockPickingPackagePreparation(models.Model):
                 })
 
             for line in td.line_ids:
-                if line.product_uom_qty > 0:
+                if line.product_uom_qty > 0 and line.sale_line_id.invoice_status != 'invoiced':
                     line.invoice_line_create(invoice.id, line.product_uom_qty)
 
             # Allow additional operations from td
