@@ -494,8 +494,7 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def invoice_validate(self):
-        """Invoice validation is called to validate purchase invoice and then
-        sale self-invoice
+        """Invoice validation is called to validate sale self-invoice
         """
         res = super().invoice_validate()
         for invoice in self:
@@ -577,13 +576,13 @@ class AccountInvoice(models.Model):
 
                     tax_vat = tax_with_sell.tax_line_id
 
-                    tax_sell = tax_with_sell.tax_line_id.rc_sale_tax_id
+                    tax_sell = tax_vat.rc_sale_tax_id
 
-                    tax_duedate = invoice.move_id.line_ids.filtered(
+                    tax_duedate_rc = invoice.move_id.line_ids.filtered(
                         lambda
                             x: x.account_id.id == invoice.account_id.id and x.credit == invoice.amount_rc and x.partner_id.id == invoice.partner_id.id and invoice.company_id.id == x.company_id.id)
 
-                    transfer_ids.append(tax_duedate.id)
+                    transfer_ids.append(tax_duedate_rc.id)
 
                     # punto 7
                     vat_sell_vals = {
@@ -610,12 +609,12 @@ class AccountInvoice(models.Model):
                     supplier_vat_vals = {
                         'name': 'Fornitore Iva RC',
                         'partner_id': invoice.partner_id.id,
-                        'account_id': tax_duedate.journal_id.id,
+                        'account_id': invoice.account_id.id,
                         'journal_id': journal_id.id,
                         'date': invoice.date_invoice,
                         'debit': invoice.amount_rc,
                         'credit': 0,
-                        'tax_line_id': tax_with_sell.tax_line_id.id,
+                        'tax_line_id': tax_vat.id,
                         'move_id': invoice.move_id.id,
                     }
                     if invoice.type == 'in_refund':
@@ -628,7 +627,7 @@ class AccountInvoice(models.Model):
 
                     transfer_ids.append(tranfer.id)
 
-                    if tax_duedate and tax_duedate.id:
+                    if tax_duedate_rc and tax_duedate_rc.id:
                         lines_to_rec = line_model.browse(transfer_ids)
                         lines_to_rec.reconcile()
 
