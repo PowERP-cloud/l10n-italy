@@ -1,6 +1,6 @@
 
 ==============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_6
+|icon| ITA - Inversione contabile 12.0.1.2.7_7
 ==============================================
 
 
@@ -245,6 +245,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.1.2.7_7 (2021-07-09)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Registrazione contabile per Reverse charge self
 
 12.0.1.2.7_6 (2021-07-09)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
