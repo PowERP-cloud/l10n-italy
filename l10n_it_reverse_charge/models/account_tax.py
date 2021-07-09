@@ -14,11 +14,20 @@ class AccountTax(models.Model):
 
     # end _compute_rc
 
-    rc_type = fields.Char('Tipo RC', compute='_compute_rc')
+    # rc_type = fields.Char('Tipo RC', compute='_compute_rc')
+    rc_type = fields.Selection(
+        selection=[
+            ('', 'No RC'),
+            ('local', 'RC locale'),
+            ('self', 'RC con autofattura'),
+        ],
+        string='Tipo reverse charge',
+        compute='_compute_rc',
+    )
 
     rc_sale_tax_id = fields.Many2one(
         comodel_name='account.tax',
-        string='Conto RC di vendita',
+        string='Codice iva vendite',
         domain=[('type_tax_use', '=', 'sale')],
     )
 

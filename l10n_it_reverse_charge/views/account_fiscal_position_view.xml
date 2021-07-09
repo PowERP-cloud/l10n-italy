@@ -13,9 +13,8 @@
         <field name="inherit_id" ref="account.view_account_position_form"/>
         <field name="arch" type="xml">
             <field name="country_group_id" position="after">
-<!--                <field name="rc_type_id"/>-->
                 <field name="rc_type" />
-                <field name="partner_type"/>
+                <field name="partner_type" attrs="{'invisible': [('rc_type', '!=', 'self')]}"/>
             </field>
         </field>
     </record>
