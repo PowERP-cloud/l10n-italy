@@ -58,33 +58,32 @@ class AccountMove(models.Model):
     @api.multi
     def write(self, values):
 
-        if 'line_ids' in values:
+        # Avoid calling the write_credit_debit_move_lines() method in the
+        # super().write() call ...THIS IS NECESSARY TO ENSURE THAT
+        # write_credit_debit_move_lines()
+        # - gets executed only one time
+        # - gets executed only when every other modification to the move
+        #   object has been completed.
+        #
+        # NOTE: since for security reasons the method
+        #       write_credit_debit_move_lines() performs an independent check
+        #       of the "writing_c_d_m_l" context variable it is necessary
+        #       to restore the original value of "writing_c_d_m_l" before
+        #       calling write_credit_debit_move_lines()
 
-            # Avoid calling the write_credit_debit_move_lines() method in the
-            # super().write() call ...THIS IS NECESSARY TO ENSURE THAT
-            # write_credit_debit_move_lines()
-            # - gets executed only one time
-            # - gets executed only when every other modification to the move
-            #   object has been completed.
-            #
-            # NOTE: since for security reasons the method
-            #       write_credit_debit_move_lines() performs an independent check
-            #       of the "writing_c_d_m_l" context variable it is necessary
-            #       to restore the original value of "writing_c_d_m_l" before
-            #       calling write_credit_debit_move_lines()
-            writing_c_d_m_l = self.env.context.get('writing_c_d_m_l', False)
-            self = self.with_context(writing_c_d_m_l=True)
-            result = super().write(values)
-            self = self.with_context(writing_c_d_m_l=writing_c_d_m_l)
+        writing_c_d_m_l = self.env.context.get('writing_c_d_m_l', False)
+        check_move_validity = self.env.context.get('check_move_validity', True)
 
-            # Avoid infinite recursion
-            if not writing_c_d_m_l:
-                self.write_credit_debit_move_lines()
-            # end if
+        self = self.with_context(writing_c_d_m_l=True)
+        result = super().write(values)
+        self = self.with_context(writing_c_d_m_l=writing_c_d_m_l)
 
-        else:
-            result = super().write(values)
-
+        # Rewrite credit and debit lines only if:
+        #   - check_move_validity is enabled (aka avoid getting in the way
+        #     when adding lines manually)
+        #   - infinite recursion guard variable (writing_c_d_m_l) is not True
+        if check_move_validity and not writing_c_d_m_l:
+            self.write_credit_debit_move_lines()
         # end if
 
         return result
