@@ -29,7 +29,7 @@ class AccountFiscalPosition(models.Model):
     partner_type = fields.Selection(
         selection=[
             ('supplier', 'Fornitore'),
-            ('other', 'Altro')
+            ('other', 'Azienda')
         ],
         string='Tipo di Partner',
         default='',

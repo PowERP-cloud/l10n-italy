@@ -78,7 +78,8 @@ class AccountInvoice(models.Model):
     def _compute_net_pay(self):
         res = super()._compute_net_pay()
         for inv in self:
-            inv.amount_net_pay = inv.amount_total - inv.amount_rc
+            if inv.fiscal_position_id.rc_type:
+                inv.amount_net_pay = inv.amount_total - inv.amount_rc
         # end for
     # end _compute_net_pay
 
@@ -122,18 +123,18 @@ class AccountInvoice(models.Model):
 
     def _compute_amount(self):
         super()._compute_amount()
-        self.amount_total = self.amount_untaxed + self.amount_tax
-        if self.fiscal_position_id.rc_type:
-            if self.fiscal_position_id.rc_type == 'self':
-                self.amount_tax = 0
-            elif self.fiscal_position_id.rc_type == 'local':
-                self.amount_tax = self.amount_tax - self.amount_rc
-            else:
-                assert False, \
-                    "Anomalia sulla posizione fiscale: valore inatteso " \
-                    "{unatt} ".format(unatt=self.fiscal_position_id.rc_type)
-            # end if
-        # end if
+        # if self.fiscal_position_id.rc_type:
+        #     self.amount_total = self.amount_untaxed + self.amount_tax
+        #     if self.fiscal_position_id.rc_type == 'self':
+        #         self.amount_tax = 0
+        #     elif self.fiscal_position_id.rc_type == 'local':
+        #         self.amount_tax = self.amount_tax - self.amount_rc
+        #     else:
+        #         assert False, \
+        #             "Anomalia sulla posizione fiscale: valore inatteso " \
+        #             "{unatt} ".format(unatt=self.fiscal_position_id.rc_type)
+        #     # end if
+        # # end if
     # end _compute_amount
 
     def rc_inv_line_vals(self, line):
@@ -496,19 +497,14 @@ class AccountInvoice(models.Model):
         """Invoice validation is called to validate purchase invoice and then
         sale self-invoice
         """
-        res = super(AccountInvoice, self).invoice_validate()
+        res = super().invoice_validate()
         for invoice in self:
             # self.ensure_one()
             fp = invoice.fiscal_position_id
-            rc_type = fp and fp.rc_type_id
-            if (rc_type and rc_type.method == 'selfinvoice' and
-                    invoice.amount_total):
-                if not rc_type.with_supplier_self_invoice:
-                    invoice.generate_self_invoice()
-                else:
-                    # See with_supplier_self_invoice field help
-                    invoice.generate_supplier_self_invoice()
-                    invoice.rc_self_purchase_invoice_id.generate_self_invoice()
+            rc_type = fp and fp.rc_type
+            if rc_type and rc_type == 'self':
+                invoice.generate_self_invoice()
+            # end if
         return res
 
     def remove_rc_payment(self):
@@ -555,78 +551,114 @@ class AccountInvoice(models.Model):
     def action_move_create(self):
         res = super(AccountInvoice, self).action_move_create()
         for invoice in self:
+            if invoice.fiscal_position_id.rc_type:
+                posted = False
+                transfer_ids = list()
+                # self or local
+                invoice_rc_type = invoice.fiscal_position_id.rc_type
+                # journal used to reconcile
+                journal_id = invoice.move_id.journal_id
+                # back to draft
+                if invoice.move_id.state == 'posted':
+                    posted = True
+                    invoice.move_id.state = 'draft'
+                # end if
+                line_model = self.env['account.move.line']
 
-            if invoice.move_id.state == 'posted':
-                posted = True
-                invoice.move_id.state = 'draft'
+                if invoice_rc_type and invoice_rc_type == 'local':
+                    # fornitore
+                    # fornitore in rc
+                    # conto di costo
+                    # iva in rc
+                    # serve la tassa per ricavare quella di vendita
+                    tax_with_sell = invoice.move_id.line_ids.filtered(
+                        lambda
+                            x: invoice.company_id.id == x.company_id.id and x.line_type == 'tax' and x.debit == invoice.amount_rc)
+
+                    tax_vat = tax_with_sell.tax_line_id
+
+                    tax_sell = tax_with_sell.tax_line_id.rc_sale_tax_id
+
+                    tax_duedate = invoice.move_id.line_ids.filtered(
+                        lambda
+                            x: x.account_id.id == invoice.account_id.id and x.credit == invoice.amount_rc and x.partner_id.id == invoice.partner_id.id and invoice.company_id.id == x.company_id.id)
+
+                    transfer_ids.append(tax_duedate.id)
+
+                    # punto 7
+                    vat_sell_vals = {
+                        'name': 'Iva su vendite',
+                        'partner_id': invoice.partner_id.id,
+                        'account_id': tax_sell.account_id.id,
+                        'journal_id': journal_id.id,
+                        'date': invoice.date_invoice,
+                        'debit': 0,
+                        'credit': invoice.amount_rc,
+                        'tax_line_id': tax_sell.id,
+                        'move_id': invoice.move_id.id,
+                    }
+                    if invoice.type == 'in_refund':
+                        vat_sell_vals['credit'] = 0
+                        vat_sell_vals['debit'] = invoice.amount_rc
+
+                    sell = line_model.with_context(
+                        {'check_move_validity': False}
+                    ).create(vat_sell_vals)
+
+                    # punto 8
+                    # reconcile with tax_duedate
+                    supplier_vat_vals = {
+                        'name': 'Fornitore Iva RC',
+                        'partner_id': invoice.partner_id.id,
+                        'account_id': tax_duedate.journal_id.id,
+                        'journal_id': journal_id.id,
+                        'date': invoice.date_invoice,
+                        'debit': invoice.amount_rc,
+                        'credit': 0,
+                        'tax_line_id': tax_with_sell.tax_line_id.id,
+                        'move_id': invoice.move_id.id,
+                    }
+                    if invoice.type == 'in_refund':
+                        supplier_vat_vals['debit'] = 0
+                        supplier_vat_vals['credit'] = invoice.amount_rc
+
+                    tranfer = line_model.with_context(
+                        check_move_validity=False
+                    ).create(supplier_vat_vals)
+
+                    transfer_ids.append(tranfer.id)
+
+                    if tax_duedate and tax_duedate.id:
+                        lines_to_rec = line_model.browse(transfer_ids)
+                        lines_to_rec.reconcile()
+
+                    if posted:
+                        invoice.move_id.state = 'posted'
+                    invoice._compute_residual()
+
+                elif invoice_rc_type and invoice_rc_type == 'self':
+                    # tax rc
+                    pass
+                else:
+                    pass
+                # end if
             # end if
-
-            invoice_rc_type = invoice.fiscal_position_id.rc_type
-
-            line_model = self.env['account.move.line']
-            transfer_ids = list()
-
-            if invoice_rc_type and invoice_rc_type == 'local':
-                # tax no rc
-                # tax rc
-                pass
-            elif invoice_rc_type and invoice_rc_type == 'self':
-                # tax rc
-                pass
-            else:
-                pass
-            # end if
-
-
-            # tax no rc
-            # tax rc
-            #
-            #     tax_line = invoice.move_id.line_ids.filtered(
-            #         lambda x: x.partner_id.id == self.partner_id.id and self.company_id.id == x.company_id.id and x.line_type == 'tax')
-            #
-            #     tax_duedate = invoice.move_id.line_ids.filtered(
-            #         lambda x: x.account_id.id == self.account_id.id and x.debit == self.amount_sp and x.partner_id.id == self.partner_id.id and self.company_id.id == x.company_id.id)
-            #
-            #     transfer_ids.append(tax_duedate.id)
-            #
-            #     for tl in tax_line:
-            #         transfer_line_vals = invoice._build_client_credit_line(tl)
-            #         transfer_line_vals['move_id'] = invoice.move_id.id
-            #         tranfer = line_model.with_context(
-            #             check_move_validity=False
-            #         ).create(transfer_line_vals)
-            #
-            #         transfer_ids.append(tranfer.id)
-            #
-            #         write_off_line_vals = invoice._build_debit_line(tl)
-            #         write_off_line_vals['move_id'] = invoice.move_id.id
-            #         line_model.with_context(
-            #             check_move_validity=False
-            #         ).create(write_off_line_vals)
-            #
-            #     if tax_duedate and tax_duedate.id:
-            #         lines_to_rec = line_model.browse(transfer_ids)
-            #         lines_to_rec.reconcile()
-            #
-            #     if posted:
-            #         invoice.move_id.state = 'posted'
-            #     invoice._compute_residual()
         return res
 
 
     @api.multi
     def action_cancel(self):
         for inv in self:
-            rc_type = inv.fiscal_position_id.rc_type_id
+            rc_type = inv.fiscal_position_id.rc_type
             if (
                 rc_type and
-                rc_type.method == 'selfinvoice' and
+                rc_type == 'self' and
                 inv.rc_self_invoice_id
             ):
                 inv.remove_rc_payment()
             elif (
                 rc_type and
-                rc_type.method == 'selfinvoice' and
+                rc_type == 'self' and
                 inv.rc_self_purchase_invoice_id
             ):
                 inv.rc_self_purchase_invoice_id.remove_rc_payment()
