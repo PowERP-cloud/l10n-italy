@@ -35,3 +35,9 @@ class AccountFiscalPosition(models.Model):
         default='',
     )
 
+    rc_journal = fields.Many2one(
+        'account.journal',
+        string='Registro per autofattura',
+        default='',
+    )
+

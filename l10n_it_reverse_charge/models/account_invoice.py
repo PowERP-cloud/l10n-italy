@@ -42,11 +42,6 @@ class AccountInvoiceLine(models.Model):
                     tax.rc_type != invoice_rc_type:
                     raise UserError('La tassa impostata non ha la natura '
                                     'esenzione corretta.')
-                    # res.update({'warning': {
-                    #     'title': 'Tassa non consentita', 'message':
-                    #         'La tassa impostata non ha la natura esenzione '
-                    #         'corretta.'}})
-                    # break
                 # end if
             # end for
         # end if
@@ -121,6 +116,7 @@ class AccountInvoice(models.Model):
         self.onchange_rc_fiscal_position_id()
         return res
 
+    # tenere
     def _compute_amount(self):
         super()._compute_amount()
         if self.fiscal_position_id.rc_type:
@@ -132,6 +128,7 @@ class AccountInvoice(models.Model):
         # end if
     # end _compute_amount
 
+    # tenere
     def rc_inv_line_vals(self, line):
         return {
             'product_id': line.product_id.id,
@@ -142,7 +139,8 @@ class AccountInvoice(models.Model):
             'discount': line.discount,
             }
 
-    def rc_inv_vals(self, partner, account, rc_type, lines, currency):
+    # tenere
+    def rc_inv_vals(self, partner, account, journal_id, lines, currency):
         if self.type == 'in_invoice':
             type = 'out_invoice'
         else:
@@ -161,13 +159,13 @@ class AccountInvoice(models.Model):
             'partner_id': partner.id,
             'type': type,
             'account_id': account.id,
-            'journal_id': rc_type.journal_id.id,
+            'journal_id': journal_id.id,
             'invoice_line_ids': lines,
             'date_invoice': self.date,
             'date': self.date,
             'origin': self.number,
             'rc_purchase_invoice_id': self.id,
-            'name': rc_type.self_invoice_text,
+            'name': 'Reverse charge self invoice',
             'currency_id': currency.id,
             'fiscal_position_id': False,
             'payment_term_id': False,
@@ -197,6 +195,7 @@ class AccountInvoice(models.Model):
             'date': self.date,
             }
 
+    # tenere
     def compute_rc_amount_tax(self):
         rc_amount_tax = 0.0
         round_curr = self.currency_id.round
@@ -390,102 +389,127 @@ class AccountInvoice(models.Model):
                 rc_payment_line_to_reconcile.id])
         rc_lines_to_rec.reconcile()
 
+    # richiamato da l10n_it_fatturapa_out_rc
     def generate_self_invoice(self):
         # update fields
+        if self.fiscal_position_id.rc_type and \
+            self.fiscal_position_id.rc_type == 'self'\
+            and self.fiscal_position_id.rc_journal:
 
-        rc_type = self.fiscal_position_id.rc_type_id
-        if not rc_type.payment_journal_id.default_credit_account_id:
-            raise UserError(
-                _('There is no default credit account defined \n'
-                  'on journal "%s".') % rc_type.payment_journal_id.name)
-        if rc_type.partner_type == 'other':
-            rc_partner = rc_type.partner_id
-        else:
-            rc_partner = self.partner_id
-        rc_currency = self.currency_id
-        rc_account = rc_partner.property_account_receivable_id
-
-        rc_invoice_lines = []
-        for line in self.invoice_line_ids:
-            if line.rc:
-                rc_invoice_line = self.rc_inv_line_vals(line)
-                line_tax_ids = line.invoice_line_tax_ids
-                if not line_tax_ids:
-                    raise UserError(_(
-                        "Invoice line\n%s\nis RC but has not tax") % line.name)
-                tax_ids = list()
-                for tax_mapping in rc_type.tax_ids:
-                    for line_tax_id in line_tax_ids:
-                        if tax_mapping.purchase_tax_id == line_tax_id:
-                            tax_ids.append(tax_mapping.sale_tax_id.id)
-                if not tax_ids:
-                    raise UserError(_("Tax code used is not a RC tax.\nCan't "
-                                      "find tax mapping"))
-                if line_tax_ids:
-                    rc_invoice_line['invoice_line_tax_ids'] = [
-                        (6, False, tax_ids)]
-                rc_invoice_line[
-                    'account_id'] = rc_type.transitory_account_id.id
-                rc_invoice_lines.append([0, False, rc_invoice_line])
-        if rc_invoice_lines:
-            inv_vals = self.rc_inv_vals(
-                rc_partner, rc_account, rc_type, rc_invoice_lines, rc_currency)
-
-            # create or write the self invoice
-            if self.rc_self_invoice_id:
-                # this is needed when user takes back to draft supplier
-                # invoice, edit and validate again
-                rc_invoice = self.rc_self_invoice_id
-                rc_invoice.invoice_line_ids.unlink()
-                rc_invoice.period_id = False
-                rc_invoice.write(inv_vals)
-                rc_invoice.compute_taxes()
+            if self.fiscal_position_id.partner_type == 'other':
+                # partner
+                rc_partner = self.company_id.partner_id
+            elif self.fiscal_position_id.partner_type == 'supplier':
+                rc_partner = self.partner_id
             else:
-                rc_invoice = self.create(inv_vals)
-                self.rc_self_invoice_id = rc_invoice.id
-            rc_invoice.action_invoice_open()
+                raise UserError('Invalid partner: partner not set.')
+            # self invoice
+            rc_invoice_lines = []
+            # creo la fattura in bozza
+            #
+            # IMPOSTAZIONI
+            #
+            # currency
+            rc_currency = self.currency_id
+            # account_id
+            rc_account = rc_partner.property_account_receivable_id
+            # journal_id
+            journal_id = self.fiscal_position_id.rc_journal
+            # account_tax sale
+            tax_with_sell = self._get_tax_sell()
+            tax_sell_id = tax_with_sell.tax_line_id.rc_sale_tax_id.id
 
-            if rc_type.with_supplier_self_invoice:
-                self.reconcile_supplier_invoice()
-            else:
-                rc_payment = self.prepare_reconcile_supplier_invoice()
-                self.reconcile_rc_invoice(rc_payment)
-                rc_payment.post()
-                self.partially_reconcile_supplier_invoice(rc_payment)
+            #
+            # righe RC
+            #
+            for line in self.invoice_line_ids:
+                # se di reverse charge
+                if line.rc:
+                    rc_invoice_line = self.rc_inv_line_vals(line)
+                    rc_invoice_line.update(
+                        {
+                            'invoice_line_tax_ids': [(6, False, [tax_sell_id])],
+                            'account_id': rc_account.id
+                        }
+                    )
+                    rc_invoice_lines.append([0, False, rc_invoice_line])
 
+            if rc_invoice_lines:
+
+                inv_vals = self.rc_inv_vals(
+                    rc_partner, rc_account, journal_id, rc_invoice_lines,
+                    rc_currency)
+
+                # no copy values
+                inv_vals['date'] = self.date
+                inv_vals['date_apply_balance'] = self.date_apply_balance
+                inv_vals['date_apply_vat'] = self.date_apply_vat
+                inv_vals['date_due'] = self.date_due
+                inv_vals['date_effective'] = self.date_effective
+                inv_vals['date_invoice'] = self.date_invoice
+                inv_vals['fiscal_position'] = None
+                # inv_vals['payment_term_id'] = self.payment_term_id.id
+
+                if self.rc_self_invoice_id:
+                    # this is needed when user takes back to draft supplier
+                    # invoice, edit and validate again
+                    rc_invoice = self.rc_self_invoice_id
+                    rc_invoice.invoice_line_ids.unlink()
+                    rc_invoice.period_id = False
+                    rc_invoice.write(inv_vals)
+                    rc_invoice.compute_taxes()
+                else:
+                    rc_invoice = self.create(inv_vals)
+                    self.rc_self_invoice_id = rc_invoice.id
+
+                rc_invoice.action_invoice_open()
+
+                # if rc_invoice.state == 'open':
+                #     rc_lines_to_rec = rc_account.line_ids.filtered(
+                #         lambda
+                #             x: rc_invoice.company_id.id == x.company_id.id
+                #                and rc_account.id == x.account_id.id
+                #     )
+                #     rc_lines_to_rec.reconcile()
+
+    # non tenere
     def generate_supplier_self_invoice(self):
-        rc_type = self.fiscal_position_id.rc_type_id
-        if not len(rc_type.tax_ids) == 1:
-            raise UserError(_(
-                "Can't find 1 tax mapping for %s" % rc_type.name))
-        if not self.rc_self_purchase_invoice_id:
-            supplier_invoice = self.copy()
-        else:
-            supplier_invoice_vals = self.copy_data()
-            supplier_invoice = self.rc_self_purchase_invoice_id
-            supplier_invoice.invoice_line_ids.unlink()
-            supplier_invoice.write(supplier_invoice_vals[0])
+        if self.fiscal_position_id.rc_type and \
+            self.fiscal_position_id.rc_type == 'self' and \
+            self.fiscal_position_id.partner_type == 'supplier':
 
-        supplier_invoice.partner_bank_id = None
+            rc_partner = self.partner_id
+            rc_currency = self.currency_id
+            rc_account = rc_partner.property_account_receivable_id
 
-        # because this field has copy=False
-        supplier_invoice.date = self.date
-        supplier_invoice.date_invoice = self.date
-        supplier_invoice.date_due = self.date
-        supplier_invoice.partner_id = rc_type.partner_id.id
-        supplier_invoice.journal_id = rc_type.supplier_journal_id.id
-        for inv_line in supplier_invoice.invoice_line_ids:
-            inv_line.invoice_line_tax_ids = [
-                (6, 0, [rc_type.tax_ids[0].purchase_tax_id.id])]
-            inv_line.account_id = rc_type.transitory_account_id.id
-        self.rc_self_purchase_invoice_id = supplier_invoice.id
+            if not self.rc_self_purchase_invoice_id:
+                supplier_invoice = self.copy()
+            else:
+                supplier_invoice_vals = self.copy_data()
+                supplier_invoice = self.rc_self_purchase_invoice_id
+                supplier_invoice.invoice_line_ids.unlink()
+                supplier_invoice.write(supplier_invoice_vals[0])
 
-        # temporary disabling self invoice automations
-        supplier_invoice.fiscal_position_id = None
-        supplier_invoice.compute_taxes()
-        supplier_invoice.check_total = supplier_invoice.amount_total
-        supplier_invoice.action_invoice_open()
-        supplier_invoice.fiscal_position_id = self.fiscal_position_id.id
+            supplier_invoice.partner_bank_id = None
+
+            # because this field has copy=False
+            supplier_invoice.date = self.date
+            supplier_invoice.date_invoice = self.date
+            supplier_invoice.date_due = self.date
+            supplier_invoice.partner_id = rc_partner.id
+            # supplier_invoice.journal_id = rc_type.supplier_journal_id.id
+            # for inv_line in supplier_invoice.invoice_line_ids:
+            #     inv_line.invoice_line_tax_ids = [
+            #         (6, 0, [rc_type.tax_ids[0].purchase_tax_id.id])]
+            #     inv_line.account_id = rc_type.transitory_account_id.id
+            self.rc_self_purchase_invoice_id = supplier_invoice.id
+
+            # temporary disabling self invoice automations
+            supplier_invoice.fiscal_position_id = None
+            supplier_invoice.compute_taxes()
+            supplier_invoice.check_total = supplier_invoice.amount_total
+            supplier_invoice.action_invoice_open()
+            supplier_invoice.fiscal_position_id = self.fiscal_position_id.id
 
     @api.multi
     def invoice_validate(self):
@@ -496,8 +520,7 @@ class AccountInvoice(models.Model):
             # self.ensure_one()
             if invoice.fiscal_position_id.rc_type \
                 and invoice.fiscal_position_id.rc_type == 'self':
-                pass
-                # invoice.generate_self_invoice()
+                invoice.generate_self_invoice()
             # end if
         return res
 
@@ -560,12 +583,8 @@ class AccountInvoice(models.Model):
                 line_model = self.env['account.move.line']
 
                 # common
-                tax_with_sell = invoice.move_id.line_ids.filtered(
-                    lambda
-                        x: invoice.company_id.id == x.company_id.id and x.line_type == 'tax' and x.debit == invoice.amount_rc)
-
+                tax_with_sell = invoice._get_tax_sell()
                 tax_vat = tax_with_sell.tax_line_id
-
                 tax_sell = tax_vat.rc_sale_tax_id
 
                 tax_duedate_rc = invoice.move_id.line_ids.filtered(
@@ -674,6 +693,7 @@ class AccountInvoice(models.Model):
                     transfer_ids.append(tranfer.id)
                 # end if
 
+                # reconcile
                 if tax_duedate_rc and tax_duedate_rc.id:
                     lines_to_rec = line_model.browse(transfer_ids)
                     lines_to_rec.reconcile()
@@ -720,6 +740,7 @@ class AccountInvoice(models.Model):
                 self_purchase_invoice.action_invoice_draft()
         return True
 
+    # modulo dipendenza
     def get_tax_amount_added_for_rc(self):
         res = 0
         for line in self.invoice_line_ids:
@@ -733,11 +754,9 @@ class AccountInvoice(models.Model):
                     res += tax['amount']
         return res
 
-    def _build_credit_line(self, invoice):
-        pass
+    def _get_tax_sell(self):
+        return self.move_id.line_ids.filtered(
+            lambda
+                x: self.company_id.id == x.company_id.id and x.line_type == 'tax' and x.debit == self.amount_rc)
+    # end _get_tax_sell
 
-    def _build_sale_line(self, invoice):
-        pass
-
-    def _build_client_line(self, invoice):
-        pass
