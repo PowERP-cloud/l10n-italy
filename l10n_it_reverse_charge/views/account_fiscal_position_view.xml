@@ -15,7 +15,7 @@
             <field name="country_group_id" position="after">
                 <field name="rc_type" />
                 <field name="partner_type" attrs="{'invisible': [('rc_type', '!=', 'self')]}"/>
-                <field name="rc_journal" attrs="{'invisible': [('rc_type', '!=', 'self')]}"/>
+                <field name="self_journal_id" attrs="{'invisible': [('rc_type', '!=', 'self')]}"/>
             </field>
         </field>
     </record>

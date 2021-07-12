@@ -414,7 +414,7 @@ class AccountInvoice(models.Model):
             # account_id
             rc_account = rc_partner.property_account_receivable_id
             # journal_id
-            journal_id = self.fiscal_position_id.rc_journal
+            journal_id = self.fiscal_position_id.self_journal_id
             # account_tax sale
             tax_with_sell = self._get_tax_sell()
             tax_sell_id = tax_with_sell.tax_line_id.rc_sale_tax_id.id
@@ -524,6 +524,7 @@ class AccountInvoice(models.Model):
             # end if
         return res
 
+    # non tenere
     def remove_rc_payment(self):
         inv = self
         if inv.payment_move_line_ids:
