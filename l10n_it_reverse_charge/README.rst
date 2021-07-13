@@ -1,6 +1,6 @@
 
 ==============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_8
+|icon| ITA - Inversione contabile 12.0.1.2.7_9
 ==============================================
 
 
@@ -246,6 +246,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_9 (2021-07-13)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Condizioni campo iva rc invisibile nella vista
+
 12.0.1.2.7_8 (2021-07-12)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -381,7 +386,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-07-12
+Last Update / Ultimo aggiornamento: 2021-07-13
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

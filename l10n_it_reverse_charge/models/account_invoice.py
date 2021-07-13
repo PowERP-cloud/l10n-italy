@@ -69,6 +69,13 @@ class AccountInvoice(models.Model):
         # end for
     # end _compute_amount_rc
 
+    @api.depends('fiscal_position_id')
+    def _compute_rc_type(self):
+        for inv in self:
+            inv.rc_type = inv.fiscal_position_id.rc_type
+        # end for
+    # end _compute_rc_type
+
     @api.depends('amount_total', 'amount_rc')
     def _compute_net_pay(self):
         res = super()._compute_net_pay()
@@ -95,6 +102,11 @@ class AccountInvoice(models.Model):
         store=True,
         readonly=True,
         compute='_compute_amount_rc')
+
+    rc_type = fields.Char(
+        string='RC Type',
+        compute='_compute_rc_type',
+    )
 
     @api.onchange('invoice_line_ids')
     def _onchange_invoice_line_ids(self):
