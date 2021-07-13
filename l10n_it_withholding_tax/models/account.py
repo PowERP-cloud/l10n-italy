@@ -443,35 +443,36 @@ class AccountInvoice(models.Model):
         '''
         dp_obj = self.env['decimal.precision']
         res = super(AccountInvoice, self).action_move_create()
-
         for inv in self:
-            # Rates
-            rate_num = 0
-            for move_line in inv.move_id.line_ids:
-                if move_line.account_id.internal_type not in ['receivable',
-                                                              'payable']:
-                    continue
-                rate_num += 1
-            if rate_num:
-                wt_rate = round(inv.withholding_tax_amount / rate_num,
-                                dp_obj.precision_get('Account'))
-            wt_residual = inv.withholding_tax_amount
-            # Re-read move lines to assign the amounts of wt
-            i = 0
-            for move_line in inv.move_id.line_ids:
-                if move_line.account_id.internal_type not in ['receivable',
-                                                              'payable']:
-                    continue
-                i += 1
-                if i == rate_num:
-                    wt_amount = wt_residual
-                else:
-                    wt_amount = wt_rate
-                wt_residual -= wt_amount
-                # update line
-                move_line.write({'withholding_tax_amount': wt_amount})
-            # Create WT Statement
-            self.create_wt_statement()
+            if inv.withholding_tax_amount:
+                # Rates
+                rate_num = 0
+                for move_line in inv.move_id.line_ids:
+                    if move_line.account_id.internal_type not in ['receivable',
+                                                                  'payable']:
+                        continue
+                    rate_num += 1
+                if rate_num:
+                    wt_rate = round(inv.withholding_tax_amount / rate_num,
+                                    dp_obj.precision_get('Account'))
+                wt_residual = inv.withholding_tax_amount
+                # Re-read move lines to assign the amounts of wt
+                i = 0
+                for move_line in inv.move_id.line_ids:
+                    if move_line.account_id.internal_type not in ['receivable',
+                                                                  'payable']:
+                        continue
+                    i += 1
+                    if i == rate_num:
+                        wt_amount = wt_residual
+                    else:
+                        wt_amount = wt_rate
+                    wt_residual -= wt_amount
+                    # update line
+                    move_line.write({'withholding_tax_amount': wt_amount})
+                # Create WT Statement
+                inv._compute_residual()
+                self.create_wt_statement()
         return res
 
     @api.multi

@@ -14,7 +14,8 @@ from odoo import fields, models
 class AccountFiscalPosition(models.Model):
     _inherit = 'account.fiscal.position'
 
-    rc_type_id = fields.Many2one('account.rc.type', 'RC Type')
+    # rc_type_id = fields.Many2one('account.rc.type', 'RC Type')
+
     rc_type = fields.Selection(
         selection=[
             ('', 'No RC'),
@@ -24,3 +25,19 @@ class AccountFiscalPosition(models.Model):
         string='Reverse charge',
         default='',
     )
+
+    partner_type = fields.Selection(
+        selection=[
+            ('supplier', 'Fornitore'),
+            ('other', 'Azienda')
+        ],
+        string='Tipo di Partner',
+        default='',
+    )
+
+    self_journal_id = fields.Many2one(
+        'account.journal',
+        string='Registro per autofattura',
+        default='',
+    )
+

@@ -1,3 +1,28 @@
+12.0.1.2.7_8 (2021-07-12)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Autofattura per Reverse charge self
+
+12.0.1.2.7_7 (2021-07-09)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Registrazione contabile per Reverse charge self
+
+12.0.1.2.7_6 (2021-07-09)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Registrazione contabile per Reverse charge locale
+
+12.0.1.2.7_5 (2021-07-07)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Ricalcolo totale fattura
+
+12.0.1.2.7_4 (2021-07-06)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Impostato campi extra
+
 12.0.1.2.7_3 (2021-07-05)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

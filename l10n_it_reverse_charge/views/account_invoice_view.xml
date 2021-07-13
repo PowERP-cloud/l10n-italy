@@ -17,15 +17,6 @@
                     attrs="{'invisible': [('amount_total', '=', False)]}"/>
             </xpath>
 
-            <field name="fiscal_position_id"
-                   position="after">
-
-                <field name="is_local_rc" groups="base.group_no_one"/>
-
-                <field name="is_self_rc" groups="base.group_no_one"/>
-
-            </field>
-
             <field name="move_id"
                position="after">
             <field name="rc_self_invoice_id" readonly="True"
