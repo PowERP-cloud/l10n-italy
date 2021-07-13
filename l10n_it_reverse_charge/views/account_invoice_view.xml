@@ -13,8 +13,9 @@
         <field name="arch" type="xml">
 
             <xpath expr="//group[hasclass('oe_subtotal_footer', 'oe_right')]/field[@name='amount_total']" position="after">
+                <field name="rc_type" invisible="1"/>
                 <field name="amount_rc" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"
-                    attrs="{'invisible': [('amount_total', '=', False)]}"/>
+                    attrs="{'invisible': [('rc_type', '=', False)]}"/>
             </xpath>
 
             <field name="move_id"
