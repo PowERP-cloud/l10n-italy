@@ -1,7 +1,12 @@
-12.0.2.1.0_3 (2021-07-02)
+12.0.2.1.0_4 (2021-07-12)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Impostato filtro corretto sui movimenti contabili per la registrazione del pagamento
+
+12.0.2.1.0_3 (2021-07-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Refactoring account_move_create
 
 12.0.2.1.0_2 (2021-07-01)
 ~~~~~~~~~~~~~~~~~~~~~~~~~

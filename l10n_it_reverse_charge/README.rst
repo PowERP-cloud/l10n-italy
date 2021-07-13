@@ -1,6 +1,6 @@
 
 ==============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_1
+|icon| ITA - Inversione contabile 12.0.1.2.7_8
 ==============================================
 
 
@@ -246,6 +246,36 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_8 (2021-07-12)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Autofattura per Reverse charge self
+
+12.0.1.2.7_7 (2021-07-09)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Registrazione contabile per Reverse charge self
+
+12.0.1.2.7_6 (2021-07-09)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Registrazione contabile per Reverse charge locale
+
+12.0.1.2.7_5 (2021-07-07)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Ricalcolo totale fattura
+
+12.0.1.2.7_4 (2021-07-06)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Impostato campi extra
+
+12.0.1.2.7_3 (2021-07-05)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Impostato verifica tipo di tassa RC
+
 12.0.1.2.7_2 (2021-06-22)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -351,7 +381,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-06-23
+Last Update / Ultimo aggiornamento: 2021-07-12
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
