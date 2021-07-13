@@ -131,12 +131,13 @@ class AccountInvoice(models.Model):
     # tenere
     def _compute_amount(self):
         super()._compute_amount()
-        if self.fiscal_position_id.rc_type:
-            self.amount_total = self.amount_untaxed + self.amount_tax
-            if self.fiscal_position_id.rc_type == 'self':
-                self.amount_tax = 0
-            elif self.fiscal_position_id.rc_type == 'local':
-                self.amount_tax -= self.amount_rc
+        for inv in self:
+            if inv.fiscal_position_id.rc_type:
+                inv.amount_total = inv.amount_untaxed + inv.amount_tax
+                if inv.fiscal_position_id.rc_type == 'self':
+                    inv.amount_tax = 0
+                elif inv.fiscal_position_id.rc_type == 'local':
+                    inv.amount_tax -= inv.amount_rc
         # end if
     # end _compute_amount
 

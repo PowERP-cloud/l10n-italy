@@ -1,7 +1,7 @@
 
-==============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_9
-==============================================
+===============================================
+|icon| ITA - Inversione contabile 12.0.1.2.7_10
+===============================================
 
 
 **Inversione contabile**
@@ -246,6 +246,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_10 (2021-07-13)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Fix bug multi in calcolo totali
+
 12.0.1.2.7_9 (2021-07-13)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -301,13 +306,6 @@ ChangeLog History / Cronologia modifiche
 
 [FIX] Error when payment invoice: function invoice_validate @multi
 
-
-12.0.1.2.6 (2021-02-17)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-[REF] Clone OCA module
-[FIX] Mixed RC and ordinary VAT line in single vendor bill
-[FIX] Self invoice account move lines
 
 
 
