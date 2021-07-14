@@ -1,6 +1,6 @@
 
 ===========================================
-|icon| Italian Withholding Tax 12.0.2.1.0_4
+|icon| Italian Withholding Tax 12.0.2.1.0_5
 ===========================================
 
 
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.2.1.0_5 (2021-07-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Verificato e risolto bug POW-409 - Nascosto campo pagamento netto residuo
+
 12.0.2.1.0_4 (2021-07-12)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -256,7 +261,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-07-13
+Last Update / Ultimo aggiornamento: 2021-07-14
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status

@@ -471,7 +471,7 @@ class AccountInvoice(models.Model):
                     # update line
                     move_line.write({'withholding_tax_amount': wt_amount})
                 # Create WT Statement
-                inv._compute_residual()
+                # inv._compute_residual()
                 self.create_wt_statement()
         return res
 

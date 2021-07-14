@@ -1,3 +1,8 @@
+12.0.2.1.0_5 (2021-07-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Verificato e risolto bug POW-409 - Nascosto campo pagamento netto residuo
+
 12.0.2.1.0_4 (2021-07-12)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
