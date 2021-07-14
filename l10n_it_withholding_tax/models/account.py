@@ -471,7 +471,7 @@ class AccountInvoice(models.Model):
                     # update line
                     move_line.write({'withholding_tax_amount': wt_amount})
                 # Create WT Statement
-                inv._compute_residual()
+                # inv._compute_residual()
                 self.create_wt_statement()
         return res
 
@@ -546,6 +546,19 @@ class AccountInvoice(models.Model):
                 else:
                     payment_val['wt_move_line'] = False
         return payment_vals
+
+    @api.multi
+    def _get_aml_for_register_payment(self):
+        """ Get the aml to consider to reconcile in register payment
+            except tax payment method
+        """
+        self.ensure_one()
+
+        res = super()._get_aml_for_register_payment()
+
+        return self.move_id.line_ids.filtered(
+            lambda r: not r.reconciled and r.account_id.internal_type in (
+                'payable', 'receivable') and r.payment_method.code != 'tax')
 
 
 class AccountInvoiceLine(models.Model):
