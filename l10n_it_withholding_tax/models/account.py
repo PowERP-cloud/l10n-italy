@@ -5,7 +5,8 @@
 from odoo import models, fields, api, _
 import odoo.addons.decimal_precision as dp
 from odoo.exceptions import ValidationError
-from odoo.addons.account.models.account_payment import MAP_INVOICE_TYPE_PAYMENT_SIGN
+from odoo.addons.account.models.account_payment import \
+    MAP_INVOICE_TYPE_PAYMENT_SIGN
 
 
 class AccountFullReconcile(models.Model):
@@ -74,15 +75,15 @@ class AccountPartialReconcile(models.Model):
         lc = self.env['account.move.line'].browse(vals.get('credit_move_id'))
 
         if lc.withholding_tax_generated_by_move_id \
-                or ld.withholding_tax_generated_by_move_id:
+            or ld.withholding_tax_generated_by_move_id:
             is_wt_move = True
         else:
             is_wt_move = False
         # Wt moves creation
         if invoice.withholding_tax_line_ids \
-                and not self._context.get('no_generate_wt_move')\
-                and not is_wt_move:
-                # and not wt_existing_moves\
+            and not self._context.get('no_generate_wt_move') \
+            and not is_wt_move:
+            # and not wt_existing_moves\
             reconcile.generate_wt_moves()
 
         return reconcile
@@ -264,7 +265,7 @@ class AccountAbstractPayment(models.AbstractModel):
         if invoice_defaults and len(invoice_defaults) == 1:
             invoice = invoice_defaults[0]
             if 'withholding_tax_amount' in invoice \
-                    and invoice['withholding_tax_amount']:
+                and invoice['withholding_tax_amount']:
                 coeff_net = invoice['residual'] / invoice['amount_total']
                 rec['amount'] = invoice['amount_net_pay_residual'] * coeff_net
         return rec
@@ -382,7 +383,7 @@ class AccountInvoice(models.Model):
                     wt_line.tax, dp_obj.precision_get('Account'))
             if withholding_tax_amount:
                 invoice.amount_net_pay = invoice.amount_total - \
-                    withholding_tax_amount
+                                         withholding_tax_amount
             amount_net_pay_residual = invoice.amount_net_pay
             invoice.withholding_tax_amount = withholding_tax_amount
             for line in invoice.payment_move_line_ids:
@@ -409,6 +410,7 @@ class AccountInvoice(models.Model):
         compute='_compute_net_pay',
         digits=dp.get_precision('Account'), string='Residual Net To Pay',
         store=True, readonly=True)
+
     # enable_wht = fields.Bool("Ritenuta d'acconto", default=False)
 
     @api.model
@@ -418,7 +420,7 @@ class AccountInvoice(models.Model):
 
         if any(line.invoice_line_tax_wt_ids for line in
                invoice.invoice_line_ids) \
-                and not invoice.withholding_tax_line_ids:
+            and not invoice.withholding_tax_line_ids:
             invoice.compute_taxes()
 
         return invoice
@@ -557,8 +559,11 @@ class AccountInvoice(models.Model):
         res = super()._get_aml_for_register_payment()
 
         return self.move_id.line_ids.filtered(
-            lambda r: not r.reconciled and r.account_id.internal_type in (
-                'payable', 'receivable') and r.payment_method.code != 'tax')
+            lambda r:
+            not r.reconciled and r.account_id.internal_type in (
+                'payable', 'receivable')
+            and r.payment_method.code != 'tax'
+            and r.line_type != 'tax')
 
 
 class AccountInvoiceLine(models.Model):
@@ -592,7 +597,7 @@ class AccountInvoiceWithholdingTax(models.Model):
     def _prepare_price_unit(self, line):
         price_unit = 0
         price_unit = line.price_unit * \
-            (1 - (line.discount or 0.0) / 100.0)
+                     (1 - (line.discount or 0.0) / 100.0)
         return price_unit
 
     @api.depends('base', 'tax', 'invoice_id.amount_untaxed')
@@ -634,7 +639,7 @@ class AccountPayment(models.Model):
         if invoice_defaults and len(invoice_defaults) == 1:
             invoice = invoice_defaults[0]
             if 'withholding_tax_amount' in invoice \
-                    and invoice['withholding_tax_amount']:
+                and invoice['withholding_tax_amount']:
                 coeff_net = invoice['residual'] / invoice['amount_total']
                 rec['amount'] = invoice['amount_net_pay_residual'] * coeff_net
         return rec
@@ -676,8 +681,10 @@ class AccountPayment(models.Model):
 
         amount_total = sign * invoice.residual_signed
         amount_total_company_signed = sign * invoice.residual_company_signed
-        invoice_currency = self.env['res.currency'].browse(invoice.currency_id.id)
-        if getattr(invoice, 'withholding_tax_amount', False) and invoice.withholding_tax_amount:
+        invoice_currency = self.env['res.currency'].browse(
+            invoice.currency_id.id)
+        if getattr(invoice, 'withholding_tax_amount',
+                   False) and invoice.withholding_tax_amount:
             coeff_net = invoice.residual / invoice.amount_total
             amount_total = invoice.amount_net_pay_residual * coeff_net
         # and if
@@ -696,4 +703,3 @@ class AccountPayment(models.Model):
 
         return total
     # end _compute_payment_invoice
-
