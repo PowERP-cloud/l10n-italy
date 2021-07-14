@@ -1,4 +1,14 @@
-12.0.2.1.0_3 (2021-07-12)
+12.0.2.1.0_5 (2021-07-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Verificato e risolto bug POW-409 - Nascosto campo pagamento netto residuo
+
+12.0.2.1.0_4 (2021-07-12)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato filtro corretto sui movimenti contabili per la registrazione del pagamento
+
+12.0.2.1.0_3 (2021-07-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [REF] Refactoring account_move_create

@@ -381,7 +381,7 @@ class WithholdingTaxMove(models.Model):
         line_to_reconcile = False
         for line in move.line_ids:
             if line.account_id.user_type_id.type in ['payable', 'receivable']\
-                    and line.partner_id:
+                    and line.partner_id and line.payment_method.code != 'tax':
                 line_to_reconcile = line
                 break
         if line_to_reconcile:

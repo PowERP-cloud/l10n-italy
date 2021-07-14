@@ -132,11 +132,11 @@ class AccountInvoice(models.Model):
     def _compute_amount(self):
         super()._compute_amount()
         for inv in self:
-            if inv.fiscal_position_id.rc_type:
+            if inv.rc_type:
                 inv.amount_total = inv.amount_untaxed + inv.amount_tax
-                if inv.fiscal_position_id.rc_type == 'self':
+                if inv.rc_type == 'self':
                     inv.amount_tax = 0
-                elif inv.fiscal_position_id.rc_type == 'local':
+                elif inv.rc_type == 'local':
                     inv.amount_tax -= inv.amount_rc
         # end if
     # end _compute_amount
@@ -403,6 +403,7 @@ class AccountInvoice(models.Model):
         rc_lines_to_rec.reconcile()
 
     # richiamato da l10n_it_fatturapa_out_rc
+    #
     def generate_self_invoice(self):
         # update fields
         if self.fiscal_position_id.rc_type and \
@@ -532,12 +533,12 @@ class AccountInvoice(models.Model):
         for invoice in self:
             # self.ensure_one()
             if invoice.fiscal_position_id.rc_type \
-                and invoice.fiscal_position_id.rc_type == 'self':
+                and invoice.rc_type == 'self':
                 invoice.generate_self_invoice()
             # end if
         return res
 
-    # non tenere
+    # tenere?
     def remove_rc_payment(self):
         inv = self
         if inv.payment_move_line_ids:
@@ -563,16 +564,18 @@ class AccountInvoice(models.Model):
                 'full_reconcile_id'
             ).mapped('full_reconcile_id.reconciled_line_ids')
             rec_partial_lines.remove_move_reconcile()
-            # remove move reconcile related to the self invoice
-            move = inv.rc_self_invoice_id.move_id
-            rec_lines = move.mapped('line_ids').filtered(
-                'full_reconcile_id'
-            ).mapped('full_reconcile_id.reconciled_line_ids')
-            rec_lines.remove_move_reconcile()
-            # cancel self invoice
-            self_invoice = self.browse(
-                inv.rc_self_invoice_id.id)
-            self_invoice.action_invoice_cancel()
+            if inv.rc_type and inv.rc_type == 'self':
+                # remove move reconcile related to the self invoice
+                move = inv.rc_self_invoice_id.move_id
+                rec_lines = move.mapped('line_ids').filtered(
+                    'full_reconcile_id'
+                ).mapped('full_reconcile_id.reconciled_line_ids')
+                rec_lines.remove_move_reconcile()
+                # cancel self invoice
+                self_invoice = self.browse(
+                    inv.rc_self_invoice_id.id)
+                self_invoice.action_invoice_cancel()
+            # end if
             # invalidate and delete the payment move generated
             # by the self invoice creation
             payment_move.button_cancel()
@@ -748,10 +751,10 @@ class AccountInvoice(models.Model):
                 self_invoice = invoice_model.browse(
                     inv.rc_self_invoice_id.id)
                 self_invoice.action_invoice_draft()
-            if inv.rc_self_purchase_invoice_id:
-                self_purchase_invoice = invoice_model.browse(
-                    inv.rc_self_purchase_invoice_id.id)
-                self_purchase_invoice.action_invoice_draft()
+            # if inv.rc_self_purchase_invoice_id:
+            #     self_purchase_invoice = invoice_model.browse(
+            #         inv.rc_self_purchase_invoice_id.id)
+            #     self_purchase_invoice.action_invoice_draft()
         return True
 
     # modulo dipendenza
