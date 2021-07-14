@@ -70,6 +70,7 @@ class AccountMove(models.Model):
         #       of the "writing_c_d_m_l" context variable it is necessary
         #       to restore the original value of "writing_c_d_m_l" before
         #       calling write_credit_debit_move_lines()
+
         writing_c_d_m_l = self.env.context.get('writing_c_d_m_l', False)
         check_move_validity = self.env.context.get('check_move_validity', True)
 
@@ -79,6 +80,10 @@ class AccountMove(models.Model):
 
         # Avoid infinite recursion
         if not writing_c_d_m_l and check_move_validity:
+        # Rewrite credit and debit lines only if:
+        #   - check_move_validity is enabled (aka avoid getting in the way
+        #     when adding lines manually)
+        #   - infinite recursion guard variable (writing_c_d_m_l) is not True
             self.write_credit_debit_move_lines()
         # end if
 
