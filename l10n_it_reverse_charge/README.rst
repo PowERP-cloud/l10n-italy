@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_10
+|icon| ITA - Inversione contabile 12.0.1.2.7_11
 ===============================================
 
 
@@ -246,6 +246,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_11 (2021-07-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Aggiornato campo registro in posizione fiscale
+
 12.0.1.2.7_10 (2021-07-13)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -300,12 +305,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 [FIX] Aggiornato verifica flag RC da elenco tasse
-
-12.0.1.2.7 (2021-03-18)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Error when payment invoice: function invoice_validate @multi
-
 
 
 
@@ -384,7 +383,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-07-13
+Last Update / Ultimo aggiornamento: 2021-07-14
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

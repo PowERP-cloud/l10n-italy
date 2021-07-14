@@ -34,7 +34,6 @@ class AccountInvoiceLine(models.Model):
     @api.onchange('invoice_line_tax_ids')
     def onchange_invoice_line_tax_id(self):
         res = dict()
-
         invoice_rc_type = self.invoice_id.fiscal_position_id.rc_type
         if self.invoice_id.type in ['in_invoice', 'in_refund']:
             for tax in self.invoice_line_tax_ids:
@@ -53,6 +52,8 @@ class AccountInvoiceLine(models.Model):
         return res
 
     rc = fields.Boolean("RC")
+
+    rc_type = fields.Char("Has RC", related='invoice_id.rc_type')
 
     def _set_additional_fields(self, invoice):
         self._set_rc_flag(invoice)
@@ -408,7 +409,7 @@ class AccountInvoice(models.Model):
         # update fields
         if self.fiscal_position_id.rc_type and \
             self.fiscal_position_id.rc_type == 'self'\
-            and self.fiscal_position_id.rc_journal:
+            and self.fiscal_position_id.self_journal_id:
 
             if self.fiscal_position_id.partner_type == 'other':
                 # partner
