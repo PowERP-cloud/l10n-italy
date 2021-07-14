@@ -559,9 +559,11 @@ class AccountInvoice(models.Model):
         res = super()._get_aml_for_register_payment()
 
         return self.move_id.line_ids.filtered(
-            lambda r: not r.reconciled and r.account_id.internal_type in (
-                'payable', 'receivable') and r.payment_method.code != 'tax'
-                      and r.line_type != 'tax')
+            lambda r:
+            not r.reconciled and r.account_id.internal_type in (
+                'payable', 'receivable')
+            and r.payment_method.code != 'tax'
+            and r.line_type != 'tax')
 
 
 class AccountInvoiceLine(models.Model):
