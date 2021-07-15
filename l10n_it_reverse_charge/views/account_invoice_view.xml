@@ -27,11 +27,15 @@
 
 
             </field>
-            <field name="price_subtotal"
-                   position="after">
-                <field name="line_rc_type" invisible="0"/>
-                <field name="rc" attrs="{'invisible': [('line_rc_type', '=', '')]}"/>
-            </field>
+            <xpath expr="//notebook/page/field[@name='invoice_line_ids']/tree/field[@name='price_subtotal']" position="after">
+<!--                <field name="line_rc_type" invisible="0"/>-->
+                <field name="rc" attrs="{'column_invisible': [('parent.rc_type', '=', False)]}"/>
+            </xpath>
+<!--            <field name="price_subtotal"-->
+<!--                   position="after">-->
+<!--                <field name="line_rc_type" invisible="0"/>-->
+<!--                <field name="rc" attrs="{'invisible': [('line_rc_type', '=', '')]}"/>-->
+<!--            </field>-->
         </field>
     </record>
 
@@ -44,7 +48,7 @@
                     expr="//form/group/group/field[@name='currency_id']"
                     position="after">
                 <field name="line_rc_type" invisible="1"/>
-                <field name="rc" attrs="{'invisible': [('line_rc_type', '=', '')]}"/>
+                <field name="rc" attrs="{'invisible': [('line_rc_type', '=', False)]}"/>
             </xpath>
         </field>
     </record>

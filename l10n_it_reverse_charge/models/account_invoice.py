@@ -21,9 +21,9 @@ class AccountInvoiceLine(models.Model):
     def compute_rc_type(self):
         for line in self:
             if line.invoice_id.fiscal_position_id.rc_type:
-                line.line_rc_type = line.invoice_id.fiscal_position_id.rc_type
+                line.line_rc_type = True
             else:
-                line.line_rc_type = ''
+                line.line_rc_type = False
             # end if
 
         # end for
@@ -65,7 +65,9 @@ class AccountInvoiceLine(models.Model):
 
     rc = fields.Boolean("RC")
 
-    line_rc_type = fields.Char("Has RC", compute='compute_rc_type')
+    line_rc_type = fields.Boolean("Has RC", compute='compute_rc_type')
+    # line_rc_type = fields.Selection("Has RC",
+    #                                 related='invoice_id.fiscal_position_id.rc_type')
 
     def _set_additional_fields(self, invoice):
         self._set_rc_flag(invoice)
