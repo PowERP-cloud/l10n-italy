@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_11
+|icon| ITA - Inversione contabile 12.0.1.2.7_12
 ===============================================
 
 
@@ -246,6 +246,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_12 (2021-07-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Nascosto campo rc in riga fatture in base alla posizione fiscale
+
 12.0.1.2.7_11 (2021-07-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -300,11 +305,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [IMP] Aggiornato numero di versione
-
-12.0.1.2.8 (2021-05-17)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Aggiornato verifica flag RC da elenco tasse
 
 
 

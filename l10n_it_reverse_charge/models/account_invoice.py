@@ -17,6 +17,18 @@ import odoo.addons.decimal_precision as dp
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
 
+    @api.depends("invoice_id")
+    def compute_rc_type(self):
+        for line in self:
+            if line.invoice_id.fiscal_position_id.rc_type:
+                line.line_rc_type = True
+            else:
+                line.line_rc_type = False
+            # end if
+
+        # end for
+    # end compute_rc_type
+
     @api.multi
     def _set_rc_flag(self, invoice):
         self.ensure_one()
@@ -53,7 +65,9 @@ class AccountInvoiceLine(models.Model):
 
     rc = fields.Boolean("RC")
 
-    rc_type = fields.Char("Has RC", related='invoice_id.rc_type')
+    line_rc_type = fields.Boolean("Has RC", compute='compute_rc_type')
+    # line_rc_type = fields.Selection("Has RC",
+    #                                 related='invoice_id.fiscal_position_id.rc_type')
 
     def _set_additional_fields(self, invoice):
         self._set_rc_flag(invoice)

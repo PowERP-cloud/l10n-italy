@@ -1,3 +1,8 @@
+12.0.1.2.7_12 (2021-07-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Nascosto campo rc in riga fatture in base alla posizione fiscale
+
 12.0.1.2.7_11 (2021-07-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
