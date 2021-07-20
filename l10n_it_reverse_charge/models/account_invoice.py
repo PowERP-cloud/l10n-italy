@@ -487,6 +487,7 @@ class AccountInvoice(models.Model):
                     rc_invoice.period_id = False
                     rc_invoice.write(inv_vals)
                     rc_invoice.compute_taxes()
+                    rc_invoice.duedate_manager_id.write_duedate_lines()
                 else:
                     rc_invoice = self.create(inv_vals)
                     self.rc_self_invoice_id = rc_invoice.id
@@ -573,7 +574,7 @@ class AccountInvoice(models.Model):
                 rec_partial.mapped('debit_move_id')
             )
             rec_partial_lines.remove_move_reconcile()
-
+            #
             # also remove full reconcile, in case of with_supplier_self_invoice
             rec_partial_lines = move.mapped('line_ids').filtered(
                 'full_reconcile_id'
@@ -765,6 +766,7 @@ class AccountInvoice(models.Model):
             if inv.rc_self_invoice_id:
                 self_invoice = invoice_model.browse(
                     inv.rc_self_invoice_id.id)
+                self_invoice.action_cancel()
                 self_invoice.action_invoice_draft()
             # if inv.rc_self_purchase_invoice_id:
             #     self_purchase_invoice = invoice_model.browse(

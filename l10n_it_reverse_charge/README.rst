@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_12
+|icon| ITA - Inversione contabile 12.0.1.2.7_13
 ===============================================
 
 
@@ -246,6 +246,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_13 (2021-07-20)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Corretto comportamento anomalo annullamento fattura
+
 12.0.1.2.7_12 (2021-07-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -300,11 +305,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [IMP] Aggiornato context per la funzione di riporto in bozza della fattura
-
-12.0.1.2.7_1 (2021-06-21)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[IMP] Aggiornato numero di versione
 
 
 
@@ -383,7 +383,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-07-14
+Last Update / Ultimo aggiornamento: 2021-07-20
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
