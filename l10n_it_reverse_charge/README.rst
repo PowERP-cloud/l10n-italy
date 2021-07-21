@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_13
+|icon| ITA - Inversione contabile 12.0.1.2.7_14
 ===============================================
 
 
@@ -246,6 +246,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_14 (2021-07-21)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato controllo flag rc in creazione fattura
+
 12.0.1.2.7_13 (2021-07-20)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -300,11 +305,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [IMP] Impostato verifica tipo di tassa RC
-
-12.0.1.2.7_2 (2021-06-22)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[IMP] Aggiornato context per la funzione di riporto in bozza della fattura
 
 
 
@@ -383,7 +383,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-07-20
+Last Update / Ultimo aggiornamento: 2021-07-21
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
