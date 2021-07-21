@@ -234,11 +234,6 @@ class AccountInvoice(models.Model):
         if not self.duedate_manager_id.duedate_line_ids:
             self.duedate_manager_id.write_duedate_lines()
 
-        tax_pm_lines = []
-
-        tax_pm_id = self.env['account.payment.method'].search(
-            [('code', '=', 'tax')])
-
         for duedate in self.duedate_manager_id.duedate_line_ids:
 
             # Create the new line
@@ -262,17 +257,12 @@ class AccountInvoice(models.Model):
             # Update - payment method
             new_line_dict['payment_method'] = duedate.payment_method_id.id
 
-            if duedate.payment_method_id.id == tax_pm_id.id:
-                tax_pm_lines.append(
-                    (0, 0, new_line_dict)
-                )
-            else:
-                new_lines.append(
-                    (0, 0, new_line_dict)
-                )
+            new_lines.append(
+                (0, 0, new_line_dict)
+            )
         # end for
 
-        return tax_pm_lines + new_lines
+        return new_lines
     # end finalize_invoice_move_lines
 
     @api.multi
