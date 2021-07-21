@@ -8,12 +8,12 @@ class InvoiceLine(models.Model):
     @api.multi
     def _set_rc_flag(self, invoice):
         self.ensure_one()
-        if 'fatturapa.attachment.in' in self.env.context.get(
-            'active_model', []
-        ):
-            # this means we are importing an e-invoice,
-            # so RC flag is already set, where needed
-            return
+        # if 'fatturapa.attachment.in' in self.env.context.get(
+        #     'active_model', []
+        # ):
+        #     # this means we are importing an e-invoice,
+        #     # so RC flag is already set, where needed
+        #     return
         return super(InvoiceLine, self)._set_rc_flag(invoice)
 
 

@@ -74,6 +74,7 @@ class AccountInvoiceLine(models.Model):
         return super(AccountInvoiceLine, self)._set_additional_fields(invoice)
 
 
+
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
@@ -122,6 +123,14 @@ class AccountInvoice(models.Model):
         string='RC Type',
         compute='_compute_rc_type',
     )
+
+    def create(self, vals):
+        res = super().create(vals)
+        if res.fiscal_position_id and res.fiscal_position_id.rc_type:
+            for line in res.invoice_line_ids:
+                line._set_rc_flag(res)
+        return res
+
 
     @api.onchange('invoice_line_ids')
     def _onchange_invoice_line_ids(self):
@@ -748,13 +757,7 @@ class AccountInvoice(models.Model):
                 inv.rc_self_invoice_id
             ):
                 inv.remove_rc_payment()
-            elif (
-                rc_type and
-                rc_type == 'self' and
-                inv.rc_self_purchase_invoice_id
-            ):
-                inv.rc_self_purchase_invoice_id.remove_rc_payment()
-                inv.rc_self_purchase_invoice_id.action_invoice_cancel()
+
         return super(AccountInvoice, self).action_cancel()
 
     @api.multi

@@ -34,8 +34,8 @@ class AccountTax(models.Model):
     @api.model
     def get_rc_type(self):
 
-        if self.kind_id and self.kind_id.code.startswith('N3') and \
-            self.kind_id.code != 'N3.5':
+        if (self.kind_id and self.kind_id.code.startswith('N3') and
+                self.kind_id.code != 'N3.5'):
             kind = 'self'
         elif self.kind_id and self.kind_id.code.startswith('N6'):
             kind = 'local'
