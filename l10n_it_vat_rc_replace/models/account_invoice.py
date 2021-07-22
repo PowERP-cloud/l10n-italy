@@ -12,6 +12,7 @@ from odoo import api, fields, models
 from odoo.exceptions import Warning as UserError
 from odoo.tools.translate import _
 import odoo.addons.decimal_precision as dp
+from odoo.tools import float_compare
 
 
 class AccountInvoiceLine(models.Model):
@@ -72,7 +73,6 @@ class AccountInvoiceLine(models.Model):
     def _set_additional_fields(self, invoice):
         self._set_rc_flag(invoice)
         return super(AccountInvoiceLine, self)._set_additional_fields(invoice)
-
 
 
 class AccountInvoice(models.Model):
@@ -796,4 +796,76 @@ class AccountInvoice(models.Model):
             lambda
                 x: self.company_id.id == x.company_id.id and x.line_type == 'tax' and x.debit == self.amount_rc)
     # end _get_tax_sell
+
+    # ------------------------------------------------------------------------#
+    #  FROM l10n_it_fatturapa_out_rc                                          #
+    # ------------------------------------------------------------------------#
+
+    def generate_self_invoice(self):
+        res = super(AccountInvoice, self).generate_self_invoice()
+        if self.rc_self_invoice_id:
+            if self.fatturapa_attachment_in_id:
+                doc_id = self.fatturapa_attachment_in_id.name
+            else:
+                doc_id = self.reference if self.reference else self.number
+            self.rc_self_invoice_id.related_documents = [
+                (0, 0, {
+                    "type": "invoice",
+                    "name": doc_id,
+                    "date": self.date_invoice,
+                })
+            ]
+        return res
+
+    # ------------------------------------------------------------------------#
+    #  FROM l10n_it_fatturapa_in_rc                                          #
+    # ------------------------------------------------------------------------#
+
+    def e_inv_check_amount_tax(self):
+        if (
+            any(self.invoice_line_ids.mapped('rc')) and
+            self.e_invoice_amount_tax
+        ):
+            error_message = ''
+            amount_added_for_rc = self.get_tax_amount_added_for_rc()
+            amount_tax = self.amount_tax - amount_added_for_rc
+            if float_compare(
+                amount_tax, self.e_invoice_amount_tax,
+                precision_rounding=self.currency_id.rounding
+            ) != 0:
+                error_message = (
+                    _("Taxed amount ({bill_amount_tax}) "
+                      "does not match with "
+                      "e-bill taxed amount ({e_bill_amount_tax})")
+                    .format(
+                        bill_amount_tax=amount_tax or 0,
+                        e_bill_amount_tax=self.e_invoice_amount_tax
+                    ))
+            return error_message
+        else:
+            return super(AccountInvoice, self).e_inv_check_amount_tax()
+
+    def e_inv_check_amount_total(self):
+        if (
+            any(self.invoice_line_ids.mapped('rc')) and
+            self.e_invoice_amount_total
+        ):
+            error_message = ''
+            amount_added_for_rc = self.get_tax_amount_added_for_rc()
+            amount_total = self.amount_total - amount_added_for_rc
+            if float_compare(
+                amount_total, self.e_invoice_amount_total,
+                precision_rounding=self.currency_id.rounding
+            ) != 0:
+                error_message = (
+                    _("Total amount ({bill_amount_total}) "
+                      "does not match with "
+                      "e-bill total amount ({e_bill_amount_total})")
+                    .format(
+                        bill_amount_total=amount_total or 0,
+                        e_bill_amount_total=self.e_invoice_amount_total
+                    ))
+            return error_message
+        else:
+            return super(AccountInvoice, self).e_inv_check_amount_total()
 

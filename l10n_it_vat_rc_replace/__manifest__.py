@@ -18,6 +18,8 @@
         'account_cancel',
         'l10n_it_account_tax_kind',
         'account_move_line_type',
+        'l10n_it_fatturapa_in',
+        'l10n_it_fatturapa_out',
     ],
     'data': [
         'security/ir.model.access.csv',
