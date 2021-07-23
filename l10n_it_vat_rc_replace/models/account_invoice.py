@@ -511,6 +511,19 @@ class AccountInvoice(models.Model):
                 #     )
                 #     rc_lines_to_rec.reconcile()
 
+        if self.rc_self_invoice_id:
+            if self.fatturapa_attachment_in_id:
+                doc_id = self.fatturapa_attachment_in_id.name
+            else:
+                doc_id = self.reference if self.reference else self.number
+            self.rc_self_invoice_id.related_documents = [
+                (0, 0, {
+                    "type": "invoice",
+                    "name": doc_id,
+                    "date": self.date_invoice,
+                })
+            ]
+
     # non tenere
     def generate_supplier_self_invoice(self):
         if self.fiscal_position_id.rc_type and \
@@ -796,26 +809,6 @@ class AccountInvoice(models.Model):
             lambda
                 x: self.company_id.id == x.company_id.id and x.line_type == 'tax' and x.debit == self.amount_rc)
     # end _get_tax_sell
-
-    # ------------------------------------------------------------------------#
-    #  FROM l10n_it_fatturapa_out_rc                                          #
-    # ------------------------------------------------------------------------#
-
-    def generate_self_invoice(self):
-        res = super(AccountInvoice, self).generate_self_invoice()
-        if self.rc_self_invoice_id:
-            if self.fatturapa_attachment_in_id:
-                doc_id = self.fatturapa_attachment_in_id.name
-            else:
-                doc_id = self.reference if self.reference else self.number
-            self.rc_self_invoice_id.related_documents = [
-                (0, 0, {
-                    "type": "invoice",
-                    "name": doc_id,
-                    "date": self.date_invoice,
-                })
-            ]
-        return res
 
     # ------------------------------------------------------------------------#
     #  FROM l10n_it_fatturapa_in_rc                                          #
