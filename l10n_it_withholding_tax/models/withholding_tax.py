@@ -332,11 +332,11 @@ class WithholdingTaxMove(models.Model):
                     self.withholding_tax_id.code, self.partner_id.name,
                     self.credit_debit_line_id.move_id.name),
                 'name': '%s' % (self.credit_debit_line_id.move_id.name),
-                'date': move_vals['date']
+                'date': move_vals['date'],
+                'partner_id': self.payment_line_id.partner_id.id,
             }
             # Credit/Debit line
             if type == 'partner':
-                ml_vals['partner_id'] = self.payment_line_id.partner_id.id
                 ml_vals['account_id'] = \
                     self.credit_debit_line_id.account_id.id
                 ml_vals['withholding_tax_generated_by_move_id'] = \
@@ -381,7 +381,7 @@ class WithholdingTaxMove(models.Model):
         line_to_reconcile = False
         for line in move.line_ids:
             if line.account_id.user_type_id.type in ['payable', 'receivable']\
-                    and line.partner_id:
+                    and line.partner_id and line.payment_method.code != 'tax':
                 line_to_reconcile = line
                 break
         if line_to_reconcile:
