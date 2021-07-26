@@ -8,9 +8,7 @@ class AccountTax(models.Model):
 
     @api.multi
     def _default_rc_type(self):
-        for tax in self:
-            tax.rc_type = tax.get_rc_type()
-        # end for
+        return self.get_rc_type()
     # end _compute_rc
 
     rc_type = fields.Selection(
