@@ -1,0 +1,69 @@
+<?xml version="1.0" ?>
+<!-- Copyright 2017 Davide Corio
+     Copyright 2017 Alex Comba - Agile Business Group
+     Copyright 2017 Lorenzo Battistini - Agile Business Group
+     Copyright 2017 Marco Calcagni - Dinamiche Aziendali srl
+     # Copyright 2021 Antonio M. Vigliotti - SHS-Av srl -->
+
+<odoo>
+    <record id="view_invoice_supplier_form_rc" model="ir.ui.view">
+        <field name="name">account.invoice.supplier.form.rc</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//group[hasclass('oe_subtotal_footer', 'oe_right')]/field[@name='amount_total']" position="after">
+                <field name="rc_type" invisible="1"/>
+                <field name="amount_rc" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"
+                    attrs="{'invisible': [('rc_type', '=', False)]}"/>
+            </xpath>
+
+            <field name="move_id"
+               position="after">
+            <field name="rc_self_invoice_id" readonly="True"
+                   context="{'form_view_ref': 'account.invoice_form'}"/>
+            <field name="rc_self_purchase_invoice_id" readonly="True"
+                   context="{'form_view_ref': 'account.supplier_invoice_form'}"/>
+
+
+            </field>
+            <xpath expr="//notebook/page/field[@name='invoice_line_ids']/tree/field[@name='price_subtotal']" position="after">
+<!--                <field name="line_rc_type" invisible="0"/>-->
+                <field name="rc" attrs="{'column_invisible': [('parent.rc_type', '=', False)]}"/>
+            </xpath>
+<!--            <field name="price_subtotal"-->
+<!--                   position="after">-->
+<!--                <field name="line_rc_type" invisible="0"/>-->
+<!--                <field name="rc" attrs="{'invisible': [('line_rc_type', '=', '')]}"/>-->
+<!--            </field>-->
+        </field>
+    </record>
+
+    <record id="view_invoice_line_form_rc" model="ir.ui.view">
+        <field name="name">view_invoice_line_form_rc</field>
+        <field name="model">account.invoice.line</field>
+        <field name="inherit_id" ref="account.view_invoice_line_form"/>
+        <field name="arch" type="xml">
+            <xpath
+                    expr="//form/group/group/field[@name='currency_id']"
+                    position="after">
+                <field name="line_rc_type" invisible="1"/>
+                <field name="rc" attrs="{'invisible': [('line_rc_type', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_invoice_form_rc" model="ir.ui.view">
+        <field name="name">account.invoice.form.rc</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <field name="move_id"
+                   position="after">
+                <field name="rc_purchase_invoice_id" readonly="True"
+                       context="{'form_view_ref': 'account.supplier_invoice_form'}"/>
+            </field>
+        </field>
+    </record>
+</odoo>
+
