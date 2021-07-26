@@ -50,10 +50,14 @@ class AccountInvoiceLine(models.Model):
         invoice_rc_type = self.invoice_id.fiscal_position_id.rc_type
         if self.invoice_id.type in ['in_invoice', 'in_refund']:
             for tax in self.invoice_line_tax_ids:
-                if invoice_rc_type and invoice_rc_type == 'self' and \
-                    tax.rc_type != invoice_rc_type:
-                    raise UserError('La tassa impostata non ha la natura '
-                                    'esenzione corretta.')
+                
+                is_rc_self = invoice_rc_type == 'self'
+                rc_mismatch = tax.rc_type != invoice_rc_type
+
+                if is_rc_self and rc_mismatch:
+                    raise UserError(
+                        'Natura esenzione errata per la tassa impostata.'
+                    )
                 # end if
             # end for
         # end if

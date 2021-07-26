@@ -6,15 +6,6 @@ from odoo import models, fields, api
 class AccountTax(models.Model):
     _inherit = 'account.tax'
 
-    @api.multi
-    def _compute_rc(self):
-        for tax in self:
-            tax.rc_type = tax.get_rc_type()
-        # end for
-
-    # end _compute_rc
-
-    # rc_type = fields.Char('Tipo RC', compute='_compute_rc')
     rc_type = fields.Selection(
         selection=[
             ('', 'No RC'),
@@ -22,7 +13,7 @@ class AccountTax(models.Model):
             ('self', 'RC con autofattura'),
         ],
         string='Tipo reverse charge',
-        compute='_compute_rc',
+        default='_compute_rc',
     )
 
     rc_sale_tax_id = fields.Many2one(
@@ -34,10 +25,12 @@ class AccountTax(models.Model):
     @api.model
     def get_rc_type(self):
 
-        if (self.kind_id and self.kind_id.code.startswith('N3') and
-                self.kind_id.code != 'N3.5'):
+        kind_N3 = self.kind_id and self.kind_id.code.startswith('N3')
+        kind_N6 = self.kind_id and self.kind_id.code.startswith('N6')
+
+        if kind_N3 and self.kind_id.code != 'N3.5':
             kind = 'self'
-        elif self.kind_id and self.kind_id.code.startswith('N6'):
+        elif kind_N6:
             kind = 'local'
         else:
             kind = ''
@@ -45,4 +38,11 @@ class AccountTax(models.Model):
 
         return kind
     # end get_rc_type
+
+    @api.multi
+    def _compute_rc(self):
+        for tax in self:
+            tax.rc_type = tax.get_rc_type()
+        # end for
+    # end _compute_rc
 

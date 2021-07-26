@@ -1,3 +1,8 @@
+12.0.1.2.7_15 (2021-07-26)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Possibilità di impostare manualmente il campo rc_type di account.tax
+
 12.0.1.2.7_14 (2021-07-21)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
