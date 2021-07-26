@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.4.8.13
+|icon| Due dates 12.0.4.8.14
 ============================
 
 
@@ -160,9 +160,14 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
-12.0.4.8.13 (2021-07-08)
+12.0.4.8.14 (2021-07-13)
 ~~~~~~~~~~~~~~~~~~~~~~~~
+ * [FIX] account_duedates: Aggiornato ordine della generazione dei movimenti contabili
  * [FIX] account_duedates: Impostato 15 giorni la ritenuta dopo l'ultima scadenza
+
+12.0.4.8.13 (2021-07-05)
+~~~~~~~~~~~~~~~~~~~~~~~~
+ * [IMP] account_duedates: Impostato manager per la gestione delle scadenze Reverse charge
 
 12.0.4.8.12 (2021-06-28)
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -209,11 +214,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Impostato e gestito gli intervalli dei giorni di esclusione
-
-12.0.3.3.4 (2021-04-20)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Tolto la possibilità di andare a capo per il campo Conto
 
 
 
@@ -288,7 +288,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-07-08
+Last Update / Ultimo aggiornamento: 2021-07-14
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

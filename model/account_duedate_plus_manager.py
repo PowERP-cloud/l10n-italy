@@ -493,7 +493,8 @@ class DueDateManager(models.Model):
     @api.model
     def _extra_duedate_line(self, param_cm, types_amount, payment_method_id):
         line = {}
-        if bool(types_amount['is_split_amount']):
+
+        if bool(types_amount['split_amount']):
             split_date = self._get_split_date_period(
                 param_cm['partner_id'], param_cm['doc_type'],
                 param_cm['invoice_date'].strftime('%Y-%m-%d'))
@@ -502,11 +503,11 @@ class DueDateManager(models.Model):
                 'duedate_manager_id': self.id,
                 'payment_method_id': payment_method_id,
                 'due_date': split_date,
-                'due_amount': types_amount['is_split_amount']
+                'due_amount': types_amount['split_amount']
             }
-            # end if
+        # end if
 
-        if bool(types_amount['is_ra_amount']):
+        if bool(types_amount['ra_amount']):
             if self.invoice_id.date:
                 ra_date_fifteen = self.invoice_id.date_due + \
                                   datetime.timedelta(days=15)
@@ -518,16 +519,35 @@ class DueDateManager(models.Model):
                     'duedate_manager_id': self.id,
                     'payment_method_id': payment_method_id,
                     'due_date': ra_date,
-                    'due_amount': types_amount['is_ra_amount']
+                    'due_amount': types_amount['ra_amount']
                 }
-            # end if
         # end if
+
+        if bool(types_amount['rc_amount']):
+            split_date = self._get_split_date_period(
+                param_cm['partner_id'], param_cm['doc_type'],
+                param_cm['invoice_date'].strftime('%Y-%m-%d'))
+
+            line = {
+                'duedate_manager_id': self.id,
+                'payment_method_id': payment_method_id,
+                'due_date': split_date,
+                'due_amount': types_amount['rc_amount']
+            }
+        # end if
+
         return line
 
     # end _extra_duedate_line
 
     @api.model
     def _set_amount_total(self, types, amount):
+        """
+            Compute invoice total according to tax type
+            - split payment (subtract from total)
+            - wt (subtract from total)
+            - rc local  (subtract from total)
+        """
 
         if types['is_split']:
             amount -= self.invoice_id.amount_sp
@@ -535,6 +555,10 @@ class DueDateManager(models.Model):
 
         if types['is_ra']:
             amount -= self.invoice_id.withholding_tax_amount
+        # end if
+
+        if types['is_rc']:
+            amount -= self.invoice_id.amount_rc
         # end if
 
         return amount
@@ -553,15 +577,20 @@ class DueDateManager(models.Model):
                          self.invoice_id.withholding_tax_amount
         # end if
 
+        if types['is_rc']:
+            tax_amount = self.invoice_id.amount_tax - \
+                         self.invoice_id.amount_rc
+        # end if
+
         return tax_amount
     # end _compute_tax_to_add
 
     @api.model
     def _get_amount_tax_type(self):
         return {
-            'is_split_amount': getattr(self.invoice_id, 'amount_sp', None),
-            'is_ra_amount': getattr(self.invoice_id, 'withholding_tax_amount', None),
-            'is_rc_amount': getattr(self.invoice_id, 'amount_rc', None),
+            'split_amount': getattr(self.invoice_id, 'amount_sp', None),
+            'ra_amount': getattr(self.invoice_id, 'withholding_tax_amount', None),
+            'rc_amount': getattr(self.invoice_id, 'amount_rc', None),
         }
     # end _get_amount_tax_type
 

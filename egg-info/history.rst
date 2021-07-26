@@ -1,6 +1,11 @@
-12.0.4.8.13 (2021-07-08)
+12.0.4.8.14 (2021-07-13)
 ~~~~~~~~~~~~~~~~~~~~~~~~
+ * [FIX] account_duedates: Aggiornato ordine della generazione dei movimenti contabili
  * [FIX] account_duedates: Impostato 15 giorni la ritenuta dopo l'ultima scadenza
+
+12.0.4.8.13 (2021-07-05)
+~~~~~~~~~~~~~~~~~~~~~~~~
+ * [IMP] account_duedates: Impostato manager per la gestione delle scadenze Reverse charge
 
 12.0.4.8.12 (2021-06-28)
 ~~~~~~~~~~~~~~~~~~~~~~~~
