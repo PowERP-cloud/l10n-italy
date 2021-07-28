@@ -50,7 +50,7 @@ class AccountInvoiceLine(models.Model):
         invoice_rc_type = self.invoice_id.fiscal_position_id.rc_type
         if self.invoice_id.type in ['in_invoice', 'in_refund']:
             for tax in self.invoice_line_tax_ids:
-                
+
                 is_rc_self = invoice_rc_type == 'self'
                 rc_mismatch = tax.rc_type != invoice_rc_type
 
@@ -128,6 +128,7 @@ class AccountInvoice(models.Model):
         compute='_compute_rc_type',
     )
 
+    @api.model
     def create(self, vals):
         res = super().create(vals)
         if res.fiscal_position_id and res.fiscal_position_id.rc_type:
