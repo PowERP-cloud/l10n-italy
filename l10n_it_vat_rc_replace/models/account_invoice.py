@@ -489,7 +489,7 @@ class AccountInvoice(models.Model):
                 inv_vals['date_apply_vat'] = self.date_apply_vat
                 inv_vals['date_due'] = self.date_due
                 inv_vals['date_effective'] = self.date_effective
-                inv_vals['date_invoice'] = self.date_invoice
+                inv_vals['date_invoice'] = self.date
                 inv_vals['fiscal_position'] = None
                 # inv_vals['payment_term_id'] = self.payment_term_id.id
 
@@ -643,6 +643,7 @@ class AccountInvoice(models.Model):
                 line_model = self.env['account.move.line']
 
                 # common
+
                 tax_with_sell = invoice._get_tax_sell()
                 tax_vat = tax_with_sell.tax_line_id
                 tax_sell = tax_vat.rc_sale_tax_id
@@ -661,7 +662,7 @@ class AccountInvoice(models.Model):
                         'partner_id': invoice.partner_id.id,
                         'account_id': tax_sell.account_id.id,
                         'journal_id': journal_id.id,
-                        'date': invoice.date_invoice,
+                        'date': invoice.date,
                         'debit': 0,
                         'credit': invoice.amount_rc,
                         'tax_line_id': tax_sell.id,
@@ -682,7 +683,7 @@ class AccountInvoice(models.Model):
                         'partner_id': invoice.partner_id.id,
                         'account_id': invoice.account_id.id,
                         'journal_id': journal_id.id,
-                        'date': invoice.date_invoice,
+                        'date': invoice.date,
                         'debit': invoice.amount_rc,
                         'credit': 0,
                         'tax_line_id': tax_vat.id,
@@ -715,7 +716,7 @@ class AccountInvoice(models.Model):
                         'account_id':
                             partner_id.property_account_receivable_id.id,
                         'journal_id': journal_id.id,
-                        'date': invoice.date_invoice,
+                        'date': invoice.date,
                         'debit': 0,
                         'credit': invoice.amount_rc,
                         'tax_line_id': tax_sell.id,
@@ -736,7 +737,7 @@ class AccountInvoice(models.Model):
                         'partner_id': invoice.partner_id.id,
                         'account_id': invoice.account_id.id,
                         'journal_id': journal_id.id,
-                        'date': invoice.date_invoice,
+                        'date': invoice.date,
                         'debit': invoice.amount_rc,
                         'credit': 0,
                         'payment_method': tax_duedate_rc.payment_method.id,
