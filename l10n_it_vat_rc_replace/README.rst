@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_19
+|icon| ITA - Inversione contabile 12.0.1.2.7_20
 ===============================================
 
 
@@ -246,6 +246,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_20 (2021-08-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato data di registrazione in tutti i movimenti contabili
+
 12.0.1.2.7_19 (2021-08-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -300,11 +305,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [IMP] Registrazione contabile per Reverse charge locale
-
-12.0.1.2.7_5 (2021-07-07)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Ricalcolo totale fattura
 
 
 
