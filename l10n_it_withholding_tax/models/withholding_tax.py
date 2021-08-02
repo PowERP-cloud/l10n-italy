@@ -37,6 +37,14 @@ class WithholdingTax(models.Model):
             return misc_journal[0].id
         return False
 
+    def _get_journal_domain(self):
+        ids = []
+        for journal in self.env['account.journal'].search([
+            ('type', 'not in', ['sale', 'purchase'])]):
+            ids.append(journal.id)
+
+        return [('id', 'in', ids)]
+
     active = fields.Boolean('Active', default=True)
     company_id = fields.Many2one(
         'res.company', string='Company', required=True, default=lambda self:
@@ -54,7 +62,7 @@ class WithholdingTax(models.Model):
         'account.journal', string="Withholding tax journal",
         help="Journal used at invoice payment to register withholding tax",
         default=lambda self: self._default_wt_journal(), required=True,
-        domain=[('type', 'not in', ['sale', 'purchase'])]
+        domain=lambda self: self._get_journal_domain()
     )
     payment_term = fields.Many2one('account.payment.term', 'Payment Terms',
                                    required=True)
