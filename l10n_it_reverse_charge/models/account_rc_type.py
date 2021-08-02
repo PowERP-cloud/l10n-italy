@@ -5,7 +5,7 @@
 # Copyright 2021 Antonio M. Vigliotti - SHS-Av srl
 # Copyright 2021 powERP enterprise network <https://www.powerp.it>
 #
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# License OPL-1 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
 #
 
 from odoo import fields, models, _, api

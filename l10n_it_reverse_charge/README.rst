@@ -1,7 +1,7 @@
 
-===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_14
-===============================================
+==============================================
+|icon| ITA - Inversione contabile 12.0.1.2.7_1
+==============================================
 
 
 **Inversione contabile**
@@ -246,65 +246,33 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
-12.0.1.2.7_14 (2021-07-21)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Impostato controllo flag rc in creazione fattura
-
-12.0.1.2.7_13 (2021-07-20)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Corretto comportamento anomalo annullamento fattura
-
-12.0.1.2.7_12 (2021-07-14)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[IMP] Nascosto campo rc in riga fatture in base alla posizione fiscale
-
-12.0.1.2.7_11 (2021-07-14)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Aggiornato campo registro in posizione fiscale
-
-12.0.1.2.7_10 (2021-07-13)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[IMP] Fix bug multi in calcolo totali
-
-12.0.1.2.7_9 (2021-07-13)
+12.0.1.2.7_2 (2021-06-22)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[IMP] Condizioni campo iva rc invisibile nella vista
+[IMP] Aggiornato context per la funzione di riporto in bozza della fattura
 
-12.0.1.2.7_8 (2021-07-12)
+12.0.1.2.7_1 (2021-06-21)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[IMP] Autofattura per Reverse charge self
+[IMP] Aggiornato numero di versione
 
-12.0.1.2.7_7 (2021-07-09)
-~~~~~~~~~~~~~~~~~~~~~~~~~
+12.0.1.2.8 (2021-05-17)
+~~~~~~~~~~~~~~~~~~~~~~~
 
-[IMP] Registrazione contabile per Reverse charge self
+[FIX] Aggiornato verifica flag RC da elenco tasse
 
-12.0.1.2.7_6 (2021-07-09)
-~~~~~~~~~~~~~~~~~~~~~~~~~
+12.0.1.2.7 (2021-03-18)
+~~~~~~~~~~~~~~~~~~~~~~~
 
-[IMP] Registrazione contabile per Reverse charge locale
+[FIX] Error when payment invoice: function invoice_validate @multi
 
-12.0.1.2.7_5 (2021-07-07)
-~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[FIX] Ricalcolo totale fattura
+12.0.1.2.6 (2021-02-17)
+~~~~~~~~~~~~~~~~~~~~~~~
 
-12.0.1.2.7_4 (2021-07-06)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[IMP] Impostato campi extra
-
-12.0.1.2.7_3 (2021-07-05)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[IMP] Impostato verifica tipo di tassa RC
+[REF] Clone OCA module
+[FIX] Mixed RC and ordinary VAT line in single vendor bill
+[FIX] Self invoice account move lines
 
 
 
@@ -383,7 +351,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-07-21
+Last Update / Ultimo aggiornamento: 2021-06-23
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

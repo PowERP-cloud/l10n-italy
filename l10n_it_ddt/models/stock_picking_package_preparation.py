@@ -20,7 +20,7 @@ class StockPickingCarriageCondition(models.Model):
     _name = "stock.picking.carriage_condition"
     _description = "Carriage Condition"
 
-    name = fields.Char(string='Carriage Condition', required=True)
+    name = fields.Char(string='Carriage Condition', translate=True, required=True)
     note = fields.Text(string='Note')
 
 
@@ -29,7 +29,7 @@ class StockPickingGoodsDescription(models.Model):
     _name = 'stock.picking.goods_description'
     _description = "Description of Goods"
 
-    name = fields.Char(string='Description of Goods', required=True)
+    name = fields.Char(string='Description of Goods', translate=True, required=True)
     note = fields.Text(string='Note')
 
 
@@ -38,7 +38,7 @@ class StockPickingTransportationReason(models.Model):
     _name = 'stock.picking.transportation_reason'
     _description = 'Reason for Transportation'
 
-    name = fields.Char(string='Reason For Transportation', required=True)
+    name = fields.Char(string='Reason For Transportation', translate=True, required=True)
     note = fields.Text(string='Note')
     to_be_invoiced = fields.Boolean(string='To be Invoiced')
 
@@ -48,7 +48,7 @@ class StockPickingTransportationMethod(models.Model):
     _name = 'stock.picking.transportation_method'
     _description = 'Method of Transportation'
 
-    name = fields.Char(string='Method of Transportation', required=True)
+    name = fields.Char(string='Method of Transportation', translate=True, required=True)
     note = fields.Text(string='Note')
 
 
@@ -101,16 +101,16 @@ class StockPickingPackagePreparation(models.Model):
     partner_shipping_id = fields.Many2one(
         'res.partner', string="Shipping Address")
     carriage_condition_id = fields.Many2one(
-        'stock.picking.carriage_condition', string='Carriage Condition')
+        'stock.picking.carriage_condition', string='Carriage Condition', translate=True)
     goods_description_id = fields.Many2one(
         'stock.picking.goods_description',
-        string='Description of Goods')
+        string='Description of Goods', translate=True)
     transportation_reason_id = fields.Many2one(
         'stock.picking.transportation_reason',
-        string='Reason for Transportation')
+        string='Reason for Transportation', translate=True)
     transportation_method_id = fields.Many2one(
         'stock.picking.transportation_method',
-        string='Method of Transportation')
+        string='Method of Transportation', translate=True)
     carrier_id = fields.Many2one(
         'res.partner', string='Carrier')
     carrier_tracking_ref = fields.Char(string='Tracking Reference', copy=False)
