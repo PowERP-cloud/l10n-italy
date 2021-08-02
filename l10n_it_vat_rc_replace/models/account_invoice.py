@@ -508,13 +508,22 @@ class AccountInvoice(models.Model):
 
                 rc_invoice.action_invoice_open()
 
-                # if rc_invoice.state == 'open':
-                #     rc_lines_to_rec = rc_account.line_ids.filtered(
-                #         lambda
-                #             x: rc_invoice.company_id.id == x.company_id.id
-                #                and rc_account.id == x.account_id.id
-                #     )
-                #     rc_lines_to_rec.reconcile()
+                if rc_invoice.state == 'open':
+                    # add credit line
+                    credit_line = self.move_id.line_ids.filtered(
+                        lambda
+                            x: self.company_id.id == x.company_id.id and x.line_type == 'tax'
+                               and rc_account.id == x.account_id.id
+                    )
+                    rc_lines_to_rec = rc_invoice.move_id.line_ids.filtered(
+                        lambda
+                            x: rc_invoice.company_id.id == x.company_id.id
+                               and rc_account.id == x.account_id.id
+                    )
+
+                    if credit_line:
+                        rc_lines_to_rec += credit_line
+                        rc_lines_to_rec.reconcile()
 
         if self.rc_self_invoice_id:
             if self.fatturapa_attachment_in_id:
