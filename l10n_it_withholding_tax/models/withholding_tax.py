@@ -53,7 +53,8 @@ class WithholdingTax(models.Model):
     journal_id = fields.Many2one(
         'account.journal', string="Withholding tax journal",
         help="Journal used at invoice payment to register withholding tax",
-        default=lambda self: self._default_wt_journal(), required=True
+        default=lambda self: self._default_wt_journal(), required=True,
+        domain=[('type', 'not in', ['sale', 'purchase'])]
     )
     payment_term = fields.Many2one('account.payment.term', 'Payment Terms',
                                    required=True)
