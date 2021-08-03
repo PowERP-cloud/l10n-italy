@@ -513,7 +513,7 @@ class AccountInvoice(models.Model):
                     credit_line = self.move_id.line_ids.filtered(
                         lambda
                             x: self.company_id.id == x.company_id.id and x.line_type == 'tax'
-                               and rc_account.id == x.account_id.id
+                               and rc_account.id == x.account_id.id and x.credit == self.amount_rc
                     )
                     rc_lines_to_rec = rc_invoice.move_id.line_ids.filtered(
                         lambda
@@ -593,6 +593,18 @@ class AccountInvoice(models.Model):
     # tenere?
     def remove_rc_payment(self):
         inv = self
+        if inv.rc_type and inv.rc_type == 'self':
+            # remove move reconcile related to the self invoice
+            move = inv.rc_self_invoice_id.move_id
+            rec_lines = move.mapped('line_ids').filtered(
+                'full_reconcile_id'
+            ).mapped('full_reconcile_id.reconciled_line_ids')
+            rec_lines.remove_move_reconcile()
+            # cancel self invoice
+            self_invoice = self.browse(
+                inv.rc_self_invoice_id.id)
+            self_invoice.action_invoice_cancel()
+
         if inv.payment_move_line_ids:
             if len(inv.payment_move_line_ids) > 1:
                 raise UserError(
@@ -601,7 +613,6 @@ class AccountInvoice(models.Model):
                       'automatically. Please proceed manually'))
             payment_move = inv.payment_move_line_ids[0].move_id
 
-            # remove move reconcile related to the supplier invoice
             move = inv.move_id
             rec_partial = move.mapped('line_ids').filtered(
                 'matched_debit_ids').mapped('matched_debit_ids')
@@ -616,18 +627,7 @@ class AccountInvoice(models.Model):
                 'full_reconcile_id'
             ).mapped('full_reconcile_id.reconciled_line_ids')
             rec_partial_lines.remove_move_reconcile()
-            if inv.rc_type and inv.rc_type == 'self':
-                # remove move reconcile related to the self invoice
-                move = inv.rc_self_invoice_id.move_id
-                rec_lines = move.mapped('line_ids').filtered(
-                    'full_reconcile_id'
-                ).mapped('full_reconcile_id.reconciled_line_ids')
-                rec_lines.remove_move_reconcile()
-                # cancel self invoice
-                self_invoice = self.browse(
-                    inv.rc_self_invoice_id.id)
-                self_invoice.action_invoice_cancel()
-            # end if
+
             # invalidate and delete the payment move generated
             # by the self invoice creation
             payment_move.button_cancel()
