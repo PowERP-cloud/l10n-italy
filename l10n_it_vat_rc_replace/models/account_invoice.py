@@ -136,7 +136,6 @@ class AccountInvoice(models.Model):
                 line._set_rc_flag(res)
         return res
 
-
     @api.onchange('invoice_line_ids')
     def _onchange_invoice_line_ids(self):
         super()._onchange_invoice_line_ids()
@@ -485,11 +484,11 @@ class AccountInvoice(models.Model):
 
                 # no copy values
                 inv_vals['date'] = self.date
-                inv_vals['date_apply_balance'] = self.date_apply_balance
-                inv_vals['date_apply_vat'] = self.date_apply_vat
-                inv_vals['date_due'] = self.date_due
-                inv_vals['date_effective'] = self.date_effective
-                inv_vals['date_invoice'] = self.date_invoice
+                inv_vals['date_apply_balance'] = self.date
+                inv_vals['date_apply_vat'] = self.date
+                inv_vals['date_due'] = self.date
+                inv_vals['date_effective'] = self.date
+                inv_vals['date_invoice'] = self.date
                 inv_vals['fiscal_position'] = None
                 # inv_vals['payment_term_id'] = self.payment_term_id.id
 
@@ -508,13 +507,22 @@ class AccountInvoice(models.Model):
 
                 rc_invoice.action_invoice_open()
 
-                # if rc_invoice.state == 'open':
-                #     rc_lines_to_rec = rc_account.line_ids.filtered(
-                #         lambda
-                #             x: rc_invoice.company_id.id == x.company_id.id
-                #                and rc_account.id == x.account_id.id
-                #     )
-                #     rc_lines_to_rec.reconcile()
+                if rc_invoice.state == 'open':
+                    # add credit line
+                    credit_line = self.move_id.line_ids.filtered(
+                        lambda
+                            x: self.company_id.id == x.company_id.id and x.line_type == 'tax'
+                               and rc_account.id == x.account_id.id and x.credit == self.amount_rc
+                    )
+                    rc_lines_to_rec = rc_invoice.move_id.line_ids.filtered(
+                        lambda
+                            x: rc_invoice.company_id.id == x.company_id.id
+                               and rc_account.id == x.account_id.id
+                    )
+
+                    if credit_line:
+                        rc_lines_to_rec += credit_line
+                        rc_lines_to_rec.reconcile()
 
         if self.rc_self_invoice_id:
             if self.fatturapa_attachment_in_id:
@@ -584,6 +592,18 @@ class AccountInvoice(models.Model):
     # tenere?
     def remove_rc_payment(self):
         inv = self
+        if inv.rc_type and inv.rc_type == 'self':
+            # remove move reconcile related to the self invoice
+            move = inv.rc_self_invoice_id.move_id
+            rec_lines = move.mapped('line_ids').filtered(
+                'full_reconcile_id'
+            ).mapped('full_reconcile_id.reconciled_line_ids')
+            rec_lines.remove_move_reconcile()
+            # cancel self invoice
+            self_invoice = self.browse(
+                inv.rc_self_invoice_id.id)
+            self_invoice.action_invoice_cancel()
+
         if inv.payment_move_line_ids:
             if len(inv.payment_move_line_ids) > 1:
                 raise UserError(
@@ -592,7 +612,6 @@ class AccountInvoice(models.Model):
                       'automatically. Please proceed manually'))
             payment_move = inv.payment_move_line_ids[0].move_id
 
-            # remove move reconcile related to the supplier invoice
             move = inv.move_id
             rec_partial = move.mapped('line_ids').filtered(
                 'matched_debit_ids').mapped('matched_debit_ids')
@@ -607,18 +626,7 @@ class AccountInvoice(models.Model):
                 'full_reconcile_id'
             ).mapped('full_reconcile_id.reconciled_line_ids')
             rec_partial_lines.remove_move_reconcile()
-            if inv.rc_type and inv.rc_type == 'self':
-                # remove move reconcile related to the self invoice
-                move = inv.rc_self_invoice_id.move_id
-                rec_lines = move.mapped('line_ids').filtered(
-                    'full_reconcile_id'
-                ).mapped('full_reconcile_id.reconciled_line_ids')
-                rec_lines.remove_move_reconcile()
-                # cancel self invoice
-                self_invoice = self.browse(
-                    inv.rc_self_invoice_id.id)
-                self_invoice.action_invoice_cancel()
-            # end if
+
             # invalidate and delete the payment move generated
             # by the self invoice creation
             payment_move.button_cancel()
@@ -643,6 +651,7 @@ class AccountInvoice(models.Model):
                 line_model = self.env['account.move.line']
 
                 # common
+
                 tax_with_sell = invoice._get_tax_sell()
                 tax_vat = tax_with_sell.tax_line_id
                 tax_sell = tax_vat.rc_sale_tax_id
@@ -661,7 +670,7 @@ class AccountInvoice(models.Model):
                         'partner_id': invoice.partner_id.id,
                         'account_id': tax_sell.account_id.id,
                         'journal_id': journal_id.id,
-                        'date': invoice.date_invoice,
+                        'date': invoice.date,
                         'debit': 0,
                         'credit': invoice.amount_rc,
                         'tax_line_id': tax_sell.id,
@@ -682,7 +691,7 @@ class AccountInvoice(models.Model):
                         'partner_id': invoice.partner_id.id,
                         'account_id': invoice.account_id.id,
                         'journal_id': journal_id.id,
-                        'date': invoice.date_invoice,
+                        'date': invoice.date,
                         'debit': invoice.amount_rc,
                         'credit': 0,
                         'tax_line_id': tax_vat.id,
@@ -715,7 +724,7 @@ class AccountInvoice(models.Model):
                         'account_id':
                             partner_id.property_account_receivable_id.id,
                         'journal_id': journal_id.id,
-                        'date': invoice.date_invoice,
+                        'date': invoice.date,
                         'debit': 0,
                         'credit': invoice.amount_rc,
                         'tax_line_id': tax_sell.id,
@@ -736,7 +745,7 @@ class AccountInvoice(models.Model):
                         'partner_id': invoice.partner_id.id,
                         'account_id': invoice.account_id.id,
                         'journal_id': journal_id.id,
-                        'date': invoice.date_invoice,
+                        'date': invoice.date,
                         'debit': invoice.amount_rc,
                         'credit': 0,
                         'payment_method': tax_duedate_rc.payment_method.id,

@@ -1,12 +1,12 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_14
+|icon| ITA - Inversione contabile 12.0.1.2.7_21
 ===============================================
 
 
 **Inversione contabile**
 
-.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/l10n-italy/12.0/l10n_it_reverse_charge/static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/l10n-italy/12.0/l10n_it_vat_rc_replace/static/description/icon.png
 
 |Maturity| |Build Status| |license opl|
 
@@ -178,7 +178,7 @@ From UI: go to:
 
 * |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
-* |menu| Setting > Apps |right_do| Select **l10n_it_reverse_charge** > Install
+* |menu| Setting > Apps |right_do| Select **l10n_it_vat_rc_replace** > Install
 
 
 |
@@ -246,6 +246,26 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_21 (2021-08-04)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato data di registrazione nell'autofattura in tutti i campi data
+
+12.0.1.2.7_20 (2021-08-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato data di registrazione in tutti i movimenti contabili
+
+12.0.1.2.7_19 (2021-08-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato data di registrazione in autofattura
+
+12.0.1.2.7_15 (2021-07-26)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Possibilità di impostare manualmente il campo rc_type di account.tax
+
 12.0.1.2.7_14 (2021-07-21)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -285,26 +305,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [IMP] Registrazione contabile per Reverse charge self
-
-12.0.1.2.7_6 (2021-07-09)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[IMP] Registrazione contabile per Reverse charge locale
-
-12.0.1.2.7_5 (2021-07-07)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Ricalcolo totale fattura
-
-12.0.1.2.7_4 (2021-07-06)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[IMP] Impostato campi extra
-
-12.0.1.2.7_3 (2021-07-05)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[IMP] Impostato verifica tipo di tassa RC
 
 
 
@@ -383,7 +383,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-07-21
+Last Update / Ultimo aggiornamento: 2021-08-04
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

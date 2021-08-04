@@ -1,3 +1,18 @@
+12.0.1.2.7_21 (2021-08-04)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato data di registrazione nell'autofattura in tutti i campi data
+
+12.0.1.2.7_20 (2021-08-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato data di registrazione in tutti i movimenti contabili
+
+12.0.1.2.7_19 (2021-08-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato data di registrazione in autofattura
+
 12.0.1.2.7_15 (2021-07-26)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

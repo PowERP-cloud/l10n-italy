@@ -6,7 +6,7 @@
 #
 {
     'name': 'ITA - Inversione contabile',
-    'version': '12.0.1.2.7_18',
+    'version': '12.0.1.2.7_21',
     'category': 'Localization/Italy',
     'summary': 'Inversione contabile',
     'author': 'powERP enterprise network and other partners',
