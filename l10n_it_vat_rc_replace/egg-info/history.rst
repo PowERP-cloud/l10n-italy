@@ -1,3 +1,8 @@
+12.0.1.2.7_21 (2021-08-04)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato data di registrazione nell'autofattura in tutti i campi data
+
 12.0.1.2.7_20 (2021-08-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

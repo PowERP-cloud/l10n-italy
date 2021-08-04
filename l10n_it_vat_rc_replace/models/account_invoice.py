@@ -136,7 +136,6 @@ class AccountInvoice(models.Model):
                 line._set_rc_flag(res)
         return res
 
-
     @api.onchange('invoice_line_ids')
     def _onchange_invoice_line_ids(self):
         super()._onchange_invoice_line_ids()
@@ -485,10 +484,10 @@ class AccountInvoice(models.Model):
 
                 # no copy values
                 inv_vals['date'] = self.date
-                inv_vals['date_apply_balance'] = self.date_apply_balance
-                inv_vals['date_apply_vat'] = self.date_apply_vat
-                inv_vals['date_due'] = self.date_due
-                inv_vals['date_effective'] = self.date_effective
+                inv_vals['date_apply_balance'] = self.date
+                inv_vals['date_apply_vat'] = self.date
+                inv_vals['date_due'] = self.date
+                inv_vals['date_effective'] = self.date
                 inv_vals['date_invoice'] = self.date
                 inv_vals['fiscal_position'] = None
                 # inv_vals['payment_term_id'] = self.payment_term_id.id
