@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_21
+|icon| ITA - Inversione contabile 12.0.1.2.7_22
 ===============================================
 
 
@@ -246,6 +246,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_22 (2021-08-05)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato date applicazione iva e iva bilancio nell'autofattura
+
 12.0.1.2.7_21 (2021-08-04)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -300,11 +305,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [IMP] Autofattura per Reverse charge self
-
-12.0.1.2.7_7 (2021-07-09)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[IMP] Registrazione contabile per Reverse charge self
 
 
 
@@ -383,7 +383,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-08-04
+Last Update / Ultimo aggiornamento: 2021-08-05
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

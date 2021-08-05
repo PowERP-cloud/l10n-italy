@@ -1,3 +1,8 @@
+12.0.1.2.7_22 (2021-08-05)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato date applicazione iva e iva bilancio nell'autofattura
+
 12.0.1.2.7_21 (2021-08-04)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
