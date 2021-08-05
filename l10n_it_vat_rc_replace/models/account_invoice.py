@@ -484,8 +484,8 @@ class AccountInvoice(models.Model):
 
                 # no copy values
                 inv_vals['date'] = self.date
-                inv_vals['date_apply_balance'] = self.date
-                inv_vals['date_apply_vat'] = self.date
+                inv_vals['date_apply_balance'] = self.date_apply_balance
+                inv_vals['date_apply_vat'] = self.date_apply_vat
                 inv_vals['date_due'] = self.date
                 inv_vals['date_effective'] = self.date
                 inv_vals['date_invoice'] = self.date
