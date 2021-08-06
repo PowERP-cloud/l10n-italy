@@ -319,11 +319,17 @@ class StockPickingPackagePreparation(models.Model):
         a clean extension chain).
         """
         self.ensure_one()
+
+        journal_id_default = self.env['account.invoice'].default_get(
+            ['journal_id']
+        )['journal_id']
+
         order = self._get_sale_order_ref()
         if order:
             # Most of the values will be overwritten below,
             # but this preserves inheritance chain
             res = order._prepare_invoice()
+            journal_id = res.get('journal_id', journal_id_default)
         else:
             # Initialise res with the fields in sale._prepare_invoice
             # that won't be overwritten below
@@ -333,10 +339,9 @@ class StockPickingPackagePreparation(models.Model):
                     self.partner_id.address_get(['delivery'])['delivery'],
                 'company_id': self.company_id.id
             }
-        journal_id = self._context.get('invoice_journal_id', False)
-        if not journal_id:
-            journal_id = self.env['account.invoice'].default_get(
-                ['journal_id'])['journal_id']
+            journal_id = self._context.get('invoice_journal_id', journal_id_default)
+        # end if
+
         if not journal_id:
             raise UserError(
                 _('Please define an accounting sale journal for this company.')
