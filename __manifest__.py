@@ -13,7 +13,7 @@
     'author': 'powERP enterprise network and other partners',
     'website': 'https://www.powerp.it',
     'development_status': 'Beta',
-    'license': 'OPL-1',
+    'license': 'AGPL-3',
     'depends': [
         'account',
         'account_due_list',
