@@ -5,18 +5,17 @@
 # Copyright 2021 SHS-AV s.r.l. <https://www.zeroincombenze.it>
 # Copyright 2021 Didotech s.r.l. <https://www.didotech.com>
 #
-# License OPL-1 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
+# License AGPL-3 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
 #
 {
     'name': 'Payment Term Extension Plus',
     'version': '12.0.0.1.7',
     'category': 'Accounting & Finance',
-    'summary': 'Adds rounding, months, weeks and multiple payment days '
-               'properties on payment term lines',
-    'author': 'powERP enterprise network',
+    'summary': 'Adds rounding, months, weeks and multiple payment days properties on payment term lines',
+    'author': 'powERP enterprise network and other partners',
     'website': 'https://www.powerp.it',
     'development_status': 'Beta',
-    'license': 'OPL-1',
+    'license': 'AGPL-3',
     'depends': [
         'account',
         'account_payment_method',

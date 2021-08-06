@@ -6,12 +6,13 @@
 
 **Adds rounding, months, weeks and multiple payment days properties on payment term lines**
 
-.. |icon| image:: https://raw.githubusercontent.com/powerp/accounting/12.0/account_payment_term_plus/static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/accounting/12.0/account_payment_term_plus/static/description/icon.png
 
-|Maturity| |Build Status| |Codecov Status| |license gpl| |Try Me|
+|Maturity| |Build Status| |license opl|
 
 
 .. contents::
+
 
 
 Overview / Panoramica
@@ -123,6 +124,20 @@ Upgrade / Aggiornamento
 From UI: go to:
 
 |
+
+Support / Supporto
+------------------
+
+
+This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
+
+Developer companies are / I soci sviluppatoro sono:
+
+* `Didotech s.r.l. <http://www.didotech.com>`__
+* `SHS-AV s.r.l. <https://www.shs-av.com/>`__
+
+
+|
 |
 
 Get involved / Ci mettiamo in gioco
@@ -130,9 +145,17 @@ Get involved / Ci mettiamo in gioco
 
 Bug reports are welcome! You can use the issue tracker to report bugs,
 and/or submit pull requests on `GitHub Issues
-<https://github.com/powerp/accounting/issues>`_.
+<https://github.com/PowERP-cloud/accounting/issues>`_.
 
 In case of trouble, please check there if your issue has already been reported.
+
+Proposals for enhancement
+-------------------------
+
+
+If you have a proposal to change this module, you may want to send an email to <info@powerp.it> for initial feedback.
+An Enhancement Proposal may be submitted if your idea gains ground.
+
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
@@ -170,6 +193,7 @@ ChangeLog History / Cronologia modifiche
 * [IMP] Module implementation / Implementazione modulo 
 
 
+
 |
 |
 
@@ -188,9 +212,9 @@ Odoo is a trademark of `Odoo S.A. <https://www.odoo.com/>`__ (formerly OpenERP)
 Authors / Autori
 ----------------
 
-* `SHS-AV s.r.l. <https://www.zeroincombenze.it/>`__
-* `Didotech srl <http://www.didotech.com>`__
-
+* `powERP <https://www.powerp.it>`__
+* `SHS-AV s.r.l. <https://www.zeroincombenze.it>`__
+* `Didotech srl <https://www.didotech.com>`__
 
 Contributors / Collaboratori
 ----------------------------
@@ -204,9 +228,12 @@ Maintainer / Manutenzione
 -------------------------
 
 
-This module is maintained by the **Powerp**.
+This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
 
-Questo modulo è mantenuto dalla rete di imprese **Powerp**.
+Developer companies are / I soci sviluppatoro sono:
+
+* `Didotech s.r.l. <http://www.didotech.com>`__
+* `SHS-AV s.r.l. <https://www.shs-av.com/>`__
 
 
 |
@@ -214,15 +241,13 @@ Questo modulo è mantenuto dalla rete di imprese **Powerp**.
 ----------------
 
 
-|en| **Powerp** is the Italian Enterprises Network born in 2020, whose mission is promote use of Odoo to cover Italian law and markeplace.
+|en| **Powerp** is an Italian enterprises network, whose mission is to develop high-level addons designed for Italian enterprise companies.
 
-`Powerp <http://www.powerp.it/>`__ distributes code under `LGPL <https://www.gnu.org/licenses/lgpl-3.0.html>`__ or `OPL <https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html>`__ licenses.
+`Powerp <http://www.powerp.it/>`__ code adds new enhanced features to Italian localization and it released under `LGPL <https://www.gnu.org/licenses/lgpl-3.0.html>`__ or `OPL <https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html>`__ licenses.
 
-Read carefully published README for more info about authors.
+|it| `Powerp <http://www.powerp.it/>`__ è una rete di imprese italiane, nata con la missione di sviluppare moduli per le PMI.
 
-|it| `Powerp <http://www.powerp.it/>`__ è una rete di imprese, nata nel 2020 che rilascia moduli per la localizzazione italiana evoluta.
-
-`Powerp <http://www.powerp.it/>`__ distribuisce il codice con licenze `LGPL <https://www.gnu.org/licenses/lgpl-3.0.html>`__ e `OPL <https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html>`__
+Il codice di `Powerp <http://www.powerp.it/>`__ aggiunge caratteristiche evolute alla localizzazione italiana; il codice è rilasciato con licenze `LGPL <https://www.gnu.org/licenses/lgpl-3.0.html>`__ e `OPL <https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html>`__
 
 I soci fondatori sono:
 
@@ -230,7 +255,6 @@ I soci fondatori sono:
 * `SHS-AV s.r.l. <https://www.shs-av.com/>`__
 * `Xplain s.r.l. <http://x-plain.it//>`__
 
-Leggere con attenzione i file README per maggiori informazioni sugli autori.
 
 
 |chat_with_us|
@@ -240,25 +264,25 @@ Leggere con attenzione i file README per maggiori informazioni sugli autori.
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2020-12-23
+Last Update / Ultimo aggiornamento: 2021-08-06
 
-.. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
+.. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
-    :alt: Alfa
-.. |Build Status| image:: https://travis-ci.org/powerp/accounting.svg?branch=12.0
-    :target: https://travis-ci.org/powerp/accounting
+    :alt: 
+.. |Build Status| image:: https://travis-ci.org/PowERP-cloud/accounting.svg?branch=12.0
+    :target: https://travis-ci.com/PowERP-cloud/accounting
     :alt: github.com
 .. |license gpl| image:: https://img.shields.io/badge/licence-LGPL--3-7379c3.svg
     :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
     :alt: License: LGPL-3
 .. |license opl| image:: https://img.shields.io/badge/licence-OPL-7379c3.svg
-    :target: https://www.odoo.com/documentation/user/9.0/legal/licenses/licenses.html
+    :target: https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html
     :alt: License: OPL
-.. |Coverage Status| image:: https://coveralls.io/repos/github/powerp/accounting/badge.svg?branch=12.0
-    :target: https://coveralls.io/github/powerp/accounting?branch=12.0
+.. |Coverage Status| image:: https://coveralls.io/repos/github/PowERP-cloud/accounting/badge.svg?branch=12.0
+    :target: https://coveralls.io/github/PowERP-cloud/accounting?branch=12.0
     :alt: Coverage
-.. |Codecov Status| image:: https://codecov.io/gh/powerp/accounting/branch/12.0/graph/badge.svg
-    :target: https://codecov.io/gh/powerp/accounting/branch/12.0
+.. |Codecov Status| image:: https://codecov.io/gh/PowERP-cloud/accounting/branch/12.0/graph/badge.svg
+    :target: https://codecov.io/gh/PowERP-cloud/accounting/branch/12.0
     :alt: Codecov
 .. |Tech Doc| image:: https://www.zeroincombenze.it/wp-content/uploads/ci-ct/prd/button-docs-12.svg
     :target: https://wiki.zeroincombenze.org/en/Odoo/12.0/dev
