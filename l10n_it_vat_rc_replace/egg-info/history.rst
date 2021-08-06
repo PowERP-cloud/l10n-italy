@@ -1,3 +1,18 @@
+12.0.1.2.7_23 (2021-08-06)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Fix bug POW-450 partner vuoto in registrazione contabile
+
+12.0.1.2.7_22 (2021-08-05)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato date applicazione iva e iva bilancio nell'autofattura
+
+12.0.1.2.7_21 (2021-08-04)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato data di registrazione nell'autofattura in tutti i campi data
+
 12.0.1.2.7_20 (2021-08-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

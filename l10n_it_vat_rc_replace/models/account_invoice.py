@@ -136,7 +136,6 @@ class AccountInvoice(models.Model):
                 line._set_rc_flag(res)
         return res
 
-
     @api.onchange('invoice_line_ids')
     def _onchange_invoice_line_ids(self):
         super()._onchange_invoice_line_ids()
@@ -487,8 +486,8 @@ class AccountInvoice(models.Model):
                 inv_vals['date'] = self.date
                 inv_vals['date_apply_balance'] = self.date_apply_balance
                 inv_vals['date_apply_vat'] = self.date_apply_vat
-                inv_vals['date_due'] = self.date_due
-                inv_vals['date_effective'] = self.date_effective
+                inv_vals['date_due'] = self.date
+                inv_vals['date_effective'] = self.date
                 inv_vals['date_invoice'] = self.date
                 inv_vals['fiscal_position'] = None
                 # inv_vals['payment_term_id'] = self.payment_term_id.id
@@ -651,6 +650,13 @@ class AccountInvoice(models.Model):
                 # end if
                 line_model = self.env['account.move.line']
 
+                # set invoice id
+                for line in invoice.move_id.line_ids:
+                    if not line.invoice_id:
+                        line.invoice_id = invoice
+                    # end if
+                # end for
+
                 # common
 
                 tax_with_sell = invoice._get_tax_sell()
@@ -671,6 +677,7 @@ class AccountInvoice(models.Model):
                         'partner_id': invoice.partner_id.id,
                         'account_id': tax_sell.account_id.id,
                         'journal_id': journal_id.id,
+                        'invoice_id': invoice.id,
                         'date': invoice.date,
                         'debit': 0,
                         'credit': invoice.amount_rc,
@@ -692,6 +699,7 @@ class AccountInvoice(models.Model):
                         'partner_id': invoice.partner_id.id,
                         'account_id': invoice.account_id.id,
                         'journal_id': journal_id.id,
+                        'invoice_id': invoice.id,
                         'date': invoice.date,
                         'debit': invoice.amount_rc,
                         'credit': 0,
@@ -725,6 +733,7 @@ class AccountInvoice(models.Model):
                         'account_id':
                             partner_id.property_account_receivable_id.id,
                         'journal_id': journal_id.id,
+                        'invoice_id': invoice.id,
                         'date': invoice.date,
                         'debit': 0,
                         'credit': invoice.amount_rc,
@@ -746,6 +755,7 @@ class AccountInvoice(models.Model):
                         'partner_id': invoice.partner_id.id,
                         'account_id': invoice.account_id.id,
                         'journal_id': journal_id.id,
+                        'invoice_id': invoice.id,
                         'date': invoice.date,
                         'debit': invoice.amount_rc,
                         'credit': 0,
@@ -761,6 +771,7 @@ class AccountInvoice(models.Model):
                     ).create(supplier_vat_vals)
 
                     transfer_ids.append(tranfer.id)
+
                 # end if
 
                 # reconcile
