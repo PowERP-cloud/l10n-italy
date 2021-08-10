@@ -75,6 +75,18 @@ class AccountMove(models.Model):
         default=False
     )
 
+    partner_bank_id = fields.Many2one(
+        'res.partner.bank',
+        string='Bank Account',
+        help=(
+            'Bank Account Number to which the invoice will be paid. '
+            'A Company bank account if this is a Customer Invoice or '
+            'Vendor Credit Note, otherwise a Partner bank account number.'
+        ),
+        readonly=True,
+        states={'draft': [('readonly', False)]}
+    )
+
     @api.multi
     def post(self, invoice=False):
         for move in self:

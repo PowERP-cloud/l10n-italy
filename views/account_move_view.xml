@@ -30,6 +30,10 @@
                 <field name="invoice_bank_id" />
             </xpath>
 
+            <xpath expr="//page[last()]/group[last()]" position="inside">
+                <field name="partner_bank_id"/>
+            </xpath>
+
         </field>
     </record>
 
