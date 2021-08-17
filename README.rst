@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.4.8.15
+|icon| Due dates 12.0.4.8.16
 ============================
 
 
@@ -160,6 +160,10 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.4.8.16 (2021-08-17)
+~~~~~~~~~~~~~~~~~~~~~~~~
+ * [FIX] account_duedates: Impostata dipendenza mancante
+
 12.0.4.8.15 (2021-08-17)
 ~~~~~~~~~~~~~~~~~~~~~~~~
  * [FIX] account_duedates: POW-465 Gestito errore utente bloccante
@@ -208,11 +212,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Corretto bug nel metodo che verifica l'intervallo delle esclusioni
-
-12.0.3.3.6 (2021-04-29)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Gestito loop in tutti i multi
 
 
 
