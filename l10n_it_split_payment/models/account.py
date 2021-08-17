@@ -107,6 +107,10 @@ class AccountInvoice(models.Model):
                     [('code', '=', 'tax'), ('payment_type', '=', 'outbound')]
                 )
 
+                if not payment_method_tax:
+                    raise UserError("Metodo di pagamento 'tax' non impostato")
+                # end if
+
                 tax_line = invoice.move_id.line_ids.filtered(
                     lambda x: x.partner_id.id == self.partner_id.id and self.company_id.id == x.company_id.id and x.line_type == 'tax')
 
