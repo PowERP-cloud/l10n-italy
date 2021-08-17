@@ -545,8 +545,9 @@ class WizardExportFatturapa(models.TransientModel):
 
         TipoDocumento = invoice.fiscal_document_type_id.code
         ImportoTotaleDocumento = invoice.amount_total
-        if invoice.split_payment:
-            ImportoTotaleDocumento += invoice.amount_sp
+        # unecessary total has sp now
+        # if invoice.split_payment:
+        #     ImportoTotaleDocumento += invoice.amount_sp
         body.DatiGenerali.DatiGeneraliDocumento = DatiGeneraliDocumentoType(
             TipoDocumento=TipoDocumento,
             Divisa=invoice.currency_id.name,
