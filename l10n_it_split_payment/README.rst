@@ -158,10 +158,15 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.0.1_8 (2021-08-17)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Corretto controllo versione oca
+
 12.0.1.0.1_7 (2021-08-17)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* [FIX] Corretto totale in xml  
+* [FIX] Corretto totale in xml
 
 12.0.1.0.1_6 (2021-06-22)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
