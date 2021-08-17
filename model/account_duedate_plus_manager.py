@@ -295,7 +295,7 @@ class DueDateManager(models.Model):
         common_args = dict()
 
         # Compute payment terms and total amount from the invoice
-        common_args['payment_terms'] =  self.invoice_id.payment_term_id
+        common_args['payment_terms'] = self.invoice_id.payment_term_id
         common_args['doc_type'] = self.invoice_id.type
         if self.invoice_id.date_effective:
             common_args['invoice_date'] = self.invoice_id.date_effective
@@ -333,20 +333,24 @@ class DueDateManager(models.Model):
         '''
         new_dudate_lines = list()
 
-        # get tax payment method
-        payment_method_tax = self.env['account.payment.method'].search(
-            [('code', '=', 'tax')])
+        payment_method_tax = self.env['account.payment.method']
 
-        if not payment_method_tax:
-            raise UserError('Metodo di pagamento Tax non impostato.')
-        # end if
+        # get extra amount tax into invoice
+        types = self._get_tax_type()
+
+        if types['is_split'] or types['is_rc'] or types['is_ra']:
+            # get tax payment method
+            payment_method_tax = self.env['account.payment.method'].search(
+                [('code', '=', 'tax')])
+
+            if not payment_method_tax:
+                raise UserError('Metodo di pagamento Tax non impostato.')
+            # end if
+        # end id
 
         if not param_cm['invoice_date']:
             return new_dudate_lines
         # end if
-
-        # get extra amount tax into invoice
-        types = self._get_tax_type()
 
         # get extra amount tax into invoice
         types_amount = self._get_amount_tax_type()

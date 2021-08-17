@@ -1,3 +1,7 @@
+12.0.4.8.15 (2021-08-17)
+~~~~~~~~~~~~~~~~~~~~~~~~
+ * [FIX] account_duedates: POW-465 Gestito errore utente bloccante
+
 12.0.4.8.14 (2021-07-13)
 ~~~~~~~~~~~~~~~~~~~~~~~~
  * [FIX] account_duedates: Aggiornato ordine della generazione dei movimenti contabili
