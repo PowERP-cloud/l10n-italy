@@ -1,11 +1,19 @@
 import logging
 from odoo import api, fields, models
+import odoo.addons.decimal_precision as dp
 
 _logger = logging.getLogger(__name__)
 
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
+
+    amount_rc = fields.Float(
+        string='Iva RC',
+        digits=dp.get_precision('Account'),
+        readonly=True,
+    )
+
 
     @api.multi
     @api.depends('line_ids.partner_id')
