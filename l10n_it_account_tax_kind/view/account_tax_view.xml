@@ -13,6 +13,17 @@
         </field>
     </record>
 
+    <record id="view_tax_tree_account_tax_kind" model="ir.ui.view">
+        <field name="name">tree.account.tax.kind</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_tree"/>
+        <field name="arch" type="xml">
+            <field name="description" position="after">
+                <field name="kind_id" />
+            </field>
+        </field>
+    </record>
+
     <record id="view_account_tax_search_tax_kind" model="ir.ui.view">
         <field name="name">view_account_tax_search_tax_kind</field>
         <field name="model">account.tax</field>
