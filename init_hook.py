@@ -20,10 +20,20 @@ def pre_init_hook(cr):
     """
 
     env = api.Environment(cr, SUPERUSER_ID, {})
-    installed_module = env['ir.module.module'].search([
-        ('name', '=', 'account_payment_term_extension')
+    # incompatibility check
+    parameter = env['ir.config_parameter'].search([
+        ('key', '=', 'disable_oca_incompatibility')
     ])
-    if installed_module and installed_module.state == 'installed':
-        raise UserError('Questo modulo non è installabile poichè è '
-                        'presente un\'altra versione simile '
-                        '(account_payment_term_extension).')
+
+    if not parameter or not eval(parameter.value):
+
+        installed_module = env['ir.module.module'].search([
+            ('name', '=', 'account_payment_term_extension')
+        ])
+        if installed_module and installed_module.state == 'installed':
+            raise UserError('Questo modulo non è installabile poichè è '
+                            'presente un\'altra versione simile '
+                            '(account_payment_term_extension).')
+
+        # end if
+    # end if

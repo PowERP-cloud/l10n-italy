@@ -9,7 +9,7 @@
 #
 {
     'name': 'Payment Term Extension Plus',
-    'version': '12.0.0.1.7',
+    'version': '12.0.0.1.8',
     'category': 'Accounting & Finance',
     'summary': 'Adds rounding, months, weeks and multiple payment days properties on payment term lines',
     'author': 'powERP enterprise network and other partners',

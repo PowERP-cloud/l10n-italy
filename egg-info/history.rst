@@ -1,3 +1,7 @@
+12.0.0.1.8 (2021-08-18)
+~~~~~~~~~~~~~~~~~~~~~~~~
+* [IMP] Added check and disable feature / Impostato controllo e disabilitazione modulo OCA
+
 12.0.0.1.7 (2020-12-23)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 * [IMP] Added duedates simulator  / Inserito simulatore scadenze
