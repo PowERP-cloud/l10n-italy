@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_bank_journal_form_banking_common" model="ir.ui.view">
+        <field name="name">account.bank.journal.form.banking.common</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_bank_journal_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//form/sheet/group[1]/group[last()]" position="after">
+                <group string="Conti di portafoglio" >
+                    <group colspan="4">
+                        <field name="portafolio_account" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
+                        <field name="portafolio_childs" attrs="{'invisible': ['|', ('portafolio_account', '=', True), ('type', 'not in', ['bank', 'cash'])]}">
+                            <tree>
+                                <field name="bank_id"/>
+                                <field name="bank_account_id"/>
+                                <field name="bank_acc_number"/>
+                            </tree>
+                        </field>
+
+                        <field name="portafolio_parent_id" attrs="{'invisible': [('portafolio_account', '=', False)]}"/>
+                    </group>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
+
