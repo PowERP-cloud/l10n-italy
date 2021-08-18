@@ -65,6 +65,10 @@ try:
 except ImportError as err:
     _logger.debug(err)
 
+FORMATO_TRASMISSIONE_PA = 'FPA12'  # Valid for Format 1.2 and 1.2.1
+FORMATO_TRASMISSIONE_PR = 'FPR12'  # Valid for Format 1.2 and 1.2.1
+SOFTWARE_IN_USE = 'powERP'
+
 
 def id_generator(
     size=5, chars=string.ascii_uppercase + string.digits +
@@ -171,10 +175,10 @@ class WizardExportFatturapa(models.TransientModel):
     def _setFormatoTrasmissione(self, partner, fatturapa):
         if partner.is_pa:
             fatturapa.FatturaElettronicaHeader.DatiTrasmissione.\
-                FormatoTrasmissione = 'FPA12'
+                FormatoTrasmissione = FORMATO_TRASMISSIONE_PA
         else:
             fatturapa.FatturaElettronicaHeader.DatiTrasmissione. \
-                FormatoTrasmissione = 'FPR12'
+                FormatoTrasmissione = FORMATO_TRASMISSIONE_PR
 
         return True
 
@@ -786,8 +790,9 @@ class WizardExportFatturapa(models.TransientModel):
                 DettaglioPagamento = DettaglioPagamentoType(
                     ModalitaPagamento=(
                         invoice.payment_term_id.fatturapa_pm_id.code),
-                    ImportoPagamento=ImportoPagamento
-                    )
+                    ImportoPagamento=ImportoPagamento,
+                    CodicePagamento=invoice.payment_term_id.note or invoice.payment_term_id.name
+                )
 
                 # Add only the existing optional fields
                 if move_line.date_maturity:
@@ -893,9 +898,9 @@ class WizardExportFatturapa(models.TransientModel):
             context = {}
         invoice_obj = self.env['account.invoice']
         if partner.is_pa:
-            fatturapa = FatturaElettronica(versione='FPA12')
+            fatturapa = FatturaElettronica(versione='FPA12', SistemaEmittente=SOFTWARE_IN_USE)
         else:
-            fatturapa = FatturaElettronica(versione='FPR12')
+            fatturapa = FatturaElettronica(versione='FPR12', SistemaEmittente=SOFTWARE_IN_USE)
 
         try:
             self.with_context(context). \
@@ -969,7 +974,7 @@ class WizardExportFatturapa(models.TransientModel):
         ).search(
             [('binding_model_id', '=', binding_model_id),
              ('name', '=', name)]
-            )
+        )
         attachment, attachment_type = report_model.render_qweb_pdf(inv.ids)
         att_id = self.env['ir.attachment'].create({
             'name': inv.number,
