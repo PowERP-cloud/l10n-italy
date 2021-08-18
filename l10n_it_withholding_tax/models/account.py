@@ -178,6 +178,10 @@ class AccountPartialReconcile(models.Model):
 class AccountMove(models.Model):
     _inherit = "account.move"
 
+    withholding_tax_amount = fields.Float(
+        digits=dp.get_precision('Account'), string='Withholding tax Amount',
+        readonly=True)
+
     @api.one
     def _prepare_wt_values(self):
         partner = False
@@ -364,6 +368,20 @@ class AccountFiscalPosition(models.Model):
         'withholding.tax', 'account_fiscal_position_withholding_tax_rel',
         'fiscal_position_id', 'withholding_tax_id', string='Withholding Tax')
 
+    # enable the visibility of the field tax_wt_ids in account move line
+    enable_wht = fields.Boolean(string="Ritenuta d'acconto", default=False,)
+
+    @api.multi
+    @api.onchange('withholding_tax_ids')
+    def _onchange_withholding_tax_ids(self):
+        for wt in self:
+            if wt.withholding_tax_ids:
+                wt.enable_wht = True
+            else:
+                wt.enable_wht = False
+        # end if
+    # end _onchange_withholding_tax_ids
+
 
 class AccountInvoice(models.Model):
     _inherit = "account.invoice"
@@ -411,7 +429,8 @@ class AccountInvoice(models.Model):
         digits=dp.get_precision('Account'), string='Residual Net To Pay',
         store=True, readonly=True)
 
-    # enable_wht = fields.Bool("Ritenuta d'acconto", default=False)
+    enable_wht = fields.Boolean("Ritenuta d'acconto",
+                                related='fiscal_position_id.enable_wht')
 
     @api.model
     def create(self, vals):

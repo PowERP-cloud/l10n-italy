@@ -194,3 +194,14 @@ class AccountInvoice(models.Model):
                         check_move_validity=False
                     ).write(
                         {'credit': receivable_line_amount})
+
+
+class AccountMove(models.Model):
+    _inherit = "account.move"
+
+    amount_sp = fields.Float(
+        string='Split Payment',
+        digits=dp.get_precision('Account'),
+        readonly=True,
+        )
+
