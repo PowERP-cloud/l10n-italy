@@ -640,7 +640,6 @@ class WizardExportFatturapa(models.TransientModel):
     def setDettaglioLinee(self, invoice, body):
 
         body.DatiBeniServizi = DatiBeniServiziType()
-        # TipoCessionePrestazione not handled
 
         line_no = 1
         price_precision = self.env['decimal.precision'].precision_get(
@@ -681,6 +680,10 @@ class WizardExportFatturapa(models.TransientModel):
                 unidecode(line.uom_id.name)) or None,
             PrezzoTotale='%.2f' % float_round(line.price_subtotal, 2),
             AliquotaIVA=AliquotaIVA)
+
+        if line.line_etype:
+            DettaglioLinea.TipoCessionePrestazione = line.line_etype
+
         DettaglioLinea.ScontoMaggiorazione.extend(
             self.setScontoMaggiorazione(line))
         if aliquota == 0.0:
