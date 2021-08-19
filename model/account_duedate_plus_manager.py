@@ -333,20 +333,15 @@ class DueDateManager(models.Model):
         '''
         new_dudate_lines = list()
 
-        payment_method_tax = self.env['account.payment.method']
-
         # get extra amount tax into invoice
         types = self._get_tax_type()
 
         if types['is_split'] or types['is_rc'] or types['is_ra']:
             # get tax payment method
-            payment_method_tax = self.env['account.payment.method'].search(
-                [('code', '=', 'tax')])
-
-            if not payment_method_tax:
-                raise UserError('Metodo di pagamento Tax non impostato.')
-            # end if
-        # end id
+            payment_method_tax = self.env['account.payment.method'].get_payment_method_tax()
+        else:
+            payment_method_tax = self.env['account.payment.method']
+        # end if
 
         if not param_cm['invoice_date']:
             return new_dudate_lines

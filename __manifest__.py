@@ -6,7 +6,7 @@
 #
 {
     'name': 'Due dates',
-    'version': '12.0.4.8.16',
+    'version': '12.0.4.8.17',
     'category': 'Accounting',
     'summary': 'Due dates management',
     'author': 'powERP enterprise network and other partners',
@@ -23,6 +23,7 @@
         'account_move_line_type',
         'date_range_plus',
         'account_payment_term_plus',
+        'account_payment_method',
     ],
     'data': [
         'security/ir.model.access.csv',

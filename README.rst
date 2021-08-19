@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.4.8.16
+|icon| Due dates 12.0.4.8.17
 ============================
 
 
@@ -160,6 +160,10 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.4.8.17 (2021-08-19)
+~~~~~~~~~~~~~~~~~~~~~~~~
+ * [REF] account_duedates: Refactoring metodo di pagamento 'tax' per scadenze tecniche
+
 12.0.4.8.16 (2021-08-17)
 ~~~~~~~~~~~~~~~~~~~~~~~~
  * [FIX] account_duedates: Impostata dipendenza mancante
@@ -207,11 +211,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Impostato cron che aggiorna i periodi dedicati all'esclusione delle scadenze
-
-12.0.3.3.7 (2021-05-04)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Corretto bug nel metodo che verifica l'intervallo delle esclusioni
 
 
 
@@ -286,7 +285,7 @@ I soci fondatori sono:
 
 This module is part of  project.
 
-Last Update / Ultimo aggiornamento: 2021-08-17
+Last Update / Ultimo aggiornamento: 2021-08-19
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

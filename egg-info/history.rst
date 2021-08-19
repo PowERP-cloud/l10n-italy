@@ -1,3 +1,7 @@
+12.0.4.8.17 (2021-08-19)
+~~~~~~~~~~~~~~~~~~~~~~~~
+ * [REF] account_duedates: Refactoring metodo di pagamento 'tax' per scadenze tecniche
+
 12.0.4.8.16 (2021-08-17)
 ~~~~~~~~~~~~~~~~~~~~~~~~
  * [FIX] account_duedates: Impostata dipendenza mancante
