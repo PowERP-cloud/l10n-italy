@@ -18,7 +18,7 @@ class AccountJournal(models.Model):
             ('portafolio_account', '=', True),
             ('portafolio_parent_id', '=', self.id)]
 
-        return self.env['account.journal'].search(domain)
+        return self.search(domain)
     # end _set_portafolio_childs_default
 
     @api.depends('portafolio_childs')
