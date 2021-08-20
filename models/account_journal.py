@@ -8,46 +8,46 @@ from odoo import models, fields, api
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
-    def _set_portafolio_parent_default(self):
+    def _set_main_bank_account_id_default(self):
         return self.env['account.journal']
-    # end _set_portafolio_parent_default
+    # end _set_main_bank_account_id_default
 
-    def _set_portafolio_childs_default(self):
+    def _set_wallet_ids_default(self):
         domain = [
             ('type', 'in', ['bank', 'cash']),
-            ('portafolio_account', '=', True),
-            ('portafolio_parent_id', '=', self.id)]
+            ('is_wallet', '=', True),
+            ('main_bank_account_id', '=', self.id)]
 
         return self.search(domain)
-    # end _set_portafolio_childs_default
+    # end _set_wallet_ids_default
 
-    @api.depends('portafolio_childs')
+    @api.depends('wallet_ids')
     def _has_children(self):
-        if self.portafolio_childs:
+        if self.wallet_ids:
             self.has_children = True
         else:
             self.has_children = False
         # end if
     # end _has_children
 
-    portafolio_account = fields.Boolean(string="Conto di portafoglio",
+    is_wallet = fields.Boolean(string="Conto di portafoglio",
                                         default=False)
 
-    portafolio_childs = fields.One2many(
+    wallet_ids = fields.One2many(
         comodel_name='account.journal',
-        inverse_name='portafolio_parent_id',
+        inverse_name='main_bank_account_id',
         string='Conti di portafoglio',
-        default=_set_portafolio_childs_default,
+        default=_set_wallet_ids_default,
         readonly=True,
     )
 
-    portafolio_parent_id = fields.Many2one(
+    main_bank_account_id = fields.Many2one(
         comodel_name='account.journal',
         string='Conto padre',
         domain=[('type', 'in', ['bank', 'cash']),
-                ('portafolio_account', '=', False),
+                ('is_wallet', '=', False),
                 ],
-        default=_set_portafolio_parent_default
+        default=_set_main_bank_account_id_default
     )
 
     has_children = fields.Boolean(
@@ -55,12 +55,13 @@ class AccountJournal(models.Model):
         compute='_has_children'
         )
 
-    @api.onchange('portafolio_account')
-    def _on_change_portafolio_account(self):
-        if not self.portafolio_account:
+    @api.onchange('is_wallet')
+    def _on_change_is_wallet(self):
+        if not self.is_wallet:
             # empty parent
-            if self.portafolio_parent_id:
-                self.portafolio_parent_id = self._set_portafolio_parent_default()
+            if self.main_bank_account_id:
+                self.main_bank_account_id = \
+                    self._set_main_bank_account_id_default()
             # end if
         # end if
     # end _on_change_portafolio_account
