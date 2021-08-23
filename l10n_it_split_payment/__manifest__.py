@@ -17,6 +17,7 @@
     'depends': [
         'account',
         'l10n_it_account',
+        'account_payment_method',
     ],
     'data': [
         'views/account_view.xml',
