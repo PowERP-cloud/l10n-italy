@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
 
             <xpath expr="//form/sheet/group[1]/group[last()]" position="after">
-                <group string="Conti di portafoglio" >
+                <group colspan="4" string="Conti di portafoglio" >
                     <group colspan="4">
                         <field name="has_children" invisible="1"/>
                         <field name="is_wallet" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])], 'readonly':[('has_children', '=', True)]}"/>
@@ -18,7 +18,7 @@
                             <field name="bank_acc_number" />
                         </tree>
                         </field>
-                        <field name="main_bank_account_id" attrs="{'invisible': [('is_wallet', '=', False)]}"/>
+                        <field name="main_bank_account_id" attrs="{'required': [('is_wallet', '=', True)], 'invisible': [('is_wallet', '=', False)]}"/>
                     </group>
                 </group>
             </xpath>
