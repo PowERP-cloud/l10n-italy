@@ -21,6 +21,14 @@ class AccountJournal(models.Model):
         return self.search(domain)
     # end _set_wallet_ids_default
 
+    def is_wallet_default(self):
+        if self.bank_account_id:
+            return self.bank_account_id.bank_is_wallet
+        else:
+            return False
+        # end if
+    # end is_wallet_default
+
     @api.depends('wallet_ids')
     def _has_children(self):
         if self.wallet_ids:
@@ -31,7 +39,7 @@ class AccountJournal(models.Model):
     # end _has_children
 
     is_wallet = fields.Boolean(string="Conto di portafoglio",
-                                        default=False)
+                               default=is_wallet_default)
 
     wallet_ids = fields.One2many(
         comodel_name='account.journal',
@@ -63,6 +71,11 @@ class AccountJournal(models.Model):
                 self.main_bank_account_id = \
                     self._set_main_bank_account_id_default()
             # end if
+        # end if
+        if self.bank_account_id:
+            bank_account = self.env['res.partner.bank'].browse(
+                self.bank_account_id.id)
+            bank_account.write({'bank_is_wallet': self.is_wallet})
         # end if
     # end _on_change_portafolio_account
 
