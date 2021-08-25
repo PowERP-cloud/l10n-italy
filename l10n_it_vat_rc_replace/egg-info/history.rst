@@ -1,3 +1,8 @@
+12.0.1.2.7_24 (2021-08-25)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Out invoice/refund do not execute RC actions / Azioni di RC ignorate per fatture / NC di vendita
+
 12.0.1.2.7_23 (2021-08-06)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
