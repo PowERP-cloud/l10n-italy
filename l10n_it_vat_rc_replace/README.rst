@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_24
+|icon| ITA - Inversione contabile 12.0.1.2.7_25
 ===============================================
 
 
@@ -381,6 +381,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_25 (2021-08-25)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[REF] Rimosso codice inutile
+
 12.0.1.2.7_24 (2021-08-25)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -435,11 +440,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [FIX] Aggiornato campo registro in posizione fiscale
-
-12.0.1.2.7_10 (2021-07-13)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[IMP] Fix bug multi in calcolo totali
 
 
 

@@ -6,7 +6,7 @@
 #
 {
     'name': 'ITA - Inversione contabile',
-    'version': '12.0.1.2.7_24',
+    'version': '12.0.1.2.7_25',
     'category': 'Localization/Italy',
     'summary': 'Inversione contabile',
     'author': 'powERP enterprise network and other partners',
@@ -22,13 +22,11 @@
         'l10n_it_fatturapa_out',
     ],
     'data': [
-        'security/ir.model.access.csv',
-        'data/rc_type.xml',
+        # 'security/ir.model.access.csv',
         'views/account_invoice_view.xml',
         'views/account_fiscal_position_view.xml',
-        'views/account_rc_type_view.xml',
         'views/account_tax_view.xml',
-        'security/reverse_charge_security.xml',
+        # 'security/reverse_charge_security.xml',
     ],
     'maintainer': 'powERP enterprise network',
     'installable': True,

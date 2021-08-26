@@ -341,42 +341,42 @@ class AccountInvoice(models.Model):
             'company_id': self.company_id.id
             }
 
-    def reconcile_supplier_invoice(self):
-        rc_type = self.fiscal_position_id.rc_type_id
-
-        move_model = self.env['account.move']
-        move_line_model = self.env['account.move.line']
-
-        rc_payment_data = self.rc_payment_vals(rc_type)
-        rc_invoice = self.rc_self_invoice_id
-        payment_credit_line_data = self.rc_payment_credit_line_vals(
-            rc_invoice)
-        payment_debit_line_data = self.rc_debit_line_vals(
-            self.amount_total)
-        # payment_credit_line_data['credit'])
-        rc_payment_data['line_ids'] = [
-            (0, 0, payment_debit_line_data),
-            (0, 0, payment_credit_line_data),
-        ]
-        rc_payment = move_model.create(rc_payment_data)
-        for move_line in rc_payment.line_ids:
-            if move_line.debit:
-                payment_debit_line = move_line
-            elif move_line.credit:
-                payment_credit_line = move_line
-        rc_payment.post()
-
-        lines_to_rec = move_line_model.browse([
-            self.get_inv_line_to_reconcile().id,
-            payment_debit_line.id
-        ])
-        lines_to_rec.reconcile()
-
-        rc_lines_to_rec = move_line_model.browse([
-            self.get_rc_inv_line_to_reconcile(rc_invoice).id,
-            payment_credit_line.id
-        ])
-        rc_lines_to_rec.reconcile()
+    # def reconcile_supplier_invoice(self):
+    #     rc_type = self.fiscal_position_id.rc_type_id
+    #
+    #     move_model = self.env['account.move']
+    #     move_line_model = self.env['account.move.line']
+    #
+    #     rc_payment_data = self.rc_payment_vals(rc_type)
+    #     rc_invoice = self.rc_self_invoice_id
+    #     payment_credit_line_data = self.rc_payment_credit_line_vals(
+    #         rc_invoice)
+    #     payment_debit_line_data = self.rc_debit_line_vals(
+    #         self.amount_total)
+    #     # payment_credit_line_data['credit'])
+    #     rc_payment_data['line_ids'] = [
+    #         (0, 0, payment_debit_line_data),
+    #         (0, 0, payment_credit_line_data),
+    #     ]
+    #     rc_payment = move_model.create(rc_payment_data)
+    #     for move_line in rc_payment.line_ids:
+    #         if move_line.debit:
+    #             payment_debit_line = move_line
+    #         elif move_line.credit:
+    #             payment_credit_line = move_line
+    #     rc_payment.post()
+    #
+    #     lines_to_rec = move_line_model.browse([
+    #         self.get_inv_line_to_reconcile().id,
+    #         payment_debit_line.id
+    #     ])
+    #     lines_to_rec.reconcile()
+    #
+    #     rc_lines_to_rec = move_line_model.browse([
+    #         self.get_rc_inv_line_to_reconcile(rc_invoice).id,
+    #         payment_credit_line.id
+    #     ])
+    #     rc_lines_to_rec.reconcile()
 
     def prepare_reconcile_supplier_invoice(self):
         rc_type = self.fiscal_position_id.rc_type_id
