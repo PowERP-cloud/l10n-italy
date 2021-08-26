@@ -1,3 +1,7 @@
+12.0.4.8.18 (2021-08-25)
+~~~~~~~~~~~~~~~~~~~~~~~~
+ * [FIX] Missed dependency: "sale" / Manca dipendenza "ordini clienti"
+
 12.0.4.8.17 (2021-08-19)
 ~~~~~~~~~~~~~~~~~~~~~~~~
  * [REF] account_duedates: Refactoring metodo di pagamento 'tax' per scadenze tecniche

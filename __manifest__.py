@@ -6,7 +6,7 @@
 #
 {
     'name': 'Due dates',
-    'version': '12.0.4.8.17',
+    'version': '12.0.4.8.18',
     'category': 'Accounting',
     'summary': 'Due dates management',
     'author': 'powERP enterprise network and other partners',
@@ -24,6 +24,7 @@
         'date_range_plus',
         'account_payment_term_plus',
         'account_payment_method',
+        'sale',
     ],
     'data': [
         'security/ir.model.access.csv',
