@@ -136,6 +136,25 @@ class AccountInvoice(models.Model):
                 line._set_rc_flag(res)
         return res
 
+    @api.multi
+    def write(self, values):
+
+        result = super().write(values)
+
+        stop_recursion = self.env.context.get('StopRecursion', False)
+
+        if not stop_recursion:
+            # Enable stop recursion
+            self = self.with_context(StopRecursion=True)
+
+            for inv in self:
+                if inv.rc_type:
+                    inv.amount_rc = inv.compute_rc_amount_tax()
+            # end for
+        # end if
+        return result
+    # end write
+
     @api.onchange('invoice_line_ids')
     def _onchange_invoice_line_ids(self):
         super()._onchange_invoice_line_ids()
@@ -582,6 +601,15 @@ class AccountInvoice(models.Model):
             supplier_invoice.check_total = supplier_invoice.amount_total
             supplier_invoice.action_invoice_open()
             supplier_invoice.fiscal_position_id = self.fiscal_position_id.id
+
+    # @api.multi
+    # def compute_taxes(self):
+    #     res = super().compute_taxes()
+    #     for inv in self:
+    #         inv.amount_rc = inv.compute_rc_amount_tax()
+    #     # end for
+    #     return res
+    # # end compute_taxes
 
     @api.multi
     def invoice_validate(self):
