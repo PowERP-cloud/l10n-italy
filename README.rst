@@ -428,12 +428,6 @@ l10n_it_vat_rc_replace: 12.0.1.2.7_11 (2021-07-14)
 [FIX] Aggiornato campo registro in posizione fiscale
 
 
-l10n_it_vat_rc_replace: 12.0.1.2.7_10 (2021-07-13)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[IMP] Fix bug multi in calcolo totali
-
-
 l10n_it_withholding_tax: 12.0.2.1.0_4 (2021-07-12)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -571,7 +565,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 |
 
 
-Last Update / Ultimo aggiornamento: 2021-08-25
+Last Update / Ultimo aggiornamento: 2021-08-30
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status
