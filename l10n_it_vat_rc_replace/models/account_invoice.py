@@ -470,10 +470,17 @@ class AccountInvoice(models.Model):
                     rc_invoice_line = self.rc_inv_line_vals(line)
                     rc_invoice_line.update(
                         {
-                            'invoice_line_tax_ids': [(6, False, [tax_sell_id])],
                             'account_id': rc_account.id
                         }
                     )
+
+                    if tax_sell_id:
+                        rc_invoice_line.update(
+                            {
+                                'invoice_line_tax_ids': [
+                                    (6, False, [tax_sell_id])],
+                            }
+                        )
                     rc_invoice_lines.append([0, False, rc_invoice_line])
 
             if rc_invoice_lines:

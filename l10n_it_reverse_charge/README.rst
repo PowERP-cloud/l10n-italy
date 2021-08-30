@@ -1,12 +1,12 @@
 
-==============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_1
-==============================================
+===============================================
+|icon| ITA - Inversione contabile 12.0.1.2.7_25
+===============================================
 
 
 **Inversione contabile**
 
-.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/l10n-italy/12.0/l10n_it_reverse_charge/static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/l10n-italy/12.0/l10n_it_vat_rc_replace/static/description/icon.png
 
 |Maturity| |Build Status| |license opl|
 
@@ -178,7 +178,142 @@ From UI: go to:
 
 * |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
-* |menu| Setting > Apps |right_do| Select **l10n_it_reverse_charge** > Install
+* |menu| Setting > Apps |right_do| Select **l10n_it_vat_rc_replace** > Install
+
+
+|
+
+Configuration / Configurazione
+------------------------------
+
+**Italiano**
+
+Creare l'imposta **22% intra UE** - Vendite:
+
+.. figure:: ../static/description/tax_22_v_i_ue.png
+   :alt: 22% intra UE - Vendite
+   :width: 600 px
+
+Creare l'imposta **22% intra UE** - Acquisti:
+
+.. figure:: ../static/description/tax_22_a_i_ue.png
+  :alt: 22% intra UE - Acquisti
+  :width: 600 px
+
+Creare l'imposta **22% extra UE** - Vendite:
+
+.. figure:: ../static/description/tax_22_v_e_ue.png
+   :alt: 22% extra UE - Vendite
+   :width: 600 px
+
+Creare l'imposta **22% extra UE** - Acquisti:
+
+.. figure:: ../static/description/tax_22_a_e_ue.png
+  :alt: 22% extra UE - Acquisti
+  :width: 600 px
+
+Creare il conto 'Transitorio autofatturazione':
+
+.. figure:: ../static/description/temp_account_auto_inv.png
+  :alt: conto transitorio Autofattura
+  :width: 600 px
+
+Il 'Registro pagamento autofattura' deve essere configurato con il conto 'Transitorio autofatturazione' appena creato:
+
+.. figure:: ../static/description/registro_riconciliazione.png
+  :alt: Registro pagamento autofattura
+  :width: 600 px
+
+Modificare il tipo inversione contabile **Intra-UE (autofattura)**:
+
+.. figure:: ../static/description/rc_selfinvoice.png
+  :alt: inversione contabile con Autofattura
+  :width: 600 px
+
+Il registro autofattura deve essere di tipo 'Vendita'.
+
+Modificare il tipo inversione contabile **Extra-UE (autofattura)**:
+
+.. figure:: ../static/description/rc_selfinvoice_extra.png
+  :alt: inversione contabile con Autofattura
+  :width: 600 px
+
+Il 'Registro autofattura passiva' deve essere di tipo 'Acquisto'.
+
+
+Nella posizione fiscale, impostare il tipo inversione contabile:
+
+.. figure:: ../static/description/fiscal_pos_intra.png
+  :alt: Impostazione posizioni fiscali Intra CEE
+  :width: 600 px
+
+.. figure:: ../static/description/fiscal_pos_extra.png
+  :alt: Impostazione posizioni fiscali Extra CEE
+  :width: 600 px
+
+**English**
+
+Create the tax **22% intra EU** - Sale:
+
+.. figure:: ../static/description/tax_22_v_i_ue.png
+   :alt: 22% intra UE - Sale
+   :width: 600 px
+
+Create the tax **22% intra EU** - Purchase:
+
+.. figure:: ../static/description/tax_22_a_i_ue.png
+  :alt: 22% intra UE - Purchase
+  :width: 600 px
+
+Create the tax **22% extra EU** - Sale:
+
+.. figure:: ../static/description/tax_22_v_e_ue.png
+   :alt: 22% extra UE - Sale
+   :width: 600 px
+
+Create the tax **22% extra EU** - Purchase:
+
+.. figure:: ../static/description/tax_22_a_e_ue.png
+  :alt: 22% extra UE - Purchase
+  :width: 600 px
+
+Create the account 'Self Invoice Transitory' as follows:
+
+.. figure:: ../static/description/temp_account_auto_inv.png
+  :alt: Self Invoice Transitory Account
+  :width: 600 px
+
+The 'Self Invoice Payment' Journal has to be configured with the just created 'Self Invoice Transitory' account:
+
+.. figure:: ../static/description/registro_riconciliazione.png
+  :alt: Registro pagamento autofattura
+  :width: 600 px
+
+Edit the reverse charge type **Intra-EU (self-invoice)**:
+
+.. figure:: ../static/description/rc_selfinvoice.png
+  :alt: reverse charge with Self Invoice
+  :width: 600 px
+
+The Self Invoice journal has to be of type 'Sale'.
+
+Edit the reverse charge type **Extra-EU (self-invoice)** :
+
+.. figure:: ../static/description/rc_selfinvoice_extra.png
+  :alt: reverse charge with Self Invoice
+  :width: 600 px
+
+The 'Supplier Self Invoice Journal' has to be of type 'Purchase'.
+
+In the fiscal position, set the reverse charge type:
+
+.. figure:: ../static/description/fiscal_pos_intra.png
+  :alt: Impostazione posizioni fiscali Intra CEE
+  :width: 600 px
+
+.. figure:: ../static/description/fiscal_pos_extra.png
+  :alt: Impostazione posizioni fiscali Extra CEE
+  :width: 600 px
 
 
 |
@@ -246,33 +381,65 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
-12.0.1.2.7_2 (2021-06-22)
-~~~~~~~~~~~~~~~~~~~~~~~~~
+12.0.1.2.7_25 (2021-08-25)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[IMP] Aggiornato context per la funzione di riporto in bozza della fattura
+[REF] Rimosso codice inutile
 
-12.0.1.2.7_1 (2021-06-21)
-~~~~~~~~~~~~~~~~~~~~~~~~~
+12.0.1.2.7_24 (2021-08-25)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[IMP] Aggiornato numero di versione
+[FIX] Out invoice/refund do not execute RC actions / Azioni di RC ignorate per fatture / NC di vendita
 
-12.0.1.2.8 (2021-05-17)
-~~~~~~~~~~~~~~~~~~~~~~~
+12.0.1.2.7_23 (2021-08-06)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[FIX] Aggiornato verifica flag RC da elenco tasse
+[FIX] Fix bug POW-450 partner vuoto in registrazione contabile
 
-12.0.1.2.7 (2021-03-18)
-~~~~~~~~~~~~~~~~~~~~~~~
+12.0.1.2.7_22 (2021-08-05)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[FIX] Error when payment invoice: function invoice_validate @multi
+[FIX] Impostato date applicazione iva e iva bilancio nell'autofattura
 
+12.0.1.2.7_21 (2021-08-04)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-12.0.1.2.6 (2021-02-17)
-~~~~~~~~~~~~~~~~~~~~~~~
+[FIX] Impostato data di registrazione nell'autofattura in tutti i campi data
 
-[REF] Clone OCA module
-[FIX] Mixed RC and ordinary VAT line in single vendor bill
-[FIX] Self invoice account move lines
+12.0.1.2.7_20 (2021-08-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato data di registrazione in tutti i movimenti contabili
+
+12.0.1.2.7_19 (2021-08-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato data di registrazione in autofattura
+
+12.0.1.2.7_15 (2021-07-26)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Possibilità di impostare manualmente il campo rc_type di account.tax
+
+12.0.1.2.7_14 (2021-07-21)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato controllo flag rc in creazione fattura
+
+12.0.1.2.7_13 (2021-07-20)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Corretto comportamento anomalo annullamento fattura
+
+12.0.1.2.7_12 (2021-07-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Nascosto campo rc in riga fatture in base alla posizione fiscale
+
+12.0.1.2.7_11 (2021-07-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Aggiornato campo registro in posizione fiscale
 
 
 
@@ -311,16 +478,25 @@ Contributors / Collaboratori
 * Fabio Giovannelli <fabio.giovannelli@didotech.com>
 
 
+Acknowledges / Riconoscimenti
+-----------------------------
+
+
+
+
+Translations by / Traduzioni a cura di
+--------------------------------------
+
+
+
+
 Maintainer / Manutenzione
 -------------------------
 
-
-This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
-
+This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese Powerp <http://www.powerp.it/>
 Developer companies are / I soci sviluppatoro sono:
-
-* `Didotech s.r.l. <http://www.didotech.com>`__
-* `SHS-AV s.r.l. <https://www.shs-av.com/>`__
+* Didotech s.r.l. <http://www.didotech.com>
+* SHS-AV s.r.l. <https://www.shs-av.com/>
 
 
 |
@@ -351,7 +527,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-06-23
+Last Update / Ultimo aggiornamento: 2021-08-25
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
