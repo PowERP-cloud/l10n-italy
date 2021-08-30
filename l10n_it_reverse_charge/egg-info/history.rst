@@ -1,3 +1,103 @@
+12.0.1.2.7_25 (2021-08-25)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[REF] Rimosso codice inutile
+
+12.0.1.2.7_24 (2021-08-25)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Out invoice/refund do not execute RC actions / Azioni di RC ignorate per fatture / NC di vendita
+
+12.0.1.2.7_23 (2021-08-06)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Fix bug POW-450 partner vuoto in registrazione contabile
+
+12.0.1.2.7_22 (2021-08-05)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato date applicazione iva e iva bilancio nell'autofattura
+
+12.0.1.2.7_21 (2021-08-04)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato data di registrazione nell'autofattura in tutti i campi data
+
+12.0.1.2.7_20 (2021-08-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato data di registrazione in tutti i movimenti contabili
+
+12.0.1.2.7_19 (2021-08-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato data di registrazione in autofattura
+
+12.0.1.2.7_15 (2021-07-26)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Possibilità di impostare manualmente il campo rc_type di account.tax
+
+12.0.1.2.7_14 (2021-07-21)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato controllo flag rc in creazione fattura
+
+12.0.1.2.7_13 (2021-07-20)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Corretto comportamento anomalo annullamento fattura
+
+12.0.1.2.7_12 (2021-07-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Nascosto campo rc in riga fatture in base alla posizione fiscale
+
+12.0.1.2.7_11 (2021-07-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Aggiornato campo registro in posizione fiscale
+
+12.0.1.2.7_10 (2021-07-13)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Fix bug multi in calcolo totali
+
+12.0.1.2.7_9 (2021-07-13)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Condizioni campo iva rc invisibile nella vista
+
+12.0.1.2.7_8 (2021-07-12)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Autofattura per Reverse charge self
+
+12.0.1.2.7_7 (2021-07-09)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Registrazione contabile per Reverse charge self
+
+12.0.1.2.7_6 (2021-07-09)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Registrazione contabile per Reverse charge locale
+
+12.0.1.2.7_5 (2021-07-07)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Ricalcolo totale fattura
+
+12.0.1.2.7_4 (2021-07-06)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Impostato campi extra
+
+12.0.1.2.7_3 (2021-07-05)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Impostato verifica tipo di tassa RC
+
 12.0.1.2.7_2 (2021-06-22)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
