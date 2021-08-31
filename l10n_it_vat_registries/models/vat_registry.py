@@ -111,9 +111,10 @@ class ReportRegistroIva(models.AbstractModel):
             if set_cee_absolute_value:
                 tax_amount = abs(tax_amount)
 
+            # refactoring con utilizzo del campo type al posto di move_type
             if (
-                'receivable' in move.move_type or
-                'payable_refund' == move.move_type
+                'out_invoice' in move.type or
+                'in_refund' == move.type
             ):
                 # otherwise refund would be positive and invoices
                 # negative.
@@ -150,7 +151,8 @@ class ReportRegistroIva(models.AbstractModel):
         # sono più codici IVA
         index = 0
         invoice = self._get_invoice_from_move(move)
-        if 'refund' in move.move_type:
+
+        if 'refund' in move.type:
             invoice_type = "NC"
         else:
             invoice_type = "FA"
@@ -206,7 +208,7 @@ class ReportRegistroIva(models.AbstractModel):
             total = abs(total)
         else:
             total = abs(move.amount)
-        if 'refund' in move.move_type:
+        if 'refund' in move.type:
             total = -total
         return total
 
@@ -218,21 +220,3 @@ class ReportRegistroIva(models.AbstractModel):
         """
         return tax._compute_totals_tax(data)
 
-    # def _get_move_total(self, move):
-    #
-    #     total = 0.0
-    #     receivable_payable_found = False
-    #     for move_line in move.line_ids:
-    #         if move_line.account_id.internal_type == 'receivable':
-    #             total += move_line.debit or (- move_line.credit)
-    #             receivable_payable_found = True
-    #         elif move_line.account_id.internal_type == 'payable':
-    #             total += (- move_line.debit) or move_line.credit
-    #             receivable_payable_found = True
-    #     if receivable_payable_found:
-    #         total = abs(total)
-    #     else:
-    #         total = abs(move.amount)
-    #     if 'refund' in move.move_type:
-    #         total = -total
-    #     return total

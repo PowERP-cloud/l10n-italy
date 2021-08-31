@@ -1,10 +1,10 @@
 
 ======================================
-|icon| ITA - Registri IVA 12.0.1.2.5_1
+|icon| ITA - Registri IVA 12.0.1.2.5_2
 ======================================
 
 
-.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/l10n-italy/12.0/l10n_it_vat_registries/static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud//12.0//static/description/icon.png
 
 |Maturity| |Build Status| |license opl|
 
@@ -22,6 +22,29 @@ Overview / Panoramica
 |
 
 |it| Law: Decreto del Presidente della Repubblica del 26 ottobre 1972 n. 633
+
+
+|
+
+Usage / Utilizzo
+----------------
+
+**Italiano**
+
+Dal menu
+Contabilità -> Rendicontazione -> Imposte -> Registri IVA
+è possibile lanciare il procedura di stampa, nella quale è necessario impostare un intervallo di date. Qui è possibile utilizzare un periodo fiscale nel campo 'Intervallo Date'.
+
+Nel campo 'Registro IVA' è possibile selezionare un registro preconfigurato, oppure è possibile andare direttamente a impostare i registri e la struttura nei campi sottostanti.
+
+
+**English**
+
+Using the menu
+Accounting -> Reports -> Taxes -> VAT registries
+it is possible to launch the print wizard, where you have to set a date range. You can use a fiscal period in the field 'date range'.
+
+In the 'VAT registry' field you can select a preconfigured registry, or you can directly journals and layout in the fields below.
 
 
 |
@@ -83,14 +106,67 @@ Installation / Installazione
     source $HOME/devel/activate_tools
     # *** End of tools installation or upgrade ***
     # Odoo repository installation; OCB repository must be installed
-    odoo_install_repository l10n-italy -b 12.0 -O powerp -o $HOME/12.0
+    odoo_install_repository  -b 12.0 -O powerp -o $HOME/12.0
     vem create $HOME/12.0/venv_odoo -O 12.0 -a "*" -DI -o $HOME/12.0
 
 From UI: go to:
 
 * |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
-* |menu| Setting > Apps |right_do| Select **l10n_it_vat_registries** > Install
+* |menu| Setting > Apps |right_do| Select **** > Install
+
+
+|
+
+Configuration / Configurazione
+------------------------------
+
+**Italiano**
+
+È possibile configurare quali imposte escludere dai registri (ad esempio le ritenute)
+impostando il campo dell'imposta 'Escludere dai registri IVA'
+
+Per generare i periodi fiscali,
+aprire Contabilità > Configurazione > Contabilità > Intervalli data > Generazione intervalli data.
+
+* Prefisso nome intervallo: prefisso identificativo dell'anno dei periodi da generare
+* Durata: 1 mese
+* Numero di intervalli da generare: 12
+* Tipo: creare un tipo o utilizzarne uno esistente, non è richiesta una configurazione particolare per il tipo
+* Data iniziale: primo giorno dell'anno dei periodi da generare (ad esempio 01/01/2018)
+
+Tramite
+Contabilità -> Configurazione -> Contabilità -> Registri IVA
+è possibile configurare i registri IVA, ad esempio 'vendite', 'acquisti' o 'corrispettivi'.
+Per associare un registro contabile a un registro IVA, aprire il registro tramite
+Contabilità -> Configurazione -> Contabilità -> Registri
+e impostare il campo "Registro IVA".
+
+Se non ci sono movimenti contabili da stampare, la stampa viene generata con totale zero.
+
+
+**English**
+
+You can configure which taxes to exclude from registries (like withholding tax)
+setting the 'Exclude from VAT registries' field.
+
+In order to generate fiscal periods,
+open Accounting > Configuration > Accounting > Date range > Generate Date Ranges and select:
+
+* Range name prefix: Prefix identifying the year of the periods to be generated
+* Duration: 1 month
+* Number of ranges to generate: 12
+* Type: Create a type or use an existing one, no specific type's configuration is required
+* Date start: first day of the period's year (for instance 01/01/2018)
+
+Using the menu
+Accounting -> Configuration -> Accounting -> VAT registries
+you can configure VAT registries, like 'Sales', 'Purchases' or 'corrispettivi'.
+In order to link a journal to a VAT registry, open journal by
+Accounting -> Configuration -> Accounting -> Journals
+and set the 'VAT registry' field.
+
+If there are no account moves to be printed, the report is printed with total equal to zero.
 
 
 |
@@ -114,7 +190,7 @@ Upgrade / Aggiornamento
     source $HOME/devel/activate_tools
     # *** End of tools installation or upgrade ***
     # Odoo repository upgrade
-    odoo_install_repository l10n-italy -b 12.0 -o $HOME/12.0 -U
+    odoo_install_repository  -b 12.0 -o $HOME/12.0 -U
     vem amend $HOME/12.0/venv_odoo -o $HOME/12.0
     # Adjust following statements as per your system
     sudo systemctl restart odoo
@@ -129,7 +205,7 @@ Support / Supporto
 
 This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
 
-Developer companies are / I soci sviluppatoro sono:
+Developer companies are / I soci sviluppatori sono:
 
 * `Didotech s.r.l. <http://www.didotech.com>`__
 * `SHS-AV s.r.l. <https://www.shs-av.com/>`__
@@ -143,7 +219,7 @@ Get involved / Ci mettiamo in gioco
 
 Bug reports are welcome! You can use the issue tracker to report bugs,
 and/or submit pull requests on `GitHub Issues
-<https://github.com/PowERP-cloud/l10n-italy/issues>`_.
+<https://github.com/PowERP-cloud//issues>`_.
 
 In case of trouble, please check there if your issue has already been reported.
 
@@ -157,6 +233,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.1.2.5_2 (2021-08-31)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Reimpostato l'elaborazione della stampa utilizzando il campo type invece di move_type
 
 12.0.1.2.5_1 (2021-06-22)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -197,16 +278,25 @@ Contributors / Collaboratori
 * Fabio Giovannelli <fabio.giovannelli@didotech.com>
 
 
+Acknowledges / Riconoscimenti
+-----------------------------
+
+
+
+
+Translations by / Traduzioni a cura di
+--------------------------------------
+
+
+
+
 Maintainer / Manutenzione
 -------------------------
 
-
-This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
-
-Developer companies are / I soci sviluppatoro sono:
-
-* `Didotech s.r.l. <http://www.didotech.com>`__
-* `SHS-AV s.r.l. <https://www.shs-av.com/>`__
+This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese Powerp <http://www.powerp.it/>
+Developer companies are / I soci sviluppatori sono:
+* Didotech s.r.l. <http://www.didotech.com>
+* SHS-AV s.r.l. <https://www.shs-av.com/>
 
 
 |
@@ -235,27 +325,27 @@ I soci fondatori sono:
 
 |
 
-This module is part of l10n-italy project.
+This module is part of  project.
 
-Last Update / Ultimo aggiornamento: 2021-06-22
+Last Update / Ultimo aggiornamento: 2021-08-31
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Mature-green.png
     :target: https://odoo-community.org/page/development-status
     :alt: 
-.. |Build Status| image:: https://travis-ci.org/PowERP-cloud/l10n-italy.svg?branch=12.0
-    :target: https://travis-ci.com/PowERP-cloud/l10n-italy
+.. |Build Status| image:: https://travis-ci.org/PowERP-cloud/.svg?branch=12.0
+    :target: https://travis-ci.com/PowERP-cloud/
     :alt: github.com
-.. |license gpl| image:: https://img.shields.io/badge/licence-LGPL--3-7379c3.svg
-    :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
-    :alt: License: LGPL-3
+.. |license gpl| image:: https://img.shields.io/badge/licence---3-7379c3.svg
+    :target: http://www.gnu.org/licenses/-3.0-standalone.html
+    :alt: License: -3
 .. |license opl| image:: https://img.shields.io/badge/licence-OPL-7379c3.svg
     :target: https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html
     :alt: License: OPL
-.. |Coverage Status| image:: https://coveralls.io/repos/github/PowERP-cloud/l10n-italy/badge.svg?branch=12.0
-    :target: https://coveralls.io/github/PowERP-cloud/l10n-italy?branch=12.0
+.. |Coverage Status| image:: https://coveralls.io/repos/github/PowERP-cloud//badge.svg?branch=12.0
+    :target: https://coveralls.io/github/PowERP-cloud/?branch=12.0
     :alt: Coverage
-.. |Codecov Status| image:: https://codecov.io/gh/PowERP-cloud/l10n-italy/branch/12.0/graph/badge.svg
-    :target: https://codecov.io/gh/PowERP-cloud/l10n-italy/branch/12.0
+.. |Codecov Status| image:: https://codecov.io/gh/PowERP-cloud//branch/12.0/graph/badge.svg
+    :target: https://codecov.io/gh/PowERP-cloud//branch/12.0
     :alt: Codecov
 .. |Tech Doc| image:: https://www.zeroincombenze.it/wp-content/uploads/ci-ct/prd/button-docs-12.svg
     :target: https://wiki.zeroincombenze.org/en/Odoo/12.0/dev
@@ -266,8 +356,8 @@ Last Update / Ultimo aggiornamento: 2021-06-22
 .. |Try Me| image:: https://www.zeroincombenze.it/wp-content/uploads/ci-ct/prd/button-try-it-12.svg
     :target: https://erp12.zeroincombenze.it
     :alt: Try Me
-.. |OCA Codecov| image:: https://codecov.io/gh/OCA/l10n-italy/branch/12.0/graph/badge.svg
-    :target: https://codecov.io/gh/OCA/l10n-italy/branch/12.0
+.. |OCA Codecov| image:: https://codecov.io/gh/OCA//branch/12.0/graph/badge.svg
+    :target: https://codecov.io/gh/OCA//branch/12.0
     :alt: Codecov
 .. |Odoo Italia Associazione| image:: https://www.odoo-italia.org/images/Immagini/Odoo%20Italia%20-%20126x56.png
    :target: https://odoo-italia.org
