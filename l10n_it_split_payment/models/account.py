@@ -136,12 +136,20 @@ class AccountInvoice(models.Model):
                 invoice._compute_residual()
         return res
 
+    # @api.multi
+    # def get_receivable_line_ids(self):
+    #     # return the move line ids with the same account as the invoice self
+    #     self.ensure_one()
+    #     return self.move_id.line_ids.filtered(
+    #         lambda r: r.account_id.id == self.account_id.id).ids
+
     @api.multi
     def get_receivable_line_ids(self):
         # return the move line ids with the same account as the invoice self
         self.ensure_one()
         return self.move_id.line_ids.filtered(
-            lambda r: r.account_id.id == self.account_id.id).ids
+            lambda r: r.account_id.id == self.account_id.id and
+            r.payment_method.code != 'tax' and r.line_type != 'tax').ids
 
     @api.multi
     def _compute_split_payments(self):
