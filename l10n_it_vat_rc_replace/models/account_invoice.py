@@ -341,42 +341,42 @@ class AccountInvoice(models.Model):
             'company_id': self.company_id.id
             }
 
-    def reconcile_supplier_invoice(self):
-        rc_type = self.fiscal_position_id.rc_type_id
-
-        move_model = self.env['account.move']
-        move_line_model = self.env['account.move.line']
-
-        rc_payment_data = self.rc_payment_vals(rc_type)
-        rc_invoice = self.rc_self_invoice_id
-        payment_credit_line_data = self.rc_payment_credit_line_vals(
-            rc_invoice)
-        payment_debit_line_data = self.rc_debit_line_vals(
-            self.amount_total)
-        # payment_credit_line_data['credit'])
-        rc_payment_data['line_ids'] = [
-            (0, 0, payment_debit_line_data),
-            (0, 0, payment_credit_line_data),
-        ]
-        rc_payment = move_model.create(rc_payment_data)
-        for move_line in rc_payment.line_ids:
-            if move_line.debit:
-                payment_debit_line = move_line
-            elif move_line.credit:
-                payment_credit_line = move_line
-        rc_payment.post()
-
-        lines_to_rec = move_line_model.browse([
-            self.get_inv_line_to_reconcile().id,
-            payment_debit_line.id
-        ])
-        lines_to_rec.reconcile()
-
-        rc_lines_to_rec = move_line_model.browse([
-            self.get_rc_inv_line_to_reconcile(rc_invoice).id,
-            payment_credit_line.id
-        ])
-        rc_lines_to_rec.reconcile()
+    # def reconcile_supplier_invoice(self):
+    #     rc_type = self.fiscal_position_id.rc_type_id
+    #
+    #     move_model = self.env['account.move']
+    #     move_line_model = self.env['account.move.line']
+    #
+    #     rc_payment_data = self.rc_payment_vals(rc_type)
+    #     rc_invoice = self.rc_self_invoice_id
+    #     payment_credit_line_data = self.rc_payment_credit_line_vals(
+    #         rc_invoice)
+    #     payment_debit_line_data = self.rc_debit_line_vals(
+    #         self.amount_total)
+    #     # payment_credit_line_data['credit'])
+    #     rc_payment_data['line_ids'] = [
+    #         (0, 0, payment_debit_line_data),
+    #         (0, 0, payment_credit_line_data),
+    #     ]
+    #     rc_payment = move_model.create(rc_payment_data)
+    #     for move_line in rc_payment.line_ids:
+    #         if move_line.debit:
+    #             payment_debit_line = move_line
+    #         elif move_line.credit:
+    #             payment_credit_line = move_line
+    #     rc_payment.post()
+    #
+    #     lines_to_rec = move_line_model.browse([
+    #         self.get_inv_line_to_reconcile().id,
+    #         payment_debit_line.id
+    #     ])
+    #     lines_to_rec.reconcile()
+    #
+    #     rc_lines_to_rec = move_line_model.browse([
+    #         self.get_rc_inv_line_to_reconcile(rc_invoice).id,
+    #         payment_credit_line.id
+    #     ])
+    #     rc_lines_to_rec.reconcile()
 
     def prepare_reconcile_supplier_invoice(self):
         rc_type = self.fiscal_position_id.rc_type_id
@@ -470,10 +470,17 @@ class AccountInvoice(models.Model):
                     rc_invoice_line = self.rc_inv_line_vals(line)
                     rc_invoice_line.update(
                         {
-                            'invoice_line_tax_ids': [(6, False, [tax_sell_id])],
                             'account_id': rc_account.id
                         }
                     )
+
+                    if tax_sell_id:
+                        rc_invoice_line.update(
+                            {
+                                'invoice_line_tax_ids': [
+                                    (6, False, [tax_sell_id])],
+                            }
+                        )
                     rc_invoice_lines.append([0, False, rc_invoice_line])
 
             if rc_invoice_lines:
@@ -636,7 +643,8 @@ class AccountInvoice(models.Model):
     def action_move_create(self):
         res = super(AccountInvoice, self).action_move_create()
         for invoice in self:
-            if invoice.fiscal_position_id.rc_type:
+            if (invoice.fiscal_position_id.rc_type and
+                    invoice.type in ('in_refund', 'in_refund')):
                 posted = False
                 transfer_ids = list()
                 # self or local
@@ -665,7 +673,10 @@ class AccountInvoice(models.Model):
 
                 tax_duedate_rc = invoice.move_id.line_ids.filtered(
                     lambda
-                        x: x.account_id.id == invoice.account_id.id and x.credit == invoice.amount_rc and x.partner_id.id == invoice.partner_id.id and invoice.company_id.id == x.company_id.id)
+                        x: (x.account_id.id == invoice.account_id.id and
+                            x.credit == invoice.amount_rc and
+                            x.partner_id.id == invoice.partner_id.id and
+                            invoice.company_id.id == x.company_id.id))
 
                 transfer_ids.append(tax_duedate_rc.id)
 
@@ -887,4 +898,3 @@ class AccountInvoice(models.Model):
             return error_message
         else:
             return super(AccountInvoice, self).e_inv_check_amount_total()
-

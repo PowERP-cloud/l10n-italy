@@ -1,5 +1,8 @@
 
-|Build Status| |license opl|
+================================
+|Zeroincombenze| l10n-italy 12.0
+================================
+|Build Status| |Codecov Status| |license gpl| |Try Me|
 
 
 .. contents::
@@ -9,7 +12,53 @@
 Overview / Panoramica
 =====================
 
-|en| N/A
+|en| [![Runbot Status](https://runbot.odoo-community.org/runbot/badge/flat/122/12.0.svg)](https://runbot.odoo-community.org/runbot/repo/github-com-oca-l10n-italy-122)
+[![Build Status](https://travis-ci.org/OCA/l10n-italy.svg?branch=12.0)](https://travis-ci.org/OCA/l10n-italy/branches)
+[![Coverage Status](https://coveralls.io/repos/OCA/l10n-italy/badge.svg?branch=12.0)](https://coveralls.io/r/OCA/l10n-italy?branch=12.0)
+[![Code Climate](https://codeclimate.com/github/OCA/l10n-italy/badges/gpa.svg)](https://codeclimate.com/github/OCA/l10n-italy)
+
+Odoo Italia Modules
+===================
+
+## English
+
+### Contributing
+
+Visit https://www.odoo-italia.org/contribuire
+
+#### Review
+
+You can find all OCA/l10n-italy contributions needing reviews [here](https://github.com/OCA/l10n-italy/pulls?q=is%3Apr+is%3Aopen+label%3A%22needs+review%22).
+
+#### Coding
+
+Please read our [contributing guidelines](https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst).
+
+#### Translations
+
+See our [documentation for translators](https://github.com/OCA/l10n-italy/wiki/Traduzioni).
+
+## Italiano
+
+### Contribuire
+
+Visita https://www.odoo-italia.org/contribuire
+
+#### Revisioni
+
+Puoi trovare [qui](https://github.com/OCA/l10n-italy/pulls?q=is%3Apr+is%3Aopen+label%3A%22needs+review%22) tutti i contributi a OCA/l10n-italy che hanno bisogno di revisione.
+
+#### Codice
+
+Leggi le nostre [linee guida](https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst).
+
+#### Traduzioni
+
+Vedi la nostra [documentazione per i traduttori](https://github.com/OCA/l10n-italy/wiki/Traduzioni).
+
+## Translation Status
+
+[![Translation status](https://translation.odoo-community.org/widgets/l10n-italy-12-0/-/multi-auto.svg)](https://translation.odoo-community.org/engage/l10n-italy-12-0/?utm_source=widget)
 
 |it| N/D
 Avaiable Addons / Moduli disponibili
@@ -18,153 +67,157 @@ Avaiable Addons / Moduli disponibili
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
 | Name / Nome                          | Version    | OCA Ver.   | Description / Descrizione                                                        |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| account_invoice_report_ddt_group     | 12.0.1.0.5 | |no_check| | Raggruppa le righe fattura per DDT che le ha generate, mostrando eventualmente i |
+| account_invoice_report_ddt_group     | 12.0.1.0.5 | |same|     | Raggruppa le righe fattura per DDT che le ha generate, mostrando eventualmente i |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| account_vat_period_end_statement     | 12.0.1.7.0 | |no_check| | Allow to create the 'VAT Statement'.                                             |
+| account_vat_period_end_statement     | 12.0.1.7.0 | |same|     | Allow to create the 'VAT Statement'.                                             |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| assets_management                    | 12.0.1.0.0 | |no_check| | Gestione Cespiti                                                                 |
+| assets_management                    | 12.0.1.0.0 | |same|     | Gestione Cespiti                                                                 |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| currency_rate_update_boi             | 12.0.1.0.0 | |no_check| | Update exchange rates using www.bancaditalia.it                                  |
+| currency_rate_update_boi             | 12.0.1.0.0 | |same|     | Update exchange rates using www.bancaditalia.it                                  |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| fiscal_epos_print                    | 12.0.1.3.2 | |no_check| | ePOS-Print XML Fiscal Printer Driver - Stampanti Epson compatibili: FP81II, FP90 |
+| fiscal_epos_print                    | 12.0.1.3.2 | |same|     | ePOS-Print XML Fiscal Printer Driver - Stampanti Epson compatibili: FP81II, FP90 |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| fiscal_epos_print_fiscalcode         | 12.0.1.1.0 | |no_check| | Consente di includere il codice fiscale negli scontrini                          |
+| fiscal_epos_print_fiscalcode         | 12.0.1.1.0 | |same|     | Consente di includere il codice fiscale negli scontrini                          |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_abicab                       | 12.0.1.1.1 | |no_check| | Base Bank ABI/CAB codes                                                          |
+| fiscal_epos_print_meal_voucher       | |no_check| | 12.0.1.1.0 | Consente di controllare e comunicare al registratore telematico le informazioni  |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_account                      | 12.0.1.4.5 | |no_check| | Modulo base usato come dipendenza di altri moduli contabili                      |
+| l10n_it_abicab                       | 12.0.1.1.1 | |same|     | Base Bank ABI/CAB codes                                                          |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_account_balance_report       | 12.0.1.0.2 | |no_check| | Rendicontazione .pdf e .xls per stato patrimoniale e conto economico a sezioni c |
+| l10n_it_account                      | 12.0.1.4.5 | 12.0.1.4.5 | Modulo base usato come dipendenza di altri moduli contabili                      |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_account_stamp                | 12.0.1.2.0 | |no_check| | Gestione automatica dell'imposta di bollo                                        |
+| l10n_it_account_balance_report       | 12.0.1.0.2 | 12.0.1.0.3 | Rendicontazione .pdf e .xls per stato patrimoniale e conto economico a sezioni c |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_account_stamp_ddt            | 12.0.1.0.1 | |no_check| | Modulo ponte tra imposta di bollo e DDT                                          |
+| l10n_it_account_stamp                | 12.0.1.2.0 | |same|     | Gestione automatica dell'imposta di bollo                                        |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_account_stamp_sale           | 12.0.1.0.1 | |no_check| | Modulo ponte tra imposta di bollo e vendite                                      |
+| l10n_it_account_stamp_ddt            | 12.0.1.0.1 | |same|     | Modulo ponte tra imposta di bollo e DDT                                          |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_account_tax_kind             | 12.0.2.1.0 | |no_check| | Italian Localisation - Natura delle aliquote IVA                                 |
+| l10n_it_account_stamp_sale           | 12.0.1.0.1 | |same|     | Modulo ponte tra imposta di bollo e vendite                                      |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_ateco                        | 12.0.1.0.1 | |no_check| | ITA - Codici Ateco                                                               |
+| l10n_it_account_tax_kind             | 12.0.2.1.0 | 12.0.2.1.0 | Italian Localisation - Natura delle aliquote IVA                                 |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_causali_pagamento            | 12.0.2.0.0 | |no_check| | Aggiunge la tabella delle causali di pagamento da usare ad esempio nelle ritenut |
+| l10n_it_ateco                        | 12.0.1.0.1 | |same|     | ITA - Codici Ateco                                                               |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_central_journal              | 12.0.1.1.4 | |no_check| | ITA - Libro giornale                                                             |
+| l10n_it_causali_pagamento            | 12.0.2.0.0 | |same|     | Aggiunge la tabella delle causali di pagamento da usare ad esempio nelle ritenut |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_codici_carica                | 12.0.1.0.2 | |no_check| | Aggiunge la tabella dei codici carica da usare nelle dichiarazioni fiscali itali |
+| l10n_it_central_journal              | 12.0.1.1.4 | |same|     | ITA - Libro giornale                                                             |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_corrispettivi                | 12.0.1.1.7 | |no_check| | Italian Localization - Ricevute                                                  |
+| l10n_it_codici_carica                | 12.0.1.0.2 | |same|     | Aggiunge la tabella dei codici carica da usare nelle dichiarazioni fiscali itali |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_corrispettivi_fatturapa_out  | 12.0.1.0.1 | |no_check| | Modulo per integrare ricevute e fatturazione elettronica                         |
+| l10n_it_corrispettivi                | 12.0.1.1.7 | |same|     | Italian Localization - Ricevute                                                  |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_corrispettivi_sale           | 12.0.1.0.3 | |no_check| | Modulo per integrare le ricevute in Odoo con gli ordini di vendita.              |
+| l10n_it_corrispettivi_fatturapa_out  | 12.0.1.0.1 | |same|     | Modulo per integrare ricevute e fatturazione elettronica                         |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_ddt                          | 12.0.1.9.1 | |no_check| | Documento di Trasporto                                                           |
+| l10n_it_corrispettivi_sale           | 12.0.1.0.3 | |same|     | Modulo per integrare le ricevute in Odoo con gli ordini di vendita.              |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_delivery_note                | 12.0.1.0.0 | |no_check| | Crea, gestisce e fattura i DDT partendo dalle consegne                           |
+| l10n_it_ddt                          | 12.0.1.10. | 12.0.1.9.1 | Documento di Trasporto                                                           |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_delivery_note_base           | 12.0.1.0.0 | |no_check| | Crea e gestisce tabelle principali per gestire i DDT                             |
+| l10n_it_delivery_note                | 12.0.1.0.0 | 12.0.1.0.1 | Crea, gestisce e fattura i DDT partendo dalle consegne                           |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_delivery_note_batch          | 12.0.1.0.0 | |no_check| | Crea i DDT partendo da gruppi di prelievi                                        |
+| l10n_it_delivery_note_base           | 12.0.1.0.0 | |same|     | Crea e gestisce tabelle principali per gestire i DDT                             |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_delivery_note_order_link     | 12.0.1.0.0 | |no_check| | Crea collegamento tra i DDT e ordine di vendita                                  |
+| l10n_it_delivery_note_batch          | 12.0.1.0.0 | |same|     | Crea i DDT partendo da gruppi di prelievi                                        |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_dichiarazione_intento        | 12.0.0.1.6 | |no_check| | Gestione dichiarazioni di intento                                                |
+| l10n_it_delivery_note_order_link     | 12.0.1.0.0 | |same|     | Crea collegamento tra i DDT e ordine di vendita                                  |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_esigibilita_iva              | 12.0.2.0.0 | |no_check| | Italian Localization - Esigibilita' IVA                                          |
+| l10n_it_dichiarazione_intento        | 12.0.0.1.6 | 12.0.0.1.7 | Gestione dichiarazioni di intento                                                |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_fatturapa                    | 12.0.2.1.2 | |no_check| | Fatture elettroniche                                                             |
+| l10n_it_esigibilita_iva              | 12.0.2.0.0 | |same|     | Italian Localization - Esigibilita' IVA                                          |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_fatturapa_export_zip         | 12.0.1.0.1 | |no_check| | Permette di esportare in uno ZIP diversi file XML di fatture elettroniche        |
+| l10n_it_fatturapa                    | 12.0.2.1.2 | 12.0.2.1.2 | Fatture elettroniche                                                             |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_fatturapa_in                 | 12.0.2.5.1 | |no_check| | Ricezione fatture elettroniche                                                   |
+| l10n_it_fatturapa_export_zip         | 12.0.1.0.1 | |same|     | Permette di esportare in uno ZIP diversi file XML di fatture elettroniche        |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_fatturapa_in_purchase        | 12.0.1.0.2 | |no_check| | Modulo ponte tra ricezione fatture elettroniche e acquisti                       |
+| l10n_it_fatturapa_in                 | 12.0.2.5.1 | 12.0.2.7.1 | Ricezione fatture elettroniche                                                   |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_fatturapa_in_rc              | 12.0.1.1.4 | |no_check| | Modulo ponte tra e-fattura in acquisto e inversione contabile                    |
+| l10n_it_fatturapa_in_purchase        | 12.0.1.0.2 | |same|     | Modulo ponte tra ricezione fatture elettroniche e acquisti                       |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_fatturapa_out                | 12.0.2.2.5 | |no_check| | Emissione fatture elettroniche                                                   |
+| l10n_it_fatturapa_in_rc              | 12.0.1.1.4 | |same|     | Modulo ponte tra e-fattura in acquisto e inversione contabile                    |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_fatturapa_out_ddt            | 12.0.1.3.0 | |no_check| | Modulo ponte tra emissione fatture elettroniche e DDT                            |
+| l10n_it_fatturapa_out                | 12.0.2.2.5 | 12.0.2.2.5 | Emissione fatture elettroniche                                                   |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_fatturapa_out_rc             | 12.0.1.0.4 | |no_check| | Integrazione l10n_it_fatturapa_out e l10n_it_reverse_charge                      |
+| l10n_it_fatturapa_out_ddt            | 12.0.1.3.0 | |same|     | Modulo ponte tra emissione fatture elettroniche e DDT                            |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_fatturapa_out_stamp          | 12.0.2.0.0 | |no_check| | Modulo ponte tra emissione fatture elettroniche e imposta di bollo               |
+| l10n_it_fatturapa_out_rc             | 12.0.1.0.4 | |same|     | Integrazione l10n_it_fatturapa_out e l10n_it_reverse_charge                      |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_fatturapa_out_triple_discoun | 12.0.2.0.1 | |no_check| | Modulo ponte tra emissione fatture elettroniche e sconto triplo                  |
+| l10n_it_fatturapa_out_stamp          | 12.0.2.0.0 | |same|     | Modulo ponte tra emissione fatture elettroniche e imposta di bollo               |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_fatturapa_out_wt             | 12.0.2.0.0 | |no_check| | Modulo ponte tra emissione fatture elettroniche e ritenute.                      |
+| l10n_it_fatturapa_out_triple_discoun | 12.0.2.0.1 | |same|     | Modulo ponte tra emissione fatture elettroniche e sconto triplo                  |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_fatturapa_pec                | 12.0.1.9.2 | |no_check| | Invio fatture elettroniche tramite PEC                                           |
+| l10n_it_fatturapa_out_wt             | 12.0.2.0.0 | |same|     | Modulo ponte tra emissione fatture elettroniche e ritenute.                      |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_fatturapa_sale               | 12.0.1.1.1 | |no_check| | Aggiunge alcuni dati per la fatturazione elettronica nell'ordine di vendita      |
+| l10n_it_fatturapa_pec                | 12.0.1.9.2 | |same|     | Invio fatture elettroniche tramite PEC                                           |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_fiscal_document_type         | 12.0.2.1.1 | |no_check| | Italian Localization - Tipi di documento fiscale per dichiarativi                |
+| l10n_it_fatturapa_sale               | 12.0.1.1.1 | |same|     | Aggiunge alcuni dati per la fatturazione elettronica nell'ordine di vendita      |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_fiscal_payment_term          | 12.0.2.0.0 | |no_check| | Condizioni di pagamento delle fatture elettroniche                               |
+| l10n_it_fiscal_document_type         | 12.0.2.1.1 | |same|     | Italian Localization - Tipi di documento fiscale per dichiarativi                |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_fiscalcode                   | 12.0.1.1.4 | |no_check| | Italian Localization - Fiscal Code                                               |
+| l10n_it_fiscal_payment_term          | 12.0.2.0.0 | |same|     | Condizioni di pagamento delle fatture elettroniche                               |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_fiscalcode_crm               | 12.0.1.0.2 | |no_check| | Aggiunge il campo codice fiscale ai contatti/opportunità                         |
+| l10n_it_fiscalcode                   | 12.0.1.1.4 | |same|     | Italian Localization - Fiscal Code                                               |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_fiscalcode_sale              | 12.0.1.0.0 | |no_check| | Mostra il codice fiscale del cliente nella stampa del preventivo                 |
+| l10n_it_fiscalcode_crm               | 12.0.1.0.2 | |same|     | Aggiunge il campo codice fiscale ai contatti/opportunità                         |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_intrastat                    | 12.0.1.2.0 | |no_check| | Riclassificazione merci e servizi per dichiarazioni Intrastat                    |
+| l10n_it_fiscalcode_sale              | 12.0.1.0.0 | |same|     | Mostra il codice fiscale del cliente nella stampa del preventivo                 |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_intrastat_statement          | 12.0.1.2.4 | |no_check| | Dichiarazione Intrastat per l'Agenzia delle Dogane                               |
+| l10n_it_intrastat                    | 12.0.1.2.0 | 12.0.1.2.2 | Riclassificazione merci e servizi per dichiarazioni Intrastat                    |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_invoices_data_communication  | 12.0.1.3.2 | |no_check| | Comunicazione dati fatture (c.d. "nuovo spesometro" o "esterometro")             |
+| l10n_it_intrastat_statement          | 12.0.1.2.4 | |same|     | Dichiarazione Intrastat per l'Agenzia delle Dogane                               |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_invoices_data_communication_ | 12.0.1.0.2 | |no_check| | Integrazione fatturazione elettronica e comunicazione dati fatture (c.d. "nuovo  |
+| l10n_it_invoices_data_communication  | 12.0.1.3.2 | |same|     | Comunicazione dati fatture (c.d. "nuovo spesometro" o "esterometro")             |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_ipa                          | 12.0.1.0.2 | |no_check| | ITA - Codice IPA                                                                 |
+| l10n_it_invoices_data_communication_ | 12.0.1.0.2 | |same|     | Integrazione fatturazione elettronica e comunicazione dati fatture (c.d. "nuovo  |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_location_nuts                | 12.0.1.0.2 | |no_check| | Opzioni NUTS specifiche per l'Italia                                             |
+| l10n_it_ipa                          | 12.0.1.0.2 | |same|     | ITA - Codice IPA                                                                 |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_mis_reports_pl_bs            | 12.0.1.0.1 | |no_check| | Modelli "MIS Builder" per il conto economico e lo stato patrimoniale             |
+| l10n_it_location_nuts                | 12.0.1.0.2 | |same|     | Opzioni NUTS specifiche per l'Italia                                             |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_pec                          | 12.0.1.0.1 | |no_check| | Aggiunge il campo email PEC al partner                                           |
+| l10n_it_mis_reports_pl_bs            | 12.0.1.0.1 | |same|     | Modelli "MIS Builder" per il conto economico e lo stato patrimoniale             |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_pos_fatturapa                | 12.0.1.0.2 | |no_check| | Gestione dati fattura elettronica del cliente all'interno dell'interfaccia del P |
+| l10n_it_pec                          | 12.0.1.0.1 | |same|     | Aggiunge il campo email PEC al partner                                           |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_pos_fiscalcode               | 12.0.1.0.1 | |no_check| | Gestione codice fiscale del cliente all'interno dell'interfaccia del POS         |
+| l10n_it_pos_fatturapa                | 12.0.1.0.2 | |same|     | Gestione dati fattura elettronica del cliente all'interno dell'interfaccia del P |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_rea                          | 12.0.1.0.3 | |no_check| | Gestisce i campi del Repertorio Economico Amministrativo                         |
+| l10n_it_pos_fiscalcode               | 12.0.1.0.1 | |same|     | Gestione codice fiscale del cliente all'interno dell'interfaccia del POS         |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_reverse_charge               | 12.0.1.2.7 | |no_check| | Inversione contabile                                                             |
+| l10n_it_rea                          | 12.0.1.0.3 | 12.0.1.0.4 | Gestisce i campi del Repertorio Economico Amministrativo                         |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_ricevute_bancarie            | 12.0.1.7.0 | |no_check| | Ricevute bancarie                                                                |
+| l10n_it_reverse_charge               | 12.0.1.2.7 | 12.0.1.2.7 | Inversione contabile                                                             |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_sdi_channel                  | 12.0.1.3.3 | |no_check| | Aggiunge il canale di invio/ricezione dei file XML attraverso lo SdI             |
+| l10n_it_ricevute_bancarie            | 12.0.1.7.0 | |same|     | Ricevute bancarie                                                                |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_split_payment                | 12.0.1.0.1 | |no_check| | Split Payment                                                                    |
+| l10n_it_sdi_channel                  | 12.0.1.3.3 | |same|     | Aggiunge il canale di invio/ricezione dei file XML attraverso lo SdI             |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_vat_registries               | 12.0.1.2.5 | |no_check| | ITA - Registri IVA                                                               |
+| l10n_it_split_payment                | 12.0.1.0.1 | 12.0.1.0.1 | Split Payment                                                                    |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_vat_registries_split_payment | 12.0.1.0.2 | |no_check| | Modulo di congiunzione tra registri IVA e scissione dei pagamenti                |
+| l10n_it_vat_rc_replace               | 12.0.1.2.7 | |no_check| | Inversione contabile                                                             |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_vat_statement_communication  | 12.0.1.6.1 | |no_check| | Comunicazione liquidazione IVA ed esportazione file xmlconforme alle specifiche  |
+| l10n_it_vat_registries               | 12.0.1.2.5 | 12.0.1.2.5 | ITA - Registri IVA                                                               |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_vat_statement_split_payment  | 12.0.1.0.2 | |no_check| | Migliora la liquidazione dell'IVA tenendo in considerazione la scissione dei pag |
+| l10n_it_vat_registries_split_payment | 12.0.1.0.2 | |same|     | Modulo di congiunzione tra registri IVA e scissione dei pagamenti                |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_website_portal_fatturapa     | 12.0.1.2.1 | |no_check| | Add fatturapa fields and checks in frontend user's details                       |
+| l10n_it_vat_statement_communication  | 12.0.1.6.2 | 12.0.1.6.1 | Comunicazione liquidazione IVA ed esportazione file xmlconforme alle specifiche  |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_website_portal_fatturapa_sal | 12.0.1.1.1 | |no_check| | Controlli per la fattura elettronica nel portale vendite                         |
+| l10n_it_vat_statement_split_payment  | 12.0.1.0.2 | |same|     | Migliora la liquidazione dell'IVA tenendo in considerazione la scissione dei pag |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_website_portal_fiscalcode    | 12.0.1.0.2 | |no_check| | Add fiscal code to details of frontend user                                      |
+| l10n_it_website_portal_fatturapa     | 12.0.1.2.1 | |same|     | Add fatturapa fields and checks in frontend user's details                       |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_website_portal_ipa           | 12.0.1.1.1 | |no_check| | Aggiunge l'indice PA (IPA) tra i dettagli dell'utente nel portale.               |
+| l10n_it_website_portal_fatturapa_sal | 12.0.1.1.1 | |same|     | Controlli per la fattura elettronica nel portale vendite                         |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_website_sale_corrispettivi   | 12.0.1.0.1 | |no_check| | Aggiunge la ricevuta come opzione per l'utente e-commerce                        |
+| l10n_it_website_portal_fiscalcode    | 12.0.1.0.2 | |same|     | Add fiscal code to details of frontend user                                      |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_website_sale_fatturapa       | 12.0.1.0.3 | |no_check| | Aggiunge i campi necessari alla fatturazione elettronica nel form del checkout   |
+| l10n_it_website_portal_ipa           | 12.0.1.1.1 | |same|     | Aggiunge l'indice PA (IPA) tra i dettagli dell'utente nel portale.               |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_website_sale_fiscalcode      | 12.0.1.1.3 | |no_check| | Website Sale FiscalCode                                                          |
+| l10n_it_website_sale_corrispettivi   | 12.0.1.0.1 | |same|     | Aggiunge la ricevuta come opzione per l'utente e-commerce                        |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_withholding_tax              | 12.0.2.1.0 | |no_check| | Italian Withholding Tax                                                          |
+| l10n_it_website_sale_fatturapa       | 12.0.1.0.3 | |same|     | Aggiunge i campi necessari alla fatturazione elettronica nel form del checkout   |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_withholding_tax_causali      | 12.0.2.0.0 | |no_check| | Causali pagamento per ritenute d'acconto                                         |
+| l10n_it_website_sale_fiscalcode      | 12.0.1.1.3 | |same|     | Website Sale FiscalCode                                                          |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_withholding_tax_payment      | 12.0.1.0.1 | |no_check| | Gestisce le ritenute sulle fatture e sui pagamenti                               |
+| l10n_it_withholding_tax              | 12.0.2.1.0 | 12.0.2.1.0 | Italian Withholding Tax                                                          |
++--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
+| l10n_it_withholding_tax_causali      | 12.0.2.0.0 | |same|     | Causali pagamento per ritenute d'acconto                                         |
++--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
+| l10n_it_withholding_tax_payment      | 12.0.1.0.1 | |same|     | Gestisce le ritenute sulle fatture e sui pagamenti                               |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
 
 
@@ -230,7 +283,7 @@ Installation / Installazione
     source $HOME/devel/activate_tools
     # *** End of tools installation or upgrade ***
     # Odoo repository installation; OCB repository must be installed
-    odoo_install_repository l10n-italy -b 12.0 -O powerp -o $HOME/12.0
+    odoo_install_repository l10n-italy -b 12.0 -O zero -o $HOME/12.0
     vem create $HOME/12.0/venv_odoo -O 12.0 -a "*" -DI -o $HOME/12.0
 
 
@@ -264,12 +317,7 @@ Support / Supporto
 ------------------
 
 
-This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
-
-Developer companies are / I soci sviluppatoro sono:
-
-* `Didotech s.r.l. <http://www.didotech.com>`__
-* `SHS-AV s.r.l. <https://www.shs-av.com/>`__
+|Zeroincombenze| This project is mainly maintained by the `SHS-AV s.r.l. <https://www.zeroincombenze.it/>`__
 
 
 
@@ -279,7 +327,7 @@ Get involved / Ci mettiamo in gioco
 
 Bug reports are welcome! You can use the issue tracker to report bugs,
 and/or submit pull requests on `GitHub Issues
-<https://github.com/PowERP-cloud/l10n-italy/issues>`_.
+<https://github.com/zeroincombenze/l10n-italy/issues>`_.
 
 In case of trouble, please check there if your issue has already been reported.
 
@@ -287,12 +335,122 @@ Proposals for enhancement
 -------------------------
 
 
-If you have a proposal to change this module, you may want to send an email to <info@powerp.it> for initial feedback.
+|en| If you have a proposal to change on oh these modules, you may want to send an email to <cc@shs-av.com> for initial feedback.
 An Enhancement Proposal may be submitted if your idea gains ground.
+
+|it| Se hai proposte per migliorare uno dei moduli, puoi inviare una mail a <cc@shs-av.com> per un iniziale contatto.
 
 
 History / Cronologia
 --------------------
+
+l10n_it_vat_rc_replace: 12.0.1.2.7_24 (2021-08-25)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Out invoice/refund do not execute RC actions / Azioni di RC ignorate per fatture / NC di vendita
+
+
+l10n_it_split_payment: 12.0.1.0.1_9 (2021-08-19)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Refactoring metodo di pagamento 'tax'
+
+
+l10n_it_withholding_tax: 12.0.2.1.0_7 (2021-08-18)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] POW-466 - Abilitazione campo ritenuta sulle righe fattura
+
+
+l10n_it_split_payment: 12.0.1.0.1_7 (2021-08-17)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Corretto totale in xml
+
+
+l10n_it_vat_rc_replace: 12.0.1.2.7_23 (2021-08-06)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Fix bug POW-450 partner vuoto in registrazione contabile
+
+
+l10n_it_vat_rc_replace: 12.0.1.2.7_22 (2021-08-05)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato date applicazione iva e iva bilancio nell'autofattura
+
+
+l10n_it_vat_rc_replace: 12.0.1.2.7_21 (2021-08-04)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato data di registrazione nell'autofattura in tutti i campi data
+
+
+l10n_it_withholding_tax: 12.0.2.1.0_6 (2021-08-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] POW-434 - Filtro sul registro
+
+
+l10n_it_vat_rc_replace: 12.0.1.2.7_19 (2021-08-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato data di registrazione in autofattura
+
+
+l10n_it_vat_rc_replace: 12.0.1.2.7_15 (2021-07-26)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Possibilità di impostare manualmente il campo rc_type di account.tax
+
+
+l10n_it_vat_rc_replace: 12.0.1.2.7_14 (2021-07-21)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato controllo flag rc in creazione fattura
+
+
+l10n_it_vat_rc_replace: 12.0.1.2.7_13 (2021-07-20)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Corretto comportamento anomalo annullamento fattura
+
+
+l10n_it_withholding_tax: 12.0.2.1.0_5 (2021-07-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Verificato e risolto bug POW-409 - Nascosto campo pagamento netto residuo
+
+
+l10n_it_vat_rc_replace: 12.0.1.2.7_11 (2021-07-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Aggiornato campo registro in posizione fiscale
+
+
+l10n_it_withholding_tax: 12.0.2.1.0_4 (2021-07-12)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato filtro corretto sui movimenti contabili per la registrazione del pagamento
+
+
+l10n_it_withholding_tax: 12.0.2.1.0_3 (2021-07-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Refactoring account_move_create
+
+
+l10n_it_withholding_tax: 12.0.2.1.0_2 (2021-07-01)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato l'importo corretto nel wizard del pagamento
+
+
+l10n_it_dichiarazione_intento: 12.0.0.1.6_1 (2021-06-25)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Importato il fix di Silvio Gregorini
+
 
 l10n_it_vat_registries: 12.0.1.2.5_1 (2021-06-22)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -343,6 +501,7 @@ l10n_it_withholding_tax: 12.0.2.1.1 (2021-06-18)
 * [IMP] Spostato il campo "netto a pagare" ma mantenuto il calcolo
 
 
+
 l10n_it_split_payment: 12.0.1.0.3 (2021-06-18)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -353,7 +512,6 @@ l10n_it_account: 12.0.1.4.6 (2021-06-18)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Impostato in fattura il campo "netto a pagare"
-
 
 
 l10n_it_split_payment: 12.0.1.0.2 (2021-06-17)
@@ -375,14 +533,6 @@ l10n_it_reverse_charge: 12.0.1.2.7 (2021-03-18)
 
 
 
-l10n_it_reverse_charge: 12.0.1.2.6 (2021-02-17)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[REF] Clone OCA module
-[FIX] Mixed RC and ordinary VAT line in single vendor bill
-[FIX] Self invoice account move lines
-
-
 
 
 
@@ -398,19 +548,14 @@ Odoo is a trademark of `Odoo S.A. <https://www.odoo.com/>`__ (formerly OpenERP)
 ----------------
 
 
-|en| **Powerp** is an Italian enterprises network, whose mission is to develop high-level addons designed for Italian enterprise companies.
+|en| **zeroincombenze®** is a trademark of `SHS-AV s.r.l. <https://www.shs-av.com/>`__
+which distributes and promotes ready-to-use **Odoo** on own cloud infrastructure.
+`Zeroincombenze® distribution of Odoo <https://wiki.zeroincombenze.org/en/Odoo>`__
+is mainly designed to cover Italian law and markeplace.
 
-`Powerp <http://www.powerp.it/>`__ code adds new enhanced features to Italian localization and it released under `LGPL <https://www.gnu.org/licenses/lgpl-3.0.html>`__ or `OPL <https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html>`__ licenses.
-
-|it| `Powerp <http://www.powerp.it/>`__ è una rete di imprese italiane, nata con la missione di sviluppare moduli per le PMI.
-
-Il codice di `Powerp <http://www.powerp.it/>`__ aggiunge caratteristiche evolute alla localizzazione italiana; il codice è rilasciato con licenze `LGPL <https://www.gnu.org/licenses/lgpl-3.0.html>`__ e `OPL <https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html>`__
-
-I soci fondatori sono:
-
-* `Didotech s.r.l. <http://www.didotech.com>`__
-* `SHS-AV s.r.l. <https://www.shs-av.com/>`__
-* `Xplain s.r.l. <http://x-plain.it//>`__
+|it| **zeroincombenze®** è un marchio registrato da `SHS-AV s.r.l. <https://www.shs-av.com/>`__
+che distribuisce e promuove **Odoo** pronto all'uso sulla propria infrastuttura.
+La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ è progettata per le esigenze del mercato italiano.
 
 
 
@@ -420,13 +565,13 @@ I soci fondatori sono:
 |
 
 
-Last Update / Ultimo aggiornamento: 2021-06-23
+Last Update / Ultimo aggiornamento: 2021-08-30
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status
     :alt: 
-.. |Build Status| image:: https://travis-ci.org/PowERP-cloud/l10n-italy.svg?branch=12.0
-    :target: https://travis-ci.com/PowERP-cloud/l10n-italy
+.. |Build Status| image:: https://travis-ci.org/zeroincombenze/l10n-italy.svg?branch=12.0
+    :target: https://travis-ci.com/zeroincombenze/l10n-italy
     :alt: github.com
 .. |license gpl| image:: https://img.shields.io/badge/licence-LGPL--3-7379c3.svg
     :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
@@ -434,11 +579,11 @@ Last Update / Ultimo aggiornamento: 2021-06-23
 .. |license opl| image:: https://img.shields.io/badge/licence-OPL-7379c3.svg
     :target: https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html
     :alt: License: OPL
-.. |Coverage Status| image:: https://coveralls.io/repos/github/PowERP-cloud/l10n-italy/badge.svg?branch=12.0
-    :target: https://coveralls.io/github/PowERP-cloud/l10n-italy?branch=12.0
+.. |Coverage Status| image:: https://coveralls.io/repos/github/zeroincombenze/l10n-italy/badge.svg?branch=12.0
+    :target: https://coveralls.io/github/zeroincombenze/l10n-italy?branch=12.0
     :alt: Coverage
-.. |Codecov Status| image:: https://codecov.io/gh/PowERP-cloud/l10n-italy/branch/12.0/graph/badge.svg
-    :target: https://codecov.io/gh/PowERP-cloud/l10n-italy/branch/12.0
+.. |Codecov Status| image:: https://codecov.io/gh/zeroincombenze/l10n-italy/branch/12.0/graph/badge.svg
+    :target: https://codecov.io/gh/zeroincombenze/l10n-italy/branch/12.0
     :alt: Codecov
 .. |Tech Doc| image:: https://www.zeroincombenze.it/wp-content/uploads/ci-ct/prd/button-docs-12.svg
     :target: https://wiki.zeroincombenze.org/en/Odoo/12.0/dev
