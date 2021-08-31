@@ -27,19 +27,6 @@ Overview / Panoramica
 
 
 |
-
-OCA comparation / Confronto con OCA
------------------------------------
-
-
-+-----------------------------------------------------------------+-------------------+----------------+--------------------------------+
-| Description / Descrizione                                       | Zeroincombenze    | OCA            | Notes / Note                   |
-+-----------------------------------------------------------------+-------------------+----------------+--------------------------------+
-| Coverage / Copertura test                                       |  |Codecov Status| | |OCA Codecov|  |                                |
-+-----------------------------------------------------------------+-------------------+----------------+--------------------------------+
-
-
-|
 |
 
 Getting started / Come iniziare
@@ -131,7 +118,7 @@ Support / Supporto
 
 This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
 
-Developer companies are / I soci sviluppatoro sono:
+Developer companies are / I soci sviluppatori sono:
 
 * `Didotech s.r.l. <http://www.didotech.com>`__
 * `SHS-AV s.r.l. <https://www.shs-av.com/>`__
@@ -162,43 +149,53 @@ ChangeLog History / Cronologia modifiche
 
 12.0.4.8.18 (2021-08-25)
 ~~~~~~~~~~~~~~~~~~~~~~~~
- * [FIX] Missed dependency: "sale" / Manca dipendenza "ordini clienti"
+
+* [FIX] Missed dependency: "sale" / Manca dipendenza "ordini clienti"
 
 12.0.4.8.17 (2021-08-19)
 ~~~~~~~~~~~~~~~~~~~~~~~~
- * [REF] account_duedates: Refactoring metodo di pagamento 'tax' per scadenze tecniche
+
+* [REF] account_duedates: Refactoring metodo di pagamento 'tax' per scadenze tecniche
 
 12.0.4.8.16 (2021-08-17)
 ~~~~~~~~~~~~~~~~~~~~~~~~
- * [FIX] account_duedates: Impostata dipendenza mancante
+
+* [FIX] account_duedates: Impostata dipendenza mancante
 
 12.0.4.8.15 (2021-08-17)
 ~~~~~~~~~~~~~~~~~~~~~~~~
- * [FIX] account_duedates: POW-465 Gestito errore utente bloccante
+
+* [FIX] account_duedates: POW-465 Gestito errore utente bloccante
 
 12.0.4.8.14 (2021-07-13)
 ~~~~~~~~~~~~~~~~~~~~~~~~
- * [FIX] account_duedates: Aggiornato ordine della generazione dei movimenti contabili
- * [FIX] account_duedates: Impostato 15 giorni la ritenuta dopo l'ultima scadenza
+
+* [FIX] account_duedates: Aggiornato ordine della generazione dei movimenti contabili
+* [FIX] account_duedates: Impostato 15 giorni la ritenuta dopo l'ultima scadenza
 
 12.0.4.8.13 (2021-07-05)
 ~~~~~~~~~~~~~~~~~~~~~~~~
- * [IMP] account_duedates: Impostato manager per la gestione delle scadenze Reverse charge
+
+* [IMP] account_duedates: Impostato manager per la gestione delle scadenze Reverse charge
 
 12.0.4.8.12 (2021-06-28)
 ~~~~~~~~~~~~~~~~~~~~~~~~
- * [IMP] account_duedates: Impostato manager per la gestione delle scadenze
+
+* [IMP] account_duedates: Impostato manager per la gestione delle scadenze
 
 12.0.4.8.11 (2021-06-25)
 ~~~~~~~~~~~~~~~~~~~~~~~~
- * [FIX] account_duedates: corretto errore che impediva il salvataggio di una registrazione contabile una volta modificata
+
+* [FIX] account_duedates: corretto errore che impediva il salvataggio di una registrazione contabile una volta modificata
 
 12.0.4.7.11 (2021-06-22)
 ~~~~~~~~~~~~~~~~~~~~~~~~
+
 * [FIX] account_duedates: campo non duplicabile 'Data di decorrenza'
 
 12.0.4.7.10 (2021-06-21)
 ~~~~~~~~~~~~~~~~~~~~~~~~
+
 * [FIX] account_duedates: corretto bug nella creazione fattura
 
 12.0.4.7.9 (2021-06-18)
@@ -244,23 +241,12 @@ Contributors / Collaboratori
 * Fabio Giovannelli <fabio.giovannelli@didotech.com>
 
 
-Acknowledges / Riconoscimenti
------------------------------
-
-
-
-
-Translations by / Traduzioni a cura di
---------------------------------------
-
-
-
-
 Maintainer / Manutenzione
 -------------------------
 
+
 This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese Powerp <http://www.powerp.it/>
-Developer companies are / I soci sviluppatoro sono:
+Developer companies are / I soci sviluppatori sono:
 * Didotech s.r.l. <http://www.didotech.com>
 * SHS-AV s.r.l. <https://www.shs-av.com/>
 
@@ -293,7 +279,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-08-25
+Last Update / Ultimo aggiornamento: 2021-08-31
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
