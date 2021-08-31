@@ -6,7 +6,7 @@
 
 **Adds rounding, months, weeks and multiple payment days properties on payment term lines**
 
-.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud//12.0//static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/accounting/12.0/account_payment_term_plus/static/description/icon.png
 
 |Maturity| |Build Status| |license opl|
 
@@ -24,19 +24,6 @@ Overview / Panoramica
 |
 
 |it| Modulo per la gestione dei giorni e delle settimane nei termini di pagamento
-
-
-|
-
-OCA comparation / Confronto con OCA
------------------------------------
-
-
-+-----------------------------------------------------------------+-------------------+----------------+--------------------------------+
-| Description / Descrizione                                       | Zeroincombenze    | OCA            | Notes / Note                   |
-+-----------------------------------------------------------------+-------------------+----------------+--------------------------------+
-| Coverage / Copertura test                                       |  |Codecov Status| | |OCA Codecov|  |                                |
-+-----------------------------------------------------------------+-------------------+----------------+--------------------------------+
 
 
 |
@@ -85,14 +72,14 @@ Installation / Installazione
     source $HOME/devel/activate_tools
     # *** End of tools installation or upgrade ***
     # Odoo repository installation; OCB repository must be installed
-    odoo_install_repository  -b 12.0 -O powerp -o $HOME/12.0
+    odoo_install_repository accounting -b 12.0 -O powerp -o $HOME/12.0
     vem create $HOME/12.0/venv_odoo -O 12.0 -a "*" -DI -o $HOME/12.0
 
 From UI: go to:
 
 * |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
-* |menu| Setting > Apps |right_do| Select **** > Install
+* |menu| Setting > Apps |right_do| Select **account_payment_term_plus** > Install
 
 
 |
@@ -116,7 +103,7 @@ Upgrade / Aggiornamento
     source $HOME/devel/activate_tools
     # *** End of tools installation or upgrade ***
     # Odoo repository upgrade
-    odoo_install_repository  -b 12.0 -o $HOME/12.0 -U
+    odoo_install_repository accounting -b 12.0 -o $HOME/12.0 -U
     vem amend $HOME/12.0/venv_odoo -o $HOME/12.0
     # Adjust following statements as per your system
     sudo systemctl restart odoo
@@ -131,7 +118,7 @@ Support / Supporto
 
 This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
 
-Developer companies are / I soci sviluppatoro sono:
+Developer companies are / I soci sviluppatori sono:
 
 * `Didotech s.r.l. <http://www.didotech.com>`__
 * `SHS-AV s.r.l. <https://www.shs-av.com/>`__
@@ -145,7 +132,7 @@ Get involved / Ci mettiamo in gioco
 
 Bug reports are welcome! You can use the issue tracker to report bugs,
 and/or submit pull requests on `GitHub Issues
-<https://github.com/PowERP-cloud//issues>`_.
+<https://github.com/PowERP-cloud/accounting/issues>`_.
 
 In case of trouble, please check there if your issue has already been reported.
 
@@ -162,38 +149,47 @@ ChangeLog History / Cronologia modifiche
 
 12.0.0.1.8 (2021-08-18)
 ~~~~~~~~~~~~~~~~~~~~~~~
+
 * [IMP] Added check and disable feature / Impostato controllo e disabilitazione modulo OCA
 
 12.0.0.1.7 (2020-12-23)
 ~~~~~~~~~~~~~~~~~~~~~~~
+
 * [IMP] Added duedates simulator  / Inserito simulatore scadenze
 
 12.0.0.1.6 (2020-12-04)
 ~~~~~~~~~~~~~~~~~~~~~~~
+
 * [IMP] Added field boolean for vat duedate  / Inserito campo flag per la gestione iva nella prima scadenza
 
 12.0.0.1.5 (2020-12-04)
 ~~~~~~~~~~~~~~~~~~~~~~~
+
 * [REF] Refactoring compute  / Verifica calcolo scadenze
 
 12.0.0.1.4 (2020-10-14)
 ~~~~~~~~~~~~~~~~~~~~~~~
+
 * [FIX] Checked all occurrences of inbound/outbound / Sostituite le occorrenze di inbound/outbound
 
 12.0.0.1.3 (2020-10-13)
 ~~~~~~~~~~~~~~~~~~~~~~~
+
 * [REF] Update fields from inbound/outbound to credit/debit
 
 12.0.0.1.2 (2020-10-07)
 ~~~~~~~~~~~~~~~~~~~~~~~
+
 * [REF] Refactoring "compute" method
 
 12.0.0.1.1 (2020-09-23)
 ~~~~~~~~~~~~~~~~~~~~~~~
+
 * [IMP] Added fields inbound/outbound / Inserito metodo di pagamento in entrata ed in uscita
 
 12.0.0.1.0 (2020-09-20)
 ~~~~~~~~~~~~~~~~~~~~~~~
+
 * [IMP] Module implementation / Implementazione modulo 
 
 
@@ -220,6 +216,7 @@ Authors / Autori
 * `SHS-AV s.r.l. <https://www.zeroincombenze.it>`__
 * `Didotech srl <https://www.didotech.com>`__
 
+
 Contributors / Collaboratori
 ----------------------------
 
@@ -232,12 +229,10 @@ Maintainer / Manutenzione
 -------------------------
 
 
-This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
-
-Developer companies are / I soci sviluppatoro sono:
-
-* `Didotech s.r.l. <http://www.didotech.com>`__
-* `SHS-AV s.r.l. <https://www.shs-av.com/>`__
+This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese Powerp <http://www.powerp.it/>
+Developer companies are / I soci sviluppatori sono:
+* Didotech s.r.l. <http://www.didotech.com>
+* SHS-AV s.r.l. <https://www.shs-av.com/>
 
 
 |
@@ -266,27 +261,27 @@ I soci fondatori sono:
 
 |
 
-This module is part of  project.
+This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-08-18
+Last Update / Ultimo aggiornamento: 2021-08-31
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
     :alt: 
-.. |Build Status| image:: https://travis-ci.org/PowERP-cloud/.svg?branch=12.0
-    :target: https://travis-ci.com/PowERP-cloud/
+.. |Build Status| image:: https://travis-ci.org/PowERP-cloud/accounting.svg?branch=12.0
+    :target: https://travis-ci.com/PowERP-cloud/accounting
     :alt: github.com
-.. |license gpl| image:: https://img.shields.io/badge/licence---3-7379c3.svg
-    :target: http://www.gnu.org/licenses/-3.0-standalone.html
-    :alt: License: -3
+.. |license gpl| image:: https://img.shields.io/badge/licence-LGPL--3-7379c3.svg
+    :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
+    :alt: License: LGPL-3
 .. |license opl| image:: https://img.shields.io/badge/licence-OPL-7379c3.svg
     :target: https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html
     :alt: License: OPL
-.. |Coverage Status| image:: https://coveralls.io/repos/github/PowERP-cloud//badge.svg?branch=12.0
-    :target: https://coveralls.io/github/PowERP-cloud/?branch=12.0
+.. |Coverage Status| image:: https://coveralls.io/repos/github/PowERP-cloud/accounting/badge.svg?branch=12.0
+    :target: https://coveralls.io/github/PowERP-cloud/accounting?branch=12.0
     :alt: Coverage
-.. |Codecov Status| image:: https://codecov.io/gh/PowERP-cloud//branch/12.0/graph/badge.svg
-    :target: https://codecov.io/gh/PowERP-cloud//branch/12.0
+.. |Codecov Status| image:: https://codecov.io/gh/PowERP-cloud/accounting/branch/12.0/graph/badge.svg
+    :target: https://codecov.io/gh/PowERP-cloud/accounting/branch/12.0
     :alt: Codecov
 .. |Tech Doc| image:: https://www.zeroincombenze.it/wp-content/uploads/ci-ct/prd/button-docs-12.svg
     :target: https://wiki.zeroincombenze.org/en/Odoo/12.0/dev
@@ -297,8 +292,8 @@ Last Update / Ultimo aggiornamento: 2021-08-18
 .. |Try Me| image:: https://www.zeroincombenze.it/wp-content/uploads/ci-ct/prd/button-try-it-12.svg
     :target: https://erp12.zeroincombenze.it
     :alt: Try Me
-.. |OCA Codecov| image:: https://codecov.io/gh/OCA//branch/12.0/graph/badge.svg
-    :target: https://codecov.io/gh/OCA//branch/12.0
+.. |OCA Codecov| image:: https://codecov.io/gh/OCA/accounting/branch/12.0/graph/badge.svg
+    :target: https://codecov.io/gh/OCA/accounting/branch/12.0
     :alt: Codecov
 .. |Odoo Italia Associazione| image:: https://www.odoo-italia.org/images/Immagini/Odoo%20Italia%20-%20126x56.png
    :target: https://odoo-italia.org
