@@ -1,10 +1,10 @@
 
 =================================
-|icon| Split Payment 12.0.1.0.1_6
+|icon| Split Payment 12.0.1.0.1_7
 =================================
 
 
-.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/l10n-italy/12.0/l10n_it_split_payment/static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud//12.0//static/description/icon.png
 
 |Maturity| |Build Status| |license opl|
 
@@ -22,6 +22,20 @@ Overview / Panoramica
 |
 
 |it| Gestione evoluta della scissione dei pagamenti
+
+
+|
+
+Usage / Utilizzo
+----------------
+
+**Italiano**
+
+Per usare questo modulo, è necessario selezionare la posizione fiscale corretta nelle fatture
+
+**English**
+
+To use this module, you need to select the correct fiscal position in invoices
 
 
 |
@@ -83,14 +97,71 @@ Installation / Installazione
     source $HOME/devel/activate_tools
     # *** End of tools installation or upgrade ***
     # Odoo repository installation; OCB repository must be installed
-    odoo_install_repository l10n-italy -b 12.0 -O powerp -o $HOME/12.0
+    odoo_install_repository  -b 12.0 -O powerp -o $HOME/12.0
     vem create $HOME/12.0/venv_odoo -O 12.0 -a "*" -DI -o $HOME/12.0
 
 From UI: go to:
 
 * |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
-* |menu| Setting > Apps |right_do| Select **l10n_it_split_payment** > Install
+* |menu| Setting > Apps |right_do| Select **** > Install
+
+
+|
+
+Configuration / Configurazione
+------------------------------
+
+**Italiano**
+
+Per configurare questo modulo è necessario:
+
+* andare in Contabilità → Configurazione → Impostazioni e configura "Conto storno scissione pagamenti" (es. 'IVA n/debito sospesa SP'). Il conto storno dovrebbe essere diverso dall'IVA a debito standard, in modo da aggiungerlo separatamente nella dichiarazione IVA.
+
+**English**
+
+To configure this module, you need to:
+
+* go to Accounting → Configuration → Settings and configure 'Split Payment Write-off account' (like 'IVA n/debito sospesa SP'). Write-off account should be different from standard debit VAT, in order to separately add it in VAT statement.
+
+.. figure:: static/settings.png
+   :alt: Configuration
+   :width: 600 px
+
+-------------------------------------------------------------------------------
+
+**Italiano**
+
+* aggiungere una nuova imposta (Contabilità → Configurazione → Contabilità → Imposte). IVA al 22% SPL deve essere configurata nel modo seguente:
+
+**English**
+
+* add a new tax (Accounting → Configuration → Accounting → Taxes). IVA al 22% SPL should be configured like the following:
+
+
+.. figure:: static/SP.png
+   :alt: 22SPL
+   :width: 600 px
+
+.. figure:: static/SP2.png
+   :alt: 22SPL
+   :width: 600 px
+
+-------------------------------------------------------------------------------
+
+**Italiano**
+
+* configurare la posizione fiscale (Contabilità → Configurazione → Contabilità → Posizioni fiscali) usata per la scissione dei pagamenti, selezionando la casella "Scissione pagamenti". Nella posizione fiscale mappare l'IVA standard con l'IVA SP, come indicato di seguito:
+
+**English**
+
+* configure the fiscal position (Accounting → Configuration → Accounting → Fiscal Positions) used for split payment, setting 'Split Payment' flag. In fiscal position, map standard VAT with SP VAT, like the following:
+
+
+.. figure:: static/fiscal_position.png
+   :alt: Fiscal position
+   :width: 600 px
+
 
 
 |
@@ -114,7 +185,7 @@ Upgrade / Aggiornamento
     source $HOME/devel/activate_tools
     # *** End of tools installation or upgrade ***
     # Odoo repository upgrade
-    odoo_install_repository l10n-italy -b 12.0 -o $HOME/12.0 -U
+    odoo_install_repository  -b 12.0 -o $HOME/12.0 -U
     vem amend $HOME/12.0/venv_odoo -o $HOME/12.0
     # Adjust following statements as per your system
     sudo systemctl restart odoo
@@ -129,7 +200,7 @@ Support / Supporto
 
 This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
 
-Developer companies are / I soci sviluppatoro sono:
+Developer companies are / I soci sviluppatori sono:
 
 * `Didotech s.r.l. <http://www.didotech.com>`__
 * `SHS-AV s.r.l. <https://www.shs-av.com/>`__
@@ -143,7 +214,7 @@ Get involved / Ci mettiamo in gioco
 
 Bug reports are welcome! You can use the issue tracker to report bugs,
 and/or submit pull requests on `GitHub Issues
-<https://github.com/PowERP-cloud/l10n-italy/issues>`_.
+<https://github.com/PowERP-cloud//issues>`_.
 
 In case of trouble, please check there if your issue has already been reported.
 
@@ -157,6 +228,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.1.0.1_7 (2021-08-31)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato filtro sui movimenti contabili per l'inserimento nella fattura elettronica
 
 12.0.1.0.1_6 (2021-06-22)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -226,16 +302,25 @@ Contributors / Collaboratori
 * Fabio Giovannelli <fabio.giovannelli@didotech.com>
 
 
+Acknowledges / Riconoscimenti
+-----------------------------
+
+
+
+
+Translations by / Traduzioni a cura di
+--------------------------------------
+
+
+
+
 Maintainer / Manutenzione
 -------------------------
 
-
-This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
-
-Developer companies are / I soci sviluppatoro sono:
-
-* `Didotech s.r.l. <http://www.didotech.com>`__
-* `SHS-AV s.r.l. <https://www.shs-av.com/>`__
+This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese Powerp <http://www.powerp.it/>
+Developer companies are / I soci sviluppatori sono:
+* Didotech s.r.l. <http://www.didotech.com>
+* SHS-AV s.r.l. <https://www.shs-av.com/>
 
 
 |
@@ -264,27 +349,27 @@ I soci fondatori sono:
 
 |
 
-This module is part of l10n-italy project.
+This module is part of  project.
 
-Last Update / Ultimo aggiornamento: 2021-06-23
+Last Update / Ultimo aggiornamento: 2021-08-31
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status
     :alt: 
-.. |Build Status| image:: https://travis-ci.org/PowERP-cloud/l10n-italy.svg?branch=12.0
-    :target: https://travis-ci.com/PowERP-cloud/l10n-italy
+.. |Build Status| image:: https://travis-ci.org/PowERP-cloud/.svg?branch=12.0
+    :target: https://travis-ci.com/PowERP-cloud/
     :alt: github.com
-.. |license gpl| image:: https://img.shields.io/badge/licence-LGPL--3-7379c3.svg
-    :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
-    :alt: License: LGPL-3
+.. |license gpl| image:: https://img.shields.io/badge/licence---3-7379c3.svg
+    :target: http://www.gnu.org/licenses/-3.0-standalone.html
+    :alt: License: -3
 .. |license opl| image:: https://img.shields.io/badge/licence-OPL-7379c3.svg
     :target: https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html
     :alt: License: OPL
-.. |Coverage Status| image:: https://coveralls.io/repos/github/PowERP-cloud/l10n-italy/badge.svg?branch=12.0
-    :target: https://coveralls.io/github/PowERP-cloud/l10n-italy?branch=12.0
+.. |Coverage Status| image:: https://coveralls.io/repos/github/PowERP-cloud//badge.svg?branch=12.0
+    :target: https://coveralls.io/github/PowERP-cloud/?branch=12.0
     :alt: Coverage
-.. |Codecov Status| image:: https://codecov.io/gh/PowERP-cloud/l10n-italy/branch/12.0/graph/badge.svg
-    :target: https://codecov.io/gh/PowERP-cloud/l10n-italy/branch/12.0
+.. |Codecov Status| image:: https://codecov.io/gh/PowERP-cloud//branch/12.0/graph/badge.svg
+    :target: https://codecov.io/gh/PowERP-cloud//branch/12.0
     :alt: Codecov
 .. |Tech Doc| image:: https://www.zeroincombenze.it/wp-content/uploads/ci-ct/prd/button-docs-12.svg
     :target: https://wiki.zeroincombenze.org/en/Odoo/12.0/dev
@@ -295,8 +380,8 @@ Last Update / Ultimo aggiornamento: 2021-06-23
 .. |Try Me| image:: https://www.zeroincombenze.it/wp-content/uploads/ci-ct/prd/button-try-it-12.svg
     :target: https://erp12.zeroincombenze.it
     :alt: Try Me
-.. |OCA Codecov| image:: https://codecov.io/gh/OCA/l10n-italy/branch/12.0/graph/badge.svg
-    :target: https://codecov.io/gh/OCA/l10n-italy/branch/12.0
+.. |OCA Codecov| image:: https://codecov.io/gh/OCA//branch/12.0/graph/badge.svg
+    :target: https://codecov.io/gh/OCA//branch/12.0
     :alt: Codecov
 .. |Odoo Italia Associazione| image:: https://www.odoo-italia.org/images/Immagini/Odoo%20Italia%20-%20126x56.png
    :target: https://odoo-italia.org
