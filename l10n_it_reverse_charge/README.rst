@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_25
+|icon| ITA - Inversione contabile 12.0.1.2.7_26
 ===============================================
 
 
@@ -176,7 +176,7 @@ Installation / Installazione
 
 From UI: go to:
 
-* |menu| Setting > Activate Developer mode 
+* |menu| Setting > Activate Developer mode
 * |menu| Apps > Update Apps List
 * |menu| Setting > Apps |right_do| Select **l10n_it_vat_rc_replace** > Install
 
@@ -381,6 +381,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_26 (2021-09-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Risolto bug partner assente nella registrazione contabile di RC
+
 12.0.1.2.7_25 (2021-08-25)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -531,7 +536,7 @@ Last Update / Ultimo aggiornamento: 2021-08-25
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
-    :alt: 
+    :alt:
 .. |Build Status| image:: https://travis-ci.org/PowERP-cloud/l10n-italy.svg?branch=12.0
     :target: https://travis-ci.com/PowERP-cloud/l10n-italy
     :alt: github.com
