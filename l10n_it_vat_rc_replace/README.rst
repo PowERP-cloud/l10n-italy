@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_22
+|icon| ITA - Inversione contabile 12.0.1.2.7_23
 ===============================================
 
 
@@ -246,6 +246,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_23 (2021-08-06)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Fix bug POW-450 partner vuoto in registrazione contabile
+
 12.0.1.2.7_22 (2021-08-05)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -300,11 +305,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [IMP] Condizioni campo iva rc invisibile nella vista
-
-12.0.1.2.7_8 (2021-07-12)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[IMP] Autofattura per Reverse charge self
 
 
 
@@ -383,7 +383,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-08-05
+Last Update / Ultimo aggiornamento: 2021-08-06
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

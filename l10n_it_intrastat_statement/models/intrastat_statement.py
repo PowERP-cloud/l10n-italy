@@ -1,5 +1,10 @@
 # Copyright 2019 Simone Rubino - Agile Business Group
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# Copyright 2021 powERP enterprise network <https://www.powerp.it>
+#
+# License AGPL-3 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
+#
+
+import re
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
@@ -36,7 +41,29 @@ def format_9(value, length):
     :param length: length of the formatted field
     :return: formatted value
     """
-    value = str(value or "")[:length]  # Formatting only sets minimum width
+    value = str(value or "")[-length:]  # Formatting only sets minimum width
+    return ('{:0>' + str(length) + '}').format(value)
+
+def format_9b(value, length):
+    """
+    Format for numeric characters.
+
+    > i dati numerici (rappresentati con “9”) vanno allineati a destra,
+    > riempiendo il campo, ove occorra, di zeri non significativi a sinistra.
+    > Negative values will be rewritten in gang'COBOL'-style.
+
+    :param value: value to be formatted
+    :param length: length of the formatted field
+    :return: formatted value
+    """
+    if value < 0:
+        subsetChars = r'[^0-9]'
+        tValue = re.sub(subsetChars, '', "{}".format(value).strip())
+        lValue = "{}".format(tValue)[:len(tValue)-1]
+        rValue = "{}".format(tValue)[len(tValue)-1]
+        value = "{}{}".format(lValue, chr(112+int(rValue)))
+    else:
+        value = str(value or "")[-length:]  # Formatting only sets minimum width
     return ('{:0>' + str(length) + '}').format(value)
 
 
@@ -46,21 +73,7 @@ class AccountIntrastatStatement(models.Model):
     _rec_name = 'number'
 
     @api.multi
-    def round_min_amount(self, amount,
-                         company=None, prec_digits=None, truncate=False):
-        """
-        Return an integer representing `amount`,
-        ready for usage in the statement.
-
-        :param amount: Amount to be edited
-        :param company: Company to be used for fetching minimal value,
-                        if not present the statement's company is used
-        :param prec_digits: Digits to be used for rounding,
-                            if not present it is rounded to the unit
-        :param truncate: True if the float number
-                         has to be truncated, otherwise it is rounded
-        :return: An integer representing `amount`
-        """
+    def round_min_amount(self, amount, company=None, prec_digits=None):
         self.ensure_one()
         if company is None:
             company = self.company_id
@@ -68,12 +81,7 @@ class AccountIntrastatStatement(models.Model):
         if prec_digits:
             round_amount = float_round(amount, precision_digits=prec_digits)
         else:
-            round_amount = float_round(amount, precision_digits=0)
-
-        if truncate:
-            round_amount = int(round_amount)
-        else:
-            round_amount = int(float_round(round_amount, precision_digits=0))
+            round_amount = round(amount)
 
         return max(round_amount or 1, company.intrastat_min_amount)
 
@@ -202,8 +210,7 @@ class AccountIntrastatStatement(models.Model):
         help="Values accepted:\n"
              " - Month : From 1 to 12\n"
              " - Quarter: From 1 to 4",
-        default=1,
-        required=True)
+             required=True)
     date_start = fields.Date(
         string="Start Date",
         store=True,
@@ -661,10 +668,10 @@ class AccountIntrastatStatement(models.Model):
 
             section_op_amount_field = \
                 '%s_section%s_operation_amount' % (kind, section_number)
-            amount = self[section_op_amount_field]
-            if section_number == 2:
-                amount = self._format_negative_number_frontispiece(amount)
-            rcd += format_9(amount, 13)
+#             amount = self[section_op_amount_field]
+#             if section_number == 2:
+#                 self._format_negative_number_frontispiece(amount)
+            rcd += format_9b(self[section_op_amount_field], 13)
 
         rcd += "\r\n"
         return rcd
@@ -760,7 +767,11 @@ class AccountIntrastatStatement(models.Model):
         domain.append(('type', 'in', inv_type))
 
         statement_data = dict()
+        # all invoices
         invoices = self.env['account.invoice'].search(domain)
+        # european only
+        invoices = invoices.filtered(self.european_invoice)
+
         for inv_intra_line in invoices.mapped('intrastat_line_ids'):
             for section_type in ['purchase', 'sale']:
                 for section_number in range(1, 5):
@@ -875,3 +886,24 @@ class AccountIntrastatStatement(models.Model):
                     not (1 <= statement.period_number <= 4):
                 raise ValidationError(
                     _("Period Not Valid! Range accepted: from 1 to 4"))
+
+    def european_invoice(self, invoice):
+        """
+        method used to filter european country
+        """
+        country = invoice.partner_id.country_id
+
+        europe = self.env.ref('base.europe')
+        if not europe:
+            europe = self.env["res.country.group"].search([('name', '=',
+                                                            'Europe')],
+                                                          limit=1)
+        # end if
+
+        if europe and country.id in europe.country_ids.ids:
+            return True
+        else:
+            return False
+        # end if
+
+    # end european_invoice

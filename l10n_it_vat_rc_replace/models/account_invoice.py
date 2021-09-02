@@ -657,6 +657,13 @@ class AccountInvoice(models.Model):
                 # end if
                 line_model = self.env['account.move.line']
 
+                # set invoice id
+                for line in invoice.move_id.line_ids:
+                    if not line.invoice_id:
+                        line.invoice_id = invoice
+                    # end if
+                # end for
+
                 # common
 
                 tax_with_sell = invoice._get_tax_sell()
@@ -677,6 +684,7 @@ class AccountInvoice(models.Model):
                         'partner_id': invoice.partner_id.id,
                         'account_id': tax_sell.account_id.id,
                         'journal_id': journal_id.id,
+                        'invoice_id': invoice.id,
                         'date': invoice.date,
                         'debit': 0,
                         'credit': invoice.amount_rc,
@@ -698,6 +706,7 @@ class AccountInvoice(models.Model):
                         'partner_id': invoice.partner_id.id,
                         'account_id': invoice.account_id.id,
                         'journal_id': journal_id.id,
+                        'invoice_id': invoice.id,
                         'date': invoice.date,
                         'debit': invoice.amount_rc,
                         'credit': 0,
@@ -731,6 +740,7 @@ class AccountInvoice(models.Model):
                         'account_id':
                             partner_id.property_account_receivable_id.id,
                         'journal_id': journal_id.id,
+                        'invoice_id': invoice.id,
                         'date': invoice.date,
                         'debit': 0,
                         'credit': invoice.amount_rc,
@@ -752,6 +762,7 @@ class AccountInvoice(models.Model):
                         'partner_id': invoice.partner_id.id,
                         'account_id': invoice.account_id.id,
                         'journal_id': journal_id.id,
+                        'invoice_id': invoice.id,
                         'date': invoice.date,
                         'debit': invoice.amount_rc,
                         'credit': 0,
@@ -767,6 +778,7 @@ class AccountInvoice(models.Model):
                     ).create(supplier_vat_vals)
 
                     transfer_ids.append(tranfer.id)
+
                 # end if
 
                 # reconcile
