@@ -1,12 +1,12 @@
 
-====================================================
-|icon| ITA - Dichiarazione Intrastat Plus 12.0.1.1.8
-====================================================
+==================================
+|icon| Intrastat esteso 12.0.1.2.5
+==================================
 
 
-**Dichiarazione Intrastat Plus per l"Agenzia delle Dogane**
+**Riclassificazione merci e servizi per dichiarazioni Intrastat**
 
-.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/accounting/12.0/l10n_it_intrastat_statement_plus/static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/accounting/12.0/l10n_it_intrastat_plus/static/description/icon.png
 
 |Maturity| |Build Status| |license opl|
 
@@ -24,11 +24,6 @@ Overview / Panoramica
 |
 
 |it| Estensione del modulo Intrastat
-
-Questo modulo si occupa di generare la dichiarazione Intrastat e le relative stampe.
-
-Le specifiche per tali stampe e i file da inviare sono in https://www.adm.gov.it/portale/dogane/operatore/modulistica/elenchi-scambi-intracomunitari-di-beni, in particolare gli allegati XI e XII.
-
 
 |
 
@@ -96,7 +91,7 @@ From UI: go to:
 
 * |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
-* |menu| Setting > Apps |right_do| Select **l10n_it_intrastat_statement_plus** > Install
+* |menu| Setting > Apps |right_do| Select **l10n_it_intrastat_plus** > Install
 
 
 |
@@ -164,15 +159,21 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
-12.0.1.1.9 (2021-08-03)
+12.0.1.1.9 (2021-06-17)
 ~~~~~~~~~~~~~~~~~~~~~~~
+* [FIX] Aggiornato campi nel modulo fattura e nel report
 
-* [FIX] Wrong year section 2 and 4 again
-
-12.0.1.1.8 (2021-05-26)
+12.0.1.1.8 (2021-06-11)
 ~~~~~~~~~~~~~~~~~~~~~~~
+* [FIX] Aggiornato campi iva nel report fattura
 
-* [FIX] Wrong year section 2 and 4
+12.0.1.1.7 (2021-06-11)
+~~~~~~~~~~~~~~~~~~~~~~~
+* [FIX] Fix contenuti td nel report fattura
+
+12.0.1.1.6 (2021-06-01)
+~~~~~~~~~~~~~~~~~~~~~~~
+* [FIX] Fix un <h?> per documento per evitare errori su stampa multipla
 
 12.0.1.1.5 (2021-03-27)
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -189,6 +190,7 @@ ChangeLog History / Cronologia modifiche
 12.0.0.1.1 (2021-03-23)
 ~~~~~~~~~~~~~~~~~~~~~~~
 * [FIX] fix travis warning
+
 
 
 
@@ -210,7 +212,6 @@ Odoo is a trademark of `Odoo S.A. <https://www.odoo.com/>`__ (formerly OpenERP)
 Authors / Autori
 ----------------
 
-* `Odoo Community Association (OCA) <https://odoo-community.org>`__
 * `powERP <https://www.powerp.it>`__
 * `SHS-AV s.r.l. <https://www.zeroincombenze.it/>`__
 * `Didotech s.r.l. <https://www.didotech.com>`__
@@ -219,15 +220,9 @@ Authors / Autori
 Contributors / Collaboratori
 ----------------------------
 
-* Alessandro Camilli
-* Lorenzo Battistini
-* Lara Baggio <lbaggio@linkgroup.it>
-* Glauco Prina <gprina@linkgroup.it>
-* Sergio Zanchetta <https://github.com/primes2h>
 * Antonio Maria Vigliotti <antoniomaria.vigliotti@gmail.com>
 * Fabio Giovannelli <fabio.giovannelli@didotech.com>
 * Marco Tosato <marco.tosato@didotech.com>
-* Fabio Colognesi <fabio.colognesi@didotech.com>
 
 
 Maintainer / Manutenzione
