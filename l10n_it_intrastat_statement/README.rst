@@ -1,12 +1,12 @@
 
 ====================================================
-|icon| ITA - Dichiarazione Intrastat Plus 12.0.1.1.8
+|icon| ITA - Dichiarazione Intrastat 12.0.1.1.8
 ====================================================
 
 
 **Dichiarazione Intrastat Plus per l"Agenzia delle Dogane**
 
-.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/accounting/12.0/l10n_it_intrastat_statement_plus/static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/accounting/12.0/l10n_it_intrastat_statement/static/description/icon.png
 
 |Maturity| |Build Status| |license opl|
 
@@ -94,9 +94,9 @@ Installation / Installazione
 
 From UI: go to:
 
-* |menu| Setting > Activate Developer mode 
+* |menu| Setting > Activate Developer mode
 * |menu| Apps > Update Apps List
-* |menu| Setting > Apps |right_do| Select **l10n_it_intrastat_statement_plus** > Install
+* |menu| Setting > Apps |right_do| Select **l10n_it_intrastat_statement** > Install
 
 
 |
@@ -274,7 +274,7 @@ Last Update / Ultimo aggiornamento: 2021-08-06
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
-    :alt: 
+    :alt:
 .. |Build Status| image:: https://travis-ci.org/PowERP-cloud/accounting.svg?branch=12.0
     :target: https://travis-ci.com/PowERP-cloud/accounting
     :alt: github.com
