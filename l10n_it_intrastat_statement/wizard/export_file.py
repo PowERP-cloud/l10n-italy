@@ -1,5 +1,8 @@
 # Copyright 2019 Simone Rubino - Agile Business Group
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# Copyright 2021 powERP enterprise network <https://www.powerp.it>
+#
+# License AGPL-3 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
+#
 
 import base64
 from odoo import api, fields, models, _
@@ -36,7 +39,7 @@ class AccountIntrastatExportFile(models.TransientModel):
         out = base64.encodebytes(file.encode())
 
         view = self.env['ir.model.data'].get_object_reference(
-            'l10n_it_intrastat_statement',
+            'l10n_it_intrastat_statement_plus',
             'wizard_account_intrastat_export_file'
         )
         view_id = view[1] or False

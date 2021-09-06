@@ -1,6 +1,7 @@
-12.0.2.1.0_7 (2021-08-18)
+12.0.2.1.0_7 (2021-09-01)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
+* [FIX] Impostato il filtro sui pagamenti della fattura solo se questa ha la ritenuta d'acconto
 * [FIX] POW-466 - Abilitazione campo ritenuta sulle righe fattura
 
 12.0.2.1.0_6 (2021-08-02)
