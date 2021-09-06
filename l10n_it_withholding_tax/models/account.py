@@ -706,8 +706,8 @@ class AccountPayment(models.Model):
             invoice.currency_id.id)
         if getattr(invoice, 'withholding_tax_amount',
                    False) and invoice.withholding_tax_amount:
-            coeff_net = invoice.residual / invoice.amount_total
-            amount_total = invoice.amount_net_pay_residual * coeff_net
+            amount_total = sign * invoice.amount_net_pay_residual
+            amount_total_company_signed = sign * invoice.amount_net_pay_residual
         # and if
 
         if payment_currency == invoice_currency:
