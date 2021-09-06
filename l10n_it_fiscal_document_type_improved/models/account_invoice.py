@@ -2,7 +2,7 @@
 # Copyright 2020 Andrei Levin - Didotech srl
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 import datetime
 from dateutil.relativedelta import relativedelta
 
@@ -76,4 +76,16 @@ class AccountInvoice(models.Model):
                 and values.get('type', 'out_invoice') == 'out_invoice':
             document_data = self._get_document_type_and_date()
             values['date_invoice'] = document_data['document_date']
-        return super().create(values)
+        else:
+            document_data = False
+
+        invoice = super().create(values)
+
+        if document_data:
+            message = _(f"Document Date set to {document_data['document_date']}")
+            invoice.message_post(body=message)
+        else:
+            message = _(f"Document created from {self.env.context.get('active_model')} model")
+            invoice.message_post(body=message)
+
+        return invoice
