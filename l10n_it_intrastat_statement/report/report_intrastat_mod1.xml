@@ -8,7 +8,7 @@
                         <div class="page" style="font-size: 10px">
                             <div class="row">
                                 <div class="col-2">
-                                    <p class="text-right"><img src="/l10n_it_intrastat_statement_plus/static/img/agenzia_dogane.jpg" height="80px"/></p>
+                                    <p class="text-right"><img src="/l10n_it_intrastat_statement/static/img/agenzia_dogane.jpg" height="80px"/></p>
                                 </div>
                                 <div class="col-6 offset-2">
                                     <table class="table table-bordered">
