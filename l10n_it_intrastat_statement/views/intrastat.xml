@@ -28,7 +28,7 @@
             <form string="INTRASTAT Statement">
                 <header>
                     <button name="compute_statement" string="Recompute" type="object"/>
-                    <button name="%(l10n_it_intrastat_statement_plus.action_wizard_wizard_account_intrastat_export_file)d" string="Export File" type="action"/>
+                    <button name="%(l10n_it_intrastat_statement.action_wizard_wizard_account_intrastat_export_file)d" string="Export File" type="action"/>
                 </header>
                 <sheet>
                     <group>
