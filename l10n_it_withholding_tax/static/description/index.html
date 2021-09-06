@@ -18,11 +18,55 @@
         </div>
     </div>
     <div class="oe_row oe_spaced">
+        <h3 class="oe_slogan" style="color:#162832;">Usage / Utilizzo</h3>
+        <div class="oe_span12">
+Per prima cosa dovremo creare una ritenuta d&#8217;acconto dove inserire tutti i campi necessari per un corretto calcolo.
+<p align="justify">
+Visto che le aliquote possono variare nel corso del tempo, nella codifica sono previsti scaglioni temporali di competenza.
+</p><p align="justify">
+E&#8217; necessario anche inserire i conti contabili che verranno utilizzati quando il modulo si occuper&#224; di generare registrazioni contabili per la rilevazione della ritenuta.
+</p><p align="justify">
+</p>
+.. figure:: static/img/ritenuta-acconto-odoo-codifica-768x457.png
+   :alt: Withholding tax
+   :width: 600 px
+<p align="justify">
+Una volta aggiunta, nella tabella ritenute, potr&#224; essere utilizzata all&#8217;interno della fattura, in corrispondenza delle righe soggette a ritenute.
+</p><p align="justify">
+Per ogni riga &#232; possibile utilizzare pi&#249; di una ritenuta. Per alcune casistiche il moduo ritenute viene usato anche per rilevare le trattenute INPS.
+</p><p align="justify">
+Il modulo ritenute calcoler&#224; i valori corrispondenti e ne mostrer&#224; il dettaglio nell&#8217;apposita area ritenute, dove &#232; possibile verificare per ogni codice ritenuta usato, l&#8217;imponibile e l&#8217;importo ritenuta applicato.
+</p><p align="justify">
+In calce ai totali, verr&#224; totalizzato l&#8217;ammontare della ritenuta e il netto a pagare. Questa sezione sar&#224; visibile solamente in presenza di almeno una ritenuta
+</p><p align="justify">
+</p>
+.. figure:: static/img/fattura-fornitore-768x517.png
+   :alt: Supplier invoice
+   :width: 600 px
+<p align="justify">
+Successivamente andando nella sezione situazione ritenute d&#8217;acconto il sistema vi mostrer&#224; una situazione riepilogativa delle varie ritenute divisa per documento di origine.
+</p><p align="justify">
+I campi principalmente da tenere in considerazione in questa tabella sono: ritenuta dovuta, ritenuta applicata e ritenuta versata.
+</p><p align="justify">
+*Ritenuta dovuta* contiene il valore della ritenuta contenuta nella fattura.
+</p><p align="justify">
+*Ritenuta applicata* mostra il valore della ritenuta rilevata al momento del pagamento della fattura.
+</p><p align="justify">
+*Ritenuta versata* contiene l&#8217;importo di ritenuta, gi&#224; applicata, che &#232; stata versata all&#8217;erario
+</p><p align="justify">
+</p>
+.. figure:: static/img/foto-3-1-1024x505.png
+   :alt: WT statement
+   :width: 600 px
+        </div>
+    </div>
+    <div class="oe_row oe_spaced">
         <h3 class="oe_slogan" style="color:#162832;">History / Cronologia</h3>
         <div class="oe_span12">
-<h3>12.0.2.1.0_7 (2021-08-18)</h3>
+<h3>12.0.2.1.0_7 (2021-09-01)</h3>
 <p align="justify">
 <ul>
+<li>[FIX] Impostato il filtro sui pagamenti della fattura solo se questa ha la ritenuta d'acconto</li>
 <li>[FIX] POW-466 - Abilitazione campo ritenuta sulle righe fattura</li>
 </ul>
 </p><p align="justify">

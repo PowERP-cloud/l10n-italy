@@ -1,3 +1,8 @@
+12.0.1.2.7_26 (2021-09-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Risolto bug partner assente nella registrazione contabile di RC
+
 12.0.1.2.7_25 (2021-08-25)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -26,6 +26,48 @@ Overview / Panoramica
 
 |
 
+Usage / Utilizzo
+----------------
+
+Per prima cosa dovremo creare una ritenuta d’acconto dove inserire tutti i campi necessari per un corretto calcolo.
+
+Visto che le aliquote possono variare nel corso del tempo, nella codifica sono previsti scaglioni temporali di competenza.
+
+E’ necessario anche inserire i conti contabili che verranno utilizzati quando il modulo si occuperà di generare registrazioni contabili per la rilevazione della ritenuta.
+
+.. figure:: static/img/ritenuta-acconto-odoo-codifica-768x457.png
+   :alt: Withholding tax
+   :width: 600 px
+
+Una volta aggiunta, nella tabella ritenute, potrà essere utilizzata all’interno della fattura, in corrispondenza delle righe soggette a ritenute.
+
+Per ogni riga è possibile utilizzare più di una ritenuta. Per alcune casistiche il moduo ritenute viene usato anche per rilevare le trattenute INPS.
+
+Il modulo ritenute calcolerà i valori corrispondenti e ne mostrerà il dettaglio nell’apposita area ritenute, dove è possibile verificare per ogni codice ritenuta usato, l’imponibile e l’importo ritenuta applicato.
+
+In calce ai totali, verrà totalizzato l’ammontare della ritenuta e il netto a pagare. Questa sezione sarà visibile solamente in presenza di almeno una ritenuta
+
+.. figure:: static/img/fattura-fornitore-768x517.png
+   :alt: Supplier invoice
+   :width: 600 px
+
+Successivamente andando nella sezione situazione ritenute d’acconto il sistema vi mostrerà una situazione riepilogativa delle varie ritenute divisa per documento di origine.
+
+I campi principalmente da tenere in considerazione in questa tabella sono: ritenuta dovuta, ritenuta applicata e ritenuta versata.
+
+*Ritenuta dovuta* contiene il valore della ritenuta contenuta nella fattura.
+
+*Ritenuta applicata* mostra il valore della ritenuta rilevata al momento del pagamento della fattura.
+
+*Ritenuta versata* contiene l’importo di ritenuta, già applicata, che è stata versata all’erario
+
+.. figure:: static/img/foto-3-1-1024x505.png
+   :alt: WT statement
+   :width: 600 px
+
+
+|
+
 OCA comparation / Confronto con OCA
 -----------------------------------
 
@@ -129,7 +171,7 @@ Support / Supporto
 
 This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
 
-Developer companies are / I soci sviluppatoro sono:
+Developer companies are / I soci sviluppatori sono:
 
 * `Didotech s.r.l. <http://www.didotech.com>`__
 * `SHS-AV s.r.l. <https://www.shs-av.com/>`__
@@ -158,9 +200,10 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
-12.0.2.1.0_7 (2021-08-18)
+12.0.2.1.0_7 (2021-09-01)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
+* [FIX] Impostato il filtro sui pagamenti della fattura solo se questa ha la ritenuta d'acconto
 * [FIX] POW-466 - Abilitazione campo ritenuta sulle righe fattura
 
 12.0.2.1.0_6 (2021-08-02)
@@ -231,16 +274,25 @@ Contributors / Collaboratori
 * Fabio Giovannelli <fabio.giovannelli@didotech.com>
 
 
+Acknowledges / Riconoscimenti
+-----------------------------
+
+
+
+
+Translations by / Traduzioni a cura di
+--------------------------------------
+
+
+
+
 Maintainer / Manutenzione
 -------------------------
 
-
-This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
-
-Developer companies are / I soci sviluppatoro sono:
-
-* `Didotech s.r.l. <http://www.didotech.com>`__
-* `SHS-AV s.r.l. <https://www.shs-av.com/>`__
+This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese Powerp <http://www.powerp.it/>
+Developer companies are / I soci sviluppatori sono:
+* Didotech s.r.l. <http://www.didotech.com>
+* SHS-AV s.r.l. <https://www.shs-av.com/>
 
 
 |
@@ -271,7 +323,11 @@ I soci fondatori sono:
 
 This module is part of  project.
 
+<<<<<<< HEAD
 Last Update / Ultimo aggiornamento: 2021-08-18
+=======
+Last Update / Ultimo aggiornamento: 2021-09-01
+>>>>>>> 12.0_hotfix_0.17
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status

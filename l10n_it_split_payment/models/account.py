@@ -104,9 +104,6 @@ class AccountInvoice(models.Model):
                 line_model = self.env['account.move.line']
                 transfer_ids = list()
 
-                payment_method_tax = self.env[
-                    'account.payment.method'].get_payment_method_tax()
-
                 tax_line = invoice.move_id.line_ids.filtered(
                     lambda x: x.partner_id.id == self.partner_id.id and self.company_id.id == x.company_id.id and x.line_type == 'tax')
 
@@ -118,7 +115,6 @@ class AccountInvoice(models.Model):
                 for tl in tax_line:
                     transfer_line_vals = invoice._build_client_credit_line(tl)
                     transfer_line_vals['move_id'] = invoice.move_id.id
-                    transfer_line_vals['payment_method'] = payment_method_tax.id
                     tranfer = line_model.with_context(
                         check_move_validity=False
                     ).create(transfer_line_vals)
@@ -140,26 +136,20 @@ class AccountInvoice(models.Model):
                 invoice._compute_residual()
         return res
 
+    # @api.multi
+    # def get_receivable_line_ids(self):
+    #     # return the move line ids with the same account as the invoice self
+    #     self.ensure_one()
+    #     return self.move_id.line_ids.filtered(
+    #         lambda r: r.account_id.id == self.account_id.id).ids
+
     @api.multi
     def get_receivable_line_ids(self):
         # return the move line ids with the same account as the invoice self
         self.ensure_one()
         return self.move_id.line_ids.filtered(
             lambda r: r.account_id.id == self.account_id.id and
-            r.payment_method.code != 'tax').ids
-
-    # @api.multi
-    # def get_receivable_line_ids(self):
-    #     # return the move line ids with the same account as the invoice self
-    #     self.ensure_one()
-    #     ids = []
-    #     for line in self.move_id.line_ids:
-    #         if line.account_id.id != self.account_id.id:
-    #             continue
-    #         if line.payment_method.code == 'tax':
-    #             continue
-    #         ids.append(line.id)
-    #     return ids
+            r.payment_method.code != 'tax' and r.line_type != 'tax').ids
 
     @api.multi
     def _compute_split_payments(self):
@@ -190,14 +180,3 @@ class AccountInvoice(models.Model):
                         check_move_validity=False
                     ).write(
                         {'credit': receivable_line_amount})
-
-
-class AccountMove(models.Model):
-    _inherit = "account.move"
-
-    amount_sp = fields.Float(
-        string='Split Payment',
-        digits=dp.get_precision('Account'),
-        readonly=True,
-        )
-
