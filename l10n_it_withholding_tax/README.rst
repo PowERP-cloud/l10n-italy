@@ -1,6 +1,6 @@
 
 ===========================================
-|icon| Italian Withholding Tax 12.0.2.1.0_7
+|icon| Italian Withholding Tax 12.0.2.1.0_8
 ===========================================
 
 
@@ -130,7 +130,7 @@ Installation / Installazione
 
 From UI: go to:
 
-* |menu| Setting > Activate Developer mode 
+* |menu| Setting > Activate Developer mode
 * |menu| Apps > Update Apps List
 * |menu| Setting > Apps |right_do| Select **** > Install
 
@@ -199,6 +199,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.2.1.0_8 (2021-09-06)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato totali corretti nel form / wizard dei pagamenti
 
 12.0.2.1.0_7 (2021-09-01)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -323,15 +328,11 @@ I soci fondatori sono:
 
 This module is part of  project.
 
-<<<<<<< HEAD
-Last Update / Ultimo aggiornamento: 2021-08-18
-=======
 Last Update / Ultimo aggiornamento: 2021-09-01
->>>>>>> 12.0_hotfix_0.17
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status
-    :alt: 
+    :alt:
 .. |Build Status| image:: https://travis-ci.org/PowERP-cloud/.svg?branch=12.0
     :target: https://travis-ci.com/PowERP-cloud/
     :alt: github.com
