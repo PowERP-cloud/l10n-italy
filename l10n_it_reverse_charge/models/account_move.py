@@ -14,7 +14,6 @@ class AccountMove(models.Model):
         readonly=True,
     )
 
-
     @api.multi
     @api.depends('line_ids.partner_id')
     def _compute_partner_id(self):
@@ -22,16 +21,21 @@ class AccountMove(models.Model):
         Override because of account move with lines which have
         different partners
         """
-
+        super()._compute_partner_id()
         for move in self:
             if move.line_ids:
-                invoice_id = move.line_ids[0].invoice_id
-                super()._compute_partner_id()
-                if invoice_id.fiscal_position_id and \
-                    invoice_id.fiscal_position_id.rc_type and \
-                    invoice_id.fiscal_position_id.rc_type == 'self':
-                    move.partner_id = invoice_id.partner_id
-                # end if
+                lines = move.line_ids.filtered(
+                    lambda mv: mv.line_type == 'lp')
+                if lines:
+                    invoice_id = lines[0].invoice_id
+                    # partner_id = lines[0].partner_id
+                    if invoice_id.fiscal_position_id and \
+                        invoice_id.fiscal_position_id.rc_type and \
+                        invoice_id.fiscal_position_id.rc_type == 'self':
+                        move.partner_id = invoice_id.partner_id.id
+                        _logger.info('move -> {mvid} parent_id > {pr}'.format(
+                            mvid=move.id, pr=move.partner_id.id))
+                    # end if
             # end if
         # end for
     # end _compute_partner_id

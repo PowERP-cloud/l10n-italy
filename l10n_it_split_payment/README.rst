@@ -26,6 +26,20 @@ Overview / Panoramica
 
 |
 
+Usage / Utilizzo
+----------------
+
+**Italiano**
+
+Per usare questo modulo, è necessario selezionare la posizione fiscale corretta nelle fatture
+
+**English**
+
+To use this module, you need to select the correct fiscal position in invoices
+
+
+|
+
 OCA comparation / Confronto con OCA
 -----------------------------------
 
@@ -95,6 +109,63 @@ From UI: go to:
 
 |
 
+Configuration / Configurazione
+------------------------------
+
+**Italiano**
+
+Per configurare questo modulo è necessario:
+
+* andare in Contabilità → Configurazione → Impostazioni e configura "Conto storno scissione pagamenti" (es. 'IVA n/debito sospesa SP'). Il conto storno dovrebbe essere diverso dall'IVA a debito standard, in modo da aggiungerlo separatamente nella dichiarazione IVA.
+
+**English**
+
+To configure this module, you need to:
+
+* go to Accounting → Configuration → Settings and configure 'Split Payment Write-off account' (like 'IVA n/debito sospesa SP'). Write-off account should be different from standard debit VAT, in order to separately add it in VAT statement.
+
+.. figure:: static/settings.png
+   :alt: Configuration
+   :width: 600 px
+
+-------------------------------------------------------------------------------
+
+**Italiano**
+
+* aggiungere una nuova imposta (Contabilità → Configurazione → Contabilità → Imposte). IVA al 22% SPL deve essere configurata nel modo seguente:
+
+**English**
+
+* add a new tax (Accounting → Configuration → Accounting → Taxes). IVA al 22% SPL should be configured like the following:
+
+
+.. figure:: static/SP.png
+   :alt: 22SPL
+   :width: 600 px
+
+.. figure:: static/SP2.png
+   :alt: 22SPL
+   :width: 600 px
+
+-------------------------------------------------------------------------------
+
+**Italiano**
+
+* configurare la posizione fiscale (Contabilità → Configurazione → Contabilità → Posizioni fiscali) usata per la scissione dei pagamenti, selezionando la casella "Scissione pagamenti". Nella posizione fiscale mappare l'IVA standard con l'IVA SP, come indicato di seguito:
+
+**English**
+
+* configure the fiscal position (Accounting → Configuration → Accounting → Fiscal Positions) used for split payment, setting 'Split Payment' flag. In fiscal position, map standard VAT with SP VAT, like the following:
+
+
+.. figure:: static/fiscal_position.png
+   :alt: Fiscal position
+   :width: 600 px
+
+
+
+|
+
 Upgrade / Aggiornamento
 -----------------------
 
@@ -129,7 +200,7 @@ Support / Supporto
 
 This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
 
-Developer companies are / I soci sviluppatoro sono:
+Developer companies are / I soci sviluppatori sono:
 
 * `Didotech s.r.l. <http://www.didotech.com>`__
 * `SHS-AV s.r.l. <https://www.shs-av.com/>`__
@@ -168,9 +239,10 @@ ChangeLog History / Cronologia modifiche
 
 * [FIX] Corretto controllo versione oca
 
-12.0.1.0.1_7 (2021-08-17)
+12.0.1.0.1_7 (2021-08-31)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
+* [FIX] Impostato filtro sui movimenti contabili per l'inserimento nella fattura elettronica
 * [FIX] Corretto totale in xml
 
 12.0.1.0.1_6 (2021-06-22)
@@ -241,16 +313,25 @@ Contributors / Collaboratori
 * Fabio Giovannelli <fabio.giovannelli@didotech.com>
 
 
+Acknowledges / Riconoscimenti
+-----------------------------
+
+
+
+
+Translations by / Traduzioni a cura di
+--------------------------------------
+
+
+
+
 Maintainer / Manutenzione
 -------------------------
 
-
-This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
-
-Developer companies are / I soci sviluppatoro sono:
-
-* `Didotech s.r.l. <http://www.didotech.com>`__
-* `SHS-AV s.r.l. <https://www.shs-av.com/>`__
+This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese Powerp <http://www.powerp.it/>
+Developer companies are / I soci sviluppatori sono:
+* Didotech s.r.l. <http://www.didotech.com>
+* SHS-AV s.r.l. <https://www.shs-av.com/>
 
 
 |
@@ -281,7 +362,11 @@ I soci fondatori sono:
 
 This module is part of  project.
 
+<<<<<<< HEAD
 Last Update / Ultimo aggiornamento: 2021-08-19
+=======
+Last Update / Ultimo aggiornamento: 2021-08-31
+>>>>>>> 12.0_hotfix_0.17
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status

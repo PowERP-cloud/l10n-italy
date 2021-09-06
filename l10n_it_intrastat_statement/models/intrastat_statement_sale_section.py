@@ -1,5 +1,8 @@
-#  Copyright 2019 Simone Rubino - Agile Business Group
-#  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# Copyright 2019 Simone Rubino - Agile Business Group
+# Copyright 2021 powERP enterprise network <https://www.powerp.it>
+#
+# License AGPL-3 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
+#
 
 from odoo import api, fields, models, _
 import odoo.addons.decimal_precision as dp
@@ -18,12 +21,6 @@ class IntrastatStatementSaleSection(models.AbstractModel):
     def get_section_type(self):
         return 'sale'
 
-    @api.model
-    def _default_transaction_nature_id(self):
-        company_id = self.env.context.get(
-            'company_id', self.env.user.company_id)
-        return company_id.intrastat_sale_transaction_nature_id
-
 
 class IntrastatStatementSaleSection1(models.Model):
     _inherit = 'account.intrastat.statement.sale.section'
@@ -32,9 +29,7 @@ class IntrastatStatementSaleSection1(models.Model):
 
     transaction_nature_id = fields.Many2one(
         comodel_name='account.intrastat.transaction.nature',
-        string="Transaction Nature",
-        default=lambda m: m._default_transaction_nature_id(),
-    )
+        string="Transaction Nature")
     weight_kg = fields.Integer(
         string="Net Mass (kg)")
     additional_units = fields.Integer(
@@ -106,19 +101,17 @@ class IntrastatStatementSaleSection1(models.Model):
             or company_id.intrastat_sale_transport_code_id
 
         # Amounts
-        dp_model = self.env['decimal.precision']
+        # dp_model = self.env['decimal.precision']
         statistic_amount = statement_id.round_min_amount(
             statistic_amount,
             statement_id.company_id or company_id,
-            dp_model.precision_get('Account'))
+            # dp_model.precision_get('Account'))
+            0)
 
-        # check if additional_units has a value
-        has_additional_units = bool(inv_intra_line.additional_units)
         res.update({
             'transaction_nature_id': transaction_nature_id.id,
             'weight_kg': round(inv_intra_line.weight_kg) or 1,
-            'additional_units': round(inv_intra_line.additional_units) or (
-                0 if not has_additional_units else 1),
+            'additional_units': round(inv_intra_line.additional_units) or 1,
             'statistic_amount_euro': statistic_amount,
             'delivery_code_id': delivery_code_id.id,
             'transport_code_id': transport_code_id.id,
@@ -184,9 +177,7 @@ class IntrastatStatementSaleSection2(models.Model):
         string="Adjustment Sign")
     transaction_nature_id = fields.Many2one(
         comodel_name='account.intrastat.transaction.nature',
-        string="Transaction Nature",
-        default=lambda m: m._default_transaction_nature_id(),
-    )
+        string="Transaction Nature")
     statistic_amount_euro = fields.Integer(
         string="Statistic Value in Euro",
         digits=dp.get_precision('Account'))
@@ -211,11 +202,12 @@ class IntrastatStatementSaleSection2(models.Model):
             or company_id.intrastat_sale_statistic_amount
 
         # Amounts
-        dp_model = self.env['decimal.precision']
+        # dp_model = self.env['decimal.precision']
         statistic_amount = statement_id.round_min_amount(
             statistic_amount,
             statement_id.company_id or company_id,
-            dp_model.precision_get('Account'))
+            # dp_model.precision_get('Account'))
+            0)
 
         # Period Ref
         ref_period = statement_id._get_period_ref()
@@ -264,7 +256,7 @@ class IntrastatStatementSaleSection2(models.Model):
         #  Trimestre di riferimento del riepilogo da rettificare
         rcd += format_9(self.quarterly, 1)
         # Anno periodo di ref da modificare
-        year = (self.year_id or 0) // 100
+        year = (self.year_id or 0) % 100
         rcd += format_9(year, 2)
         # Codice dello Stato membro dell’acquirente
         country_id = self.country_partner_id or self.partner_id.country_id
@@ -450,6 +442,15 @@ class IntrastatStatementSaleSection4(models.Model):
         if not self.progressive_to_modify:
             raise ValidationError(
                 _("Missing progressive to adjust on 'Sales - Section 4'"))
+        if (not self.invoice_number) or (not self.invoice_date):
+            raise ValidationError(
+                _("Missing invoice data on 'Sales - Section 4'"))
+        if not self.supply_method:
+            raise ValidationError(
+                _("Missing supply method on 'Sales - Section 4'"))
+        if not self.payment_method:
+            raise ValidationError(
+                _("Missing payment method on 'Sales - Section 4'"))
         if not self.country_payment_id:
             raise ValidationError(
                 _("Missing payment country on 'Sales - Section 4'"))
