@@ -568,23 +568,24 @@ class AccountInvoice(models.Model):
                     payment_val['wt_move_line'] = False
         return payment_vals
 
-    @api.multi
-    def _get_aml_for_register_payment(self):
-        """ Get the aml to consider to reconcile in register payment
-            except tax payment method
-        """
-        self.ensure_one()
-
-        res = super()._get_aml_for_register_payment()
-        if self.withholding_tax:
-            return self.move_id.line_ids.filtered(
-                lambda r:
-                not r.reconciled and r.account_id.internal_type in (
-                    'payable', 'receivable')
-                and r.payment_method.code != 'tax'
-                and r.line_type != 'tax')
-        else:
-            return res
+    # @api.multi
+    # def _get_aml_for_register_payment(self):
+    #     """ Get the aml to consider to reconcile in register payment
+    #         except tax payment method
+    #     """
+    #     self.ensure_one()
+    #
+    #     res = super()._get_aml_for_register_payment()
+    #     # if self.withholding_tax:
+    #     #     return self.move_id.line_ids.filtered(
+    #     #         lambda r:
+    #     #         not r.reconciled and r.account_id.internal_type in (
+    #     #             'payable', 'receivable')
+    #     #         # and r.payment_method.code != 'tax'
+    #     #         # and r.line_type != 'tax'
+    #     #     )
+    #     # else:
+    #     return res
 
 
 class AccountInvoiceLine(models.Model):
@@ -707,7 +708,7 @@ class AccountPayment(models.Model):
         if getattr(invoice, 'withholding_tax_amount',
                    False) and invoice.withholding_tax_amount:
             amount_total = sign * invoice.amount_net_pay_residual
-            amount_total_company_signed = sign * invoice.amount_net_pay_residual
+            # amount_total_company_signed = sign * invoice.amount_net_pay_residual
         # and if
 
         if payment_currency == invoice_currency:
@@ -724,3 +725,16 @@ class AccountPayment(models.Model):
 
         return total
     # end _compute_payment_invoice
+
+    # @api.multi
+    # def post(self):
+    #     res = super().post()
+    #     for rec in self:
+    #
+    #         # add lines
+    #         # reconcile
+    #         # close
+    #         pass
+    #     # end for
+    #
+    # # end post

@@ -92,7 +92,6 @@
                     <field name="invoice_line_tax_wt_ids"
                            widget="many2many_tags"
                            options="{'no_create': True}"
-                           attrs="{'column_invisible': [('parent.enable_wht', '=', False)]}"
                     />
                 </xpath>
 
@@ -165,7 +164,6 @@
                     <field name="invoice_line_tax_wt_ids"
                            widget="many2many_tags"
                            options="{'no_create': True}"
-                           attrs="{'column_invisible': [('parent.enable_wht', '=', False)]}"
                     />
                 </xpath>
 
