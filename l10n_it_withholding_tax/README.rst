@@ -1,6 +1,6 @@
 
 ===========================================
-|icon| Italian Withholding Tax 12.0.2.1.0_8
+|icon| Italian Withholding Tax 12.0.2.1.0_9
 ===========================================
 
 
@@ -199,6 +199,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.2.1.0_9 (2021-09-07)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato visibilita fissa Rda nella riga
 
 12.0.2.1.0_8 (2021-09-06)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
