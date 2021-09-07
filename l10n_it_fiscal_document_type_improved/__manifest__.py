@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Italian localization - fiscal Document Type Improved',
-    'version': '0.6.0',
+    'version': '0.7.0',
     'category': 'Localisation/Italy',
     'summary': 'Improvements for module l10n_it_fiscal_document_type',
     'author': 'powERP enterprise network',
@@ -91,7 +91,7 @@ Last Update / Ultimo aggiornamento: 2021-08-06
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status
-    :alt: 
+    :alt:
 .. |Build Status| image:: https://travis-ci.org/PowERP-cloud/custom-addons.svg?branch=12.0
     :target: https://travis-ci.com/PowERP-cloud/custom-addons
     :alt: github.com

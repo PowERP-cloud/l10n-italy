@@ -39,7 +39,7 @@ class AccountIntrastatExportFile(models.TransientModel):
         out = base64.encodebytes(file.encode())
 
         view = self.env['ir.model.data'].get_object_reference(
-            'l10n_it_intrastat_statement_plus',
+            'l10n_it_intrastat_statement',
             'wizard_account_intrastat_export_file'
         )
         view_id = view[1] or False
