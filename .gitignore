@@ -1,9 +1,19 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*.csync_journal.db
+example_*
 
 # C extensions
 *.so
+
+# Temporay files
+*.log
+*.bak
+*.swp
+*.out
+*~
+*~*
 
 # Distribution / packaging
 .Python
@@ -13,6 +23,7 @@ build/
 develop-eggs/
 dist/
 eggs/
+lib/
 lib64/
 parts/
 sdist/
@@ -28,16 +39,13 @@ pip-delete-this-directory.txt
 # Unit test / coverage reports
 htmlcov/
 .tox/
-.coverage
+**/.coverage
 .cache
 nosetests.xml
 coverage.xml
 
 # Translations
 *.mo
-
-# Pycharm
-.idea
 
 # Mr Developer
 .mr.developer.cfg
@@ -47,12 +55,26 @@ coverage.xml
 # Rope
 .ropeproject
 
+# Django stuff:
+*.log
+
+# Komodo
+*.komodoproject
+.komodotools
+
+# pyCharm
+.idea
+
+# *.pot is used for translations templates
+
 # Sphinx documentation
 docs/_build/
 
-# Backup files
-*~
-*.swp
-
 # OSX Files
 *.DS_Store
+
+# Altro
+/.settings/
+stdout.log
+*.oca
+*.z0i
