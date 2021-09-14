@@ -32,6 +32,24 @@ class DdTFromPickings(models.TransientModel):
         }
         type_list = []
         partner = False
+
+        sale_orders = {
+            picking.sale_id
+            for picking in self.picking_ids
+        }
+
+        payment_terms = {
+            sale_order.payment_term_id
+            for sale_order in sale_orders
+        }
+
+        if len(payment_terms) > 1:
+            raise UserError(
+                'Impossibile create DDT da movimenti di magazzino relativi'
+                ' a ordini di vendita con Termini di Pagamento diversi'
+            )
+        # end if
+
         for picking in self.picking_ids:
             # check if picking is already linked to a DDT
             self.env['stock.picking.package.preparation'].check_linked_picking(
