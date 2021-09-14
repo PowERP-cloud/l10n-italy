@@ -21,6 +21,24 @@ class AddPickingToDdt(models.TransientModel):
     def add_to_ddt(self):
         pickings = self.env['stock.picking'].browse(
             self.env.context['active_ids'])
+
+        sale_orders = {
+            picking.sale_id
+            for picking in (pickings + self.ddt_id.picking_ids)
+        }
+
+        payment_terms = {
+            sale_order.payment_term_id
+            for sale_order in sale_orders
+        }
+
+        if len(payment_terms) > 1:
+            raise UserError(
+                'Impossibile create DDT da movimenti di magazzino relativi'
+                ' a ordini di vendita con Termini di Pagamento diversi'
+            )
+        # end if
+
         for picking in pickings:
             # check if picking is already linked to a DDT
             self.env['stock.picking.package.preparation'].check_linked_picking(
