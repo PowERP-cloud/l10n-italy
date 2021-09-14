@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_27
+|icon| ITA - Inversione contabile 12.0.1.2.7_28
 ===============================================
 
 
@@ -381,6 +381,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_28 (2021-09-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Risolto bug fattura fornitore con posizione fiscale RC self
+
 12.0.1.2.7_27 (2021-09-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -435,11 +440,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [FIX] Impostato controllo flag rc in creazione fattura
-
-12.0.1.2.7_13 (2021-07-20)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Corretto comportamento anomalo annullamento fattura
 
 
 

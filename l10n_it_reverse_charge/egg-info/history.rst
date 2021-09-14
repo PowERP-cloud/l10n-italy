@@ -1,3 +1,8 @@
+12.0.1.2.7_28 (2021-09-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Risolto bug fattura fornitore con posizione fiscale RC self
+
 12.0.1.2.7_27 (2021-09-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
