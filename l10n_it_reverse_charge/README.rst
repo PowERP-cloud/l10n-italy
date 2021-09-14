@@ -1,12 +1,12 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_26
+|icon| ITA - Inversione contabile 12.0.1.2.7_27
 ===============================================
 
 
 **Inversione contabile**
 
-.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/l10n-italy/12.0/l10n_it_vat_rc_replace/static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/l10n-italy/12.0/l10n_it_reverse_charge/static/description/icon.png
 
 |Maturity| |Build Status| |license opl|
 
@@ -176,9 +176,9 @@ Installation / Installazione
 
 From UI: go to:
 
-* |menu| Setting > Activate Developer mode
+* |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
-* |menu| Setting > Apps |right_do| Select **l10n_it_vat_rc_replace** > Install
+* |menu| Setting > Apps |right_do| Select **l10n_it_reverse_charge** > Install
 
 
 |
@@ -381,6 +381,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_27 (2021-09-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Risolto bug fattura cliente con posizione fiscale RC
+
 12.0.1.2.7_26 (2021-09-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -436,16 +441,6 @@ ChangeLog History / Cronologia modifiche
 
 [FIX] Corretto comportamento anomalo annullamento fattura
 
-12.0.1.2.7_12 (2021-07-14)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[IMP] Nascosto campo rc in riga fatture in base alla posizione fiscale
-
-12.0.1.2.7_11 (2021-07-14)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Aggiornato campo registro in posizione fiscale
-
 
 
 |
@@ -483,20 +478,9 @@ Contributors / Collaboratori
 * Fabio Giovannelli <fabio.giovannelli@didotech.com>
 
 
-Acknowledges / Riconoscimenti
------------------------------
-
-
-
-
-Translations by / Traduzioni a cura di
---------------------------------------
-
-
-
-
 Maintainer / Manutenzione
 -------------------------
+
 
 This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese Powerp <http://www.powerp.it/>
 Developer companies are / I soci sviluppatoro sono:
@@ -532,11 +516,11 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-08-25
+Last Update / Ultimo aggiornamento: 2021-09-14
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
-    :alt:
+    :alt: 
 .. |Build Status| image:: https://travis-ci.org/PowERP-cloud/l10n-italy.svg?branch=12.0
     :target: https://travis-ci.com/PowERP-cloud/l10n-italy
     :alt: github.com

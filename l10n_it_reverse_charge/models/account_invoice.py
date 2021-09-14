@@ -670,6 +670,10 @@ class AccountInvoice(models.Model):
     @api.multi
     def action_move_create(self):
         res = super(AccountInvoice, self).action_move_create()
+        # reverse charge vat for in.invoice / in.refund only
+        if self.type == 'out_invoice' or self.type == 'out_refund':
+            return res
+        # end if
         for invoice in self:
             if invoice.fiscal_position_id.rc_type:
                 posted = False
