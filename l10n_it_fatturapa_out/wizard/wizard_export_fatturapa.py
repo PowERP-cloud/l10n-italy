@@ -801,7 +801,14 @@ class WizardExportFatturapa(models.TransientModel):
                 if move_line.date_maturity:
                     DettaglioPagamento.DataScadenzaPagamento = \
                         move_line.date_maturity
-                partner_bank = invoice.partner_bank_id
+
+                # partner_bank = invoice.partner_bank_id
+                if hasattr(invoice, 'bank_4_xml'):
+                    partner_bank = invoice.bank_4_xml
+                else:
+                    partner_bank = invoice.partner_bank_id
+                # end if
+
                 if partner_bank.bank_name:
                     DettaglioPagamento.IstitutoFinanziario = \
                         partner_bank.bank_name
