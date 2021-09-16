@@ -127,7 +127,7 @@ Installation / Installazione
 
 From UI: go to:
 
-* |menu| Setting > Activate Developer mode 
+* |menu| Setting > Activate Developer mode
 * |menu| Apps > Update Apps List
 * |menu| Setting > Apps |right_do| Select **** > Install
 
@@ -216,6 +216,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.2.2.5_3 (2021-09-15)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[IMP] Utilizzo del campo account.invoice.bank_4_xml se presente per l'inserimento dell'IBAN nell'XML della fattura
 
 12.0.2.2.5_2 (2021-08-31)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -313,7 +318,7 @@ Last Update / Ultimo aggiornamento: 2021-08-31
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
-    :alt: 
+    :alt:
 .. |Build Status| image:: https://travis-ci.org/PowERP-cloud/.svg?branch=12.0
     :target: https://travis-ci.com/PowERP-cloud/
     :alt: github.com
