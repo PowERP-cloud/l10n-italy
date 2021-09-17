@@ -22,11 +22,9 @@
         'l10n_it_fatturapa_out',
     ],
     'data': [
-        # 'security/ir.model.access.csv',
         'views/account_invoice_view.xml',
         'views/account_fiscal_position_view.xml',
         'views/account_tax_view.xml',
-        # 'security/reverse_charge_security.xml',
     ],
     'maintainer': 'powERP enterprise network',
     'installable': True,
