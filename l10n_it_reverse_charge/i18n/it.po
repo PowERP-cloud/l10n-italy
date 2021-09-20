@@ -152,11 +152,6 @@ msgid "Name"
 msgstr "Nome"
 
 #. module: l10n_it_reverse_charge
-#: selection:account.rc.type,partner_type:0
-msgid "Other"
-msgstr "Altro"
-
-#. module: l10n_it_reverse_charge
 #: model:ir.model.fields,help:l10n_it_reverse_charge.field_account_rc_type__partner_id
 msgid "Partner used on RC self invoices."
 msgstr "Partner usato nelle autofatture in RC."
@@ -231,11 +226,6 @@ msgid "Sale Tax"
 msgstr "Imposta vendite"
 
 #. module: l10n_it_reverse_charge
-#: selection:account.rc.type,method:0
-msgid "Self Invoice"
-msgstr "Autofattura"
-
-#. module: l10n_it_reverse_charge
 #: model:ir.model.fields,field_description:l10n_it_reverse_charge.field_account_rc_type__journal_id
 msgid "Self Invoice Journal"
 msgstr "Registro autofattura"
@@ -271,11 +261,6 @@ msgid "Self Invoicing"
 msgstr "Autofatturazione"
 
 #. module: l10n_it_reverse_charge
-#: selection:account.rc.type,partner_type:0
-msgid "Supplier"
-msgstr "Fornitore"
-
-#. module: l10n_it_reverse_charge
 #: model:ir.model.fields,field_description:l10n_it_reverse_charge.field_account_rc_type__supplier_journal_id
 msgid "Supplier Self Invoice Journal"
 msgstr "Registro autofattura fornitore"
@@ -299,11 +284,6 @@ msgid ""
 msgstr ""
 "Il codice imposta utilizzato non è di tipo RC.\n"
 "Impossibile trovare la mappatura imposte"
-
-#. module: l10n_it_reverse_charge
-#: sql_constraint:account.rc.type.tax:0
-msgid "Tax mappings can be defined only once per rc type."
-msgstr "Una mappatura può essere definita solo una volta per ogni tipo rc."
 
 #. module: l10n_it_reverse_charge
 #: model:ir.model.fields,field_description:l10n_it_reverse_charge.field_account_rc_type__self_invoice_text
@@ -341,11 +321,6 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_it_reverse_charge.field_account_rc_type__transitory_account_id
 msgid "Transitory account used on self invoices."
 msgstr "Conto transitorio usato sulle autofatture."
-
-#. module: l10n_it_reverse_charge
-#: selection:account.rc.type,method:0
-msgid "VAT Integration"
-msgstr "Integrazione IVA"
 
 #. module: l10n_it_reverse_charge
 #: code:addons/l10n_it_reverse_charge/models/account_invoice.py:422
