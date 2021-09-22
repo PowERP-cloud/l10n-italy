@@ -61,10 +61,11 @@ class AccountGroup(models.Model):
                         accounts_message += _("\nSign: %s, accounts: %s\n") % (
                             sign, ", ".join(
                                 accounts_by_sign[sign].mapped("name")[:50]))
-                    raise ValidationError(
-                        _("Incoherent balance signs for '{}' and its subgroups:\n{}")
-                        .format(progenitor.name_get()[0][-1], accounts_message)
-                    )
+                    # [antoniov: 2021-09-22] POW-507 - Conflicts with Powerp
+                    # raise ValidationError(
+                    #     _("Incoherent balance signs for '{}' and its subgroups:\n{}")
+                    #     .format(progenitor.name_get()[0][-1], accounts_message)
+                    # )
 
     @api.multi
     def _compute_account_balance_sign(self):
