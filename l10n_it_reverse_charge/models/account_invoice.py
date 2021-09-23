@@ -454,8 +454,14 @@ class AccountInvoice(models.Model):
     def generate_self_invoice(self):
         # update fields
         if self.fiscal_position_id.rc_type and \
-            self.fiscal_position_id.rc_type == 'self'\
-            and self.fiscal_position_id.self_journal_id:
+            self.fiscal_position_id.rc_type == 'self':
+
+            if self.fiscal_position_id.self_journal_id and self.fiscal_position_id.self_journal_id.id:
+                # journal_id
+                journal_id = self.fiscal_position_id.self_journal_id
+            else:
+                raise UserError('Configurazione mancante nella '
+                                'posizione fiscale: Registro per autofattura')
 
             if self.fiscal_position_id.partner_type == 'other':
                 # partner
@@ -463,7 +469,8 @@ class AccountInvoice(models.Model):
             elif self.fiscal_position_id.partner_type == 'supplier':
                 rc_partner = self.partner_id
             else:
-                raise UserError('Invalid partner: partner not set.')
+                raise UserError('Configurazione mancante nella '
+                                'posizione fiscale: Tipo di partner')
             # self invoice
             rc_invoice_lines = []
             # creo la fattura in bozza
@@ -474,8 +481,6 @@ class AccountInvoice(models.Model):
             rc_currency = self.currency_id
             # account_id
             rc_account = rc_partner.property_account_receivable_id
-            # journal_id
-            journal_id = self.fiscal_position_id.self_journal_id
             # account_tax sale
             tax_with_sell = self._get_tax_sell()
             tax_sell_id = tax_with_sell.tax_line_id.rc_sale_tax_id.id
@@ -510,10 +515,24 @@ class AccountInvoice(models.Model):
 
                 # no copy values
                 inv_vals['date'] = self.date
-                inv_vals['date_apply_balance'] = self.date_apply_balance
-                inv_vals['date_apply_vat'] = self.date_apply_vat
+
+                #
+                # custom fields
+                #
+
+                if hasattr(self, 'date_apply_balance'):
+                    inv_vals['date_apply_balance'] = self.date_apply_balance
+                # end if
+
+                if hasattr(self, 'date_apply_vat'):
+                    inv_vals['date_apply_vat'] = self.date_apply_vat
+                # end if
+
+                if hasattr(self, 'date_effective'):
+                    inv_vals['date_effective'] = self.date_effective
+                # end if
+
                 inv_vals['date_due'] = self.date
-                inv_vals['date_effective'] = self.date
                 inv_vals['date_invoice'] = self.date
                 inv_vals['fiscal_position'] = None
                 # inv_vals['payment_term_id'] = self.payment_term_id.id
@@ -670,6 +689,10 @@ class AccountInvoice(models.Model):
     @api.multi
     def action_move_create(self):
         res = super(AccountInvoice, self).action_move_create()
+        # reverse charge vat for in.invoice / in.refund only
+        if self.type == 'out_invoice' or self.type == 'out_refund':
+            return res
+        # end if
         for invoice in self:
             if invoice.fiscal_position_id.rc_type:
                 posted = False
@@ -750,7 +773,8 @@ class AccountInvoice(models.Model):
                     elif invoice.fiscal_position_id.partner_type == 'other':
                         partner_id = invoice.company_id.partner_id
                     else:
-                        raise UserError('Anomalia partner')
+                        raise UserError('Configurazione mancante nella '
+                                        'posizione fiscale: Tipo di partner')
                     # end if
 
                     vat_sell_vals = {
