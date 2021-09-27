@@ -6,13 +6,12 @@
 
 {
     'name': 'ITA - Fattura elettronica - Base',
-    'version': '12.0.2.1.2_a',
+    'version': '12.0.2.1.2_2',
     'category': 'Localization/Italy',
     'summary': 'Fatture elettroniche',
     'author': 'Davide Corio, Agile Business Group, Innoviu, '
-              'Odoo Italia Network, Odoo Community Association (OCA)',
-    'website': 'https://github.com/OCA/l10n-italy/tree/12.0/'
-               'l10n_it_fatturapa',
+    'Odoo Italia Network, Odoo Community Association (OCA)',
+    'website': 'https://github.com/OCA/l10n-italy/tree/12.0/l10n_it_fatturapa',
     'license': 'AGPL-3',
     'excludes': ['l10n_it_edi'],
     "depends": [
@@ -28,7 +27,8 @@
         'l10n_it_split_payment',
         'l10n_it_fiscal_document_type',
         'partner_firstname',
-        ],
+        'account_invoice_line_form',  # custom-addons
+    ],
     "data": [
         'data/fatturapa_data.xml',
         'data/welfare.fund.type.csv',
@@ -44,7 +44,7 @@
     'external_dependencies': {
         'python': [
             'pyxb',  # pyxb 1.2.6
-            'asn1crypto'
+            'asn1crypto',
         ],
-    }
+    },
 }
