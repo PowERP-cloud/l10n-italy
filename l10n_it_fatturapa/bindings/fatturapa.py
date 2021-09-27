@@ -1,6 +1,10 @@
 import logging
-from odoo.modules.module import get_module_resource
+
 from lxml import etree
+
+from odoo.modules.module import get_module_resource
+
+from .binding import *  # noqa: F403
 
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)
@@ -10,12 +14,10 @@ try:
 except (ImportError) as err:
     _logger.debug(err)
 
-from .binding import *  # noqa: F403
 
 XSD_SCHEMA = 'Schema_del_file_xml_FatturaPA_versione_1.2.1.xsd'
 
-_xsd_schema = get_module_resource('l10n_it_fatturapa', 'bindings', 'xsd',
-                                  XSD_SCHEMA)
+_xsd_schema = get_module_resource('l10n_it_fatturapa', 'bindings', 'xsd', XSD_SCHEMA)
 _root = etree.parse(_xsd_schema)
 
 _CreateFromDocument = CreateFromDocument  # noqa: F405
@@ -38,14 +40,14 @@ def collect_element(target, element, parent=None):
     if parent is None:
         parent = get_parent_element(element)
 
-    path = '//%s/%s' % (parent.attrib['name'], element.attrib['name'])
+    path = '//{}/{}'.format(parent.attrib['name'], element.attrib['name'])
     mandatory = element.attrib.get('minOccurs') != '0'
     if path not in target:
         target[path] = mandatory
     else:
-        assert target[path] == mandatory, \
-            'Element %s is already present with different minOccurs value' % \
-            path
+        assert target[path] == mandatory, (
+            'Element %s is already present with different minOccurs value' % path
+        )
 
 
 def collect_elements_by_type_query(target, query):
@@ -88,14 +90,16 @@ def CreateFromDocument(xml_string):
 
     # remove timezone from type `xs:date` if any or
     # pyxb will fail to compare with
-    for path, mandatory in date_types.items():
+    for path in date_types:
         for element in root.xpath(path):
             result = pyxb.binding.datatypes.date(element.text.strip())
             if result.tzinfo is not None:
                 result = result.replace(tzinfo=None)
                 element.text = result.XsdLiteral(result)
-                msg = 'removed timezone information from date only element ' \
-                      '%s: %s' % (tree.getpath(element), element.text)
+                msg = (
+                    'removed timezone information from date only element '
+                    '%s: %s' % (tree.getpath(element), element.text)
+                )
                 problems.append(msg)
                 _logger.warn(msg)
 
@@ -107,12 +111,17 @@ def CreateFromDocument(xml_string):
             except OverflowError as e:
                 element_path = tree.getpath(element)
                 if mandatory:
-                    _logger.error('element %s is invalid but is mandatory: '
-                                  '%s' % (element_path, element.text))
+                    _logger.error(
+                        'element %s is invalid but is mandatory: '
+                        '%s' % (element_path, element.text)
+                    )
                 else:
                     element.getparent().remove(element)
-                    msg = 'removed invalid dateTime element %s: %s (%s)' % (
-                        element_path, element.text, e)
+                    msg = 'removed invalid dateTime element {}: {} ({})'.format(
+                        element_path,
+                        element.text,
+                        e,
+                    )
                     problems.append(msg)
                     _logger.warn(msg)
 
@@ -124,7 +133,7 @@ def CreateFromDocument(xml_string):
         email.text = email.text.strip()
 
     fatturapa = _CreateFromDocument(etree.tostring(root))
-    setattr(fatturapa, '_xmldoctor', problems)
+    fatturapa._xmldoctor = problems
     return fatturapa
 
 

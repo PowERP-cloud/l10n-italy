@@ -1,12 +1,14 @@
-import lxml.etree as ET
-import re
 import base64
 import binascii
 import logging
+import re
 from io import BytesIO
-from odoo import models, api, fields
-from odoo.modules import get_module_resource
+
+import lxml.etree as ET
+
+from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.modules import get_module_resource
 from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -17,8 +19,7 @@ except (ImportError, IOError) as err:
     _logger.debug(err)
 
 
-re_base64 = re.compile(
-    br'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$')
+re_base64 = re.compile(br'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$')
 
 
 def is_base64(s):
@@ -73,21 +74,13 @@ class Attachment(models.Model):
         try:
             data = base64.b64decode(self.datas)
         except binascii.Error as e:
-            raise UserError(
-                _(
-                    'Corrupted attachment %s.'
-                ) % e.args
-            )
+            raise UserError(_('Corrupted attachment %s.') % e.args)
 
         if is_base64(data):
             try:
                 data = base64.b64decode(data)
             except binascii.Error as e:
-                raise UserError(
-                    _(
-                        'Base64 encoded file %s.'
-                    ) % e.args
-                )
+                raise UserError(_('Base64 encoded file %s.') % e.args)
 
         # Amazon sends xml files without <?xml declaration,
         # so they cannot be easily detected using a pattern.
@@ -107,16 +100,14 @@ class Attachment(models.Model):
         # cleanup_xml calls root.iter(), but root is None if the parser fails
         # Invalid xml 'NoneType' object has no attribute 'iter'
         except AttributeError as e:
-            raise UserError(
-                _(
-                    'Invalid xml %s.'
-                ) % e.args
-            )
+            raise UserError(_('Invalid xml %s.') % e.args)
 
     def get_fattura_elettronica_preview(self):
         xsl_path = get_module_resource(
-            'l10n_it_fatturapa', 'data',
-            self.env.user.company_id.fatturapa_preview_style)
+            'l10n_it_fatturapa',
+            'data',
+            self.env.user.company_id.fatturapa_preview_style,
+        )
         xslt = ET.parse(xsl_path)
         xml_string = self.get_xml_string()
         xml_file = BytesIO(xml_string)

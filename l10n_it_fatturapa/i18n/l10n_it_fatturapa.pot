@@ -1499,4 +1499,3 @@ msgstr ""
 #: selection:faturapa.summary.data,non_taxable_nature:0
 msgid "reverse charge – transfer of scrap and of other recyclable materials"
 msgstr ""
-
