@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_29
+|icon| ITA - Inversione contabile 12.0.1.2.7_30
 ===============================================
 
 
@@ -384,6 +384,11 @@ ChangeLog History / Cronologia modifiche
 12.0.1.2.7_29 (2021-09-24)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+[FIX] Gestito bug tasse multiple su movimento contabile
+
+12.0.1.2.7_28 (2021-09-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 [FIX] Gestito bug nota di credito fornitore e auto fattura di tipo nota di credito
 
 12.0.1.2.7_28 (2021-09-14)
@@ -435,11 +440,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [FIX] Impostato data di registrazione in autofattura
-
-12.0.1.2.7_15 (2021-07-26)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[IMP] Possibilità di impostare manualmente il campo rc_type di account.tax
 
 
 
@@ -516,7 +516,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-09-24
+Last Update / Ultimo aggiornamento: 2021-09-27
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

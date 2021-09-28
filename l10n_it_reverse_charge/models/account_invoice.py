@@ -47,18 +47,27 @@ class AccountInvoiceLine(models.Model):
     @api.onchange('invoice_line_tax_ids')
     def onchange_invoice_line_tax_id(self):
         res = dict()
+        rc_mismatch = False
         invoice_rc_type = self.invoice_id.fiscal_position_id.rc_type
-        if self.invoice_id.type in ['in_invoice', 'in_refund']:
+        if self.invoice_id.type in ['in_invoice', 'in_refund'] and invoice_rc_type in [
+            'local',
+            'self',
+        ]:
+
             for tax in self.invoice_line_tax_ids:
-
-                is_rc_self = invoice_rc_type == 'self'
-                rc_mismatch = tax.rc_type != invoice_rc_type
-
-                if is_rc_self and rc_mismatch:
-                    raise UserError(
-                        'Natura esenzione errata per la tassa impostata.'
-                    )
+                if invoice_rc_type == 'local':
+                    if (
+                        tax.kind_id.code
+                        and tax.kind_id.code.startswith('N3')
+                        and tax.kind_id.code != 'N3.5'
+                    ):
+                        rc_mismatch = True
+                elif invoice_rc_type == 'self':
+                    if tax.kind_id.code and tax.kind_id.code.startswith('N6'):
+                        rc_mismatch = True
                 # end if
+                if rc_mismatch:
+                    raise UserError('Natura esenzione errata per la tassa impostata.')
             # end for
         # end if
 
@@ -71,8 +80,6 @@ class AccountInvoiceLine(models.Model):
     rc = fields.Boolean("RC")
 
     line_rc_type = fields.Boolean("Has RC", compute='compute_rc_type')
-    # line_rc_type = fields.Selection("Has RC",
-    #                                 related='invoice_id.fiscal_position_id.rc_type')
 
     def _set_additional_fields(self, invoice):
         self._set_rc_flag(invoice)
