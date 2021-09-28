@@ -359,6 +359,11 @@ class WithholdingTaxMove(models.Model):
                 ml_vals['name'] = '%s - %s' % (
                     self.withholding_tax_id.code,
                     self.credit_debit_line_id.move_id.name)
+
+                # FIX set this line as move generated to avoid recalculation
+                ml_vals['withholding_tax_generated_by_move_id'] = \
+                    self.payment_line_id.move_id.id
+
                 if self.payment_line_id.credit:
                     ml_vals['debit'] = abs(self.amount)
                     if self.credit_debit_line_id.invoice_id.type in\
