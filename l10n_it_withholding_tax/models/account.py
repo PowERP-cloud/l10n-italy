@@ -390,7 +390,6 @@ class AccountInvoice(models.Model):
     @api.depends(
         'invoice_line_ids.price_subtotal', 'withholding_tax_line_ids.tax',
         'currency_id', 'company_id', 'date_invoice', 'payment_move_line_ids')
-    # def _amount_withholding_tax(self):
     def _compute_net_pay(self):
         res = super()._compute_net_pay()
         dp_obj = self.env['decimal.precision']
@@ -568,25 +567,6 @@ class AccountInvoice(models.Model):
                     payment_val['wt_move_line'] = False
         return payment_vals
 
-    # @api.multi
-    # def _get_aml_for_register_payment(self):
-    #     """ Get the aml to consider to reconcile in register payment
-    #         except tax payment method
-    #     """
-    #     self.ensure_one()
-    #
-    #     res = super()._get_aml_for_register_payment()
-    #     # if self.withholding_tax:
-    #     #     return self.move_id.line_ids.filtered(
-    #     #         lambda r:
-    #     #         not r.reconciled and r.account_id.internal_type in (
-    #     #             'payable', 'receivable')
-    #     #         # and r.payment_method.code != 'tax'
-    #     #         # and r.line_type != 'tax'
-    #     #     )
-    #     # else:
-    #     return res
-
 
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
@@ -726,15 +706,3 @@ class AccountPayment(models.Model):
         return total
     # end _compute_payment_invoice
 
-    # @api.multi
-    # def post(self):
-    #     res = super().post()
-    #     for rec in self:
-    #
-    #         # add lines
-    #         # reconcile
-    #         # close
-    #         pass
-    #     # end for
-    #
-    # # end post
