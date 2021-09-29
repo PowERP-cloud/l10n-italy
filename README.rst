@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.4.8.19
+|icon| Due dates 12.0.4.8.20
 ============================
 
 
@@ -147,6 +147,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.4.8.20 (2021-09-29)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito registrazione contabile fattura a zero
+
 12.0.4.8.19 (2021-09-29)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -202,11 +207,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] account_duedates: corretto bug nella creazione fattura
-
-12.0.4.7.9 (2021-06-18)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Impostata gestione scadenze con split payment
 
 
 

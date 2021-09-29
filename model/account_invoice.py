@@ -234,9 +234,9 @@ class AccountInvoice(models.Model):
         if not self.duedate_manager_id.duedate_line_ids:
             self.duedate_manager_id.write_duedate_lines()
 
-        # if self.amount_total == 0.0 and \
-        #         not self.duedate_manager_id.duedate_line_ids:
-        #     return move_lines
+        if self.amount_total == 0.0 and \
+                not self.duedate_manager_id.duedate_line_ids:
+            return move_lines
 
         tax_pm_lines = []
 
