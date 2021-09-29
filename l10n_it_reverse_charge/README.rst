@@ -381,6 +381,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_30 (2021-09-29)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Gestito filtro su registro per autofattura
+
 12.0.1.2.7_29 (2021-09-24)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -435,11 +440,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [FIX] Impostato data di registrazione in tutti i movimenti contabili
-
-12.0.1.2.7_19 (2021-08-02)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Impostato data di registrazione in autofattura
 
 
 
@@ -516,7 +516,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-09-27
+Last Update / Ultimo aggiornamento: 2021-09-29
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
