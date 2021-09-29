@@ -35,7 +35,7 @@ class DueDateLine(models.Model):
     move_line_id = fields.One2many(
         comodel_name='account.move.line',
         inverse_name='duedate_line_id',
-        string='Riferimento riga registrazione contagbile',
+        string='Riferimento riga registrazione contabile',
     )
 
     proposed_new_value = fields.Float(string='Importo proposto')
@@ -48,7 +48,7 @@ class DueDateLine(models.Model):
     def _get_scheduled_payment(self):
         for line in self:
             rec = self.env['account.payment.line'].search([
-                ('move_line_id', '=', line.move_line_id.id)])
+                ('move_line_id', 'in', [x.id for x in line.move_line_id])])
             if rec:
                 line.schedule_payment = True
             else:
@@ -56,8 +56,10 @@ class DueDateLine(models.Model):
 
     def _get_paid(self):
         for line in self:
-            if line.move_line_id.payment_id:
-                line.is_paid = True
+            if line.move_line_id:
+                for line_pymnt in line.move_line_id:
+                    if line_pymnt.payment_id:
+                        line.is_paid = True
             else:
                 line.is_paid = False
 

@@ -234,6 +234,10 @@ class AccountInvoice(models.Model):
         if not self.duedate_manager_id.duedate_line_ids:
             self.duedate_manager_id.write_duedate_lines()
 
+        # if self.amount_total == 0.0 and \
+        #         not self.duedate_manager_id.duedate_line_ids:
+        #     return move_lines
+
         tax_pm_lines = []
 
         tax_pm_id = self.env['account.payment.method'].search(
@@ -309,7 +313,7 @@ class AccountInvoice(models.Model):
             invoice.check_duedates_payment = False
             for line in invoice.duedate_line_ids:
                 rec = invoice.env['account.payment.line'].search([
-                    ('move_line_id', '=', line.move_line_id.id)])
+                    ('move_line_id', 'in', [x.id for x in line.move_line_id])])
                 if rec:
                     invoice.check_duedates_payment = True
                 # end if

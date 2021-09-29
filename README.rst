@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.4.8.18
+|icon| Due dates 12.0.4.8.19
 ============================
 
 
@@ -118,7 +118,7 @@ Support / Supporto
 
 This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
 
-Developer companies are / I soci sviluppatori sono:
+Developer companies are / I soci sviluppatoro sono:
 
 * `Didotech s.r.l. <http://www.didotech.com>`__
 * `SHS-AV s.r.l. <https://www.shs-av.com/>`__
@@ -146,6 +146,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.4.8.19 (2021-09-29)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] POW-509 Gestito errore singleton
 
 12.0.4.8.18 (2021-08-25)
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -203,11 +208,6 @@ ChangeLog History / Cronologia modifiche
 
 * [IMP] Impostata gestione scadenze con split payment
 
-12.0.4.7.8 (2021-06-15)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] account_duedates: corretto bug che impediva di salvare correttamente registrazioni contabili di tipo diverso da fattura / nota di credito
-
 
 
 |
@@ -246,7 +246,7 @@ Maintainer / Manutenzione
 
 
 This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese Powerp <http://www.powerp.it/>
-Developer companies are / I soci sviluppatori sono:
+Developer companies are / I soci sviluppatoro sono:
 * Didotech s.r.l. <http://www.didotech.com>
 * SHS-AV s.r.l. <https://www.shs-av.com/>
 
@@ -279,7 +279,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-08-31
+Last Update / Ultimo aggiornamento: 2021-09-29
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
