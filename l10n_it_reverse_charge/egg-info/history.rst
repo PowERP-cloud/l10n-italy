@@ -1,3 +1,23 @@
+12.0.1.2.7_29 (2021-09-24)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Gestito bug tasse multiple su movimento contabile
+
+12.0.1.2.7_28 (2021-09-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Gestito bug nota di credito fornitore e auto fattura di tipo nota di credito
+
+12.0.1.2.7_28 (2021-09-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Risolto bug fattura fornitore con posizione fiscale RC self
+
+12.0.1.2.7_27 (2021-09-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Risolto bug fattura cliente con posizione fiscale RC
+
 12.0.1.2.7_26 (2021-09-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
