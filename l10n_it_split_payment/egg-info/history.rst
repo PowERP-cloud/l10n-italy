@@ -1,7 +1,18 @@
+12.0.1.0.1_9 (2021-08-19)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Refactoring metodo di pagamento 'tax'
+
+12.0.1.0.1_8 (2021-08-17)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Corretto controllo versione oca
+
 12.0.1.0.1_7 (2021-08-31)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Impostato filtro sui movimenti contabili per l'inserimento nella fattura elettronica
+* [FIX] Corretto totale in xml
 
 12.0.1.0.1_6 (2021-06-22)
 ~~~~~~~~~~~~~~~~~~~~~~~~~

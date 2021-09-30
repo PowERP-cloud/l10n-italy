@@ -5,10 +5,10 @@
 
 {
     'name': 'Italian Withholding Tax',
-    'version': '12.0.2.1.0_7',
+    'version': '12.0.2.1.0_10',
     'category': 'Account',
-    'author': 'Openforce, Odoo Italia Network, '
-              'Odoo Community Association (OCA)',
+    'author': """Openforce, Odoo Italia Network,
+              Odoo Community Association (OCA)""",
     'website': 'https://github.com/OCA/l10n-italy',
     'license': 'AGPL-3',
     "depends": [

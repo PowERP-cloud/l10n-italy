@@ -278,6 +278,15 @@ class AccountInvoiceLine(models.Model):
         'Discount or Supplement Details', copy=False
     )
     ftpa_line_number = fields.Integer("Line Number", readonly=True, copy=False)
+    line_etype = fields.Selection(
+        string="Tipo Prestazione",
+        selection=[
+            ('SC', 'Sconto'),
+            ('PR', 'Premio'),
+            ('AB', 'Abbuono'),
+            ('AC', 'Spesa accessoria')
+        ]
+    )
 
 
 class FaturapaSummaryData(models.Model):

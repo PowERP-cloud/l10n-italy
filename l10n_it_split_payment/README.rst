@@ -229,10 +229,21 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.0.1_9 (2021-08-19)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Refactoring metodo di pagamento 'tax'
+
+12.0.1.0.1_8 (2021-08-17)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Corretto controllo versione oca
+
 12.0.1.0.1_7 (2021-08-31)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Impostato filtro sui movimenti contabili per l'inserimento nella fattura elettronica
+* [FIX] Corretto totale in xml
 
 12.0.1.0.1_6 (2021-06-22)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -351,7 +362,11 @@ I soci fondatori sono:
 
 This module is part of  project.
 
+<<<<<<< HEAD
+Last Update / Ultimo aggiornamento: 2021-08-19
+=======
 Last Update / Ultimo aggiornamento: 2021-08-31
+>>>>>>> 12.0_hotfix_0.17
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status

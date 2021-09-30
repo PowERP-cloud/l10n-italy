@@ -1,7 +1,23 @@
+12.0.2.1.0_10 (2021-09-28)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito bug conti sul residuo pagamenti
+
+12.0.2.1.0_9 (2021-09-07)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato visibilita fissa Rda nella riga
+
+12.0.2.1.0_8 (2021-09-06)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato totali corretti nel form / wizard dei pagamenti
+
 12.0.2.1.0_7 (2021-09-01)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Impostato il filtro sui pagamenti della fattura solo se questa ha la ritenuta d'acconto
+* [FIX] POW-466 - Abilitazione campo ritenuta sulle righe fattura
 
 12.0.2.1.0_6 (2021-08-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~~

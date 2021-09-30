@@ -15,6 +15,9 @@
                         <group>
                             <field name="admin_ref"/>
                         </group>
+                        <group>
+                            <field name="line_etype" />
+                        </group>
                    </div>
                     <group string="Related Documents">
                         <field name="related_documents" nolabel="1"/>

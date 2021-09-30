@@ -178,6 +178,10 @@ class AccountPartialReconcile(models.Model):
 class AccountMove(models.Model):
     _inherit = "account.move"
 
+    withholding_tax_amount = fields.Float(
+        digits=dp.get_precision('Account'), string='Withholding tax Amount',
+        readonly=True)
+
     @api.one
     def _prepare_wt_values(self):
         partner = False
@@ -364,6 +368,20 @@ class AccountFiscalPosition(models.Model):
         'withholding.tax', 'account_fiscal_position_withholding_tax_rel',
         'fiscal_position_id', 'withholding_tax_id', string='Withholding Tax')
 
+    # enable the visibility of the field tax_wt_ids in account move line
+    enable_wht = fields.Boolean(string="Ritenuta d'acconto", default=False,)
+
+    @api.multi
+    @api.onchange('withholding_tax_ids')
+    def _onchange_withholding_tax_ids(self):
+        for wt in self:
+            if wt.withholding_tax_ids:
+                wt.enable_wht = True
+            else:
+                wt.enable_wht = False
+        # end if
+    # end _onchange_withholding_tax_ids
+
 
 class AccountInvoice(models.Model):
     _inherit = "account.invoice"
@@ -372,7 +390,6 @@ class AccountInvoice(models.Model):
     @api.depends(
         'invoice_line_ids.price_subtotal', 'withholding_tax_line_ids.tax',
         'currency_id', 'company_id', 'date_invoice', 'payment_move_line_ids')
-    # def _amount_withholding_tax(self):
     def _compute_net_pay(self):
         res = super()._compute_net_pay()
         dp_obj = self.env['decimal.precision']
@@ -411,7 +428,8 @@ class AccountInvoice(models.Model):
         digits=dp.get_precision('Account'), string='Residual Net To Pay',
         store=True, readonly=True)
 
-    # enable_wht = fields.Bool("Ritenuta d'acconto", default=False)
+    enable_wht = fields.Boolean("Ritenuta d'acconto",
+                                related='fiscal_position_id.enable_wht')
 
     @api.model
     def create(self, vals):
@@ -549,24 +567,6 @@ class AccountInvoice(models.Model):
                     payment_val['wt_move_line'] = False
         return payment_vals
 
-    @api.multi
-    def _get_aml_for_register_payment(self):
-        """ Get the aml to consider to reconcile in register payment
-            except tax payment method
-        """
-        self.ensure_one()
-
-        res = super()._get_aml_for_register_payment()
-        if self.withholding_tax:
-            return self.move_id.line_ids.filtered(
-                lambda r:
-                not r.reconciled and r.account_id.internal_type in (
-                    'payable', 'receivable')
-                and r.payment_method.code != 'tax'
-                and r.line_type != 'tax')
-        else:
-            return res
-
 
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
@@ -687,8 +687,8 @@ class AccountPayment(models.Model):
             invoice.currency_id.id)
         if getattr(invoice, 'withholding_tax_amount',
                    False) and invoice.withholding_tax_amount:
-            coeff_net = invoice.residual / invoice.amount_total
-            amount_total = invoice.amount_net_pay_residual * coeff_net
+            amount_total = sign * invoice.amount_net_pay_residual
+            # amount_total_company_signed = sign * invoice.amount_net_pay_residual
         # and if
 
         if payment_currency == invoice_currency:
@@ -705,3 +705,4 @@ class AccountPayment(models.Model):
 
         return total
     # end _compute_payment_invoice
+

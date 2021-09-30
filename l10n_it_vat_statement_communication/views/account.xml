@@ -5,7 +5,7 @@
         <field name="name">vsc.account.tax.form</field>
         <field name="model">account.tax</field>
         <field name="inherit_id"
-               ref="account_vat_period_end_statement.view_tax_form_vat"/>
+               ref="l10n_it_vat_statement.view_tax_form_vat"/>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat_statement_account_id']"
