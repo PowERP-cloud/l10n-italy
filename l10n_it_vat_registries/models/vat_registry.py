@@ -218,5 +218,13 @@ class ReportRegistroIva(models.AbstractModel):
             A tuple: (tax_name, base, tax, deductible, undeductible)
 
         """
-        return tax._compute_totals_tax(data)
+        context = {
+            'from_date': data['from_date'],
+            'to_date': data['to_date'],
+            'filter_date': data['filter_date'],
+        }
+        registry_type = data.get('registry_type', 'customer')
+        context.update({'registry_type': registry_type})
+
+        return tax.compute_totals_tax(context)
 

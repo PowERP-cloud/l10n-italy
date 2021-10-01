@@ -11,6 +11,12 @@ class WizardRegistroIva(models.TransientModel):
     date_range_id = fields.Many2one('date.range', string="Date range")
     from_date = fields.Date('From date', required=True)
     to_date = fields.Date('To date', required=True)
+    filter_date = fields.Selection([
+        ('date', 'Data contabile'),
+        ('date_apply_vat', 'Data di competenza'),
+        ],
+        string='Data/Data competenza', required=True, default='date_apply_vat')
+
     layout_type = fields.Selection([
         ('customer', 'Customer Invoices'),
         ('supplier', 'Supplier Invoices'),
@@ -65,9 +71,10 @@ class WizardRegistroIva(models.TransientModel):
                               'Please load them before to retry!'))
         move_ids = self._get_move_ids(wizard)
 
-        datas_form = {}
+        datas_form = dict()
         datas_form['from_date'] = wizard.from_date
         datas_form['to_date'] = wizard.to_date
+        datas_form['filter_date'] = wizard.filter_date
         datas_form['journal_ids'] = [j.id for j in wizard.journal_ids]
         datas_form['fiscal_page_base'] = wizard.fiscal_page_base
         datas_form['registry_type'] = wizard.layout_type
