@@ -32,7 +32,15 @@
 
                         <t t-if="print_details > 0 ">
                             <tr style="page-break-inside: avoid" name="vat_header_invoice">
-                                <th class="left_without_line">REG. DATE</th>
+
+                                <t t-if="filter_date == 'date_apply_vat'">
+                                    <th class="left_without_line">COM. DATE</th>
+                                </t>
+                                <t t-else="">
+                                    <th class="left_without_line">REG. DATE</th>
+                                </t>
+
+
                                 <th class="left_without_line">REG. NUM.</th>
                                 <t t-if="registry_type != 'corrispettivi'">
                                     <th class="left_without_line">REASON</th>
@@ -74,7 +82,12 @@
                                     <t t-if="line['index'] == 0">
                                         <tr style="page-break-inside: avoid; border:1px solid #fff;" name="vat_body_invoice">
                                             <!-- Data registrazione -->
+                                        <t t-if="filter_date == 'date_apply_vat'">
+                                            <td class="left_without_line_bold"><div style="page-break-inside: avoid" t-esc="format_date(move.date_apply_vat, date_format)"/></td>
+                                        </t>
+                                        <t t-else="">
                                             <td class="left_without_line_bold"><div style="page-break-inside: avoid" t-esc="format_date(move.date,date_format)"/></td>
+                                        </t>
                                             <!-- Numero registrazione -->
                                             <td class="left_without_line_bold"><div style="page-break-inside: avoid" t-esc="move.name"/></td>
                                             <t t-if="registry_type != 'corrispettivi'">

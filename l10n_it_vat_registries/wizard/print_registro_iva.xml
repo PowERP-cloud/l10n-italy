@@ -20,6 +20,10 @@
                             <field name="to_date"/>
                         </group>
                         <group>
+                            <field name="filter_date"/>
+                        </group>
+                        <newline/>
+                        <group>
                             <field name="year_footer"/>
                         </group>
                         <separator string="Journals" colspan="2"/>

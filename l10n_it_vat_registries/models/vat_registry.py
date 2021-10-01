@@ -31,6 +31,7 @@ class ReportRegistroIva(models.AbstractModel):
                 data['form']['from_date'], date_format),
             'to_date': self._format_date(
                 data['form']['to_date'], date_format),
+            'filter_date': data['form']['filter_date'],
             'registry_type': data['form']['registry_type'],
             'invoice_total': self._get_move_total,
             'tax_registry_name': data['form']['tax_registry_name'],
@@ -218,5 +219,13 @@ class ReportRegistroIva(models.AbstractModel):
             A tuple: (tax_name, base, tax, deductible, undeductible)
 
         """
-        return tax._compute_totals_tax(data)
+        context = {
+            'from_date': data['from_date'],
+            'to_date': data['to_date'],
+            'filter_date': data['filter_date'],
+        }
+        registry_type = data.get('registry_type', 'customer')
+        context.update({'registry_type': registry_type})
+
+        return tax.compute_totals_tax(context)
 
