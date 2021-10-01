@@ -31,6 +31,7 @@ class ReportRegistroIva(models.AbstractModel):
                 data['form']['from_date'], date_format),
             'to_date': self._format_date(
                 data['form']['to_date'], date_format),
+            'filter_date': data['form']['filter_date'],
             'registry_type': data['form']['registry_type'],
             'invoice_total': self._get_move_total,
             'tax_registry_name': data['form']['tax_registry_name'],
