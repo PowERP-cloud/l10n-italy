@@ -585,7 +585,6 @@ class AccountInvoice(models.Model):
                             rc_lines_to_rec += debit_line
                             rc_lines_to_rec.reconcile()
 
-                        self._reconcile_self_refund(rc_invoice, rc_account)
                     else:
                     # add credit line
                         credit_line = self.move_id.line_ids.filtered(
