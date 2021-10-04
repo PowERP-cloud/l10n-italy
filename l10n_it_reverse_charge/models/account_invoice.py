@@ -570,25 +570,38 @@ class AccountInvoice(models.Model):
 
                 if rc_invoice.state == 'open':
                     if self.type == 'in_refund':
-                        self._reconcile_self_refund(rc_invoice, rc_account)
+                        debit_line = self.move_id.line_ids.filtered(
+                            lambda
+                                x: self.company_id.id == x.company_id.id and x.line_type == 'tax'
+                                   and rc_account.id == x.account_id.id and x.debit == self.amount_rc
+                        )
+                        rc_lines_to_rec = rc_invoice.move_id.line_ids.filtered(
+                            lambda
+                                x: rc_invoice.company_id.id == x.company_id.id
+                                   and rc_account.id == x.account_id.id
+                        )
+
+                        if debit_line:
+                            rc_lines_to_rec += debit_line
+                            rc_lines_to_rec.reconcile()
+
                     else:
-                        self._reconcile_self_invoice(rc_invoice, rc_account)
-                    # end if
                     # add credit line
-                    # credit_line = self.move_id.line_ids.filtered(
-                    #     lambda
-                    #         x: self.company_id.id == x.company_id.id and x.line_type == 'tax'
-                    #            and rc_account.id == x.account_id.id and x.credit == self.amount_rc
-                    # )
-                    # rc_lines_to_rec = rc_invoice.move_id.line_ids.filtered(
-                    #     lambda
-                    #         x: rc_invoice.company_id.id == x.company_id.id
-                    #            and rc_account.id == x.account_id.id
-                    # )
-                    #
-                    # if credit_line:
-                    #     rc_lines_to_rec += credit_line
-                    #     rc_lines_to_rec.reconcile()
+                        credit_line = self.move_id.line_ids.filtered(
+                            lambda
+                                x: self.company_id.id == x.company_id.id and x.line_type == 'tax'
+                                   and rc_account.id == x.account_id.id and x.credit == self.amount_rc
+                        )
+                        rc_lines_to_rec = rc_invoice.move_id.line_ids.filtered(
+                            lambda
+                                x: rc_invoice.company_id.id == x.company_id.id
+                                   and rc_account.id == x.account_id.id
+                        )
+
+                        if credit_line:
+                            rc_lines_to_rec += credit_line
+                            rc_lines_to_rec.reconcile()
+                    # end if
 
         if self.rc_self_invoice_id:
             if self.fatturapa_attachment_in_id:
@@ -966,36 +979,4 @@ class AccountInvoice(models.Model):
             return error_message
         else:
             return super(AccountInvoice, self).e_inv_check_amount_total()
-
-    def _reconcile_self_invoice(self, rc_invoice, rc_account):
-        credit_line = self.move_id.line_ids.filtered(
-            lambda
-                x: self.company_id.id == x.company_id.id and x.line_type == 'tax'
-                   and rc_account.id == x.account_id.id and x.credit == self.amount_rc
-        )
-        rc_lines_to_rec = rc_invoice.move_id.line_ids.filtered(
-            lambda
-                x: rc_invoice.company_id.id == x.company_id.id
-                   and rc_account.id == x.account_id.id
-        )
-
-        if credit_line:
-            rc_lines_to_rec += credit_line
-            rc_lines_to_rec.reconcile()
-
-    def _reconcile_self_refund(self, rc_invoice, rc_account):
-        debit_line = self.move_id.line_ids.filtered(
-            lambda
-                x: self.company_id.id == x.company_id.id and x.line_type == 'tax'
-                   and rc_account.id == x.account_id.id and x.debit == self.amount_rc
-        )
-        rc_lines_to_rec = rc_invoice.move_id.line_ids.filtered(
-            lambda
-                x: rc_invoice.company_id.id == x.company_id.id
-                   and rc_account.id == x.account_id.id
-        )
-
-        if debit_line:
-            rc_lines_to_rec += debit_line
-            rc_lines_to_rec.reconcile()
 
