@@ -1,12 +1,12 @@
-12.0.1.2.7_31 (2021-09-30)
+12.0.1.2.7_31 (2021-10-04)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Gestito bug riconciliazione su autofattura
+
+12.0.1.2.7_30 (2021-09-30)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [FIX] Gestito visualizzazione totale tassa nella fattura
-
-12.0.1.2.7_30 (2021-09-29)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Gestito filtro su registro per autofattura
 
 12.0.1.2.7_29 (2021-09-24)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
