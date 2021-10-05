@@ -4,7 +4,7 @@ from lxml import etree
 
 from odoo.modules.module import get_module_resource
 
-from .binding import CreateFromDocument, EmailType
+from .binding import *  # noqa: F403
 
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)
@@ -21,7 +21,7 @@ XSD_SCHEMA = 'Schema_del_file_xml_FatturaPA_versione_1.2.1.xsd'
 _xsd_schema = get_module_resource('l10n_it_fatturapa', 'bindings', 'xsd', XSD_SCHEMA)
 _root = etree.parse(_xsd_schema)
 
-_CreateFromDocument = CreateFromDocument
+_CreateFromDocument = CreateFromDocument  # noqa: F405
 
 date_types = {}
 datetime_types = {}
@@ -141,7 +141,7 @@ def take_valid_email(xml_root, problems):
     for email in xml_root.xpath("//Email"):
         email_cleaned = email.text.strip()
         try:
-            EmailType(email_cleaned)
+            EmailType(email_cleaned)  # noqa: F405
             email.text = email_cleaned
         except SimpleFacetValueError:
             msg = f'Invalid email: {email_cleaned}'
