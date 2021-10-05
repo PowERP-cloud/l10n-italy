@@ -1,3 +1,8 @@
+12.0.4.8.21 (2021-10-05)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostato  elenco scadenze in stampa fattura qualora siano più di una
+
 12.0.4.8.20 (2021-09-29)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

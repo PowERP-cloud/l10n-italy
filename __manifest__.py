@@ -6,7 +6,7 @@
 #
 {
     'name': 'Due dates',
-    'version': '12.0.4.8.20',
+    'version': '12.0.4.8.21',
     'category': 'Accounting',
     'summary': 'Due dates management',
     'author': 'powERP enterprise network and other partners',
@@ -33,6 +33,7 @@
         'view/account_move_line_view.xml',
         'view/account_due_list_view.xml',
         'view/partner_view.xml',
+        'view/report_invoice.xml',
         'data/update_year_cron.xml',
         'data/date_range_type.xml',
     ],
