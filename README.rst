@@ -1,6 +1,6 @@
 
 ========================================
-|icon| Account Banking Common 12.0.3.7.5
+|icon| Account Banking Common 12.0.3.7.6
 ========================================
 
 
@@ -129,7 +129,7 @@ Support / Supporto
 
 This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
 
-Developer companies are / I soci sviluppatoro sono:
+Developer companies are / I soci sviluppatori sono:
 
 * `Didotech s.r.l. <http://www.didotech.com>`__
 * `SHS-AV s.r.l. <https://www.shs-av.com/>`__
@@ -157,6 +157,16 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.3.7.7 (2021-10-14)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] POW-523 Fix popolamento registri nel wizard di generazione ordini
+
+12.0.3.7.6 (2021-08-18)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] POW-464 Aggiornamento vista registri per conti di portafoglio
 
 12.0.3.7.5 (2021-06-25)
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -208,16 +218,6 @@ ChangeLog History / Cronologia modifiche
 
 * [IMP] Aggiornato numero versione dopo warning travis
 
-12.0.3.5.12 (2021-02-08)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Modifica registrazione contabile degli insoluti
-
-12.0.3.4.11 (2021-02-02)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Refactoring
-
 
 
 |
@@ -255,12 +255,10 @@ Maintainer / Manutenzione
 -------------------------
 
 
-This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
-
-Developer companies are / I soci sviluppatoro sono:
-
-* `Didotech s.r.l. <http://www.didotech.com>`__
-* `SHS-AV s.r.l. <https://www.shs-av.com/>`__
+This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese Powerp <http://www.powerp.it/>
+Developer companies are / I soci sviluppatori sono:
+* Didotech s.r.l. <http://www.didotech.com>
+* SHS-AV s.r.l. <https://www.shs-av.com/>
 
 
 |
@@ -291,7 +289,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-08-06
+Last Update / Ultimo aggiornamento: 2021-10-14
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

@@ -39,7 +39,6 @@ class AccountPaymentGenerate(models.TransientModel):
 
     def _set_domain_journal(self):
         active_ids = self._context.get('active_ids')
-        invoice_bank_id = False
         payment_method = False
         default_domain = [('type', '=', 'bank'),
                           ('bank_account_id', '!=', False)]
@@ -47,27 +46,27 @@ class AccountPaymentGenerate(models.TransientModel):
             lines = self.env['account.move.line'].browse(active_ids)
             for line in lines:
                 payment_method = line.payment_method
-                invoice_bank_id = line.move_id.invoice_bank_id.id
                 break
             # end for
         # end if
 
         if payment_method and payment_method.code and \
-                payment_method.code == 'invoice_financing' and invoice_bank_id:
-            search_domain = [
-                ('type', '=', 'bank'),
-                ('bank_account_id', '=', invoice_bank_id),
-            ]
-            records = self.env['account.journal'].search(
-                search_domain,
-                order='sequence asc',
-                limit=1
-            )
-            if len(records) > 0:
-                return search_domain
+                payment_method.code == 'invoice_financing':
+
+            journal_ids = []
+            default_mode_id = self._set_default_mode()
+            if default_mode_id:
+                default_mode = self.env['account.payment.mode'].browse(default_mode_id)
+                if default_mode.bank_account_link == 'fixed':
+                    journal_ids.appned(default_mode.fixed_journal_id.id)
+                elif default_mode.bank_account_link == 'variable':
+
+                    journal_ids = [jrn.id for jrn in
+                                   default_mode.variable_journal_ids]
+
+                return [('id', 'in', tuple(journal_ids))]
             else:
                 return default_domain
-            # end if
         else:
             return default_domain
         # end if
@@ -76,38 +75,27 @@ class AccountPaymentGenerate(models.TransientModel):
 
     def _set_default_journal(self):
         active_ids = self._context.get('active_ids')
-        invoice_bank_id = False
-        payment_method = False
-
+        payment_method = None
         if active_ids and len(active_ids) > 0:
             lines = self.env['account.move.line'].browse(active_ids)
             for line in lines:
                 payment_method = line.payment_method
-                invoice_bank_id = line.move_id.invoice_bank_id.id
                 break
             # end for
         # end if
 
         if payment_method and payment_method.code and \
-                payment_method.code == 'invoice_financing' and invoice_bank_id:
-            search_domain = [
-                ('type', '=', 'bank'),
-                ('bank_account_id', '=', invoice_bank_id),
-            ]
-            records = self.env['account.journal'].search(
-                search_domain,
-                order='sequence asc',
-                limit=1
-            )
-            if len(records) == 1:
-                return records[0].id
+                payment_method.code == 'invoice_financing':
+
+            default_mode = self._set_default_mode()
+            if default_mode.bank_account_link == 'fixed':
+                return default_mode.fixed_journal_id.id
+            elif default_mode.bank_account_link == 'variable':
+                return default_mode.variable_journal_ids.ids
             else:
                 return False
-            # end if
         else:
             return False
-        # end if
-
     # end _set_default_journal
 
     payment_mode_id = fields.Many2one(
@@ -121,11 +109,38 @@ class AccountPaymentGenerate(models.TransientModel):
         'account.journal',
         string='Bank Journal',
         domain=_set_domain_journal,
-        # domain=[('type', '=', 'bank'), ('bank_account_id', '!=', False)],
-        deafult=_set_default_journal
     )
 
     description = fields.Char(string='Description')
+
+    @api.onchange('journal_id')
+    def on_change_journal_id(self):
+        active_ids = self._context.get('active_ids')
+        payment_method = None
+        default_domain = [('type', '=', 'bank'),
+                          ('bank_account_id', '!=', False)]
+        journal_ids = []
+        if active_ids and len(active_ids) > 0:
+            lines = self.env['account.move.line'].browse(active_ids)
+            for line in lines:
+                payment_method = line.payment_method
+                break
+            # end for
+            if payment_method and payment_method.code and \
+                    payment_method.code == 'invoice_financing':
+
+                if self.payment_mode_id.bank_account_link == 'fixed':
+                    journal_ids.append(self.payment_mode_id.fixed_journal_id.id)
+                elif self.payment_mode_id.bank_account_link == 'variable':
+                    journal_ids = [jrn.id for jrn in
+                                   self.payment_mode_id.variable_journal_ids]
+                # end if
+
+                return {'domain': {
+                    'journal_id': [('id', 'in', tuple(journal_ids))]}
+                }
+
+        return {'domain': {'journal_id': default_domain}}
 
     @api.onchange('payment_mode_id')
     def on_change_payment_mode(self):

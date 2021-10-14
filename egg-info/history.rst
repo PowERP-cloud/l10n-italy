@@ -1,3 +1,13 @@
+12.0.3.7.7 (2021-10-14)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] POW-523 Fix popolamento registri nel wizard di generazione ordini
+
+12.0.3.7.6 (2021-08-18)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] POW-464 Aggiornamento vista registri per conti di portafoglio
+
 12.0.3.7.5 (2021-06-25)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
