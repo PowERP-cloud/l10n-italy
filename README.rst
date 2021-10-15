@@ -1,6 +1,6 @@
 
 ========================================
-|icon| Account Banking Common 12.0.3.7.6
+|icon| Account Banking Common 12.0.3.7.8
 ========================================
 
 
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.8 (2021-10-15)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Aggiornato popolamento registri nel wizard di generazione ordini
+
 12.0.3.7.7 (2021-10-14)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -212,11 +217,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] No riferimento data bilancio
-
-12.0.3.5.13 (2021-02-11)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Aggiornato numero versione dopo warning travis
 
 
 
@@ -289,7 +289,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-10-14
+Last Update / Ultimo aggiornamento: 2021-10-15
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

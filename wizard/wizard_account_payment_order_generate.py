@@ -56,13 +56,15 @@ class AccountPaymentGenerate(models.TransientModel):
             journal_ids = []
             default_mode_id = self._set_default_mode()
             if default_mode_id:
-                default_mode = self.env['account.payment.mode'].browse(default_mode_id)
-                if default_mode.bank_account_link == 'fixed':
-                    journal_ids.appned(default_mode.fixed_journal_id.id)
-                elif default_mode.bank_account_link == 'variable':
-
-                    journal_ids = [jrn.id for jrn in
-                                   default_mode.variable_journal_ids]
+                journal_ids = self._set_journals_invoice_financing(
+                    default_mode_id)
+                # default_mode = self.env['account.payment.mode'].browse(default_mode_id)
+                # if default_mode.bank_account_link == 'fixed':
+                #     journal_ids.appned(default_mode.fixed_journal_id.id)
+                # elif default_mode.bank_account_link == 'variable':
+                #
+                #     journal_ids = [jrn.id for jrn in
+                #                    default_mode.variable_journal_ids]
 
                 return [('id', 'in', tuple(journal_ids))]
             else:
@@ -113,7 +115,7 @@ class AccountPaymentGenerate(models.TransientModel):
 
     description = fields.Char(string='Description')
 
-    @api.onchange('journal_id')
+    @api.onchange('journal_id', 'payment_mode_id')
     def on_change_journal_id(self):
         active_ids = self._context.get('active_ids')
         payment_method = None
@@ -128,13 +130,8 @@ class AccountPaymentGenerate(models.TransientModel):
             # end for
             if payment_method and payment_method.code and \
                     payment_method.code == 'invoice_financing':
-
-                if self.payment_mode_id.bank_account_link == 'fixed':
-                    journal_ids.append(self.payment_mode_id.fixed_journal_id.id)
-                elif self.payment_mode_id.bank_account_link == 'variable':
-                    journal_ids = [jrn.id for jrn in
-                                   self.payment_mode_id.variable_journal_ids]
-                # end if
+                journal_ids = self._set_journals_invoice_financing(
+                    self.payment_mode_id.id)
 
                 return {'domain': {
                     'journal_id': [('id', 'in', tuple(journal_ids))]}
@@ -331,5 +328,27 @@ class AccountPaymentGenerate(models.TransientModel):
                                     'impostato nelle scadenze.')
         # end for
     # end _check_invoice_financing_line_bank
+
+    def _set_journals_invoice_financing(self, default_mode_id):
+        journal_ids = []
+        default_mode = self.env['account.payment.mode'].browse(default_mode_id)
+        if default_mode.bank_account_link == 'fixed':
+            if default_mode.fixed_journal_id.wallet_ids:
+                children = [ch.id for ch in
+                            default_mode.fixed_journal_id.wallet_ids]
+                journal_ids = journal_ids + children
+
+            journal_ids.append(default_mode.fixed_journal_id.id)
+
+        elif default_mode.bank_account_link == 'variable':
+            for jrn in default_mode.variable_journal_ids:
+                journal_ids.append(jrn.id)
+                if jrn.wallet_ids:
+                    children = [ch.id for ch in jrn.wallet_ids]
+                    journal_ids = journal_ids + children
+                # end if
+            # edn for
+        return journal_ids
+    # end _set_journals_invoice_financing
 
 # end AccountPaymentGenerate

@@ -1,3 +1,8 @@
+12.0.3.7.8 (2021-10-15)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Aggiornato popolamento registri nel wizard di generazione ordini
+
 12.0.3.7.7 (2021-10-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
