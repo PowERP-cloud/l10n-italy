@@ -11,6 +11,12 @@ class WizardRegistroIva(models.TransientModel):
     date_range_id = fields.Many2one('date.range', string="Date range")
     from_date = fields.Date('From date', required=True)
     to_date = fields.Date('To date', required=True)
+    filter_date = fields.Selection([
+        ('date', 'Data contabile'),
+        ('date_apply_vat', 'Data di competenza'),
+        ],
+        string='Data di ricerca', required=True, default='date_apply_vat')
+
     layout_type = fields.Selection([
         ('customer', 'Customer Invoices'),
         ('supplier', 'Supplier Invoices'),
@@ -49,11 +55,42 @@ class WizardRegistroIva(models.TransientModel):
             self.year_footer = self.from_date.year
 
     def _get_move_ids(self, wizard):
-        moves = self.env['account.move'].search([
-            ('date', '>=', self.from_date),
-            ('date', '<=', self.to_date),
-            ('journal_id', 'in', [j.id for j in self.journal_ids]),
-            ('state', '=', 'posted'), ], order='date, name')
+
+        domain = [('journal_id', 'in', [j.id for j in self.journal_ids]),
+                  ('state', '=', 'posted'),
+                  ]
+
+        filter_date = wizard.filter_date
+
+        if filter_date == 'date_apply_vat':
+
+            order_by = 'date_apply_vat, name'
+
+            date_domain = []
+            date_domain.append('|'),
+            date_domain.append('&'),
+            date_domain.append(('date_apply_vat', '<>', False)),
+            date_domain.append(('date_apply_vat', '>=', self.from_date)),
+            date_domain.append('&'),
+            date_domain.append(('date_apply_vat', '=', False)),
+            date_domain.append(('date', '>=', self.from_date)),
+            date_domain.append('|'),
+            date_domain.append('&'),
+            date_domain.append(('date_apply_vat', '<>', False)),
+            date_domain.append(('date_apply_vat', '<=', self.to_date)),
+            date_domain.append('&'),
+            date_domain.append(('date_apply_vat', '=', False)),
+            date_domain.append(('date', '<=', self.to_date)),
+        else:
+            order_by = 'date, name'
+            date_domain = [
+                ('date', '>=', self.from_date),
+                ('date', '<=', self.to_date),
+                ]
+
+        default_domain = domain + date_domain
+
+        moves = self.env['account.move'].search(default_domain, order=order_by)
         return moves.ids
 
     @api.multi
@@ -65,9 +102,10 @@ class WizardRegistroIva(models.TransientModel):
                               'Please load them before to retry!'))
         move_ids = self._get_move_ids(wizard)
 
-        datas_form = {}
+        datas_form = dict()
         datas_form['from_date'] = wizard.from_date
         datas_form['to_date'] = wizard.to_date
+        datas_form['filter_date'] = wizard.filter_date
         datas_form['journal_ids'] = [j.id for j in wizard.journal_ids]
         datas_form['fiscal_page_base'] = wizard.fiscal_page_base
         datas_form['registry_type'] = wizard.layout_type

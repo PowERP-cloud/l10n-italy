@@ -1,0 +1,6 @@
+codicefiscale
+unidecode
+pyxb==1.2.6
+pycryptodome
+pkcs7
+PyPDF2

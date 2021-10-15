@@ -38,6 +38,7 @@ class AccountFiscalPosition(models.Model):
     self_journal_id = fields.Many2one(
         'account.journal',
         string='Registro per autofattura',
+        domain=[('type', '=', 'sale')],
         default='',
     )
 

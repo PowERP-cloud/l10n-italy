@@ -384,11 +384,13 @@ ChangeLog History / Cronologia modifiche
 12.0.1.2.7_31 (2021-10-04)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+[FIX] Gestito visualizzazione totale tassa nella fattura
 [FIX] Gestito bug riconciliazione su autofattura
 
-12.0.1.2.7_30 (2021-09-24)
+12.0.1.2.7_30 (2021-09-29)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+[FIX] Gestito filtro su registro per autofattura
 [FIX] Gestito bug tasse multiple
 
 12.0.1.2.7_29 (2021-09-24)
@@ -516,7 +518,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-10-04
+Last Update / Ultimo aggiornamento: 2021-10-05
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

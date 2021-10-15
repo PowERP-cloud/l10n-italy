@@ -188,11 +188,10 @@ class AccountInvoice(models.Model):
         for inv in self:
             if inv.rc_type:
                 inv.amount_total = inv.amount_untaxed + inv.amount_tax
-                if inv.rc_type == 'self':
-                    inv.amount_tax = 0
-                elif inv.rc_type == 'local':
+                if inv.rc_type == 'self' or inv.rc_type == 'local':
                     inv.amount_tax -= inv.amount_rc
-        # end if
+                # end if
+            # end if
     # end _compute_amount
 
     # tenere
