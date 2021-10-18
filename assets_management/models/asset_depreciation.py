@@ -5,6 +5,9 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_compare, float_is_zero
+import logging
+
+_logger = logging.getLogger(__file__)
 
 
 class AssetDepreciation(models.Model):
@@ -626,3 +629,28 @@ class AssetDepreciation(models.Model):
             'move_type': 'depreciated',
             'name': _("{} - Depreciation").format(dep_year)
         }
+
+    def generate_depreciation_lines_single_vals(self, dep_date):
+        self.ensure_one()
+
+        dep_nr = self.get_max_depreciation_nr() + 1
+        dep = self.with_context(dep_nr=dep_nr, used_asset=self.asset_id.used)
+        dep_amount = dep.get_depreciation_amount(dep_date)
+        dep = dep.with_context(dep_amount=dep_amount)
+
+        return dep.prepare_depreciation_line_vals(dep_date)
+
+    def calculate_residual_summary(self, dep_date):
+        self.ensure_one()
+        amount = 0.0
+        for line in self.line_ids:
+            if line.move_type != 'depreciated':
+                continue
+
+            if line.date <= dep_date:
+                amount += line.amount
+            # end if
+        # edn for
+        _logger.info('residual {}'.format(amount))
+        return amount
+
