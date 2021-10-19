@@ -94,12 +94,15 @@ class AccountInvoice(models.Model):
         res = super(AccountInvoice, self).action_move_create()
         for invoice in self:
             if invoice.split_payment:
+
                 if invoice.type in ['in_invoice', 'in_refund']:
                     raise UserError(
                         _("Can't handle supplier invoices with split payment"))
                 if invoice.move_id.state == 'posted':
                     posted = True
                     invoice.move_id.state = 'draft'
+                else:
+                    posted = False
 
                 line_model = self.env['account.move.line']
                 transfer_ids = list()
@@ -119,9 +122,19 @@ class AccountInvoice(models.Model):
                         check_move_validity=False
                     ).create(transfer_line_vals)
 
+                    if not tranfer:
+                        raise UserError('Movimento Iva in scissione pagamenti '
+                                        'non impostato.')
+                    # end if
+
                     transfer_ids.append(tranfer.id)
 
                     write_off_line_vals = invoice._build_debit_line(tl)
+                    if not write_off_line_vals:
+                        msg = _('Split Payment Write Off')
+                        raise UserError(msg + ' non impostato.')
+                    # end if
+
                     write_off_line_vals['move_id'] = invoice.move_id.id
                     line_model.with_context(
                         check_move_validity=False

@@ -1,3 +1,8 @@
+12.0.1.0.1_10 (2021-08-19)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Impostato controlli su generazione registrazione contabile
+
 12.0.1.0.1_9 (2021-08-19)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
