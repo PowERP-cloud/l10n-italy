@@ -1,3 +1,8 @@
+12.0.3.7.9 (2021-10-19)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] POW-526 Corretta la verifica dei conti bancari nel wizard di generazione ordini
+
 12.0.3.7.8 (2021-10-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

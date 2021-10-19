@@ -319,14 +319,35 @@ class AccountPaymentGenerate(models.TransientModel):
 
     @api.model
     def _check_invoice_financing_line_bank(self, lines):
+        account_invoice_bank = None
+        banks = []
         for line in lines:
             if line.move_id.invoice_bank_id.id:
-                invoice_bank_id = line.move_id.invoice_bank_id.id
-                if invoice_bank_id != self.journal_id.bank_account_id.id:
-                    raise UserError('ATTENZIONE!\nConto bancario aziendale '
-                                    'selezionato non corrispondente a quello '
-                                    'impostato nelle scadenze.')
+                account_invoice_bank = line.move_id.invoice_bank_id
+                break
+            # end if
         # end for
+
+        if not account_invoice_bank:
+            raise UserError('ATTENZIONE!\nConto bancario aziendale '
+                            'non impostato. ')
+        # end if
+
+        if account_invoice_bank.bank_is_wallet is False:
+            # children
+            banks = [bnk.id for bnk in account_invoice_bank.bank_wallet_ids]
+            # and father
+            banks.append(account_invoice_bank.id)
+        else:
+            banks.append(account_invoice_bank.id)
+        # end if
+
+        if self.journal_id.bank_account_id.id not in banks:
+            raise UserError('ATTENZIONE!\nConto bancario aziendale '
+                            'selezionato non corrispondente a quello '
+                            'impostato nelle scadenze.')
+        # end if
+
     # end _check_invoice_financing_line_bank
 
     def _set_journals_invoice_financing(self, default_mode_id):

@@ -1,6 +1,6 @@
 
 ========================================
-|icon| Account Banking Common 12.0.3.7.8
+|icon| Account Banking Common 12.0.3.7.9
 ========================================
 
 
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.9 (2021-10-19)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] POW-526 Corretta la verifica dei conti bancari nel wizard di generazione ordini
+
 12.0.3.7.8 (2021-10-15)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -212,11 +217,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 * [REF] Trasferito i wizard per la creazione distinta e inserimento scadenze
-
-12.0.3.5.14 (2021-02-15)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] No riferimento data bilancio
 
 
 
@@ -289,7 +289,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-10-15
+Last Update / Ultimo aggiornamento: 2021-10-19
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
