@@ -322,8 +322,9 @@ class AccountPaymentGenerate(models.TransientModel):
         account_invoice_bank = None
         banks = []
         for line in lines:
-            if line.move_id.invoice_bank_id.id:
-                account_invoice_bank = line.move_id.invoice_bank_id
+            if line.move_id.partner_bank_id.id:
+                # account_invoice_bank = line.move_id.invoice_bank_id
+                account_invoice_bank = line.move_id.partner_bank_id
                 break
             # end if
         # end for

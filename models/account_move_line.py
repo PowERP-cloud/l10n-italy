@@ -358,9 +358,9 @@ class AccountMoveLine(models.Model):
                       'la banca aziendale.\n\n '
 
                 for line in lines:
-                    if line.move_id.invoice_bank_id.id:
-                        invoice_bank_id = line.move_id.invoice_bank_id.id
-                        invoice_bank_name = line.move_id.invoice_bank_id.bank_name
+                    if line.move_id.partner_bank_id.id:
+                        invoice_bank_id = line.move_id.partner_bank_id.id
+                        invoice_bank_name = line.move_id.partner_bank_id.bank_name
 
                         banks[invoice_bank_id]['count'] += 1
                         banks[invoice_bank_id]['name'] = invoice_bank_name

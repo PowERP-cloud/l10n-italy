@@ -1,7 +1,7 @@
 
-========================================
-|icon| Account Banking Common 12.0.3.7.9
-========================================
+=========================================
+|icon| Account Banking Common 12.0.3.7.10
+=========================================
 
 
 **Common stuff for payment modules**
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.10 (2021-10-20)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] POW-524 Refactoring del codice per il campo Conto aziendale
+
 12.0.3.7.9 (2021-10-19)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -212,11 +217,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 * [REF] Aggiornato messaggi di errore
-
-12.0.3.6.1 (2021-02-17)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Trasferito i wizard per la creazione distinta e inserimento scadenze
 
 
 
@@ -289,7 +289,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-10-19
+Last Update / Ultimo aggiornamento: 2021-10-20
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
