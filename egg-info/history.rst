@@ -1,3 +1,9 @@
+12.0.3.3.12 (2021-10-20)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Aggiornata gestione del conto bancario
+* [IMP] Inserito po file
+
 12.0.3.3.11 (2021-08-10)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

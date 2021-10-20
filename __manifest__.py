@@ -6,7 +6,7 @@
 #
 {
     'name': 'Account Invoice 13 more',
-    'version': '12.0.3.3.11',
+    'version': '12.0.3.3.12',
     'category': 'Accounting',
     'summary': 'Account Invoice 13 more',
     'author': 'powERP enterprise network and other partners',

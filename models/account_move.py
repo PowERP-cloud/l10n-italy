@@ -2,9 +2,11 @@
 #
 # Copyright 2021 powERP enterprise network <https://www.powerp.it>
 #
-# License OPL-1 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
+# License OPL-1 or later
+# (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
 #
-from odoo import models, fields, api
+from odoo import api, fields, models
+
 # from odoo.exceptions import UserError
 
 
@@ -13,9 +15,12 @@ class AccountMove(models.Model):
 
     @api.model
     def _get_default_invoice_date(self):
-        return fields.Date.today() if self._context.get(
-            'default_type', 'entry') in (
-            'in_invoice', 'in_refund', 'in_receipt') else False
+        return (
+            fields.Date.today()
+            if self._context.get('default_type', 'entry')
+            in ('in_invoice', 'in_refund', 'in_receipt')
+            else False
+        )
 
     @api.multi
     @api.depends('line_ids')
@@ -23,15 +28,18 @@ class AccountMove(models.Model):
         for rec in self:
             rec.lines_count = len(rec.line_ids)
         # end for
+
     # end def
 
     # Naming of 13.0 differs from account.invoice.date_invoice
     invoice_date = fields.Date(
         string='Data documento',
-        readonly=True, index=True, copy=False,
+        readonly=True,
+        index=True,
+        copy=False,
         states={'draft': [('readonly', False)]},
         default=_get_default_invoice_date,
-        help="Keep empty to use the current date"
+        help="Keep empty to use the current date",
     )
     # Naming of 13.0 same as account.invoice.type
     # From 14.0 this field is renamed to move_type
@@ -55,24 +63,21 @@ class AccountMove(models.Model):
     )
     fiscal_position_id = fields.Many2one(
         'account.fiscal.position',
-        string='Fiscal Position', readonly=True,
+        string='Fiscal Position',
+        readonly=True,
         states={'draft': [('readonly', False)]},
         domain="[('company_id', '=', company_id)]",
-        help="Fiscal positions are used to adapt taxes and accounts for particular customers or sales orders/invoices. "
-             "The default value comes from the customer.")
+        help="Fiscal positions are used to adapt taxes and accounts for "
+        "particular customers or sales orders/invoices. "
+        "The default value comes from the customer.",
+    )
 
     lines_count = fields.Integer(compute='count_line_ids')
 
     payment_term_id = fields.Many2one(
         comodel_name='account.payment.term',
         string='Termine di pagamento',
-        oldname='payment_id'
-    )
-
-    invoice_bank_id = fields.Many2one(
-        string='Conto Bancario',
-        comodel_name='res.partner.bank',
-        default=False
+        oldname='payment_id',
     )
 
     partner_bank_id = fields.Many2one(
@@ -84,7 +89,7 @@ class AccountMove(models.Model):
             'Vendor Credit Note, otherwise a Partner bank account number.'
         ),
         readonly=True,
-        states={'draft': [('readonly', False)]}
+        states={'draft': [('readonly', False)]},
     )
 
     @api.multi
@@ -94,6 +99,6 @@ class AccountMove(models.Model):
                 move.invoice_date = invoice.date_invoice
                 move.type = invoice.type
                 move.payment_term_id = invoice.payment_term_id
-                move.invoice_bank_id = invoice.partner_bank_id
+                move.partner_bank_id = invoice.partner_bank_id
                 move.fiscal_position_id = invoice.fiscal_position_id
         return super().post(invoice=invoice)

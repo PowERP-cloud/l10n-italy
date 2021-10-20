@@ -1,6 +1,6 @@
 
 ==========================================
-|icon| Account Invoice 13 more 12.0.2.3.10
+|icon| Account Invoice 13 more 12.0.3.3.12
 ==========================================
 
 
@@ -131,7 +131,7 @@ Support / Supporto
 
 This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
 
-Developer companies are / I soci sviluppatoro sono:
+Developer companies are / I soci sviluppatori sono:
 
 * `Didotech s.r.l. <http://www.didotech.com>`__
 * `SHS-AV s.r.l. <https://www.shs-av.com/>`__
@@ -159,6 +159,17 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.3.3.12 (2021-10-20)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Aggiornata gestione del conto bancario
+* [IMP] Inserito po file
+
+12.0.3.3.11 (2021-08-10)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Aggiunto campo partner_bank_id ad account.move
 
 12.0.2.3.10 (2021-02-11)
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -208,12 +219,10 @@ Maintainer / Manutenzione
 -------------------------
 
 
-This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
-
-Developer companies are / I soci sviluppatoro sono:
-
-* `Didotech s.r.l. <http://www.didotech.com>`__
-* `SHS-AV s.r.l. <https://www.shs-av.com/>`__
+This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese Powerp <http://www.powerp.it/>
+Developer companies are / I soci sviluppatori sono:
+* Didotech s.r.l. <http://www.didotech.com>
+* SHS-AV s.r.l. <https://www.shs-av.com/>
 
 
 |
@@ -244,7 +253,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-08-06
+Last Update / Ultimo aggiornamento: 2021-10-20
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
