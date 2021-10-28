@@ -1,7 +1,7 @@
 
-========================================
-|icon| ITA - Gestione Cespiti 12.0.1.0.4
-========================================
+==========================================
+|icon| ITA - Gestione Cespiti 12.0.1.0.0_7
+==========================================
 
 
 **Gestione Cespiti**
@@ -192,23 +192,39 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
-12.0.1.0.4 (2021-10-25)
-~~~~~~~~~~~~~~~~~~~~~~~
+12.0.1.0.0_7 (2021-10-28)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Esposto flag consolidato nelle righe e gestione pulsanti in relazione allo stato del flag
+
+12.0.1.0.0_6 (2021-10-27)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Controllo su data ammortamento e flag consolidato
+* [FIX] Messaggi da wizard
+
+12.0.1.0.0_5 (2021-10-26)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Controllo su ammortamenti ripetuti
+
+12.0.1.0.0_4 (2021-10-25)
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Fix bug calcolo residuo per il metodo simulazione nel bilancio
 
-12.0.1.0.3 (2021-10-22)
-~~~~~~~~~~~~~~~~~~~~~~~
+12.0.1.0.0_3 (2021-10-22)
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Gestito flag 'ammortamento indiretto' nella registrazione contabile
 
-12.0.1.0.2 (2021-10-22)
-~~~~~~~~~~~~~~~~~~~~~~~
+12.0.1.0.0_2 (2021-10-22)
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Introdotto flag 'ammortamento indiretto' nei metodi di ammortamento
 
-12.0.1.0.1 (2021-10-18)
-~~~~~~~~~~~~~~~~~~~~~~~
+12.0.1.0.0_1 (2021-10-18)
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Individuato le funzionalità di generazione dell'importo della quota di ammortamento
 
@@ -284,7 +300,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-10-25
+Last Update / Ultimo aggiornamento: 2021-10-28
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

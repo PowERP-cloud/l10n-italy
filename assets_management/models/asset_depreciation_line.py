@@ -128,6 +128,10 @@ class AssetDepreciationLine(models.Model):
         string="Requires Dep Num"
     )
 
+    final = fields.Boolean(
+        string="Final"
+    )
+
     # Non-default parameter: set which `move_types` require numeration
     _numbered_move_types = ('depreciated', 'historical')
     # Non-default parameter: set which `move_types` do not concur to
@@ -378,6 +382,9 @@ class AssetDepreciationLine(models.Model):
             vals['line_ids'].append((0, 0, v))
 
         self.move_id = am_obj.create(vals)
+
+        if self.final:
+            self.move_id.post()
 
     def get_account_move_vals(self):
         self.ensure_one()
