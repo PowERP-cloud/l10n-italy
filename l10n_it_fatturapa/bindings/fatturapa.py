@@ -11,6 +11,7 @@ _logger.setLevel(logging.DEBUG)
 
 try:
     import pyxb.binding
+    from pyxb import SimpleFacetValueError
 except (ImportError) as err:
     _logger.debug(err)
 
@@ -78,34 +79,12 @@ def collect_types():
     collect_elements_by_type_query(datetime_types, "//*[@type='xs:dateTime']")
 
 
-def CreateFromDocument(xml_string):
-    try:
-        root = etree.fromstring(xml_string)
-    except Exception as e:
-        _logger.warn('lxml was unable to parse xml: %s' % e)
-        return _CreateFromDocument(xml_string)
-
-    problems = []
-    tree = etree.ElementTree(root)
-
-    # remove timezone from type `xs:date` if any or
-    # pyxb will fail to compare with
-    for path in date_types:
-        for element in root.xpath(path):
-            result = pyxb.binding.datatypes.date(element.text.strip())
-            if result.tzinfo is not None:
-                result = result.replace(tzinfo=None)
-                element.text = result.XsdLiteral(result)
-                msg = (
-                    'removed timezone information from date only element '
-                    '%s: %s' % (tree.getpath(element), element.text)
-                )
-                problems.append(msg)
-                _logger.warn(msg)
-
+def remove_invalid_date(xml_root, problems):
     # remove bogus dates accepted by ADE but not by python
+    tree = etree.ElementTree(xml_root)
+
     for path, mandatory in datetime_types.items():
-        for element in root.xpath(path):
+        for element in xml_root.xpath(path):
             try:
                 pyxb.binding.datatypes.dateTime(element.text)
             except OverflowError as e:
@@ -125,12 +104,71 @@ def CreateFromDocument(xml_string):
                     problems.append(msg)
                     _logger.warn(msg)
 
+    return xml_root, problems
+
+
+def remove_timezone(xml_root, problems):
+    # remove timezone from type `xs:date` if any or
+    # pyxb will fail to compare with
+
+    tree = etree.ElementTree(xml_root)
+
+    for path in date_types:
+        for element in xml_root.xpath(path):
+            result = pyxb.binding.datatypes.date(element.text.strip())
+            if result.tzinfo is not None:
+                result = result.replace(tzinfo=None)
+                element.text = result.XsdLiteral(result)
+                msg = (
+                    'removed timezone information from date only element '
+                    '%s: %s' % (tree.getpath(element), element.text)
+                )
+                problems.append(msg)
+                _logger.warn(msg)
+
+    return xml_root, problems
+
+
+def fix_trailing_spaces(xml_root, problems):
     # fix trailing spaces in <PECDestinatario/> and <Email/>
-    for pec in root.xpath("//PECDestinatario"):
+    for pec in xml_root.xpath("//PECDestinatario"):
         pec.text = pec.text.strip()
 
-    for email in root.xpath("//Email"):
-        email.text = email.text.strip()
+    return xml_root, problems
+
+
+def take_valid_email(xml_root, problems):
+    for email in xml_root.xpath("//Email"):
+        email_cleaned = email.text.strip()
+        try:
+            EmailType(email_cleaned)  # noqa: F405
+            email.text = email_cleaned
+        except SimpleFacetValueError:
+            msg = f'Invalid email: {email_cleaned}'
+            problems.append(msg)
+            _logger.warn(msg)
+            email.getparent().remove(email)
+
+    return xml_root, problems
+
+
+def sanitize(xml_root):
+    problems = []
+    xml_root, problems = remove_timezone(xml_root, problems)
+    xml_root, problems = remove_invalid_date(xml_root, problems)
+    xml_root, problems = fix_trailing_spaces(xml_root, problems)
+    xml_root, problems = take_valid_email(xml_root, problems)
+    return xml_root, problems
+
+
+def CreateFromDocument(xml_string):
+    try:
+        root = etree.fromstring(xml_string)
+    except Exception as e:
+        _logger.warn('lxml was unable to parse xml: %s' % e)
+        return _CreateFromDocument(xml_string)
+
+    root, problems = sanitize(root)
 
     fatturapa = _CreateFromDocument(etree.tostring(root))
     fatturapa._xmldoctor = problems
