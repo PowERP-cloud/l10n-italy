@@ -1,3 +1,8 @@
+12.0.4.8.22 (2021-10-28)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostato in elenco scadenze in stampa fattura il metodo di pagamento
+
 12.0.4.8.21 (2021-10-05)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
