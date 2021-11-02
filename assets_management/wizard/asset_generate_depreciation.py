@@ -17,18 +17,41 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
 
     @api.model
     def get_default_date_dep(self):
-        fiscal_year = self.env['account.fiscal.year'].get_fiscal_year_by_date(
-            fields.Date.today(),
+        query = "SELECT MAX(date) FROM asset_depreciation_line WHERE " \
+                "final='true' and move_type = 'depreciated'"
+        self._cr.execute(query)
+        date = self._cr.fetchone()
+        # has depreciation
+        if date[0]:
+            last_date = date[0]
+            last_date += datetime.timedelta(days=1)
+        else:
+            last_date = fields.Date.today()
+        # end if
+
+        # search for end of fiscal year if is set according
+        # with the year of last date
+        fiscal_year = self.env[
+            'account.fiscal.year'].get_fiscal_year_by_date(
+            last_date,
             company=self.env.user.company_id,
             miss_raise=False
         )
         if fiscal_year:
             return fiscal_year.date_to
+        # end if
+
         return fields.Date.today()
 
     @api.model
     def get_default_type_ids(self):
         return [(6, 0, self.env['asset.depreciation.type'].search([]).ids)]
+
+    @api.depends('asset_ids')
+    def _compute_asset_ids(self):
+        for r in self:
+            r.has_asset_ids = len(r.asset_ids) > 0
+        # end for
 
     asset_ids = fields.Many2many(
         'asset.asset',
@@ -64,6 +87,11 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
         default=False,
     )
 
+    has_asset_ids = fields.Boolean(
+        string='Has asset ids',
+        compute='_compute_asset_ids'
+    )
+
     @api.multi
     def do_generate(self):
         """
@@ -90,24 +118,35 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
 
             # existenz of lines beyond
             lines = dep.line_ids
+
+            # start
+            year = self.date_dep.year
+            start_year = datetime.date(year, 1, 1)
+            end_year = datetime.date(year, 12, 31)
+
             # final is True
             confirmed_lines = lines.filtered(
-                lambda l: l.move_type == 'depreciated' and not
-                l.partial_dismissal and l.date >= self.date_dep
+                lambda l:
+                l.move_type == 'depreciated'
+                and not l.partial_dismissal
+                and start_year <= l.date <= self.date_dep
                 and l.final is True
             )
 
             if confirmed_lines:
                 raise UserError(
                     'Non si può effettuare l\'ammortamento del bene '
-                    'poichè per {} esistono ammortamenti consolidati alla '
+                    'poichè per {} esistono ammortamenti consolidati entro la '
                     'data impostata '
                     .format(dep.display_name)
                 )
             else:
                 newer_lines = lines.filtered(
-                    lambda l: l.move_type == 'depreciated' and not
-                    l.partial_dismissal and l.date >= self.date_dep
+                    lambda l:
+                    l.move_type == 'depreciated'
+                    and not l.partial_dismissal
+                    and start_year <= l.date
+                    and l.final is False
                 )
 
                 if newer_lines:
