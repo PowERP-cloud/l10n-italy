@@ -12,4 +12,15 @@
         </field>
     </record>
 
+    <record id="ddt_stock_picking_package_preparation_search_inherit" model="ir.ui.view">
+        <field name="name">ddt.stock.picking.package.preparation.search.inherit</field>
+        <field name="model">stock.picking.package.preparation</field>
+        <field name="inherit_id" ref="l10n_it_ddt.ddt_stock_picking_package_preparation_search"></field>
+        <field name="arch" type="xml">
+             <xpath expr="//filter[@name='draft']" position="after">
+                 <filter string="In Pack" domain="[('state','=', 'in_pack')]" name="inpack"/>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
