@@ -1,3 +1,13 @@
+12.0.1.0.0_12 (2021-11-08)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito generazione ammortamenti solo da wizard
+
+12.0.1.0.0_11 (2021-11-04)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato registrazione svalutazione e rivalutazione
+
 12.0.1.0.0_10 (2021-11-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 

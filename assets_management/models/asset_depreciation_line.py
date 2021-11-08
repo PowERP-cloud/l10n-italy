@@ -23,9 +23,10 @@ class AssetDepreciationLine(models.Model):
 
     asset_id = fields.Many2one(
         'asset.asset',
-        readonly=True,
-        related='depreciation_id.asset_id',
-        store=True,
+        required=True,
+        # readonly=True,
+        # related='depreciation_id.asset_id',
+        # store=True,
         string="Asset"
     )
 
@@ -59,7 +60,7 @@ class AssetDepreciationLine(models.Model):
     depreciation_id = fields.Many2one(
         'asset.depreciation',
         ondelete='cascade',
-        readonly=True,
+        # readonly=True,
         required=True,
         string="Asset depreciation",
     )
@@ -128,11 +129,6 @@ class AssetDepreciationLine(models.Model):
         string="Requires Dep Num"
     )
 
-    # state = fields.Selection(
-    #     string='Move state',
-    #     related='move_id.state',
-    # )
-
     final = fields.Boolean(
         string="Final",
         # readonly=True,
@@ -150,9 +146,20 @@ class AssetDepreciationLine(models.Model):
 
     @api.model
     def create(self, vals):
+        if self._context.get('depreciated_by_line') \
+            and vals['move_type'] == 'depreciated':
+            raise ValidationError(_("L'ammortamento non è consentito "
+                                    "da questa interfaccia.\n"))
+
         line = super().create(vals)
         if line.need_normalize_depreciation_nr():
             line.normalize_depreciation_nr(force=True)
+        # end if
+        if line.move_type in line.get_update_move_types():
+            if line.requires_account_move:
+                line.button_generate_account_move()
+                return line
+        # end if
         return line
 
     @api.multi
@@ -241,6 +248,19 @@ class AssetDepreciationLine(models.Model):
     def onchange_move_type(self):
         if self.move_type not in ('in', 'out'):
             self.depreciation_line_type_id = False
+
+    @api.onchange('asset_id')
+    def onchange_asset_id(self):
+        res = dict()
+        ids = list()
+        for dep in self.asset_id.depreciation_ids:
+            ids.append(dep.id)
+        # end for
+    # if ids:
+        res['domain'] = {
+            'depreciation_id': [('id', '=', ids)], }
+        # end if
+        return res
 
     def get_linked_aa_info_records(self):
         self.ensure_one()
@@ -489,9 +509,22 @@ class AssetDepreciationLine(models.Model):
         )
 
     def get_in_account_move_line_vals(self):
-        raise NotImplementedError(
-            _("Cannot create account move lines for lines of type `In`")
-        )
+        self.ensure_one()
+        credit_line_vals = {
+            'account_id': self.asset_id.category_id.gain_account_id.id,
+            'credit': 0.0,
+            'debit': self.amount,
+            'currency_id': self.currency_id.id,
+            'name': " - ".join((self.asset_id.make_name(), self.name)),
+        }
+        debit_line_vals = {
+            'account_id': self.asset_id.category_id.asset_account_id.id,
+            'credit': self.amount,
+            'debit': 0.0,
+            'currency_id': self.currency_id.id,
+            'name': " - ".join((self.asset_id.make_name(), self.name)),
+        }
+        return [credit_line_vals, debit_line_vals]
 
     def get_loss_account_move_line_vals(self):
         self.ensure_one()
@@ -512,9 +545,22 @@ class AssetDepreciationLine(models.Model):
         return [credit_line_vals, debit_line_vals]
 
     def get_out_account_move_line_vals(self):
-        raise NotImplementedError(
-            _("Cannot create account move lines for lines of type `Out`")
-        )
+        self.ensure_one()
+        credit_line_vals = {
+            'account_id': self.asset_id.category_id.asset_account_id.id,
+            'credit': self.amount,
+            'debit': 0.0,
+            'currency_id': self.currency_id.id,
+            'name': " - ".join((self.asset_id.make_name(), self.name)),
+        }
+        debit_line_vals = {
+            'account_id': self.asset_id.category_id.loss_account_id.id,
+            'credit': 0.0,
+            'debit': self.amount,
+            'currency_id': self.currency_id.id,
+            'name': " - ".join((self.asset_id.make_name(), self.name)),
+        }
+        return [credit_line_vals, debit_line_vals]
 
     def needs_account_move(self):
         self.ensure_one()
