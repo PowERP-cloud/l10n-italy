@@ -148,6 +148,11 @@ class Asset(models.Model):
         compute='compute_last_depreciation_date',
     )
 
+    is_open = fields.Boolean(
+        string="Opened",
+        default=False,
+    )
+
     @api.model
     def create(self, vals):
         # Add depreciation if it's missing while category is set
@@ -264,6 +269,19 @@ class Asset(models.Model):
             'default_type_ids': [
                 (6, 0, self.depreciation_ids.mapped('type_id').ids)
             ],
+        })
+        act['context'] = ctx
+        return act
+
+    @api.multi
+    def launch_wizard_generate_open(self):
+        self.ensure_one()
+        xmlid = 'assets_management.action_wizard_asset_open'
+        [act] = self.env.ref(xmlid).read()
+        ctx = dict(self._context)
+        ctx.update({
+            'default_asset_ids': [(6, 0, self.ids)],
+            'default_company_id': self.company_id.id,
         })
         act['context'] = ctx
         return act
