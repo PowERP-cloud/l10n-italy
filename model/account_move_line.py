@@ -16,6 +16,17 @@ _logger = logging.getLogger(__name__)
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
+    @api.model
+    def set_default_company_bank(self):
+        if self.invoice_id.type == 'out_invoice' and \
+                hasattr(self.move_id, 'company_bank_id') and \
+                self.move_id.company_bank_id:
+            return self.move_id.company_bank_id.id
+        else:
+            return False
+        # end if
+    # end set_default_company_bank
+
     payment_method = fields.Many2one('account.payment.method',
                                      string="Metodo di pagamento")
 
@@ -69,8 +80,12 @@ class AccountMoveLine(models.Model):
 
     iban = fields.Char(related='partner_bank_id.acc_number', string='IBAN')
 
-    invoice_bank_id = fields.Many2one(
-        string='Conto Bancario', related='invoice_id.partner_bank_id'
+    company_bank_id = fields.Many2one(
+        comodel_name='res.partner.bank',
+        string='Conto Bancario aziendale',
+        default=set_default_company_bank,
+        domain=lambda self:
+            [('partner_id', '=', self.env.user.company_id.partner_id.id)]
     )
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

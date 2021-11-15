@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.4.8.22
+|icon| Due dates 12.0.4.8.23
 ============================
 
 
@@ -147,6 +147,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.4.8.23 (2021-11-15)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostato campo banca aziendale
+
 12.0.4.8.22 (2021-10-28)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -202,11 +207,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] account_duedates: Impostato manager per la gestione delle scadenze
-
-12.0.4.8.11 (2021-06-25)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] account_duedates: corretto errore che impediva il salvataggio di una registrazione contabile una volta modificata
 
 
 
@@ -279,7 +279,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-10-28
+Last Update / Ultimo aggiornamento: 2021-11-15
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
@@ -338,5 +338,5 @@ Last Update / Ultimo aggiornamento: 2021-10-28
 .. |FatturaPA| image:: https://raw.githubusercontent.com/zeroincombenze/grymb/master/certificates/ade/icons/fatturapa.png
    :target: https://github.com/zeroincombenze/grymb/blob/master/certificates/ade/scope/fatturapa.md
 .. |chat_with_us| image:: https://www.shs-av.com/wp-content/chat_with_us.gif
-   :target: https://t.me/axitec_helpdesk
+   :target: https://t.me/Assitenza_clienti_powERP
 
