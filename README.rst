@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.10
+|icon| Account Banking Common 12.0.3.7.11
 =========================================
 
 
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.11 (2021-11-15)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] POW-367 Verificato e corretto utilizzo campo banca impostata in fattura
+
 12.0.3.7.10 (2021-10-20)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -212,11 +217,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 * [REF] Check su dati banca in anticipo fatture
-
-12.0.3.6.2 (2021-02-19)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Aggiornato messaggi di errore
 
 
 
@@ -289,7 +289,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-10-20
+Last Update / Ultimo aggiornamento: 2021-11-15
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
@@ -348,5 +348,5 @@ Last Update / Ultimo aggiornamento: 2021-10-20
 .. |FatturaPA| image:: https://raw.githubusercontent.com/zeroincombenze/grymb/master/certificates/ade/icons/fatturapa.png
    :target: https://github.com/zeroincombenze/grymb/blob/master/certificates/ade/scope/fatturapa.md
 .. |chat_with_us| image:: https://www.shs-av.com/wp-content/chat_with_us.gif
-   :target: https://t.me/axitec_helpdesk
+   :target: https://t.me/Assitenza_clienti_powERP
 

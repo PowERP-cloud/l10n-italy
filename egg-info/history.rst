@@ -1,3 +1,8 @@
+12.0.3.7.11 (2021-11-15)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] POW-367 Verificato e corretto utilizzo campo banca impostata in fattura
+
 12.0.3.7.10 (2021-10-20)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
