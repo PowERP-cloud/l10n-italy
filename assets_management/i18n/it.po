@@ -1282,7 +1282,7 @@ msgstr "Data inizio"
 #. module: assets_management
 #: model:ir.model.fields,field_description:assets_management.field_asset_depreciation_mode__default
 msgid "Default Mode"
-msgstr ""
+msgstr "Metodo di default"
 
 #. module: assets_management
 #: model:ir.model.fields,help:assets_management.field_asset_category__print_by_default
@@ -3239,3 +3239,13 @@ msgstr ""
 msgid "{} - Depreciation"
 msgstr "{} - Ammortamento"
 
+#. module: assets_management
+#: model:ir.model.fields,field_description:assets_management.field_asset_depreciation_mode__indirect_depreciation
+msgid "Indirect depreciation"
+msgstr "Ammortamento indiretto"
+
+#. module: assets_management
+#: model:ir.model.fields,field_description:assets_management.field_asset_depreciation_line__final
+#: model:ir.model.fields,field_description:assets_management.field_wizard_asset_generate_depreciation__final
+msgid "Final"
+msgstr "Consolidato"

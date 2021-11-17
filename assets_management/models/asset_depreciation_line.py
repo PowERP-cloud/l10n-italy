@@ -128,6 +128,10 @@ class AssetDepreciationLine(models.Model):
         string="Requires Dep Num"
     )
 
+    final = fields.Boolean(
+        string="Final"
+    )
+
     # Non-default parameter: set which `move_types` require numeration
     _numbered_move_types = ('depreciated', 'historical')
     # Non-default parameter: set which `move_types` do not concur to
@@ -379,6 +383,9 @@ class AssetDepreciationLine(models.Model):
 
         self.move_id = am_obj.create(vals)
 
+        if self.final:
+            self.move_id.post()
+
     def get_account_move_vals(self):
         self.ensure_one()
         return {
@@ -413,13 +420,23 @@ class AssetDepreciationLine(models.Model):
 
         # Asset depreciation
         if not self.partial_dismissal:
-            credit_account_id = self.asset_id.category_id.fund_account_id.id
+
+            if self.depreciation_id.mode_id.indirect_depreciation:
+                credit_account_id = self.asset_id.category_id.fund_account_id.id
+            else:
+                credit_account_id = \
+                    self.asset_id.category_id.asset_account_id.id
+
             debit_account_id = self.asset_id.category_id \
                 .depreciation_account_id.id
 
         # Asset partial dismissal
         else:
-            debit_account_id = self.asset_id.category_id.fund_account_id.id
+            if self.depreciation_id.mode_id.indirect_depreciation:
+                debit_account_id = self.asset_id.category_id.fund_account_id.id
+            else:
+                debit_account_id = self.asset_id.category_id.asset_account_id.id
+
             credit_account_id = self.asset_id.category_id\
                 .asset_account_id.id
 
