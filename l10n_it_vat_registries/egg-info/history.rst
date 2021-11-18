@@ -1,3 +1,8 @@
+12.0.1.2.5_5 (2021-11-18)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato registri per l'elaborazione della stampa da passare alla funzione di totalizzazione
+
 12.0.1.2.5_4 (2021-10-01)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 

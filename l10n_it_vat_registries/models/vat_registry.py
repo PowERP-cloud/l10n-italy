@@ -226,6 +226,10 @@ class ReportRegistroIva(models.AbstractModel):
         }
         registry_type = data.get('registry_type', 'customer')
         context.update({'registry_type': registry_type})
+        # journal needed to filter move lines
+        if data['journal_ids']:
+            context.update({'registry_ids': data['journal_ids']})
+        # end if
 
         return tax.compute_totals_tax(context)
 
