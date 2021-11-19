@@ -569,7 +569,8 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def _get_aml_for_register_payment(self):
-        """ Get the aml to consider to reconcile in register payment """
+        """ Get the aml to consider to reconcile in register payment override
+        """
         self.ensure_one()
         return self.move_id.line_ids.filtered(
             lambda r: not r.reconciled
