@@ -1,6 +1,6 @@
 
 ============================================
-|icon| Italian Withholding Tax 12.0.2.1.0_10
+|icon| Italian Withholding Tax 12.0.2.1.0_11
 ============================================
 
 
@@ -130,7 +130,7 @@ Installation / Installazione
 
 From UI: go to:
 
-* |menu| Setting > Activate Developer mode
+* |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
 * |menu| Setting > Apps |right_do| Select **l10n_it_withholding_tax** > Install
 
@@ -171,7 +171,7 @@ Support / Supporto
 
 This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
 
-Developer companies are / I soci sviluppatoro sono:
+Developer companies are / I soci sviluppatori sono:
 
 * `Didotech s.r.l. <http://www.didotech.com>`__
 * `SHS-AV s.r.l. <https://www.shs-av.com/>`__
@@ -199,6 +199,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.2.1.0_11 (2021-11-19)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito bug multi righe movimenti pagamento
 
 12.0.2.1.0_10 (2021-09-28)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -294,7 +299,7 @@ Maintainer / Manutenzione
 
 
 This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese Powerp <http://www.powerp.it/>
-Developer companies are / I soci sviluppatoro sono:
+Developer companies are / I soci sviluppatori sono:
 * Didotech s.r.l. <http://www.didotech.com>
 * SHS-AV s.r.l. <https://www.shs-av.com/>
 
@@ -327,11 +332,11 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-09-28
+Last Update / Ultimo aggiornamento: 2021-11-19
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status
-    :alt:
+    :alt: 
 .. |Build Status| image:: https://travis-ci.org/PowERP-cloud/l10n-italy.svg?branch=12.0
     :target: https://travis-ci.com/PowERP-cloud/l10n-italy
     :alt: github.com
@@ -386,5 +391,5 @@ Last Update / Ultimo aggiornamento: 2021-09-28
 .. |FatturaPA| image:: https://raw.githubusercontent.com/zeroincombenze/grymb/master/certificates/ade/icons/fatturapa.png
    :target: https://github.com/zeroincombenze/grymb/blob/master/certificates/ade/scope/fatturapa.md
 .. |chat_with_us| image:: https://www.shs-av.com/wp-content/chat_with_us.gif
-   :target: https://t.me/axitec_helpdesk
+   :target: https://t.me/Assitenza_clienti_powERP
 
