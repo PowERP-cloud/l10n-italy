@@ -1,3 +1,8 @@
+12.0.4.8.24 (2021-11-19)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato metodo di pagamento per le scadenze NON tecniche
+
 12.0.4.8.23 (2021-11-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
