@@ -8,7 +8,6 @@
 #
 import datetime
 from odoo import models, fields, api
-from odoo.exceptions import UserError
 from ..utils.misc import MOVE_TYPE_INV_CN
 
 
