@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.4.8.23
+|icon| Due dates 12.0.4.8.24
 ============================
 
 
@@ -147,6 +147,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.4.8.24 (2021-11-23)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato e gestito aggiornamento campi banca aziendale e banca partner
+
 12.0.4.8.23 (2021-11-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -202,11 +207,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] account_duedates: Impostato manager per la gestione delle scadenze Reverse charge
-
-12.0.4.8.12 (2021-06-28)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] account_duedates: Impostato manager per la gestione delle scadenze
 
 
 
@@ -279,7 +279,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-11-15
+Last Update / Ultimo aggiornamento: 2021-11-23
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

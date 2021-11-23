@@ -1,3 +1,8 @@
+12.0.4.8.24 (2021-11-23)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato e gestito aggiornamento campi banca aziendale e banca partner
+
 12.0.4.8.23 (2021-11-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
