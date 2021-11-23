@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.11
+|icon| Account Banking Common 12.0.3.7.12
 =========================================
 
 
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.12 (2021-11-23)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] POW-556 Impostato e gestito il campo del conto bancario aziendale nei controlli di anticipo fattura
+
 12.0.3.7.11 (2021-11-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -212,11 +217,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Aggiornata gestione del registro per l'ordine in caso di anticipo fatture
-
-12.0.3.6.3 (2021-02-19)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Check su dati banca in anticipo fatture
 
 
 
@@ -289,7 +289,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-11-15
+Last Update / Ultimo aggiornamento: 2021-11-23
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
