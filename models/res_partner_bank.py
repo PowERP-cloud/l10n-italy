@@ -111,10 +111,11 @@ class ResPartnerBank(models.Model):
             Se esiste il collegamento alla banca (bank_id)  aggiungere carattere ")"
 
         """
+        res = super().name_get()
         result = []
         for record in self:
             if not record.bank_id and record.bank_is_wallet is False:
-                return super().name_get()
+                return res
             disp_name = ''
 
             chars_bank_name = 16 if (record.bank_id and record.bank_is_wallet) else 31

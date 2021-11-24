@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.12
+|icon| Account Banking Common 12.0.3.7.13
 =========================================
 
 
@@ -158,6 +158,12 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.13 (2021-11-24)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] POW-573 Impostato e gestito il display name del conto bancario
+
+12.0.3.7.12 (2021-11-23)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] POW-556 Impostato e gestito il campo del conto bancario aziendale nei controlli di anticipo fattura
@@ -211,16 +217,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] lint error: F401 'odoo.exceptions.UserError' imported but unused
-
-12.0.3.7.2 (2021-03-18)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Impostato funzionalità aggiornamento metodo di pagamento
-
-12.0.3.7.1 (2021-02-26)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Aggiornata gestione del registro per l'ordine in caso di anticipo fatture
 
 
 
@@ -293,11 +289,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-<<<<<<< HEAD
 Last Update / Ultimo aggiornamento: 2021-11-24
-=======
-Last Update / Ultimo aggiornamento: 2021-11-23
->>>>>>> 12.0_hotfix_0.21
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

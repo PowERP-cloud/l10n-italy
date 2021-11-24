@@ -1,3 +1,8 @@
+12.0.3.7.13 (2021-11-24)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] POW-573 Impostato e gestito il display name del conto bancario
+
 12.0.3.7.12 (2021-11-23)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
