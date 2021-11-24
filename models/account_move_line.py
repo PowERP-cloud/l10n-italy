@@ -367,8 +367,9 @@ class AccountMoveLine(models.Model):
                     else:
                         fattura = line.stored_invoice_id.number
                         raise UserError('ATTENZIONE!\nConto bancario aziendale '
-                                        'nella fattura {fattura} non '
-                                        'impostato.'.format(fattura=fattura))
+                                        'nella testata di registrazione '
+                                        '{fattura} non impostato.'.format(
+                                            fattura=fattura))
                     # end if
 
                 # end for

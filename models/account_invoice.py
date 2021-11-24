@@ -45,6 +45,23 @@ class AccountInvoice(models.Model):
                 })
             # end if
         # end if
+        if 'company_bank_id' in vals:
+            if self.state == 'open':
+                self.move_id.write({
+                        'company_bank_id': vals['company_bank_id'],
+                        'bank_2_print_selector': 'company',
+                })
+            # end if
+        # end if
+        if 'counterparty_bank_id' in vals:
+            if self.state == 'open':
+                self.move_id.write({
+                        'counterparty_bank_id': vals['counterparty_bank_id'],
+                        'bank_2_print_selector': 'partner',
+                })
+            # end if
+        # end if
+
         return super().write(vals)
     # end write
 
