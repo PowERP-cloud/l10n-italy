@@ -27,6 +27,17 @@ class AccountMoveLine(models.Model):
         # end if
     # end set_default_company_bank
 
+    @api.model
+    def set_default_counterparty_bank(self):
+        if self.invoice_id.type == 'out_invoice' and \
+                hasattr(self.move_id, 'counterparty_bank_id') and \
+                self.move_id.counterparty_bank_id:
+            return self.move_id.counterparty_bank_id
+        else:
+            return False
+        # end if
+    # end set_default_counterparty_bank
+
     payment_method = fields.Many2one('account.payment.method',
                                      string="Metodo di pagamento")
 
@@ -86,6 +97,13 @@ class AccountMoveLine(models.Model):
         default=set_default_company_bank,
         domain=lambda self:
             [('partner_id', '=', self.env.user.company_id.partner_id.id)]
+    )
+
+    counterparty_bank_id = fields.Many2one(
+        string="Banca d'appoggio",
+        comodel_name='res.partner.bank',
+        default=set_default_company_bank,
+        copy=True,
     )
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

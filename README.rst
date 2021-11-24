@@ -147,9 +147,10 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
-12.0.4.8.24 (2021-11-19)
+12.0.4.8.24 (2021-11-23)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+* [FIX] Impostato e gestito aggiornamento campi banca aziendale e banca partner
 * [FIX] Impostato metodo di pagamento per le scadenze NON tecniche
 
 12.0.4.8.23 (2021-11-15)
@@ -279,7 +280,11 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
+<<<<<<< HEAD
 Last Update / Ultimo aggiornamento: 2021-11-19
+=======
+Last Update / Ultimo aggiornamento: 2021-11-23
+>>>>>>> 12.0_hotfix_0.21
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

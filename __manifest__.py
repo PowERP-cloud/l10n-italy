@@ -25,6 +25,7 @@
         'account_payment_term_plus',
         'account_payment_method',
         'sale',
+        'l10n_it_iban_in_stampa',
     ],
     'data': [
         'security/ir.model.access.csv',

@@ -1,6 +1,7 @@
-12.0.4.8.24 (2021-11-19)
+12.0.4.8.24 (2021-11-23)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+* [FIX] Impostato e gestito aggiornamento campi banca aziendale e banca partner
 * [FIX] Impostato metodo di pagamento per le scadenze NON tecniche
 
 12.0.4.8.23 (2021-11-15)

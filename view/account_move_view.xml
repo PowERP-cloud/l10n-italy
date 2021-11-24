@@ -11,6 +11,24 @@
                 <field name="date_effective" />
             </xpath>
 
+            <xpath expr="//field[@name='partner_bank_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+
+
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="bank_2_print_selector" attrs="{'invisible': [('type', 'not in', ['out_invoice', 'out_refund', 'in_invoice', 'in_refund'])]}"/>
+                <field
+                    name="counterparty_bank_id"
+                    attrs="{'invisible': ['|', ('bank_2_print_selector', '!=', 'partner'), ('type', 'not in', ['out_invoice', 'out_refund', 'in_invoice', 'in_refund'])]}"
+
+                />
+                <field
+                    name="company_bank_id"
+                    attrs="{'invisible': ['|', ('bank_2_print_selector', '!=', 'company'), ('type', 'not in', ['out_invoice', 'out_refund', 'in_invoice', 'in_refund'])]}"
+                />
+            </xpath>
+
             <xpath expr="//field[@name='line_ids']/tree/field[@name='credit']" position="after">
                 <field name="calculate_field" invisible="1"/>
                 <field name="payment_method" domain="[('debit_credit', '=', calculate_field)]"/>
