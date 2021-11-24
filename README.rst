@@ -1,7 +1,7 @@
 
-===========================================
-|icon| Account Banking Common 12.0.3.7.11_M
-===========================================
+=========================================
+|icon| Account Banking Common 12.0.3.7.12
+=========================================
 
 
 **Common stuff for payment modules**
@@ -158,6 +158,10 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] POW-556 Impostato e gestito il campo del conto bancario aziendale nei controlli di anticipo fattura
+
 12.0.3.7.11_M (2021-11-24)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -289,7 +293,11 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
+<<<<<<< HEAD
 Last Update / Ultimo aggiornamento: 2021-11-24
+=======
+Last Update / Ultimo aggiornamento: 2021-11-23
+>>>>>>> 12.0_hotfix_0.21
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

@@ -358,17 +358,18 @@ class AccountMoveLine(models.Model):
                       'la banca aziendale.\n\n '
 
                 for line in lines:
-                    if line.move_id.partner_bank_id.id:
-                        invoice_bank_id = line.move_id.partner_bank_id.id
-                        invoice_bank_name = line.move_id.partner_bank_id.bank_name
+                    if line.move_id.company_bank_id.id:
+                        invoice_bank_id = line.move_id.company_bank_id.id
+                        invoice_bank_name = line.move_id.company_bank_id.bank_name
 
                         banks[invoice_bank_id]['count'] += 1
                         banks[invoice_bank_id]['name'] = invoice_bank_name
                     else:
                         fattura = line.stored_invoice_id.number
                         raise UserError('ATTENZIONE!\nConto bancario aziendale '
-                                        'nella fattura {fattura} non '
-                                        'impostato.'.format(fattura=fattura))
+                                        'nella testata di registrazione '
+                                        '{fattura} non impostato.'.format(
+                                            fattura=fattura))
                     # end if
 
                 # end for
@@ -425,9 +426,9 @@ class AccountMoveLine(models.Model):
                       ' che non hanno la stessa banca.\n\n '
 
                 for line in lines:
-                    if line.move_id.partner_bank_id.id:
-                        invoice_bank_id = line.move_id.partner_bank_id.id
-                        invoice_bank_name = line.move_id.partner_bank_id.bank_name
+                    if line.move_id.company_bank_id.id:
+                        invoice_bank_id = line.move_id.company_bank_id.id
+                        invoice_bank_name = line.move_id.company_bank_id.bank_name
 
                         banks[invoice_bank_id]['count'] += 1
                         banks[invoice_bank_id]['name'] = invoice_bank_name

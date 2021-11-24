@@ -83,6 +83,10 @@ class ResPartnerBank(models.Model):
         related='journal_id.main_bank_account_id'
     )
 
+    display_name = fields.Char(
+        string='Name', compute='_compute_display_name',
+    )
+
     @api.onchange('bank_is_wallet')
     def _onchange_bank_is_wallet(self):
         _logger.info('on change su bank_is_wallet')

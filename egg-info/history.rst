@@ -1,3 +1,8 @@
+12.0.3.7.12 (2021-11-23)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] POW-556 Impostato e gestito il campo del conto bancario aziendale nei controlli di anticipo fattura
+
 12.0.3.7.11_M (2021-11-24)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
