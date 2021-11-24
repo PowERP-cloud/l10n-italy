@@ -100,5 +100,8 @@ class AccountMove(models.Model):
                 move.type = invoice.type
                 move.payment_term_id = invoice.payment_term_id
                 move.partner_bank_id = invoice.partner_bank_id
+                move.company_bank_id = invoice.company_bank_id
+                move.counterparty_bank_id = invoice.counterparty_bank_id
+                move.partner_bank_id = invoice.partner_bank_id
                 move.fiscal_position_id = invoice.fiscal_position_id
         return super().post(invoice=invoice)
