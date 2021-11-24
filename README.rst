@@ -1,6 +1,6 @@
 
 ==========================================
-|icon| Account Invoice 13 more 12.0.3.3.13
+|icon| Account Invoice 13 more 12.0.3.3.14
 ==========================================
 
 
@@ -159,6 +159,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.3.3.14 (2021-11-24)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Aggiornato dipendenze
 
 12.0.3.3.13 (2021-11-24)
 ~~~~~~~~~~~~~~~~~~~~~~~~

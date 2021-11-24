@@ -6,7 +6,7 @@
 #
 {
     'name': 'Account Invoice 13 more',
-    'version': '12.0.3.3.13',
+    'version': '12.0.3.3.14',
     'category': 'Accounting',
     'summary': 'Account Invoice 13 more',
     'author': 'powERP enterprise network and other partners',
@@ -15,7 +15,6 @@
     'license': 'OPL-1',
     'depends': [
         'account',
-        'l10n_it_iban_in_stampa',
     ],
     'data': ['views/account_move_view.xml'],
     'installable': True,
