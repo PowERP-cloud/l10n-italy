@@ -14,8 +14,8 @@
     'development_status': 'Beta',
     'license': 'OPL-1',
     'depends': [
-        'account'
-
+        'account',
+        'l10n_it_iban_in_stampa',
     ],
     'data': ['views/account_move_view.xml'],
     'installable': True,
