@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.13
+|icon| Account Banking Common 12.0.3.7.14
 =========================================
 
 
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.14 (2021-11-24)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato in sola lettura il campo standard del conto bancario
+
 12.0.3.7.13 (2021-11-24)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -212,11 +217,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Impostato nella tab [Transfer journal entries] il riferimento a alla registrazione di accredito
-
-12.0.3.7.3 (2021-03-18)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] lint error: F401 'odoo.exceptions.UserError' imported but unused
 
 
 

@@ -1,3 +1,8 @@
+12.0.3.7.14 (2021-11-24)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato in sola lettura il campo standard del conto bancario
+
 12.0.3.7.13 (2021-11-24)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
