@@ -8,7 +8,6 @@
 #
 import datetime
 from odoo import models, fields, api
-from odoo.exceptions import UserError
 from ..utils.misc import MOVE_TYPE_INV_CN
 
 
@@ -369,7 +368,7 @@ class DueDateManager(models.Model):
                     'duedate_manager_id': self.id,
                     'due_date': inv_date,
                     'due_amount': param_cm['total_amount'],
-                    'payment_method_id': payment_method_tax.id,
+                    'payment_method_id': False,
                 })
 
                 extra_line = self._extra_line(inv_date, payment_method_tax.id,
