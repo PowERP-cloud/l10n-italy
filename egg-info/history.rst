@@ -1,7 +1,22 @@
+12.0.3.7.14 (2021-11-24)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato in sola lettura il campo standard del conto bancario
+
+12.0.3.7.13 (2021-11-24)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] POW-573 Impostato e gestito il display name del conto bancario
+
 12.0.3.7.12 (2021-11-23)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] POW-556 Impostato e gestito il campo del conto bancario aziendale nei controlli di anticipo fattura
+
+12.0.3.7.11_M (2021-11-24)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] POW-573 Impostato nuovo formato per il nome del record
 
 12.0.3.7.11 (2021-11-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~
