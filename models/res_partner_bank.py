@@ -113,7 +113,7 @@ class ResPartnerBank(models.Model):
                 return super().name_get()
             disp_name = ''
 
-            chars_bank_name = 11 if (record.bank_id and record.bank_is_wallet) else 21
+            chars_bank_name = 16 if (record.bank_id and record.bank_is_wallet) else 31
 
             if record.bank_id:
                 disp_name += record.bank_id.name[0:chars_bank_name] + ' ('
