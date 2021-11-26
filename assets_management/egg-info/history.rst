@@ -1,3 +1,8 @@
+12.0.1.0.0_15 (2021-11-26)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Fix impostato il termine corretto per Asset depreciation (Natura operazione) nel form della creazione dei movimenti
+
 12.0.1.0.0_14 (2021-11-26)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -1,6 +1,6 @@
 
 ===========================================
-|icon| ITA - Gestione Cespiti 12.0.1.0.0_14
+|icon| ITA - Gestione Cespiti 12.0.1.0.0_15
 ===========================================
 
 
@@ -192,6 +192,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.0.0_15 (2021-11-26)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Fix impostato il termine corretto per Asset depreciation (Natura operazione) nel form della creazione dei movimenti
+
 12.0.1.0.0_14 (2021-11-26)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -248,11 +253,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Fix bug calcolo residuo per il metodo simulazione nel bilancio
-
-12.0.1.0.0_3 (2021-10-22)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Gestito flag 'ammortamento indiretto' nella registrazione contabile
 
 
 
