@@ -1,4 +1,6 @@
-|icon| ITA - Gestione Cespiti 12.0.1.0.0_15
+===========================================
+|icon| ITA - Gestione Cespiti 12.0.1.0.0_16
+===========================================
 
 
 **Gestione Cespiti**
@@ -189,6 +191,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.0.0_16 (2021-11-26)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Fix impostato importi e conti per svalutazione e rivalutazione
+
 12.0.1.0.0_15 (2021-11-26)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -246,11 +253,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Controllo su ammortamenti ripetuti
-
-12.0.1.0.0_4 (2021-10-25)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Fix bug calcolo residuo per il metodo simulazione nel bilancio
 
 
 |

@@ -1,3 +1,8 @@
+12.0.1.0.0_16 (2021-11-26)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Fix impostato importi e conti per svalutazione e rivalutazione
+
 12.0.1.0.0_15 (2021-11-26)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
