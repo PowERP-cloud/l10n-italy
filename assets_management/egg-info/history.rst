@@ -1,6 +1,12 @@
-12.0.1.0.0_14 (2021-11-19)
+12.0.1.0.0_15 (2021-11-26)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
+* [FIX] Fix impostato il termine corretto per Asset depreciation (Natura operazione) nel form della creazione dei movimenti
+
+12.0.1.0.0_14 (2021-11-26)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Fix bug filtro civilisico nel calcolo ultima data di ammortamento
 * [FIX] Impostato codice registro ammortamenti
 
 12.0.1.0.0_13 (2021-11-09)

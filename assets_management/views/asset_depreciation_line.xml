@@ -82,7 +82,7 @@
                     <group name="info" string="General Info">
                         <group>
                             <field name="asset_id" />
-                            <field name="depreciation_id" />
+                            <field name="depreciation_id" string="Natura operazione"/>
                             <field name="name"/>
                             <field name="date"/>
                             <field name="move_type"/>

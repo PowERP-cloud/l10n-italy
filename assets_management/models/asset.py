@@ -16,12 +16,13 @@ class Asset(models.Model):
     def get_default_company_id(self):
         return self.env.user.company_id
 
-    @api.depends('depreciation_ids')
+    @api.depends('depreciation_ids', 'depreciation_ids.line_ids')
     def compute_last_depreciation_date(self):
         for r in self:
             conf = self.env['res.company'].browse(r.company_id.id)
+            civilistico_id = conf.compute_civilistico()
             cicilistico_max = self.env['asset.depreciation'].search([
-                ('asset_id', '=', r.id), ('type_id', '=', conf.civilistico.id),
+                ('asset_id', '=', r.id), ('type_id', '=', civilistico_id),
             ], order='last_depreciation_date', limit=1,)
 
             r.last_depreciation_date = \

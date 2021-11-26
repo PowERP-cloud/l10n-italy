@@ -101,11 +101,17 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
         """
         self.ensure_one()
 
+        # assets
+        # assets = list()
         # Add depreciation date in context just in case
         deps = self.get_depreciations().with_context(dep_date=self.date_dep,
                                                      final=self.final)
         for dep in deps:
             # no depreciation
+            # if dep.asset_id not in assets:
+            #     assets.append(dep.asset_id)
+            # # end if
+
             if dep.state == 'non_depreciated':
                 continue
 
@@ -156,11 +162,16 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
 
         dep_lines = deps.generate_depreciation_lines(self.date_dep)
         deps.post_generate_depreciation_lines(dep_lines)
-        if self._context.get('reload_window'):
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'reload'
-            }
+
+        # for asset in assets:
+        #     asset.compute_last_depreciation_date()
+        # # end if
+
+        # if self._context.get('reload_window'):
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload'
+        }
 
     def get_depreciations(self):
         self.ensure_one()
@@ -192,23 +203,30 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
             # mapping  warnings
             # default
             lines.append((0, 0, {
-                'reason': 'Attenzione: l\'operazione è irreversibile!'}))
+                'reason': 'ATTENZIONE: l\'operazione è irreversibile!'}))
 
-            year = datetime.date.today().year
+            current_year = datetime.date.today().year
+            year = self.date_dep.year
             end_year = datetime.date(year, 12, 31)
+            current_date_str = self.date_dep.strftime('%d-%m-%Y')
+            end_year_str = end_year.strftime('%d-%m-%Y')
 
             # check date
             if self.date_dep < end_year:
                 lines.append((0, 0, {
-                    'reason': 'Attenzione: la data inserita per l\'ammortamento'
-                              ' è fuori esercizio (inferiore a quella '
-                              'dell\'anno in corso).'}))
+                    'reason': "ATTENZIONE: la data inserita per "
+                              "l'ammortamento {curr}"
+                              " è fuori esercizio (inferiore a quella usuale "
+                              "per l'anno indicato {endy} ).".format(
+                                curr=current_date_str, endy=end_year_str)
+                }))
 
             if self.date_dep > end_year:
                 lines.append((0, 0, {
-                    'reason': 'Attenzione: la data inserita per l\'ammortamento'
-                              ' è fuori esercizio (superiore a quella '
-                              'dell\'anno in corso).'}))
+                    'reason': 'ATTENZIONE: la data inserita per l\'ammortamento'
+                              ' {curr} è fuori esercizio (superiore a quella '
+                              'usuale per l\'anno indicato {endy}).'.format(
+                                curr=current_date_str, endy=end_year_str)}))
 
             wz_id = self.env['asset.generate.warning'].create({
                 'wizard_id': wizard.id,
@@ -232,7 +250,7 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
             }
 
         if self._context.get('depreciated'):
-            self.do_generate().with_context(depreciated=True)
+            return self.do_generate().with_context(depreciated=True)
         else:
-            self.do_generate()
+            return self.do_generate()
 
