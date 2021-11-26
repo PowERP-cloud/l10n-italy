@@ -1,3 +1,8 @@
+12.0.1.0.0_14 (2021-11-26)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Fix bug filtro civilisico nel calcolo ultima data di ammortamento
+
 12.0.1.0.0_13 (2021-11-09)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
