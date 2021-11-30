@@ -114,7 +114,8 @@ class ResPartnerBank(models.Model):
         res = super().name_get()
         result = []
         for record in self:
-            if not record.bank_id and record.bank_is_wallet is False:
+            if (not record.bank_id and record.bank_is_wallet is False) or \
+                    record.acc_type != 'iban':
                 return res
             disp_name = ''
 

@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.14
+|icon| Account Banking Common 12.0.3.7.15
 =========================================
 
 
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.15 (2021-11-30)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato formattazione conto solo per tipo iban
+
 12.0.3.7.14 (2021-11-24)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -212,11 +217,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] POW-401 Aggiornamento configurazione conto "Effetti allo sconto"
-
-12.0.3.7.4 (2021-04-28)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Impostato nella tab [Transfer journal entries] il riferimento a alla registrazione di accredito
 
 
 
@@ -289,7 +289,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-11-24
+Last Update / Ultimo aggiornamento: 2021-11-30
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
