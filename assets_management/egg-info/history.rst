@@ -1,3 +1,49 @@
+12.0.1.0.0_16 (2021-11-26)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Fix impostato importi e conti per svalutazione e rivalutazione
+
+12.0.1.0.0_15 (2021-11-26)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Fix impostato il termine corretto per Asset depreciation (Natura operazione) nel form della creazione dei movimenti
+
+12.0.1.0.0_14 (2021-11-26)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Fix bug filtro civilisico nel calcolo ultima data di ammortamento
+
+12.0.1.0.0_13 (2021-11-09)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Gestito apertura cespite (solo registrazione contabile)
+
+12.0.1.0.0_12 (2021-11-08)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito generazione ammortamenti solo da wizard
+
+12.0.1.0.0_11 (2021-11-04)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato registrazione svalutazione e rivalutazione
+
+12.0.1.0.0_10 (2021-11-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostato e gestito registro di default
+
+12.0.1.0.0_9 (2021-11-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostata data ultimo ammortamento nell'elenco dei cespiti
+* [FIX] Spostato configurazione natura dei cespiti nella company
+
+12.0.1.0.0_8 (2021-11-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Nascosto flag consolidato nel wizard se per singolo cespite
+
 12.0.1.0.0_7 (2021-10-28)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 

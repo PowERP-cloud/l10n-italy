@@ -1,7 +1,7 @@
 
-==========================================
-|icon| ITA - Gestione Cespiti 12.0.1.0.0_7
-==========================================
+===========================================
+|icon| ITA - Gestione Cespiti 12.0.1.0.0_16
+===========================================
 
 
 **Gestione Cespiti**
@@ -31,7 +31,7 @@ Overview / Panoramica
 Usage / Utilizzo
 ----------------
 
-**English**
+|en|
 
 You can create and manage assets from accounting section of Odoo.
 
@@ -44,7 +44,7 @@ Assets Management -> Generate Depreciations, or by triggering the same wizard fr
 form view.
 
 
-**Italiano**
+|it|
 
 È possibile creare e gestire cespiti dalla sezione contabilità di Odoo.
 
@@ -192,6 +192,52 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.0.0_16 (2021-11-26)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Fix impostato importi e conti per svalutazione e rivalutazione
+
+12.0.1.0.0_15 (2021-11-26)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Fix impostato il termine corretto per Asset depreciation (Natura operazione) nel form della creazione dei movimenti
+
+12.0.1.0.0_14 (2021-11-26)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Fix bug filtro civilisico nel calcolo ultima data di ammortamento
+
+12.0.1.0.0_13 (2021-11-09)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Gestito apertura cespite (solo registrazione contabile)
+
+12.0.1.0.0_12 (2021-11-08)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito generazione ammortamenti solo da wizard
+
+12.0.1.0.0_11 (2021-11-04)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato registrazione svalutazione e rivalutazione
+
+12.0.1.0.0_10 (2021-11-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostato e gestito registro di default
+
+12.0.1.0.0_9 (2021-11-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostata data ultimo ammortamento nell'elenco dei cespiti
+* [FIX] Spostato configurazione natura dei cespiti nella company
+
+12.0.1.0.0_8 (2021-11-02)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Nascosto flag consolidato nel wizard se per singolo cespite
+
 12.0.1.0.0_7 (2021-10-28)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -207,27 +253,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Controllo su ammortamenti ripetuti
-
-12.0.1.0.0_4 (2021-10-25)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Fix bug calcolo residuo per il metodo simulazione nel bilancio
-
-12.0.1.0.0_3 (2021-10-22)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Gestito flag 'ammortamento indiretto' nella registrazione contabile
-
-12.0.1.0.0_2 (2021-10-22)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Introdotto flag 'ammortamento indiretto' nei metodi di ammortamento
-
-12.0.1.0.0_1 (2021-10-18)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Individuato le funzionalità di generazione dell'importo della quota di ammortamento
-
 
 
 
@@ -252,6 +277,12 @@ Authors / Autori
 * `powERP <https://www.powerp.it>`__
 * `SHS-AV s.r.l. <https://www.zeroincombenze.it>`__
 * `Didotech srl <https://www.didotech.com>`__
+* `Open Force <https://www.openforce.it/>`__
+* `Takobi <https://www.takobi.online/>`__
+* `Takobi <https://takobi.online/>`__
+* `SHS-AV srl <https://www.zeroincombenze.it>`__
+* `Open Force <https://www.openforce.it>`__
+* `Takobi <https://takobi.online>`__
 
 
 Contributors / Collaboratori
@@ -260,6 +291,10 @@ Contributors / Collaboratori
 * Antonio Maria Vigliotti <antoniomaria.vigliotti@gmail.com>
 * Marco Tosato <marco.tosato@didotech.com>
 * Fabio Giovannelli <fabio.giovannelli@didotech.com>
+* Alessandro Camilli <alessandrocamilli@openforce.it>
+* Silvio Gregorini <silviogregorini@openforce.it>
+* Stefano Pezzini <stefanopezzini@openforce.it>
+* Lorenzo Battistini <lb@takobi.online>
 
 
 Maintainer / Manutenzione
@@ -300,7 +335,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-10-28
+Last Update / Ultimo aggiornamento: 2021-11-26
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
@@ -359,5 +394,5 @@ Last Update / Ultimo aggiornamento: 2021-10-28
 .. |FatturaPA| image:: https://raw.githubusercontent.com/zeroincombenze/grymb/master/certificates/ade/icons/fatturapa.png
    :target: https://github.com/zeroincombenze/grymb/blob/master/certificates/ade/scope/fatturapa.md
 .. |chat_with_us| image:: https://www.shs-av.com/wp-content/chat_with_us.gif
-   :target: https://t.me/axitec_helpdesk
+   :target: https://t.me/Assitenza_clienti_powERP
 

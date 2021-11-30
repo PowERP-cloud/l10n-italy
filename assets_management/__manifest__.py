@@ -4,7 +4,7 @@
 
 {
     'name': 'ITA - Gestione Cespiti',
-    'version': '12.0.1.0.0_7',
+    'version': '12.0.1.0.0_16',
     'category': 'Localization/Italy',
     'summary': "Gestione Cespiti",
     'author': 'Openforce, Odoo Community Association (OCA)',
@@ -23,6 +23,7 @@
         'security/rules.xml',
         'data/ir_cron.xml',
         'data/asset_data.xml',
+        'data/asset_journal_data.xml',
         'report/layout.xml',
         'report/paperformat.xml',
         'report/templates/asset_journal.xml',
@@ -47,6 +48,7 @@
         'wizard/asset_journal_report_view.xml',
         'wizard/asset_previsional_report_view.xml',
         'wizard/asset_generate_warning_view.xml',
+        'wizard/asset_generate_open_view.xml',
 
     ],
     'development_status': 'Beta',

@@ -16,6 +16,20 @@ class Asset(models.Model):
     def get_default_company_id(self):
         return self.env.user.company_id
 
+    @api.depends('depreciation_ids', 'depreciation_ids.line_ids')
+    def compute_last_depreciation_date(self):
+        for r in self:
+            conf = self.env['res.company'].browse(r.company_id.id)
+            civilistico_id = conf.compute_civilistico()
+            cicilistico_max = self.env['asset.depreciation'].search([
+                ('asset_id', '=', r.id), ('type_id', '=', civilistico_id),
+            ], order='last_depreciation_date', limit=1,)
+
+            r.last_depreciation_date = \
+                cicilistico_max and cicilistico_max.last_depreciation_date \
+                or False
+        # end for
+
     asset_accounting_info_ids = fields.One2many(
         'asset.accounting.info',
         'asset_id',
@@ -128,6 +142,16 @@ class Asset(models.Model):
 
     used = fields.Boolean(
         string="Used",
+    )
+
+    last_depreciation_date = fields.Date(
+        string='Last depreciation date',
+        compute='compute_last_depreciation_date',
+    )
+
+    is_open = fields.Boolean(
+        string="Opened",
+        default=False,
     )
 
     @api.model
@@ -246,6 +270,19 @@ class Asset(models.Model):
             'default_type_ids': [
                 (6, 0, self.depreciation_ids.mapped('type_id').ids)
             ],
+        })
+        act['context'] = ctx
+        return act
+
+    @api.multi
+    def launch_wizard_generate_open(self):
+        self.ensure_one()
+        xmlid = 'assets_management.action_wizard_asset_open'
+        [act] = self.env.ref(xmlid).read()
+        ctx = dict(self._context)
+        ctx.update({
+            'default_asset_ids': [(6, 0, self.ids)],
+            'default_company_id': self.company_id.id,
         })
         act['context'] = ctx
         return act
