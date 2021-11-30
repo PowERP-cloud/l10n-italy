@@ -22,7 +22,7 @@
             <xpath expr="//field[@name='payment_type']" position="after">
                 <field name="debit_credit"/>
                 <field name="active"/>
-                <field name="bank_account_required"/>
+<!--                <field name="bank_account_required"/>-->
             </xpath>
         </field>
     </record>
