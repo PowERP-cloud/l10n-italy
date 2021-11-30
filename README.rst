@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.15
+|icon| Account Banking Common 12.0.3.7.16
 =========================================
 
 
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.16 (2021-11-30)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Fix ricerca ordini in aggiungi a distinta
+
 12.0.3.7.15 (2021-11-30)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -212,11 +217,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] POW-464 Aggiornamento vista registri per conti di portafoglio
-
-12.0.3.7.5 (2021-06-25)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] POW-401 Aggiornamento configurazione conto "Effetti allo sconto"
 
 
 

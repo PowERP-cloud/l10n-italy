@@ -23,23 +23,23 @@ class AccountPaymentAddMoveLines(models.TransientModel):
         orders = self.env['account.payment.order'].search(domain)
         if active_ids and len(active_ids) > 0:
             lines = self.env['account.move.line'].browse(active_ids)
-            if lines[0].move_id.partner_bank_id and \
-                    lines[0].move_id.partner_bank_id.id:
-                bank_id = lines[0].move_id.partner_bank_id.id
+            if lines[0].move_id.company_bank_id and \
+                    lines[0].move_id.company_bank_id.id:
+                bank_id = lines[0].move_id.company_bank_id.id
             else:
                 bank_id = 0
             payment_method_code = lines[0].payment_method.code
             if payment_method_code == 'invoice_financing':
-                pmethod = ('payment_method_code', '=', 'invoice_financing')
+                pmethod = ('payment_method_id.code', '=', 'invoice_financing')
                 domain.append(pmethod)
                 orders = self.env['account.payment.order'].search(domain)
                 porders = list()
                 for order in orders:
                     adding = True
                     for line in order.payment_line_ids:
-                        if line.move_line_id.move_id.partner_bank_id.id:
+                        if line.move_line_id.move_id.company_bank_id.id:
                             to_match_id = \
-                                line.move_line_id.move_id.partner_bank_id.id
+                                line.move_line_id.move_id.company_bank_id.id
                             if to_match_id != bank_id:
                                 adding = False
                     if adding:
