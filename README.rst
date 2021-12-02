@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.4.8.24
+|icon| Due dates 12.0.4.8.25
 ============================
 
 
@@ -147,6 +147,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.4.8.25 (2021-12-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Reimpostato filtro "Non in distinta"
+
 12.0.4.8.24 (2021-11-23)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -203,11 +208,6 @@ ChangeLog History / Cronologia modifiche
 
 * [FIX] account_duedates: Aggiornato ordine della generazione dei movimenti contabili
 * [FIX] account_duedates: Impostato 15 giorni la ritenuta dopo l'ultima scadenza
-
-12.0.4.8.13 (2021-07-05)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] account_duedates: Impostato manager per la gestione delle scadenze Reverse charge
 
 
 
@@ -280,11 +280,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-<<<<<<< HEAD
-Last Update / Ultimo aggiornamento: 2021-11-19
-=======
-Last Update / Ultimo aggiornamento: 2021-11-23
->>>>>>> 12.0_hotfix_0.21
+Last Update / Ultimo aggiornamento: 2021-12-02
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

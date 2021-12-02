@@ -71,8 +71,9 @@
                 <field name="payment_order_name" />
             </xpath>
             <xpath expr="//filter[@name='unreconciled']" position="after">
+                <separator/>
                 <filter string="Non in distinta"
-                        domain="[('in_order', '=', False)]"
+                        domain="[('payment_order_lines', '=', False)]"
                         name="not_in_distinta"/>
             </xpath>
         </field>
