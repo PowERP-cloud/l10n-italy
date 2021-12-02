@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.4.8.25
+|icon| Due dates 12.0.4.8.26
 ============================
 
 
@@ -147,6 +147,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.4.8.26 (2021-12-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Aggiunto filtri "In distinta" e "Effetti incassati"
+
 12.0.4.8.25 (2021-12-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -202,12 +207,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] account_duedates: POW-465 Gestito errore utente bloccante
-
-12.0.4.8.14 (2021-07-13)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] account_duedates: Aggiornato ordine della generazione dei movimenti contabili
-* [FIX] account_duedates: Impostato 15 giorni la ritenuta dopo l'ultima scadenza
 
 
 

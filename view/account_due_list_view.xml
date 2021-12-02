@@ -75,6 +75,13 @@
                 <filter string="Non in distinta"
                         domain="[('payment_order_lines', '=', False)]"
                         name="not_in_distinta"/>
+                <filter string="In distinta"
+                        domain="[('payment_order_lines', '!=', False)]"
+                        name="in_distinta"/>
+                <separator/>
+                <filter string="Effetti incassati"
+                        domain="[('incasso_effettuato', '=', True)]"
+                        name="effetti_incassati"/>
             </xpath>
         </field>
     </record>
