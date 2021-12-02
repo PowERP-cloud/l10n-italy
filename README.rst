@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.16
+|icon| Account Banking Common 12.0.3.7.17
 =========================================
 
 
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.17 (2021-12-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato metodo che valorizza il conto per il credit
+
 12.0.3.7.16 (2021-11-30)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -212,11 +217,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] POW-523 Fix popolamento registri nel wizard di generazione ordini
-
-12.0.3.7.6 (2021-08-18)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] POW-464 Aggiornamento vista registri per conti di portafoglio
 
 
 
@@ -289,7 +289,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-11-30
+Last Update / Ultimo aggiornamento: 2021-12-02
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

@@ -73,7 +73,7 @@ class AccountPaymentOrder(models.Model):
             if not cfg['bank_journal'].id:
                 raise UserError("Attenzione!\nConto di costo non impostato.")
 
-            bank_account = cfg['bank_journal'].default_credit_account_id
+            # bank_account = cfg['bank_journal'].default_credit_account_id
 
             lines = self.env['account.payment.line'].search(
                 [('order_id', '=', payment_order.id)])
@@ -87,6 +87,10 @@ class AccountPaymentOrder(models.Model):
 
                 # se ci sono spese le aggiungo
                 if amount_expense > 0:
+
+                    credit_account = self.set_expense_credit_account(
+                        cfg['bank_journal'])
+
                     expense_move_line = {
                         'account_id': account_expense_id,
                         'credit': 0,
@@ -95,7 +99,7 @@ class AccountPaymentOrder(models.Model):
                     line_ids.append((0, 0, expense_move_line))
 
                     bank_expense_line = {
-                        'account_id': bank_account.id,
+                        'account_id': credit_account.id,
                         'credit': amount_expense,
                         'debit': 0,
                     }
@@ -189,4 +193,18 @@ class AccountPaymentOrder(models.Model):
 
         return cfg
     # end get_move_config
+
+    @api.model
+    def set_expense_credit_account(self, journal):
+
+        if journal.is_wallet:
+            main_journal = journal.main_bank_account_id
+            credit_account = main_journal.default_credit_account_id
+        else:
+            credit_account = journal.default_credit_account_id
+        # end if
+
+        return credit_account
+    # end _set_expense_credit_account
+
 # end AccountPaymentOrder
