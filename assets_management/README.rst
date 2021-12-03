@@ -334,11 +334,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-<<<<<<< HEAD
-Last Update / Ultimo aggiornamento: 2021-11-19
-=======
 Last Update / Ultimo aggiornamento: 2021-11-26
->>>>>>> 12.0_release_0.22
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
