@@ -185,6 +185,11 @@ ChangeLog History / Cronologia modifiche
 * [IMP] No som default methods / Rimossi alcuni metodi pagamento predefiniti
 
 
+12.0.0.1.1 (2020-10-12)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Added credit/debit field / Aggiunto il campo debito/credito
+
 
 
 |
