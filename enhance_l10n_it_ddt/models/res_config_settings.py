@@ -83,8 +83,7 @@ class ResConfigSettings(models.TransientModel):
         deafult=False)
 
     def lock_on_payment_terms(self):
-        tmp_id = self.env["ir.config_parameter"].sudo().get_param("stock.ddt.lock_ddt_on_payment_terms") or False
-        return tmp_bool
+        return self.env["ir.config_parameter"].sudo().get_param("stock.ddt.lock_ddt_on_payment_terms") or False
 
     def _carriage_condition_get(self):
         entity_type = self.env['stock.picking.carriage_condition']
