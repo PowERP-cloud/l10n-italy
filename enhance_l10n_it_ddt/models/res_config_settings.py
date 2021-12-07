@@ -76,6 +76,16 @@ class ResConfigSettings(models.TransientModel):
         string='TD Type for business extra EU customers',
         config_parameter='res.partner.business_extra_eu_ddt_type_id')
 
+    setup_lock_ddt_on_payment_terms = fields.Boolean(
+        string='TD lock on payment terms',
+        help='Locks TD generation based on payment terms from sale orders.',
+        config_parameter='stock.ddt.lock_ddt_on_payment_terms',
+        deafult=False)
+
+    def lock_on_payment_terms(self):
+        tmp_id = self.env["ir.config_parameter"].sudo().get_param("stock.ddt.lock_ddt_on_payment_terms") or False
+        return tmp_bool
+
     def _carriage_condition_get(self):
         entity_type = self.env['stock.picking.carriage_condition']
         tmp_id = self.env["ir.config_parameter"].sudo().get_param("res.partner.carriage_condition_id") or "0"
