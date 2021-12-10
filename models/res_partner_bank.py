@@ -113,39 +113,41 @@ class ResPartnerBank(models.Model):
         """
         res = super().name_get()
         result = []
-        for record in self:
+        for t_record in res:
+            record = self.browse(t_record[0])
             if (not record.bank_id and record.bank_is_wallet is False) or \
                     record.acc_type != 'iban':
-                return res
-            disp_name = ''
+                result.append(t_record)
+            else:
+                disp_name = ''
 
-            chars_bank_name = 16 if (record.bank_id and record.bank_is_wallet) else 31
+                chars_bank_name = 16 if (record.bank_id and record.bank_is_wallet) else 31
 
-            if record.bank_id:
-                disp_name += record.bank_id.name[0:chars_bank_name] + ' ('
-            # end if
+                if record.bank_id:
+                    disp_name += record.bank_id.name[0:chars_bank_name] + ' ('
+                # end if
 
-            if record.bank_is_wallet:
-                siz = len(record.bank_main_bank_account_id.acc_number) - 3
-                # father account
-                disp_name += record.bank_main_bank_account_id.acc_number[
-                             0:5]
+                if record.bank_is_wallet:
+                    siz = len(record.bank_main_bank_account_id.acc_number) - 3
+                    # father account
+                    disp_name += record.bank_main_bank_account_id.acc_number[
+                                 0:5]
+                    disp_name += '*'
+                    disp_name += record.bank_main_bank_account_id.acc_number[
+                                 siz:]
+                    disp_name += '/'
+                # end if
+
+                # current account
+                disp_name += record.acc_number[0:5]
                 disp_name += '*'
-                disp_name += record.bank_main_bank_account_id.acc_number[
-                             siz:]
-                disp_name += '/'
-            # end if
+                siz = len(record.acc_number) - 3
+                disp_name += record.acc_number[siz:]
 
-            # current account
-            disp_name += record.acc_number[0:5]
-            disp_name += '*'
-            siz = len(record.acc_number) - 3
-            disp_name += record.acc_number[siz:]
-
-            if record.bank_id:
-                disp_name += ')'
-            # end if
-            result.append((record.id, disp_name))
+                if record.bank_id:
+                    disp_name += ')'
+                # end if
+                result.append((record.id, disp_name))
         return result
     # end name_get
 
