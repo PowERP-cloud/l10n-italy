@@ -9,20 +9,22 @@
         <field name="arch" type="xml">
             <form string="Vat statement">
                 <header>
-                    <button name="create_move" attrs="{'invisible': ['|', ('annual', '=', True), ('state', '!=', 'draft')]}" type="object" string="Create Move" class="oe_highlight" />
+                    <button name="create_move" attrs="{'invisible': [('statement_type', 'in', ['eu', 'year']), ('state', '!=', 'draft')]}" type="object" string="Create Move" class="oe_highlight" />
                     <button name="statement_draft" type="object" states="confirmed,paid" string="Set to draft"/>
                     <button type="object" name="compute_amounts" string="Recompute amounts" states="draft"/>
                     <field name="state" widget="statusbar" attrs="{'invisible': [('annual', '=', True)]}"/>
                 </header>
                 <group>
-                    <field name="journal_id" widget="selection"/>
+                    <field name="name" />
+                    <field name="statement_type" />
+                    <field name="journal_id" widget="selection" attrs="{'invisible': [('statement_type', '!=', 'recur')]}"/>
                     <field name="date"/>
-                    <field name="annual"/>
-                    <field name="move_id" attrs="{'invisible': [('annual', '=', True)]}"/>
-                    <field name="payment_term_id" attrs="{'invisible': [('annual', '=', True)]}"/>
-                    <field name="authority_partner_id" domain="[('supplier', '=', True)]" contenxt="{'default_supplier': True}" attrs="{'invisible': [('annual', '=', True)]}"/>
-                    <field name="authority_vat_account_id" attrs="{'invisible': [('annual', '=', True)], 'required': [('annual', '=', False)]}"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="annual" invisible="1" force_save="1"/>
+                    <field name="move_id" attrs="{'invisible': [('statement_type', '!=', 'recur')]}"/>
+                    <field name="payment_term_id" attrs="{'invisible': [('statement_type', '!=', 'recur')]}"/>
+                    <field name="authority_partner_id" domain="[('supplier', '=', True)]" contenxt="{'default_supplier': True}" attrs="{'invisible': [('statement_type', '!=', 'recur')]}"/>
+                    <field name="authority_vat_account_id" attrs="{'invisible': [('statement_type', '!=', 'recur')], 'required': [('statement_type', '=', 'recur')]}"/>
+                    <field name="company_id" />
                     <field name="interest" />
                     <field name="interest_percent"
                            attrs="{'invisible': [('interest', '=', False)], 'required': [('interest', '=', True)]}"/>
@@ -172,15 +174,16 @@
         <field name="model">account.vat.period.end.statement</field>
         <field name="arch" type="xml">
             <search>
+<!--                <field name="statement_type" invisible="1"/>-->
                 <field name="journal_id"/>
                 <field name="date"/>
                 <field name="move_id"/>
                 <field name="payment_term_id"/>
                 <field name="state"/>
-                <filter string="Annual" name="annual_filter"
-                        domain="[('annual', '=', True)]"/>
-                <filter string="Periodic" name="periodic_filter"
-                        domain="[('annual', '=', False)]"/>
+<!--                <filter string="Annual" name="annual_filter"-->
+<!--                        domain="[('statement_type', '=', 'year')]"/>-->
+<!--                <filter string="Periodic" name="periodic_filter"-->
+<!--                        domain="[('statement_type', '=', 'recur')]"/>-->
             </search>
         </field>
     </record>
@@ -191,17 +194,23 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Vat statement">
+
                 <field name="date" />
-                <field name="journal_id" />
+                <field name="name" />
+                <field name="statement_type" />
+<!--                <field name="country_id" attrs="{'invisible': [('statement_type', '!=', 'eu')]}"/>-->
+
+<!--                <field name="journal_id" />-->
                 <field name="previous_credit_vat_amount"/>
                 <field name="previous_debit_vat_amount"/>
                 <field name="interests_debit_vat_amount"/>
                 <field name="tax_credit_amount"/>
-                <field name="deductible_vat_amount"/>
+<!--                <field name="deductible_vat_amount"/>-->
                 <field name="authority_vat_amount"/>
-                <field name="annual"/>
-                <field name="state" />
-                <field name="company_id" groups="base.group_multi_company"/>
+<!--                <field name="annual"/>-->
+<!--                <field name="state" />-->
+                <field name="company_id" />
+
             </tree>
         </field>
     </record>

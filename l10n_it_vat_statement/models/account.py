@@ -216,12 +216,7 @@ class AccountVatPeriodEndStatement(models.Model):
     deductible_vat_amount = fields.Float(
         'Deductible VAT Amount', compute="_compute_deductible_vat_amount",
         digits=dp.get_precision('Account'))
-    journal_id = fields.Many2one(
-        'account.journal', 'Journal', required=True,
-        states={
-            'confirmed': [('readonly', True)],
-            'paid': [('readonly', True)],
-            'draft': [('readonly', False)]})
+
     date = fields.Date(
         'Date', required=True,
         states={
@@ -270,7 +265,6 @@ class AccountVatPeriodEndStatement(models.Model):
         'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get(
             'account.invoice'))
-    annual = fields.Boolean("Annual prospect")
 
     debit_vat_group_line_ids = fields.One2many(
         comodel_name='statement.debit.group.line',
@@ -286,6 +280,35 @@ class AccountVatPeriodEndStatement(models.Model):
         string='Credit group line VAT',
         help='The accounts containing the VAT amount total to write-off',
         readonly=True
+    )
+
+    journal_id = fields.Many2one(
+        'account.journal', 'Journal',
+        # required=True,
+        states={
+            'confirmed': [('readonly', True)],
+            'paid': [('readonly', True)],
+            'draft': [('readonly', False)]},
+        # domain=[('company_id', '=', company_id)]
+    )
+
+    name = fields.Text(
+        string='Descrizione',
+    )
+
+    statement_type = fields.Selection([
+        ('recur', 'Liquidazione periodica'),
+        ('year', 'Liquidazione annuale'),
+        ('eu', 'Liquidazione EU-OSS'),
+    ], 'Tipo liquidazione', required=True, default='recur')
+
+    # country_id = fields.Many2one(
+    #     'res.country', 'Paese',
+    #     default=lambda self: self.env['res.company'].country_id.id
+    # )
+
+    annual = fields.Boolean(
+        string="Annual prospect",
     )
 
     @api.multi
@@ -870,6 +893,15 @@ class AccountVatPeriodEndStatement(models.Model):
         company = self.env.user.company_id
         self.interest_percent = (
             company.of_account_end_vat_statement_interest_percent)
+
+    @api.onchange('statement_type')
+    def onchange_statement_type(self):
+        if self.statement_type and self.statement_type == 'year':
+            self.write({'annual': True})
+        else:
+            self.write({'annual': False})
+        # end if
+    # end _compute_annual
 
     @api.multi
     def get_account_interest(self):
