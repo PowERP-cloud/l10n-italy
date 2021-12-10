@@ -1,10 +1,10 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright (C) 2020-2021 Didotech srl
+#    Copyright (C) 2020-2020 Didotech srl
 #    (<http://www.didotech.com/>).
 #
-#    Created on : 2021-04-02
+#    Created on : 2021-11-07
 #    Author : Fabio Colognesi
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -22,5 +22,5 @@
 #
 ##############################################################################
 
-from . import models
-from . import wizard
+from . import add_picking_to_ddt
+from . import ddt_from_picking
