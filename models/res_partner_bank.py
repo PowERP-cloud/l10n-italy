@@ -116,7 +116,7 @@ class ResPartnerBank(models.Model):
         for t_record in res:
             record = self.browse(t_record[0])
             if (not record.bank_id and record.bank_is_wallet is False) or \
-                    record.acc_type != 'iban':
+                    record.acc_type != 'iban' or not record.acc_number:
                 result.append(t_record)
             else:
                 disp_name = ''
