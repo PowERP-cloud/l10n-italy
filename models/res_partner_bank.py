@@ -127,7 +127,8 @@ class ResPartnerBank(models.Model):
                     disp_name += record.bank_id.name[0:chars_bank_name] + ' ('
                 # end if
 
-                if record.bank_is_wallet:
+                if record.bank_is_wallet and \
+                        record.bank_main_bank_account_id.acc_number:
                     siz = len(record.bank_main_bank_account_id.acc_number) - 3
                     # father account
                     disp_name += record.bank_main_bank_account_id.acc_number[
