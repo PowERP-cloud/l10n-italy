@@ -391,27 +391,42 @@ class WithholdingTaxMove(models.Model):
         # Save move in the wt move
         self.wt_account_move_id = move.id
 
-        # Find lines for reconcile
-        line_to_reconcile = False
-        for line in move.line_ids:
-            if line.account_id.user_type_id.type in ['payable', 'receivable']\
-                    and line.partner_id and line.payment_method.code != 'tax':
-                line_to_reconcile = line
-                break
-        if line_to_reconcile:
-            if self.credit_debit_line_id.invoice_id.type in\
-                    ['in_refund', 'out_invoice']:
-                debit_move_id = self.credit_debit_line_id.id
-                credit_move_id = line_to_reconcile.id
-            else:
-                debit_move_id = line_to_reconcile.id
-                credit_move_id = self.credit_debit_line_id.id
-            self.env['account.partial.reconcile'].\
-                with_context(no_generate_wt_move=True).create({
-                    'debit_move_id': debit_move_id,
-                    'credit_move_id': credit_move_id,
-                    'amount': abs(self.amount),
-                })
+        # reconcile tax debit line
+        filter_account_id = self.statement_id.invoice_id.account_id
+        tec_line = self.statement_id.move_id.line_ids.filtered(
+            lambda x: x.account_id == filter_account_id and x.line_type == 'debit'
+            and x.payment_method.code == 'tax')
+
+        supplier_line = move.line_ids.filtered(
+            lambda x: x.account_id == filter_account_id
+        )
+
+        if supplier_line and tec_line:
+            line_to_rec = self.env['account.move.line']
+            line_to_rec += tec_line + supplier_line
+            line_to_rec.reconcile()
+
+        # # Find lines for reconcile
+        # line_to_reconcile = False
+        # for line in move.line_ids:
+        #     if line.account_id.user_type_id.type in ['payable', 'receivable']\
+        #             and line.partner_id and line.payment_method.code != 'tax':
+        #         line_to_reconcile = line
+        #         break
+        # if line_to_reconcile:
+        #     if self.credit_debit_line_id.invoice_id.type in\
+        #             ['in_refund', 'out_invoice']:
+        #         debit_move_id = self.credit_debit_line_id.id
+        #         credit_move_id = line_to_reconcile.id
+        #     else:
+        #         debit_move_id = line_to_reconcile.id
+        #         credit_move_id = self.credit_debit_line_id.id
+        #     self.env['account.partial.reconcile'].\
+        #         with_context(no_generate_wt_move=True).create({
+        #             'debit_move_id': debit_move_id,
+        #             'credit_move_id': credit_move_id,
+        #             'amount': abs(self.amount),
+        #         })
 
     def _compute_display_name(self):
         self.display_name = \
