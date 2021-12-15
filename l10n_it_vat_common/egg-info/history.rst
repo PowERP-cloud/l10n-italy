@@ -1,3 +1,8 @@
+12.0.1.0.2 (2021-11-18)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Inserito elenco dei registri nel context per domain per i movimenti contabile
+
 12.0.1.0.1 (2021-10-01)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

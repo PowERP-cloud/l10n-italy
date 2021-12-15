@@ -1,12 +1,12 @@
 
 ======================================
-|icon| ITA - Componenti IVA 12.0.1.0.1
+|icon| ITA - Componenti IVA 12.0.1.0.2
 ======================================
 
 
 **Vat methods enhanced**
 
-.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/accounting/12.0/l10n_it_vat_common/static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/l10n-italy/12.0/l10n_it_vat_common/static/description/icon.png
 
 |Maturity| |Build Status| |license opl|
 
@@ -85,7 +85,7 @@ Installation / Installazione
     source $HOME/devel/activate_tools
     # *** End of tools installation or upgrade ***
     # Odoo repository installation; OCB repository must be installed
-    odoo_install_repository accounting -b 12.0 -O powerp -o $HOME/12.0
+    odoo_install_repository l10n-italy -b 12.0 -O powerp -o $HOME/12.0
     vem create $HOME/12.0/venv_odoo -O 12.0 -a "*" -DI -o $HOME/12.0
 
 From UI: go to:
@@ -116,7 +116,7 @@ Upgrade / Aggiornamento
     source $HOME/devel/activate_tools
     # *** End of tools installation or upgrade ***
     # Odoo repository upgrade
-    odoo_install_repository accounting -b 12.0 -o $HOME/12.0 -U
+    odoo_install_repository l10n-italy -b 12.0 -o $HOME/12.0 -U
     vem amend $HOME/12.0/venv_odoo -o $HOME/12.0
     # Adjust following statements as per your system
     sudo systemctl restart odoo
@@ -145,7 +145,7 @@ Get involved / Ci mettiamo in gioco
 
 Bug reports are welcome! You can use the issue tracker to report bugs,
 and/or submit pull requests on `GitHub Issues
-<https://github.com/PowERP-cloud/accounting/issues>`_.
+<https://github.com/PowERP-cloud/l10n-italy/issues>`_.
 
 In case of trouble, please check there if your issue has already been reported.
 
@@ -159,6 +159,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.1.0.2 (2021-11-18)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Inserito elenco dei registri nel context per domain per i movimenti contabile
 
 12.0.1.0.1 (2021-10-01)
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -240,15 +245,15 @@ I soci fondatori sono:
 
 |
 
-This module is part of accounting project.
+This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-10-01
+Last Update / Ultimo aggiornamento: 2021-12-15
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
     :alt: 
-.. |Build Status| image:: https://travis-ci.org/PowERP-cloud/accounting.svg?branch=12.0
-    :target: https://travis-ci.com/PowERP-cloud/accounting
+.. |Build Status| image:: https://travis-ci.org/PowERP-cloud/l10n-italy.svg?branch=12.0
+    :target: https://travis-ci.com/PowERP-cloud/l10n-italy
     :alt: github.com
 .. |license gpl| image:: https://img.shields.io/badge/licence-LGPL--3-7379c3.svg
     :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
@@ -256,11 +261,11 @@ Last Update / Ultimo aggiornamento: 2021-10-01
 .. |license opl| image:: https://img.shields.io/badge/licence-OPL-7379c3.svg
     :target: https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html
     :alt: License: OPL
-.. |Coverage Status| image:: https://coveralls.io/repos/github/PowERP-cloud/accounting/badge.svg?branch=12.0
-    :target: https://coveralls.io/github/PowERP-cloud/accounting?branch=12.0
+.. |Coverage Status| image:: https://coveralls.io/repos/github/PowERP-cloud/l10n-italy/badge.svg?branch=12.0
+    :target: https://coveralls.io/github/PowERP-cloud/l10n-italy?branch=12.0
     :alt: Coverage
-.. |Codecov Status| image:: https://codecov.io/gh/PowERP-cloud/accounting/branch/12.0/graph/badge.svg
-    :target: https://codecov.io/gh/PowERP-cloud/accounting/branch/12.0
+.. |Codecov Status| image:: https://codecov.io/gh/PowERP-cloud/l10n-italy/branch/12.0/graph/badge.svg
+    :target: https://codecov.io/gh/PowERP-cloud/l10n-italy/branch/12.0
     :alt: Codecov
 .. |Tech Doc| image:: https://www.zeroincombenze.it/wp-content/uploads/ci-ct/prd/button-docs-12.svg
     :target: https://wiki.zeroincombenze.org/en/Odoo/12.0/dev
@@ -271,8 +276,8 @@ Last Update / Ultimo aggiornamento: 2021-10-01
 .. |Try Me| image:: https://www.zeroincombenze.it/wp-content/uploads/ci-ct/prd/button-try-it-12.svg
     :target: https://erp12.zeroincombenze.it
     :alt: Try Me
-.. |OCA Codecov| image:: https://codecov.io/gh/OCA/accounting/branch/12.0/graph/badge.svg
-    :target: https://codecov.io/gh/OCA/accounting/branch/12.0
+.. |OCA Codecov| image:: https://codecov.io/gh/OCA/l10n-italy/branch/12.0/graph/badge.svg
+    :target: https://codecov.io/gh/OCA/l10n-italy/branch/12.0
     :alt: Codecov
 .. |Odoo Italia Associazione| image:: https://www.odoo-italia.org/images/Immagini/Odoo%20Italia%20-%20126x56.png
    :target: https://odoo-italia.org
@@ -301,5 +306,5 @@ Last Update / Ultimo aggiornamento: 2021-10-01
 .. |FatturaPA| image:: https://raw.githubusercontent.com/zeroincombenze/grymb/master/certificates/ade/icons/fatturapa.png
    :target: https://github.com/zeroincombenze/grymb/blob/master/certificates/ade/scope/fatturapa.md
 .. |chat_with_us| image:: https://www.shs-av.com/wp-content/chat_with_us.gif
-   :target: https://t.me/axitec_helpdesk
+   :target: https://t.me/Assitenza_clienti_powERP
 

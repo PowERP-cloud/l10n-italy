@@ -25,6 +25,7 @@ class AccountTax(models.Model):
                     else:
                         total_base += (line.credit - line.debit)
                         _logger.info(f'{line.id} BC| {line.debit} | {line.credit}')
+                        _logger.info(f' So far base {total_base}')
 
                 elif self == line.tax_line_id:
                     if registry_type == 'supplier':
@@ -33,6 +34,7 @@ class AccountTax(models.Model):
                     else:
                         total_tax += (line.credit - line.debit)
                         _logger.info(f'{line.id} TC| {line.debit} | {line.credit}')
+                        _logger.info(f' so far tax {total_tax}')
 
             # se è una tassa secondaria devo verificare la deducibilità
             # della tassa primaria
@@ -80,7 +82,10 @@ class AccountTax(models.Model):
         domain.append(('journal_id.type', '=', self.type_tax_use))
 
         header_domain = [x for x in domain]
-        header_domain.append(('state', '=', 'posted'))
+        
+        if 'registry_ids' in ctx:
+            header_domain.append(('journal_id', 'in', ctx['registry_ids']))
+        # end if
         move_ids = self.env['account.move'].search(header_domain).ids
         # esclusione righe di testata
         domain.append(('line_type', 'not in', ['debit', 'credit']))
