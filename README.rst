@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.4.8.26
+|icon| Due dates 12.0.4.8.27
 ============================
 
 
@@ -147,6 +147,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.4.8.27 (2021-12-15)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito ricalcolo delle scadenze in create e write
+
 12.0.4.8.26 (2021-12-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -202,11 +207,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] account_duedates: Impostata dipendenza mancante
-
-12.0.4.8.15 (2021-08-17)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] account_duedates: POW-465 Gestito errore utente bloccante
 
 
 
@@ -279,7 +279,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-12-02
+Last Update / Ultimo aggiornamento: 2021-12-15
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
