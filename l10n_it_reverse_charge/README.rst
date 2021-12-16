@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_33
+|icon| ITA - Inversione contabile 12.0.1.2.7_34
 ===============================================
 
 
@@ -381,6 +381,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_34 (2021-12-16)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Fix autofattura
+
 12.0.1.2.7_33 (2021-12-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -437,11 +442,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [FIX] Out invoice/refund do not execute RC actions / Azioni di RC ignorate per fatture / NC di vendita
-
-12.0.1.2.7_23 (2021-08-06)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Fix bug POW-450 partner vuoto in registrazione contabile
 
 
 
@@ -518,7 +518,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-12-14
+Last Update / Ultimo aggiornamento: 2021-12-16
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
