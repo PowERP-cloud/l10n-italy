@@ -765,6 +765,9 @@ class AccountInvoice(models.Model):
                 tax_with_sell = invoice._get_tax_sell()
                 tax_vat = tax_with_sell.tax_line_id
                 tax_sell = tax_vat.rc_sale_tax_id
+                if not tax_sell:
+                    raise UserError("Codice iva vendite non impostato.")
+                # end if
 
                 if invoice.type == 'in_refund':
                     tax_duedate_rc = invoice.move_id.line_ids.filtered(
