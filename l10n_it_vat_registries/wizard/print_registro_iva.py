@@ -15,7 +15,7 @@ class WizardRegistroIva(models.TransientModel):
         ('date', 'Data contabile'),
         ('date_apply_vat', 'Data di competenza'),
         ],
-        string='Data di ricerca', required=True, default='date_apply_vat')
+        string='Data di ricerca', required=True, default='date')
 
     layout_type = fields.Selection([
         ('customer', 'Customer Invoices'),

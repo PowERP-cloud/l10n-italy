@@ -1,6 +1,6 @@
 
 ======================================
-|icon| ITA - Registri IVA 12.0.1.2.5_5
+|icon| ITA - Registri IVA 12.0.1.2.5_6
 ======================================
 
 
@@ -234,6 +234,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.5_6 (2021-12-16)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Reimpostato l'elaborazione della stampa con la data di registrazione
+
 12.0.1.2.5_5 (2021-11-18)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -331,7 +336,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-11-18
+Last Update / Ultimo aggiornamento: 2021-12-16
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Mature-green.png
     :target: https://odoo-community.org/page/development-status
