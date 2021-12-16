@@ -61,28 +61,38 @@ class AccountTax(models.Model):
         domain = []
         tax_name = self._get_tax_name()
         registry_type = ctx.get('registry_type', 'customer')
+        date_by = ctx.get('filter_date', 'date_apply_vat')
+        state = ctx.get('state', 'posted')
 
         if 'from_date' in ctx:
-            domain.append('|')
-            domain.append('&')
-            domain.append(('date_apply_vat', '<>', False))
-            domain.append(('date_apply_vat', '>=', ctx['from_date']))
-            domain.append('&')
-            domain.append(('date_apply_vat', '=', False))
-            domain.append(('date', '>=', ctx['from_date']))
+            if date_by == 'date_apply_vat':
+                domain.append('|')
+                domain.append('&')
+                domain.append(('date_apply_vat', '<>', False))
+                domain.append(('date_apply_vat', '>=', ctx['from_date']))
+                domain.append('&')
+                domain.append(('date_apply_vat', '=', False))
+                domain.append(('date', '>=', ctx['from_date']))
+            else:
+                domain.append(('date', '>=', ctx['from_date']))
+
         if 'to_date' in ctx:
-            domain.append('|')
-            domain.append('&')
-            domain.append(('date_apply_vat', '<>', False))
-            domain.append(('date_apply_vat', '<=', ctx['to_date']))
-            domain.append('&')
-            domain.append(('date_apply_vat', '=', False))
-            domain.append(('date', '<=', ctx['to_date']))
+            if date_by == 'date_apply_vat':
+                domain.append('|')
+                domain.append('&')
+                domain.append(('date_apply_vat', '<>', False))
+                domain.append(('date_apply_vat', '<=', ctx['to_date']))
+                domain.append('&')
+                domain.append(('date_apply_vat', '=', False))
+                domain.append(('date', '<=', ctx['to_date']))
+            else:
+                domain.append(('date', '<=', ctx['to_date']))
 
         domain.append(('journal_id.type', '=', self.type_tax_use))
 
         header_domain = [x for x in domain]
-        
+        header_domain.append(('state', '=', state))
+
         if 'registry_ids' in ctx:
             header_domain.append(('journal_id', 'in', ctx['registry_ids']))
         # end if
