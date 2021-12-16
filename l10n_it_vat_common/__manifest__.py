@@ -2,7 +2,7 @@
 #
 {
     'name': 'ITA - Componenti IVA',
-    'version': '12.0.1.0.2',
+    'version': '12.0.1.0.3',
     'category': 'Localization/Italy',
     'summary': 'Vat methods enhanced',
     'author': 'powERP enterprise network and other partners',
