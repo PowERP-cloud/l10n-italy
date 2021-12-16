@@ -61,8 +61,7 @@ class AccountTax(models.Model):
         domain = []
         tax_name = self._get_tax_name()
         registry_type = ctx.get('registry_type', 'customer')
-
-        date_by = ctx.get('date_by', 'date_apply_vat')
+        date_by = ctx.get('filter_date', 'date_apply_vat')
         state = ctx.get('state', 'posted')
 
         if 'from_date' in ctx:
@@ -93,6 +92,7 @@ class AccountTax(models.Model):
 
         header_domain = [x for x in domain]
         header_domain.append(('state', '=', state))
+
         if 'registry_ids' in ctx:
             header_domain.append(('journal_id', 'in', ctx['registry_ids']))
         # end if
