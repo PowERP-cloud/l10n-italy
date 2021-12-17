@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.19
+|icon| Account Banking Common 12.0.3.7.20
 =========================================
 
 
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.20 (2021-12-17)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito conti bancari nelle scadenze
+
 12.0.3.7.19 (2021-12-13)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -212,11 +217,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] POW-524 Refactoring del codice per il campo Conto aziendale
-
-12.0.3.7.9 (2021-10-19)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] POW-526 Corretta la verifica dei conti bancari nel wizard di generazione ordini
 
 
 
@@ -289,7 +289,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-12-13
+Last Update / Ultimo aggiornamento: 2021-12-17
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
