@@ -1,6 +1,6 @@
 
 ===========================================
-|icon| ITA - Gestione Cespiti 12.0.1.0.0_16
+|icon| ITA - Gestione Cespiti 12.0.1.0.0_17
 ===========================================
 
 
@@ -192,6 +192,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.0.0_17 (2021-12-10)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Fix errore installazione modulo
+
 12.0.1.0.0_16 (2021-11-26)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -206,6 +211,7 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Fix bug filtro civilisico nel calcolo ultima data di ammortamento
+* [FIX] Impostato codice registro ammortamenti
 
 12.0.1.0.0_13 (2021-11-09)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -248,11 +254,6 @@ ChangeLog History / Cronologia modifiche
 
 * [IMP] Controllo su data ammortamento e flag consolidato
 * [FIX] Messaggi da wizard
-
-12.0.1.0.0_5 (2021-10-26)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Controllo su ammortamenti ripetuti
 
 
 
@@ -335,7 +336,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-11-26
+Last Update / Ultimo aggiornamento: 2021-12-10
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

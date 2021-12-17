@@ -1,3 +1,13 @@
+12.0.2.1.0_11 (2021-12-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito bug POW-540 riconciliazioni mancate
+
+12.0.2.1.0_11 (2021-11-19)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito bug multi righe movimenti pagamento
+
 12.0.2.1.0_10 (2021-09-28)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -10,7 +10,7 @@
 #
 {
     'name': 'Account Payment Method',
-    'version': '12.0.0.2.6',
+    'version': '12.0.0.2.7',
     'category': 'Generic Modules/Accounting',
     'summary': 'Extend payment method model',
     'author': 'powERP enterprise network and other partners',

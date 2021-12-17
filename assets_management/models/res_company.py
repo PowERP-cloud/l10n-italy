@@ -31,22 +31,3 @@ class ResCompany(models.Model):
         ])
         return internal_sequence.res_id
 
-    civilistico = fields.Many2one(
-        string='Tipo ammortamento civilistico',
-        comodel_name='asset.depreciation.type',
-        default=compute_civilistico,
-        domain=[('requires_account_move', '=', True)]
-    )
-
-    fiscale = fields.Many2one(
-        string='Tipo ammortamento fiscale',
-        comodel_name='asset.depreciation.type',
-        default=compute_fiscale,
-    )
-
-    gestionale = fields.Many2one(
-        string='Tipo ammortamento gestionale',
-        comodel_name='asset.depreciation.type',
-        default=compute_gestionale,
-    )
-

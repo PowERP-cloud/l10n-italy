@@ -1,3 +1,8 @@
+12.0.1.0.0_17 (2021-12-10)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Fix errore installazione modulo
+
 12.0.1.0.0_16 (2021-11-26)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -12,6 +17,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Fix bug filtro civilisico nel calcolo ultima data di ammortamento
+* [FIX] Impostato codice registro ammortamenti
 
 12.0.1.0.0_13 (2021-11-09)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
