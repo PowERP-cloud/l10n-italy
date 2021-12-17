@@ -764,9 +764,16 @@ class AccountInvoice(models.Model):
 
                 tax_with_sell = invoice._get_tax_sell()
                 tax_vat = tax_with_sell.tax_line_id
+                tax_name = tax_vat.display_name
                 tax_sell = tax_vat.rc_sale_tax_id
                 if not tax_sell:
-                    raise UserError("Codice iva vendite non impostato.")
+                    if tax_name:
+                        raise UserError(
+                            "Codice iva vendite non impostato nella imposta "
+                            "{tax}.".format(tax=tax_name))
+                    else:
+                        raise UserError("Codice iva vendite non impostato.")
+                    # end if
                 # end if
 
                 if invoice.type == 'in_refund':
@@ -940,14 +947,20 @@ class AccountInvoice(models.Model):
 
     def _get_tax_sell(self):
         if self.type == 'in_refund':
-            return self.move_id.line_ids.filtered(
+            res = self.move_id.line_ids.filtered(
                 lambda
                     x: self.company_id.id == x.company_id.id and x.line_type == 'tax' and x.credit == self.amount_rc)
         else:
-            return self.move_id.line_ids.filtered(
+            res =  self.move_id.line_ids.filtered(
                 lambda
                     x: self.company_id.id == x.company_id.id and x.line_type == 'tax' and x.debit == self.amount_rc)
-
+        # end if
+        if not res:
+            raise UserError('Per completare la registrazione contabile '
+                            'occorrono le righe con le aliquote iva che al '
+                            'momento non sono sono presenti.')
+        # end if
+        return res
     # end _get_tax_sell
 
     # ------------------------------------------------------------------------#

@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_34
+|icon| ITA - Inversione contabile 12.0.1.2.7_35
 ===============================================
 
 
@@ -381,6 +381,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_35 (2021-12-17)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Inserito avviso per conto iva vendite
+
 12.0.1.2.7_34 (2021-12-16)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -437,11 +442,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [REF] Rimosso codice inutile
-
-12.0.1.2.7_24 (2021-08-25)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Out invoice/refund do not execute RC actions / Azioni di RC ignorate per fatture / NC di vendita
 
 
 
@@ -518,7 +518,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-12-16
+Last Update / Ultimo aggiornamento: 2021-12-17
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
