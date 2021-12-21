@@ -81,16 +81,30 @@
                 <sheet>
                     <group name="info" string="General Info">
                         <group>
-                            <field name="asset_id" />
-                            <field name="depreciation_id" string="Natura operazione"/>
-                            <field name="name"/>
-                            <field name="date"/>
-                            <field name="move_type"/>
-                            <field name="final" readonly="1"/>
+                            <field name="asset_id"
+                                   attrs="{'readonly': [('final', '=', True)]}"
+                            />
+                            <field name="depreciation_id" string="Natura operazione"
+                                   attrs="{'readonly': [('final', '=', True)]}"
+                            />
+                            <field name="name"
+                                   attrs="{'readonly': [('final', '=', True)]}"
+                            />
+                            <field name="date"
+                                   attrs="{'readonly': [('final', '=', True)]}"
+                            />
+                            <field name="move_type"
+                                   attrs="{'readonly': [('final', '=', True)]}"
+                            />
+                            <field name="final"
+                                   attrs="{'readonly':[('date', '!=', False), ('date', '&lt;', 'last_depreciation_date')]}"
+                            />
                             <field name="depreciation_line_type_id"
                                    attrs="{'invisible':[('move_type', 'not in', ('in', 'out'))]}"
                                    string="In/Out Amount Type"/>
-                            <field name="depreciation_nr"/>
+                            <field name="depreciation_nr"
+                                   attrs="{'readonly': [('final', '=', True)]}"
+                            />
                         </group>
                         <group>
                             <field name="amount" widget="monetary"/>
