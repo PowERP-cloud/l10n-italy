@@ -1,3 +1,8 @@
+12.0.1.0.0_18 (2021-12-21)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Fix validazione movimenti non ammortamento se flag consolidato
+
 12.0.1.0.0_17 (2021-12-10)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
