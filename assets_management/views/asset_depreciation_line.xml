@@ -97,7 +97,7 @@
                                    attrs="{'readonly': [('final', '=', True)]}"
                             />
                             <field name="final"
-                                   attrs="{'readonly':[('date', '!=', False), ('date', '&lt;', 'last_depreciation_date')]}"
+                                   readonly="1"
                             />
                             <field name="depreciation_line_type_id"
                                    attrs="{'invisible':[('move_type', 'not in', ('in', 'out'))]}"
@@ -107,9 +107,13 @@
                             />
                         </group>
                         <group>
-                            <field name="amount" widget="monetary"/>
+                            <field name="amount" widget="monetary"
+                                   attrs="{'readonly': [('final', '=', True)]}"
+                            />
                             <field name="balance" widget="monetary"/>
-                            <field name="move_id"/>
+                            <field name="move_id"
+                                   attrs="{'readonly': [('final', '=', True)]}"
+                            />
                             <field name="requires_account_move"
                                    invisible="1"/>
                             <field name="currency_id"
