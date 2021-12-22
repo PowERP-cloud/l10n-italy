@@ -77,10 +77,6 @@ class AccountInvoice(models.Model):
         # Set default for date_effective
         new_invoice._default_date_effective()
 
-        if 'invoice_line_ids' in values:
-            self.update_duedates()
-        # end if
-
         # Return the result of the write command
         return new_invoice
     # end create
@@ -150,8 +146,9 @@ class AccountInvoice(models.Model):
                         invoice._default_date_effective()
                 # end if
 
-                # update duedates always
-                invoice.update_duedates()
+                if 'invoice_line_ids' in values:
+                    invoice.update_duedates()
+                # end if
 
             # end for
 

@@ -1,3 +1,8 @@
+12.0.4.8.29 (2021-12-22)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Hotfix0.23 Rimosso ricalcolo scadenze nelle creazione fattura
+
 12.0.4.8.28 (2021-12-17)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

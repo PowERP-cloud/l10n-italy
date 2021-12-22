@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.4.8.28
+|icon| Due dates 12.0.4.8.29
 ============================
 
 
@@ -147,6 +147,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.4.8.29 (2021-12-22)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Hotfix0.23 Rimosso ricalcolo scadenze nelle creazione fattura
+
 12.0.4.8.28 (2021-12-17)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -202,11 +207,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Missed dependency: "sale" / Manca dipendenza "ordini clienti"
-
-12.0.4.8.17 (2021-08-19)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] account_duedates: Refactoring metodo di pagamento 'tax' per scadenze tecniche
 
 
 
@@ -279,7 +279,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-12-17
+Last Update / Ultimo aggiornamento: 2021-12-22
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
