@@ -1,3 +1,13 @@
+12.0.1.0.0_19 (2021-12-22)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Fix visualizzazione creazione righe di altra natura (non ammortamento)
+
+12.0.1.0.0_18 (2021-12-21)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Fix validazione movimenti non ammortamento se flag consolidato
+
 12.0.1.0.0_17 (2021-12-10)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_32
+|icon| ITA - Inversione contabile 12.0.1.2.7_35
 ===============================================
 
 
@@ -381,6 +381,21 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_35 (2021-12-17)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Inserito avviso per conto iva vendite
+
+12.0.1.2.7_34 (2021-12-16)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Fix autofattura
+
+12.0.1.2.7_33 (2021-12-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Fix autofattura
+
 12.0.1.2.7_32 (2021-12-09)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -427,21 +442,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [REF] Rimosso codice inutile
-
-12.0.1.2.7_24 (2021-08-25)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Out invoice/refund do not execute RC actions / Azioni di RC ignorate per fatture / NC di vendita
-
-12.0.1.2.7_23 (2021-08-06)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Fix bug POW-450 partner vuoto in registrazione contabile
-
-12.0.1.2.7_22 (2021-08-05)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Impostato date applicazione iva e iva bilancio nell'autofattura
 
 
 
@@ -518,7 +518,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-12-09
+Last Update / Ultimo aggiornamento: 2021-12-17
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

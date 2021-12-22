@@ -1,6 +1,6 @@
 
 ============================================
-|icon| Italian Withholding Tax 12.0.2.1.0_11
+|icon| Italian Withholding Tax 12.0.2.1.0_12
 ============================================
 
 
@@ -200,6 +200,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.2.1.0_11 (2021-12-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito bug POW-540 riconciliazioni mancate
+
 12.0.2.1.0_11 (2021-11-19)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -255,11 +260,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Aggiornato numero di versione con incrementante interno
-
-12.0.2.1.1 (2021-06-18)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Spostato il campo "netto a pagare" ma mantenuto il calcolo
 
 
 
@@ -332,7 +332,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-11-19
+Last Update / Ultimo aggiornamento: 2021-12-14
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status
