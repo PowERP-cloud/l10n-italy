@@ -1,6 +1,6 @@
 
 ===========================================
-|icon| ITA - Gestione Cespiti 12.0.1.0.0_18
+|icon| ITA - Gestione Cespiti 12.0.1.0.0_19
 ===========================================
 
 
@@ -192,6 +192,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.0.0_19 (2021-12-22)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Fix visualizzazione creazione righe di altra natura (non ammortamento)
+
 12.0.1.0.0_18 (2021-12-21)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -248,11 +253,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Nascosto flag consolidato nel wizard se per singolo cespite
-
-12.0.1.0.0_7 (2021-10-28)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Esposto flag consolidato nelle righe e gestione pulsanti in relazione allo stato del flag
 
 
 
@@ -335,7 +335,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-12-21
+Last Update / Ultimo aggiornamento: 2021-12-22
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
