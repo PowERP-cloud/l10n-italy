@@ -204,7 +204,8 @@ class AccountVatPeriodEndStatement(models.Model):
             'paid': [('readonly', True)],
             'draft': [('readonly', False)]})
     authority_vat_account_id = fields.Many2one(
-        'account.account', 'Tax Authority VAT Account',
+        'account.account',
+        'Tax Authority VAT Account',
         states={
             'confirmed': [('readonly', True)],
             'paid': [('readonly', True)],
@@ -216,7 +217,13 @@ class AccountVatPeriodEndStatement(models.Model):
     deductible_vat_amount = fields.Float(
         'Deductible VAT Amount', compute="_compute_deductible_vat_amount",
         digits=dp.get_precision('Account'))
-
+    journal_id = fields.Many2one(
+        'account.journal', 'Journal',
+        # required=True,
+        states={
+            'confirmed': [('readonly', True)],
+            'paid': [('readonly', True)],
+            'draft': [('readonly', False)]})
     date = fields.Date(
         'Date', required=True,
         states={
@@ -265,6 +272,7 @@ class AccountVatPeriodEndStatement(models.Model):
         'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get(
             'account.invoice'))
+    annual = fields.Boolean("Annual prospect")
 
     debit_vat_group_line_ids = fields.One2many(
         comodel_name='statement.debit.group.line',
@@ -282,33 +290,22 @@ class AccountVatPeriodEndStatement(models.Model):
         readonly=True
     )
 
-    journal_id = fields.Many2one(
-        'account.journal', 'Journal',
-        # required=True,
-        states={
-            'confirmed': [('readonly', True)],
-            'paid': [('readonly', True)],
-            'draft': [('readonly', False)]},
-        # domain=[('company_id', '=', company_id)]
-    )
-
     name = fields.Text(
-        string='Descrizione',
+        string='Descrizione'
     )
 
-    statement_type = fields.Selection([
-        ('recur', 'Liquidazione periodica'),
-        ('year', 'Liquidazione annuale'),
-        ('eu', 'Liquidazione EU-OSS'),
-    ], 'Tipo liquidazione', required=True, default='recur')
-
-    # country_id = fields.Many2one(
-    #     'res.country', 'Paese',
-    #     default=lambda self: self.env['res.company'].country_id.id
-    # )
-
-    annual = fields.Boolean(
-        string="Annual prospect",
+    statement_type = fields.Selection(
+        [('recur', 'Liquidazione periodica'),
+         ('year', 'Liquidazione annuale'),
+         ('eu', 'Liquidazione EU-OSS')],
+        string='Tipo liquidazione',
+        required=True,
+        default='recur',
+    )
+    country_id = fields.Many2one(
+        comodel_name='res.country',
+        string='Country',
+        default=lambda self: self.env.user.company_id.country_id,
     )
 
     @api.multi
@@ -571,11 +568,16 @@ class AccountVatPeriodEndStatement(models.Model):
         credit_line_model = self.env['statement.credit.account.line']
 
         for statement in self:
+
             statement.previous_debit_vat_amount = 0.0
             prev_statements = self.search(
-                [('date', '<', statement.date), ('annual', '=', False)],
+                [('date', '<', statement.date),
+                 ('statement_type', 'not in', ('year', 'eu'))],
                 order='date desc')
-            if prev_statements and not statement.annual:
+            if prev_statements and \
+                statement.statement_type not in ['year', 'eu']:
+                # not statement.annual:
+
                 prev_statement = prev_statements[0]
                 if (
                     prev_statement.residual > 0 and
@@ -739,11 +741,36 @@ class AccountVatPeriodEndStatement(models.Model):
         credit_total = {}
         debit_total = {}
         tax_model = self.env['account.tax']
-        taxes = tax_model.search([
+        domain = [
             # ('vat_statement_account_id', '!=', False),
             ('type_tax_use', 'in', ['sale', 'purchase']),
             ('company_id', '=', self.company_id.id),
-        ])
+        ]
+        # check statement for type
+        if statement.statement_type == 'eu':
+            # country
+            if not statement.country_id:
+                raise UserError(
+                    'Nazione non impostata per Liquidazione iva EU-OSS')
+            # end if
+
+            # group tax with country
+            group_ids = self.env['account.tax.group'].search([
+                ('country_id', '=', statement.country_id.id)
+            ])
+
+            if not group_ids:
+                msg = 'Gruppo imposte non trovato per {nazione}'.format(
+                    nazione=statement.country_id.name
+                )
+                raise UserError(msg)
+
+            domain.append(
+                ('tax_group_id', 'in', [t.id for t in group_ids])
+            )
+        # end if
+
+        taxes = tax_model.search(domain)
         for tax in taxes:
             if any(tax_child
                    for tax_child in tax.children_tax_ids
@@ -894,15 +921,6 @@ class AccountVatPeriodEndStatement(models.Model):
         self.interest_percent = (
             company.of_account_end_vat_statement_interest_percent)
 
-    @api.onchange('statement_type')
-    def onchange_statement_type(self):
-        if self.statement_type and self.statement_type == 'year':
-            self.write({'annual': True})
-        else:
-            self.write({'annual': False})
-        # end if
-    # end _compute_annual
-
     @api.multi
     def get_account_interest(self):
         company = self.env.user.company_id
@@ -1000,13 +1018,6 @@ class StatementCreditAccountLine(models.Model):
     def _compute_undeductible_amount(self):
         for line in self:
             line.undeductible_amount = line.vat_amount - line.amount
-            #
-            # is_split_payment = getattr(line.tax_id, 'is_split_payment', None)
-            # if is_split_payment or not line.tax_id.account_id or (
-            #         line.kind_id.code and line.kind_id.code.startswith('N6')):
-            # else:
-            #     line.undeductible_amount = 0.0
-            # # end if
         # end for
     # end _compute_undeductible_amount
 
@@ -1133,3 +1144,4 @@ class StatementCreditGroupLine(models.Model):
     undeductible_amount = fields.Float(
         'Undeductible', digits=dp.get_precision('Account')
     )
+

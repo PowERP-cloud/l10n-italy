@@ -24,6 +24,7 @@
         'l10n_it_account_tax_kind',
         'account_invoice_entry_dates',
         'account_move_plus',
+        'account_tax_group_plus',
     ],
     'data': [
         'wizard/add_period.xml',
