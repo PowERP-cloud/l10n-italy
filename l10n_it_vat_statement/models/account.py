@@ -258,8 +258,13 @@ class AccountVatPeriodEndStatement(models.Model):
     payment_ids = fields.Many2many(
         'account.move.line', string='Payments', compute="_compute_lines",
         store=True)
-    date_range_ids = fields.One2many(
-        'date.range', 'vat_statement_id', 'Periods')
+    # date_range_ids = fields.One2many(
+    #     'date.range', 'vat_statement_id', 'Periods')
+
+    date_range_ids = fields.Many2many(
+        comodel_name='date.range',
+        # 'vat_statement_id',
+        string='Periods')
     interest = fields.Boolean(
         'Compute Interest', default=_get_default_interest)
     interest_percent = fields.Float(
@@ -1074,11 +1079,11 @@ class StatementGenericAccountLine(models.Model):
     name = fields.Char('Description')
 
 
-class DateRange(models.Model):
-    _inherit = "date.range"
-    vat_statement_id = fields.Many2one(
-        'account.vat.period.end.statement', "VAT statement"
-    )
+# class DateRange(models.Model):
+#     _inherit = "date.range"
+#     vat_statement_id = fields.Many2one(
+#         'account.vat.period.end.statement', "VAT statement"
+#     )
 
 
 class StatementDebitGroupLine(models.Model):

@@ -34,10 +34,13 @@ class RemovePeriod(models.TransientModel):
         self.ensure_one()
         if 'active_id' not in self.env.context:
             raise UserError(_('Current statement not found'))
-        period = self.env['date.range'].browse(int(self.period_id))
-        period.vat_statement_id = False
+        # period = self.env['date.range'].browse(int(self.period_id))
+        # period.vat_statement_id = False
         statement = self.env['account.vat.period.end.statement'].browse(
             self.env.context['active_id'])
+        statement.write({
+            'date_range_ids': [(5, 0)]
+        })
         statement.set_fiscal_year()
         statement.compute_amounts()
         return {
