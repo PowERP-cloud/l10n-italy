@@ -6,7 +6,7 @@
 #
 {
     'name': 'ITA - Liquidazione IVA evoluta',
-    'version': '12.0.1.9.1',
+    'version': '12.0.1.9.1_2',
     'category': 'Localization/Italy',
     'summary': 'Allow to create the "VAT Statement".',
     'author': 'powERP enterprise network and other partners',
@@ -24,6 +24,7 @@
         'l10n_it_account_tax_kind',
         'account_invoice_entry_dates',
         'account_move_plus',
+        'account_tax_group_plus',
     ],
     'data': [
         'wizard/add_period.xml',

@@ -1,3 +1,13 @@
+12.0.1.9.1_2 (2021-12-27)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Inserito migrations per aggiornamento valori pregressi
+
+12.0.1.9.1_1 (2021-12-24)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Refactoring campi per liquidazioine EU-OSS
+
 12.0.1.9.1 (2021-10-01)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
