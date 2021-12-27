@@ -814,3 +814,8 @@ msgstr "Righe totali a credito"
 #: model_terms:ir.ui.view,arch_db:l10n_it_vat_statement.view_account_vat_period_end_statement
 msgid "Totals"
 msgstr "Totali"
+
+#. module: l10n_it_vat_statement
+#: model:ir.model.fields,field_description:l10n_it_vat_statement.field_account_vat_period_end_statement__country_id
+msgid "Country"
+msgstr "Paese"

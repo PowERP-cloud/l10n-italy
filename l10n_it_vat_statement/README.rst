@@ -1,6 +1,6 @@
 
 ==================================================
-|icon| ITA - Liquidazione IVA evoluta 12.0.1.9.1_1
+|icon| ITA - Liquidazione IVA evoluta 12.0.1.9.1_2
 ==================================================
 
 
@@ -198,6 +198,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.9.1_2 (2021-12-27)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Inserito migrations per aggiornamento valori pregressi
+
 12.0.1.9.1_1 (2021-12-24)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -252,11 +257,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Aggiornato il template
-
-12.0.1.8.5 (2021-07-05)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Aggiornato il model delle righe tasse di debito con campo calcolato indeducibile
 
 
 
@@ -329,7 +329,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-12-24
+Last Update / Ultimo aggiornamento: 2021-12-27
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

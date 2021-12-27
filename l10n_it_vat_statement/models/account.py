@@ -30,8 +30,13 @@ class AccountVatPeriodEndStatement(models.Model):
             credit_vat_amount = 0.0
             generic_vat_amount = 0.0
             for debit_line in statement.debit_vat_account_line_ids:
-                debit_vat_amount += debit_line.deductible_amount \
-                    if debit_line.tax_id.eu_vat is False else 0.0
+                if debit_line.tax_id.tax_group_id.country_id.code != 'IT':
+                    to_add = 0.0
+                else:
+                    to_add = debit_line.deductible_amount
+
+                debit_vat_amount += to_add
+
             for credit_line in statement.credit_vat_account_line_ids:
                 credit_vat_amount += credit_line.amount
             for generic_line in statement.generic_vat_account_line_ids:
@@ -379,7 +384,7 @@ class AccountVatPeriodEndStatement(models.Model):
             lines_to_create = []
 
             for debit_line in statement.debit_vat_account_line_ids:
-                if debit_line.tax_id.eu_vat:
+                if debit_line.tax_id.tax_group_id.country_id.code != 'IT':
                     continue
                 if debit_line.amount != 0.0 and debit_line.account_id:
                     debit_vat_data = {
@@ -947,7 +952,7 @@ class StatementDebitAccountLine(models.Model):
     @api.depends('tax_id')
     def _compute_deductible_amount(self):
         for line in self:
-            if line.tax_id.eu_vat:
+            if line.tax_id.tax_group_id.country_id.code != 'IT':
                 line.deductible_amount = 0.0
             else:
                 is_split_payment = getattr(line.tax_id, 'is_split_payment', None)

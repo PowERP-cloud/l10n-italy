@@ -42,8 +42,7 @@
 
                     <field name="authority_partner_id" domain="[('supplier', '=', True)]"
                            contenxt="{'default_supplier': True}"
-                           attrs="{'invisible': [('statement_type', 'in', ('year', 'eu'))],
-                           'required': [('statement_type', '=', 'recur')]}"
+                           attrs="{'invisible': [('statement_type', 'in', ('year', 'eu'))]}"
                     />
 
                     <field name="authority_vat_account_id"
@@ -253,7 +252,6 @@
         <field name="arch" type="xml">
             <field name="tax_group_id" position="after">
                 <field name="vat_statement_account_id"/>
-                <field name="eu_vat"/>
             </field>
         </field>
     </record>

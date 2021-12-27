@@ -6,7 +6,7 @@
 #
 {
     'name': 'ITA - Liquidazione IVA evoluta',
-    'version': '12.0.1.9.1_1',
+    'version': '12.0.1.9.1_2',
     'category': 'Localization/Italy',
     'summary': 'Allow to create the "VAT Statement".',
     'author': 'powERP enterprise network and other partners',
