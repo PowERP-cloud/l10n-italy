@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.20
+|icon| Account Banking Common 12.0.3.7.21
 =========================================
 
 
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.21 (2021-12-28)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato default per importo accreditato
+
 12.0.3.7.20 (2021-12-17)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -212,11 +217,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] POW-367 Verificato e corretto utilizzo campo banca impostata in fattura
-
-12.0.3.7.10 (2021-10-20)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] POW-524 Refactoring del codice per il campo Conto aziendale
 
 
 
@@ -289,7 +289,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-12-17
+Last Update / Ultimo aggiornamento: 2021-12-28
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

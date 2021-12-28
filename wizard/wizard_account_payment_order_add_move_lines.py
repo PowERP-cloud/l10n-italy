@@ -61,7 +61,7 @@ class AccountPaymentAddMoveLines(models.TransientModel):
     def add(self):
 
         active_ids = self._context.get('active_ids')
-
+        payment_method = self.env['account.payment.method']
         # get payment order
         payment_order_id = int(self.payment_orders)
         # validate
@@ -70,14 +70,22 @@ class AccountPaymentAddMoveLines(models.TransientModel):
             browse(payment_order_id)
 
         if len(active_ids) > 0:
-
             lines = self.env['account.move.line'].browse(active_ids)
+
+            for line in lines:
+                payment_method = line.payment_method
+                break
 
             # Check for errors
             self._raise_on_errors(lines, payment_order)
 
             # Aggiunta linee a distinta
             lines.create_payment_line_from_move_line(payment_order)
+
+            # if payment_method and payment_method.code == 'invoice_financing':
+            #     payment_order.bank_invoice_financing_amount = \
+            #         payment_order.massimale
+            # # end if
 
             # Apertura ordine di pagamento
             return {
