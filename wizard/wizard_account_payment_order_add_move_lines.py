@@ -71,10 +71,13 @@ class AccountPaymentAddMoveLines(models.TransientModel):
 
         if len(active_ids) > 0:
             lines = self.env['account.move.line'].browse(active_ids)
-
             for line in lines:
                 payment_method = line.payment_method
                 break
+
+            if payment_method and payment_method.code == 'invoice_financing':
+                order = payment_order.read([])[0]
+                order.update({'massimale': payment_order.massimale})
 
             # Check for errors
             self._raise_on_errors(lines, payment_order)
@@ -82,10 +85,11 @@ class AccountPaymentAddMoveLines(models.TransientModel):
             # Aggiunta linee a distinta
             lines.create_payment_line_from_move_line(payment_order)
 
-            # if payment_method and payment_method.code == 'invoice_financing':
-            #     payment_order.bank_invoice_financing_amount = \
-            #         payment_order.massimale
-            # # end if
+            if payment_method and payment_method.code == 'invoice_financing':
+                if order['massimale'] == order['bank_invoice_financing_amount']:
+                    payment_order.bank_invoice_financing_amount = \
+                        payment_order.massimale
+            # end if
 
             # Apertura ordine di pagamento
             return {
