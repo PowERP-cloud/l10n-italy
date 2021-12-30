@@ -197,7 +197,7 @@ class AccountInvoice(models.Model):
         for invoice in self:
             if invoice.state == 'draft':
                 res = invoice.compute_taxes()
-                invoice.duedate_manager_id.write_duedate_lines()
+                # invoice.duedate_manager_id.write_duedate_lines()
                 # invoice.show_reload_tax = False
         return res
         # edn for
