@@ -36,6 +36,18 @@
 <!--                <field name="line_rc_type" invisible="0"/>-->
 <!--                <field name="rc" attrs="{'invisible': [('line_rc_type', '=', '')]}"/>-->
 <!--            </field>-->
+
+            <xpath expr="//form/sheet/notebook/page/group/group/div/field[@name='tax_line_ids']" position="after">
+                <button name="taxes_reload"
+                            confirm="Verranno ricalcolate le imposte e le scadenze. Conferma?"
+                            type="object"
+                            states="draft"
+                            string="Ricalcola le imposte"
+                            class="oe_highlight"
+                    />
+            </xpath>
+
+
         </field>
     </record>
 
@@ -65,5 +77,24 @@
             </field>
         </field>
     </record>
+
+<!--    <record model="ir.actions.server" id="update_show_button_reload_taxes">-->
+<!--        <field name="name">Reload Taxes Server Action</field>-->
+<!--        <field name="model_id" ref="model_account_invoice"/>-->
+<!--        <field name="state">code</field>-->
+<!--        <field name="code">-->
+<!--            if record:-->
+<!--                record.show_reload_tax = True-->
+<!--                action = {-->
+<!--                    "type": "ir.actions.act_window",-->
+<!--                    "view_mode": "form",-->
+<!--                    "res_model": "account.invoice",-->
+<!--                    "res_id": record.id,-->
+<!--                    "target": "current",-->
+<!--                    "view_id": False,-->
+<!--                }-->
+<!--        </field>-->
+<!--    </record>-->
+
 </odoo>
 
