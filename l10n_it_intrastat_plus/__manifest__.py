@@ -1,6 +1,6 @@
 {
     'name': 'Intrastat esteso',
-    'version': '12.0.1.2.5',
+    'version': '12.0.1.2.6',
     'category': 'Account',
     'summary': 'Riclassificazione merci e servizi per dichiarazioni Intrastat',
     'author': 'powERP enterprise network and other partners',

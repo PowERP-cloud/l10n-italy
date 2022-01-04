@@ -112,6 +112,14 @@ class AccountInvoiceLine(models.Model):
 class AccountInvoice(models.Model):
     _inherit = "account.invoice"
 
+    intrastat = fields.Boolean(
+        string="Subject to Intrastat",
+        readonly=True,
+        states={
+            'draft': [
+                ('readonly', False)]},
+        copy=False)
+
     def _get_conditions_of_sale(self):
         return self.env['res.config.settings']._get_conditions_of_sale()
 

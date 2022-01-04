@@ -1,3 +1,7 @@
+12.0.1.2.6 (2022-01-04)
+~~~~~~~~~~~~~~~~~~~~~~~~
+* [FIX] Impostato readonly nel campo intrastat della fattura
+
 12.0.1.1.9 (2021-06-17)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 * [FIX] Aggiornato campi nel modulo fattura e nel report
