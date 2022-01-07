@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_36
+|icon| ITA - Inversione contabile 12.0.1.2.7_37
 ===============================================
 
 
@@ -381,6 +381,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_37 (2022-01-07)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato tipo documento per l'autofattura da posizione fiscale
+
 12.0.1.2.7_36 (2021-12-30)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -437,11 +442,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [FIX] Risolto bug fattura cliente con posizione fiscale RC
-
-12.0.1.2.7_26 (2021-09-02)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Risolto bug partner assente nella registrazione contabile di RC
 
 
 
@@ -518,7 +518,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-12-30
+Last Update / Ultimo aggiornamento: 2022-01-07
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
