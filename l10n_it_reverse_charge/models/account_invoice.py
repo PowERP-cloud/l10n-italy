@@ -500,6 +500,7 @@ class AccountInvoice(models.Model):
             else:
                 raise UserError('Configurazione mancante nella '
                                 'posizione fiscale: Tipo di partner')
+
             # self invoice
             rc_invoice_lines = []
             # creo la fattura in bozza
@@ -574,12 +575,11 @@ class AccountInvoice(models.Model):
                     inv_vals['type'] = 'out_invoice'
                 # end if
 
-                # inv_vals['payment_term_id'] = self.payment_term_id.id
-
                 if self.rc_self_invoice_id:
                     # this is needed when user takes back to draft supplier
                     # invoice, edit and validate again
                     rc_invoice = self.rc_self_invoice_id
+
                     rc_invoice.invoice_line_ids.unlink()
                     rc_invoice.period_id = False
                     rc_invoice.write(inv_vals)
@@ -588,6 +588,10 @@ class AccountInvoice(models.Model):
                 else:
                     rc_invoice = self.create(inv_vals)
                     self.rc_self_invoice_id = rc_invoice.id
+
+                if self.fiscal_position_id.rc_fiscal_document_type_id:
+                    fid = self.fiscal_position_id.rc_fiscal_document_type_id
+                    rc_invoice.fiscal_document_type_id = fid.id
 
                 rc_invoice.action_invoice_open()
 
