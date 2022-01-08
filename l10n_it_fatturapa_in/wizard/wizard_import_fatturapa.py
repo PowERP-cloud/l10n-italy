@@ -8,7 +8,6 @@ from odoo.exceptions import UserError
 
 from odoo.addons.l10n_it_fatturapa.bindings import fatturapa
 from odoo.addons.base_iban.models.res_partner_bank import pretty_iban
-import odoo.addons.decimal_precision as dp
 
 _logger = logging.getLogger(__name__)
 
@@ -26,14 +25,6 @@ class WizardImportFatturapa(models.TransientModel):
     _name = "wizard.import.fatturapa"
     _description = "Import E-bill"
 
-    @api.model
-    def _get_digits_prices(self):
-        return self.env['decimal.precision'].precision_get('Product Price')
-
-    @api.model
-    def _get_digits_qty(self):
-        return self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        
     e_invoice_detail_level = fields.Selection([
         ('0', 'Minimum'),
         ('1', 'Tax rate'),
@@ -53,19 +44,15 @@ class WizardImportFatturapa(models.TransientModel):
         help="Decimal digits used in prices computation. This is needed to correctly "
              "import e-invoices with many decimal digits, not being forced to "
              "increase decimal digits of all your prices. "
-             "Otherwise, increase \"Product Price\" precision.",
-        default=_get_digits_prices,
+             "Otherwise, increase \"Product Price\" precision."
     )
     quantity_decimal_digits = fields.Integer(
         "Quantities decimal digits", required=True,
-        help="Decimal digits used for quantity field. See \"Product Unit of Measure\".",
-        default=_get_digits_qty,
-
+        help="Decimal digits used for quantity field. See \"Prices decimal digits\"."
     )
     discount_decimal_digits = fields.Integer(
         "Discounts decimal digits", required=True,
-        help="Decimal digits used for discount field. See \"Prices decimal digits\".",
-        default=_get_digits_prices,
+        help="Decimal digits used for discount field. See \"Prices decimal digits\"."
     )
 
     @api.model
@@ -92,13 +79,13 @@ class WizardImportFatturapa(models.TransientModel):
             if len(partners) == 1:
                 res['e_invoice_detail_level'] = (
                     partners[0].e_invoice_detail_level)
-                if partners[0].e_invoice_price_decimal_digits > 0:
+                if partners[0].e_invoice_price_decimal_digits >= 0:
                     res["price_decimal_digits"] = (
                         partners[0].e_invoice_price_decimal_digits)
-                if partners[0].e_invoice_quantity_decimal_digits > 0:
+                if partners[0].e_invoice_quantity_decimal_digits >= 0:
                     res["quantity_decimal_digits"] = (
                         partners[0].e_invoice_quantity_decimal_digits)
-                if partners[0].e_invoice_discount_decimal_digits > 0:
+                if partners[0].e_invoice_discount_decimal_digits >= 0:
                     res["discount_decimal_digits"] = (
                         partners[0].e_invoice_discount_decimal_digits)
         return res
