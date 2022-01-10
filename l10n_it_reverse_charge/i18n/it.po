@@ -354,3 +354,8 @@ msgstr "Con autofattura passiva aggiuntiva"
 #~ "La riga fattura\n"
 #~ "%s\n"
 #~ "è RC ma non non ha imposte"
+
+#. module: l10n_it_reverse_charge
+#: model:ir.model.fields,field_description:l10n_it_reverse_charge.field_account_fiscal_position__rc_fiscal_document_type_id
+msgid "Self Invoice Fiscal Document Type"
+msgstr "Tipo documento fiscale autofattura"
