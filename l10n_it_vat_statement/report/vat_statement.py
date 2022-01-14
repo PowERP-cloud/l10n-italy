@@ -89,7 +89,8 @@ class VatPeriodEndStatementReport(models.AbstractModel):
             # end if
 
             # patch EU OSS
-            if tax.eu_vat:
+            # if tax.eu_vat:
+            if tax.tax_group_id.country_id.code != 'IT':
                 undeductible = 0.0
                 deductible = 0.0
             # end if

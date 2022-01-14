@@ -102,9 +102,6 @@ class AccountTax(models.Model):
         domain.append(('move_id', 'in', move_ids))
         # TODO patch da verificare !!!
         domain.append(('account_id.internal_type', '!=', 'payable'))
-        # if 'registry_ids' in ctx:
-        #     domain.append(('move_id.journal_id', 'in', ctx['registry_ids']))
-        # # end if
 
         (total_base,
          total_tax,

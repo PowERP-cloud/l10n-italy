@@ -1,3 +1,8 @@
+12.0.1.2.5_6 (2021-12-16)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Reimpostato l'elaborazione della stampa con la data di registrazione
+
 12.0.1.2.5_5 (2021-11-18)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 

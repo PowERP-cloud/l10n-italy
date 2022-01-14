@@ -1,11 +1,5 @@
-
-======================================
-<<<<<<< HEAD
-|icon| ITA - Componenti IVA 12.0.1.0.2
-=======
 |icon| ITA - Componenti IVA 12.0.1.0.3
->>>>>>> 12.0_hotfix_0.22
-======================================
+
 
 
 **Vat methods enhanced**
@@ -164,14 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
-<<<<<<< HEAD
-=======
 12.0.1.0.3 (2021-12-16)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Inserito data filtro per data competenza e data registrazione
 
->>>>>>> 12.0_hotfix_0.22
 12.0.1.0.2 (2021-11-18)
 ~~~~~~~~~~~~~~~~~~~~~~~
 

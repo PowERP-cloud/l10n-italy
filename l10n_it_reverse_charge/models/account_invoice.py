@@ -8,8 +8,8 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 #
 
-from odoo import api, fields, models
-from odoo.exceptions import Warning as UserError
+from odoo import api, fields, models, registry
+from odoo.exceptions import Warning as UserError, RedirectWarning
 from odoo.tools.translate import _
 import odoo.addons.decimal_precision as dp
 from odoo.tools import float_compare
@@ -142,6 +142,8 @@ class AccountInvoice(models.Model):
         compute='_compute_rc_type',
     )
 
+    # show_reload_tax = fields.Boolean(readonly=True, default=False, copy=False,)
+
     @api.model
     def create(self, vals):
         res = super().create(vals)
@@ -189,6 +191,17 @@ class AccountInvoice(models.Model):
         # before than being changed by this method.
         self.onchange_rc_fiscal_position_id()
         return res
+
+    @api.multi
+    def taxes_reload(self):
+        for invoice in self:
+            if invoice.state == 'draft':
+                res = invoice.compute_taxes()
+                # invoice.duedate_manager_id.write_duedate_lines()
+                # invoice.show_reload_tax = False
+        return res
+        # edn for
+    # end taxes_reload
 
     # tenere
     def _compute_amount(self):
@@ -763,6 +776,27 @@ class AccountInvoice(models.Model):
                 # common
 
                 tax_with_sell = invoice._get_tax_sell()
+                if not tax_with_sell:
+                    # set invoice flag outside transaction
+                    # new_cr = registry(self.env.cr.dbname).cursor()
+                    # env2 = api.Environment(new_cr, self.env.uid, {})
+                    # inv = env2['account.invoice'].browse(invoice.id)
+                    # inv.sudo().update({
+                    #     'show_reload_tax': True
+                    # })
+                    # new_cr.close()
+
+                    msg = ("Per completare la registrazione contabile "
+                           "occorrono le righe con le aliquote iva che al "
+                           "momento non sono sono presenti.\n"
+                           "Aggiornare le imposte e ricalcolarle.")
+
+                    raise UserError(msg)
+                    # action = self.env.ref('account.action_invoice_tree2')
+                    # raise RedirectWarning(msg, action.id,
+                    #                       'Ok')
+
+                # end if
                 tax_vat = tax_with_sell.tax_line_id
                 tax_name = tax_vat.display_name
                 tax_sell = tax_vat.rc_sale_tax_id
@@ -951,15 +985,11 @@ class AccountInvoice(models.Model):
                 lambda
                     x: self.company_id.id == x.company_id.id and x.line_type == 'tax' and x.credit == self.amount_rc)
         else:
-            res =  self.move_id.line_ids.filtered(
+            res = self.move_id.line_ids.filtered(
                 lambda
                     x: self.company_id.id == x.company_id.id and x.line_type == 'tax' and x.debit == self.amount_rc)
         # end if
-        if not res:
-            raise UserError('Per completare la registrazione contabile '
-                            'occorrono le righe con le aliquote iva che al '
-                            'momento non sono sono presenti.')
-        # end if
+
         return res
     # end _get_tax_sell
 
@@ -1014,3 +1044,4 @@ class AccountInvoice(models.Model):
             return error_message
         else:
             return super(AccountInvoice, self).e_inv_check_amount_total()
+

@@ -587,3 +587,4 @@ class AssetDepreciationLine(models.Model):
         )
         if to_create_move:
             to_create_move.generate_account_move()
+

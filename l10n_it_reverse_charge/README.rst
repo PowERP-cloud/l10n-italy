@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_35
+|icon| ITA - Inversione contabile 12.0.1.2.7_36
 ===============================================
 
 
@@ -381,6 +381,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_36 (2021-12-30)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Fix BUG 601 / 602
+
 12.0.1.2.7_35 (2021-12-17)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -437,11 +442,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [FIX] Risolto bug partner assente nella registrazione contabile di RC
-
-12.0.1.2.7_25 (2021-08-25)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[REF] Rimosso codice inutile
 
 
 
@@ -518,7 +518,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-12-17
+Last Update / Ultimo aggiornamento: 2021-12-30
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
