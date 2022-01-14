@@ -15,6 +15,11 @@ class AccountPaymentOrder(models.Model):
         related='payment_method_id.code',
     )
 
+    is_wallet_company_bank = fields.Boolean(
+        string='Conto di portafoglio aziendale',
+        related='company_partner_bank_id.bank_is_wallet',
+    )
+
     @api.multi
     def action_accreditato(self):
 

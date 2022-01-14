@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.23
+|icon| Account Banking Common 12.0.3.7.24
 =========================================
 
 
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.24 (2022-01-14)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestione visibiltà pulsante accredito
+
 12.0.3.7.23 (2022-01-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -212,11 +217,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] POW-573 Impostato e gestito il display name del conto bancario
-
-12.0.3.7.12 (2021-11-23)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] POW-556 Impostato e gestito il campo del conto bancario aziendale nei controlli di anticipo fattura
 
 
 

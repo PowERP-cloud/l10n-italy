@@ -10,10 +10,12 @@
 
             <xpath expr="//button[@name='action_cancel']" position="before">
                 <field name="payment_method_code" invisible="1" />
+                <field name="is_wallet_company_bank" invisible="1" />
+
                 <button name="action_accreditato"
                         type="object"
-                        attrs="{'invisible': ['|', ('payment_method_code', '=', 'invoice_financing'),
-                        ('state', '!=', 'uploaded')]}"
+                        attrs="{'invisible': ['|', '|', ('payment_method_code', '=', 'invoice_financing'),
+                        ('state', '!=', 'uploaded'), ('is_wallet_company_bank', '=', False)]}"
                         string="Accredito"
                         class="oe_highlight"/>
             </xpath>
