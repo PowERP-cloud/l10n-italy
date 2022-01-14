@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.22
+|icon| Account Banking Common 12.0.3.7.23
 =========================================
 
 
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.23 (2022-01-14)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestione viste conto di portafoglio
+
 12.0.3.7.22 (2022-01-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -212,11 +217,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] POW-556 Impostato e gestito il campo del conto bancario aziendale nei controlli di anticipo fattura
-
-12.0.3.7.11_M (2021-11-24)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] POW-573 Impostato nuovo formato per il nome del record
 
 
 
