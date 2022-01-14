@@ -1,3 +1,8 @@
+12.0.3.7.22 (2022-01-14)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestione registrazioni contabili con conto di portafoglio
+
 12.0.3.7.21 (2021-12-28)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

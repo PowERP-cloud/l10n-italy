@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.21
+|icon| Account Banking Common 12.0.3.7.22
 =========================================
 
 
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.22 (2022-01-14)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestione registrazioni contabili con conto di portafoglio
+
 12.0.3.7.21 (2021-12-28)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -212,11 +217,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] POW-573 Impostato nuovo formato per il nome del record
-
-12.0.3.7.11 (2021-11-15)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] POW-367 Verificato e corretto utilizzo campo banca impostata in fattura
 
 
 
@@ -289,7 +289,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-12-28
+Last Update / Ultimo aggiornamento: 2022-01-14
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

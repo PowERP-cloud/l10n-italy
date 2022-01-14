@@ -3,7 +3,7 @@
 # License OPL-1 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
 #
 
-from odoo import models, api, fields
+from odoo import models, api, fields, _
 from odoo.exceptions import UserError
 
 
@@ -206,5 +206,76 @@ class AccountPaymentOrder(models.Model):
 
         return credit_account
     # end _set_expense_credit_account
+
+    @api.multi
+    def _create_reconcile_move(self, hashcode, blines):
+        self.ensure_one()
+        post_move = self.payment_mode_id.post_move
+        am_obj = self.env['account.move']
+        mvals = self._prepare_move(blines)
+        move = am_obj.create(mvals)
+        is_wallet = self.company_partner_bank_id.bank_is_wallet
+        if is_wallet:
+            move.invoice_date = move.date
+            move.date = fields.Date.today()
+        blines.reconcile_payment_lines()
+        if post_move:
+            move.post()
+    # end _create_reconcile_move
+
+    @api.multi
+    def _prepare_move(self, bank_lines=None):
+        vals = super()._prepare_move(bank_lines)
+
+        if self.payment_mode_id.offsetting_account == 'bank_account':
+            account = self.journal_id.default_debit_account_id
+        elif self.payment_mode_id.offsetting_account == 'transfer_account':
+            account = self.payment_mode_id.transfer_account_id
+
+        if account.user_type_id.type not in ('payable', 'receivable'):
+            return vals
+        else:
+            vals['line_ids'] = []
+            for bline in bank_lines:
+                partner_ml_vals = self._prepare_move_line_partner_account(bline)
+                vals['line_ids'].append((0, 0, partner_ml_vals))
+                trf_ml_vals = self._prepare_move_line_single_offsetting_account(
+                    bline)
+                vals['line_ids'].append((0, 0, trf_ml_vals))
+        return vals
+
+    @api.multi
+    def _prepare_move_line_single_offsetting_account(self, bank_line):
+        vals = {}
+        if self.payment_type == 'outbound':
+            name = _('Payment order %s') % self.name
+        else:
+            name = _('Debit order %s') % self.name
+        if self.payment_mode_id.offsetting_account == 'bank_account':
+            vals.update({'date': bank_line.date})
+        else:
+            vals.update({'date_maturity': bank_line.date})
+
+        if self.payment_mode_id.offsetting_account == 'bank_account':
+            account_id = self.journal_id.default_debit_account_id.id
+        elif self.payment_mode_id.offsetting_account == 'transfer_account':
+            account_id = self.payment_mode_id.transfer_account_id.id
+        partner_id = bank_line.payment_line_ids[0].partner_id.id
+        vals.update({
+            'name': name,
+            'partner_id': partner_id,
+            'account_id': account_id,
+            'credit': (self.payment_type == 'outbound' and
+                       bank_line.amount_company_currency or 0.0),
+            'debit': (self.payment_type == 'inbound' and
+                      bank_line.amount_company_currency or 0.0),
+        })
+        if bank_line.currency_id != bank_line.company_currency_id:
+            sign = self.payment_type == 'outbound' and -1 or 1
+            vals.update({
+                'currency_id': bank_line.currency_id.id,
+                'amount_currency': bank_line.amount_currency * sign,
+                })
+        return vals
 
 # end AccountPaymentOrder
