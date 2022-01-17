@@ -3,10 +3,80 @@
 # License OPL-1 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
 #
 from odoo import api, fields, models
+from odoo.exceptions import UserError
+from odoo.addons.account_banking_common.utils import domains
 
 
 class AccountJournal(models.Model):
     _inherit = "account.journal"
+
+    _DEFAULT_FINANCING_PCT = {
+        'invoice_amount': 80,
+        'taxable_amount': 100,
+    }
+
+    @api.depends('effetti_allo_sconto')
+    def _importo_effetti(self):
+        for rec in self:
+            if rec.effetti_allo_sconto and rec.effetti_allo_sconto.id:
+                query_select_account_balance = """
+                 SELECT 
+                    SUM(debit) - SUM(credit) as balance
+                    FROM account_move_line, account_move 
+                    WHERE account_move_line.account_id = {account_id}
+                    and account_move_line.move_id = account_move.id
+                    and account_move.state = 'posted'
+                """.format(account_id=rec.effetti_allo_sconto.id)
+
+                self.env.cr.execute(query_select_account_balance)
+
+                anticipo = [r[0] for r in self.env.cr.fetchall()]
+                rec.importo_effetti_sbf = anticipo[0]
+            else:
+                rec.importo_effetti_sbf = 0.0
+            # end if
+        # end for
+    # end _importo_effetti
+
+    @api.depends('portafoglio_sbf')
+    def _impegno_effetti(self):
+        for rec in self:
+            if rec.portafoglio_sbf and rec.portafoglio_sbf.id:
+                query_select_account_balance = """
+                    SELECT 
+                    SUM(debit) - SUM(credit) as balance
+                    FROM account_move_line, account_move 
+                    WHERE account_move_line.account_id = {account_id}
+                    and account_move_line.move_id = account_move.id
+                    and account_move.state = 'posted'
+                """.format(account_id=rec.portafoglio_sbf.id)
+
+                self.env.cr.execute(query_select_account_balance)
+
+                impegno = [r[0] for r in self.env.cr.fetchall()]
+                rec.impegno_effetti_sbf = impegno[0]
+            else:
+                rec.impegno_effetti_sbf = 0.0
+            # end if
+        # end for
+    # end _impegno_effetti
+
+    @api.depends('limite_effetti_sbf', 'importo_effetti_sbf')
+    def _disponibilita_effetti(self):
+        for rec in self:
+            residuo = (
+                    rec.limite_effetti_sbf -
+                    (rec.importo_effetti_sbf +
+                     rec.impegno_effetti_sbf)
+            )
+
+            if residuo > 0:
+                rec.disponibilita_effetti_sbf = residuo
+            else:
+                rec.disponibilita_effetti_sbf = 0.0
+            # end if
+        # end for
+    # end _disponibilita_effetti
 
     def _set_main_bank_account_id_default(self):
         return self.env['account.journal']
@@ -65,6 +135,65 @@ class AccountJournal(models.Model):
 
     has_children = fields.Boolean(string="Conto padre", compute='_has_children')
 
+    # ACCOUNTS
+
+    invoice_financing_evaluate = fields.Selection(
+        [
+            ('invoice_amount', 'percentuale su totale'),
+            ('taxable_amount', 'imponibile su imponibile')
+        ],
+        string='Metodo calcolo anticipo fatture'
+    )
+
+    invoice_financing_percent = fields.Float(
+        string='Percentuale di anticipo fatture',
+        default=None,
+    )
+
+    sezionale = fields.Many2one(
+        string='Sezionale',
+        comodel_name='account.journal',
+        domain=domains.transfer_journal,
+    )
+
+    effetti_allo_sconto = fields.Many2one(
+        string='Effetti allo sconto',
+        comodel_name='account.account',
+        domain=lambda self: domains.domain_effetti_allo_sconto(self.env),
+    )
+
+    portafoglio_sbf = fields.Many2one(
+        string='Conto portafoglio SBF',
+        comodel_name='account.account',
+        domain=lambda self: domains.domain_portafoglio_sbf(),
+    )
+
+    default_bank_expenses_account = fields.Many2one(
+        string='Conto di default per spese bancarie',
+        comodel_name='account.account',
+        domain=lambda self: domains.get_bank_expenses_account(self.env),
+    )
+
+    limite_effetti_sbf = fields.Float(
+        string='Affidamento bancario SBF',
+        default=0.0
+    )
+
+    importo_effetti_sbf = fields.Float(
+        string='Portafoglio utilizzato',
+        compute='_importo_effetti'
+    )
+
+    impegno_effetti_sbf = fields.Float(
+        string='Importo da presentare',
+        compute='_impegno_effetti'
+    )
+
+    disponibilita_effetti_sbf = fields.Float(
+        string='Disponibilità residua',
+        compute='_disponibilita_effetti'
+    )
+
     @api.onchange('is_wallet')
     def _on_change_is_wallet(self):
         if not self.is_wallet:
@@ -79,3 +208,41 @@ class AccountJournal(models.Model):
         # end if
 
     # end _on_change_portafolio_account
+
+    @api.model
+    def get_payment_method_config(self):
+        return {
+            'sezionale': self.sezionale,
+            'transfer_journal': self.sezionale,
+            'transfer_account': self.portafoglio_sbf,
+            'banca_conto_effetti': self.portafoglio_sbf,
+            'conto_effetti_attivi': self.portafoglio_sbf,
+            'effetti_allo_sconto': self.effetti_allo_sconto,
+            'conto_spese_bancarie': self.default_bank_expenses_account,
+        }
+
+    @api.onchange('invoice_financing_evaluate')
+    def _onchange_invoice_financing_evaluate(self):
+
+        method = self.invoice_financing_evaluate
+        pct_default = self._DEFAULT_FINANCING_PCT.get(method, 0)
+        pct_set = bool(self.invoice_financing_percent)
+
+        if not pct_set or not method:
+            self.invoice_financing_percent = pct_default
+        # end if
+    # _onchange_invoice_financing_evaluate
+
+    @api.model
+    def _validate_invoice_financing_percent(self):
+
+        ife_set = self.invoice_financing_evaluate is not False
+        pct_set = self.invoice_financing_percent not in [False, 0]
+
+        if ife_set and not pct_set:
+            raise UserError(
+                'Percentuale anticipo non impostata! '
+                'La percentuale deve essere maggiore di zero'
+            )
+        # end if
+    # end _validate_invoice_financing_percent

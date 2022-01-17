@@ -20,8 +20,45 @@
                         </field>
                         <field name="main_bank_account_id" attrs="{'required': [('is_wallet', '=', True)], 'invisible': [('is_wallet', '=', False)]}"/>
                     </group>
+                    <group colspan="4" string="Configurazione conti pagamenti" attrs="{'invisible': [('is_wallet', '=', False)]}">
+                        <group>
+                                    <field name="invoice_financing_evaluate"/>
+                        </group>
+                        <group>
+                                <field
+                                      name="invoice_financing_percent"
+                                      attrs="{
+                                      'invisible': [('invoice_financing_evaluate', '=', False)],
+                                      'required' : [('invoice_financing_evaluate', '!=', False)]
+                                      }"
+                                      />
+                        </group>
+                        <group>
+                            <field name="sezionale"/>
+                            <field name="portafoglio_sbf"/>
+                            <field name="effetti_allo_sconto"/>
+                            <field name="default_bank_expenses_account"/>
+                        </group>
+                        <group>
+                            <field name="limite_effetti_sbf"/>
+                            <field name="impegno_effetti_sbf"/>
+                            <field name="importo_effetti_sbf"/>
+                            <field name="disponibilita_effetti_sbf"/>
+                        </group>
+                    </group>
+
                 </group>
             </xpath>
+
+            <xpath expr="//group[@name='bank_statement']" position="after">
+                <group string="Castelletto pagamenti" >
+                    <group>
+                        <field name="limite_effetti_sbf" />
+                        <field name="disponibilita_effetti_sbf"/>
+                    </group>
+                </group>
+            </xpath>
+
 
         </field>
     </record>

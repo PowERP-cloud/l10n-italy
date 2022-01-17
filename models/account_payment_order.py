@@ -175,11 +175,10 @@ class AccountPaymentOrder(models.Model):
 
         po = self
         pay_mode = po.payment_mode_id
-        pay_method = po.payment_method_id
-        res_bank_acc = po.company_partner_bank_id
 
-        # 1 - Get default config from res_bank_account
-        cfg = res_bank_acc.get_payment_method_config(pay_method.code)
+        # 1 - Get default config from journal
+
+        cfg = po.journal_id.get_payment_method_config()
 
         # 2 - Get overrides from payment mode
         if pay_mode.offsetting_account == 'transfer_account':

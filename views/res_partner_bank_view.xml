@@ -10,11 +10,11 @@
         <field name="model">res.partner.bank</field>
         <field name="inherit_id" ref="base.view_partner_bank_form"/>
         <field name="arch" type="xml">
-            <xpath expr="/form/group" position="inside">
-                <group string="Configurazione pagamenti" colspan="2" attrs="{'invisible': [('bank_is_wallet', '=', False)]}">
-                    <notebook name="payment_config"></notebook>
-                </group>
-            </xpath>
+<!--            <xpath expr="/form/group" position="inside">-->
+<!--                <group string="Configurazione pagamenti" colspan="2" attrs="{'invisible': [('bank_is_wallet', '=', False)]}">-->
+<!--                    <notebook name="payment_config"></notebook>-->
+<!--                </group>-->
+<!--            </xpath>-->
 
             <xpath expr="//form/group/group[2]" position="after">
                 <group colspan="4" name="invoice_financing" string="Conti di portafoglio">
