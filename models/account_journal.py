@@ -194,6 +194,26 @@ class AccountJournal(models.Model):
         compute='_disponibilita_effetti'
     )
 
+    @api.model
+    def create(self, vals):
+        result = super().create(vals)
+        self._validate_invoice_financing_percent()
+        return result
+
+    # end if
+
+    @api.multi
+    def write(self, vals):
+        result = super().write(vals)
+
+        for journal in self:
+            journal._validate_invoice_financing_percent()
+        # end for
+
+        return result
+
+    # end if
+
     @api.onchange('is_wallet')
     def _on_change_is_wallet(self):
         if not self.is_wallet:

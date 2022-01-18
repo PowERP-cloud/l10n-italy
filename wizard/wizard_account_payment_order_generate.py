@@ -189,21 +189,21 @@ class AccountPaymentGenerate(models.TransientModel):
                 # verifica dati journal bank_account_id
                 if self.journal_id and self.journal_id.id:
                     journal = self.journal_id
-                    if not journal.bank_account_id.invoice_financing_evaluate:
+                    if not journal.invoice_financing_evaluate:
                         raise UserError('Attenzione!\nMetodo calcolo anticipo non '
                                         'impostato nel conto.')
-                    elif journal.bank_account_id.invoice_financing_evaluate \
+                    elif journal.invoice_financing_evaluate \
                             not in ['invoice_amount', 'taxable_amount']:
                         raise UserError('Attenzione!\nMetodo calcolo anticipo '
                                         'ha un valore sconosciuto.')
                     # end if
 
-                    if not journal.bank_account_id.invoice_financing_percent:
+                    if not journal.invoice_financing_percent:
                         raise UserError('Attenzione!\nPercentuale di anticipo non '
                                         'impostata nel conto.')
                     # end if
 
-                    if journal.bank_account_id.invoice_financing_percent <= 0:
+                    if journal.invoice_financing_percent <= 0:
                         raise UserError('Attenzione!\nLa percentuale di anticipo '
                                         'impostata nel conto deve essere '
                                         'maggiore di zero.')

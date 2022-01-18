@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.24
+|icon| Account Banking Common 12.0.3.7.25
 =========================================
 
 
@@ -158,6 +158,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.25 (2022-01-18)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Refactoring impostazione conti trasferiti nel registro
+
 12.0.3.7.24 (2022-01-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -212,11 +217,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Impostato in sola lettura il campo standard del conto bancario
-
-12.0.3.7.13 (2021-11-24)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] POW-573 Impostato e gestito il display name del conto bancario
 
 
 
@@ -289,7 +289,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2022-01-14
+Last Update / Ultimo aggiornamento: 2022-01-18
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

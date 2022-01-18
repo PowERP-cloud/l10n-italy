@@ -1,3 +1,8 @@
+12.0.3.7.25 (2022-01-18)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Refactoring impostazione conti trasferiti nel registro
+
 12.0.3.7.24 (2022-01-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
