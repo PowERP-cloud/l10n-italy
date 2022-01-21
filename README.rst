@@ -1,10 +1,10 @@
 
 ===================================
-|icon| Account Move Plus 12.0.0.2.5
+|icon| Account Move Plus 12.0.0.2.6
 ===================================
 
 
-**Account move extension for Italian Localization**
+**Account move extension**
 
 .. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/accounting/12.0/account_move_plus/static/description/icon.png
 
@@ -18,18 +18,11 @@
 Overview / Panoramica
 =====================
 
-|en| Improvements for account move
-----------------------------------
-
-This module add some new fields in account.move
-
+|en| This module add some new fields in account.move, maily fiscal year
 
 |
 
-|it| Campi aggiuntivi contabili
--------------------------------
-
-Questo modulo aggiunge alcuni campi alle registrazioni di prima nota
+|it| Questo modulo aggiunge alcuni campi alle registrazioni di prima nota, principalmente l'anno fiscale
 
 |
 |
@@ -123,7 +116,7 @@ Support / Supporto
 
 This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
 
-Developer companies are / I soci sviluppatoro sono:
+Developer companies are / I soci sviluppatori sono:
 
 * `Didotech s.r.l. <http://www.didotech.com>`__
 * `SHS-AV s.r.l. <https://www.shs-av.com/>`__
@@ -152,21 +145,10 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
-12.0.0.1.4 (2020-12-07)
+12.0.0.1.5 (2022-01-20)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-* [REF] Rimosso campo data bilancio
-
-12.0.0.1.4 (2020-12-07)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Rimossi campi con _13
-
-12.0.0.1.3 (2020-11-26)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Campo date_apply_vat spostato in l10n_it_statement
-
+* [REF] Rimosso contatore linee (presente in account_13_more)
 
 
 
@@ -193,15 +175,12 @@ Authors / Autori
 * `Didotech srl <https://www.didotech.com>`__
 
 
-
-
 Contributors / Collaboratori
 ----------------------------
 
 * Antonio M. Vigliotti <info@shs-av.com>
 * Marco Tosato <marco.tosato@didotech.com>
 * Fabio Giovannelli <fabio.giovannelli@didotech.com>
-
 * Antonio Maria Vigliotti <antoniomaria.vigliotti@gmail.com>
 
 
@@ -209,12 +188,10 @@ Maintainer / Manutenzione
 -------------------------
 
 
-This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
-
-Developer companies are / I soci sviluppatoro sono:
-
-* `Didotech s.r.l. <http://www.didotech.com>`__
-* `SHS-AV s.r.l. <https://www.shs-av.com/>`__
+This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese Powerp <http://www.powerp.it/>
+Developer companies are / I soci sviluppatori sono:
+* Didotech s.r.l. <http://www.didotech.com>
+* SHS-AV s.r.l. <https://www.shs-av.com/>
 
 
 |
@@ -245,7 +222,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-08-06
+Last Update / Ultimo aggiornamento: 2022-01-21
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
@@ -304,5 +281,5 @@ Last Update / Ultimo aggiornamento: 2021-08-06
 .. |FatturaPA| image:: https://raw.githubusercontent.com/zeroincombenze/grymb/master/certificates/ade/icons/fatturapa.png
    :target: https://github.com/zeroincombenze/grymb/blob/master/certificates/ade/scope/fatturapa.md
 .. |chat_with_us| image:: https://www.shs-av.com/wp-content/chat_with_us.gif
-   :target: https://t.me/axitec_helpdesk
+   :target: https://t.me/Assitenza_clienti_powERP
 
