@@ -2,29 +2,38 @@
 <section class="oe_container">
     <div class="oe_row oe_spaced">
         <div class="oe_span12">
-            <h2 class="oe_slogan" style="color:#162832;">Extend payment method model / Gestione tipi di pagamento</h2>
+            <h2 class="oe_slogan" style="color:#162832;">Extended payment method / Metodo di pagamento esteso</h2>
         </div>
         <div class="oe_span6">
             <p align="center">
                 <img src="https://raw.githubusercontent.com/zeroincombenze/grymb/master/flags/en_US.png" alt="English"/>
             </p>
-            <p class="oe_mt16" align="justify">This module add account.payment.kind table to manage due records.</p>
+            <p class="oe_mt16" align="justify">Technical module which adds some default payment mathods, mainly the "tax" method.
+The "tax" method is required to manage some special VAT law, like withholding tax.
+Invoices with these special VAT law, total amount and amout to pay are different.
+So the difference amount is records in a account.move.line with "tax" payment method.</p>
         </div>
         <div class="oe_span6">
             <p align="center">
                 <img src="https://raw.githubusercontent.com/zeroincombenze/grymb/master/flags/it_IT.png" alt="Italiano"/>
             </p>
-            <p class="oe_mt16" align="justify">Gestione tipi di pagamento
-<p align="justify">
-Aggiunge tabella tipi pagamento per scadenzario
-</p></p>
+            <p class="oe_mt16" align="justify">Modulo tecnico con che dichiara alcuni metodi di pagamento predefiniti, principalmente "tax".
+Il metodo "tax" &#232; necessario per gestire alcuni regimi IVA speciali, ad esempi la ritenuta d'acconto.
+Nelle fatture con questi regimi IVA speciali, l'importo della fattura e totale da pagare sono diversi.
+La differenza &#232; posta in una riga di account.move.line con il metodo "tax".</p>
         </div>
     </div>
     <div class="oe_row oe_spaced">
         <h3 class="oe_slogan" style="color:#162832;">History / Cronologia</h3>
         <div class="oe_span12">
-<h3>12.0.0.2.7 (2021-11-30)</h3>
+<h3>12.0.0.2.8 (2022-01-20)</h3>
 <p align="justify">
+<ul>
+<li>[IMP] Pulizia campi duplicati active e bank_required</li>
+</ul>
+</p><p align="justify">
+<h3>12.0.0.2.7 (2021-11-30)</h3>
+</p><p align="justify">
 <ul>
 <li>[IMP] Gestito campo duplicato "Conto necessario"</li>
 </ul>
