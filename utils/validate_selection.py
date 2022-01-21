@@ -1,6 +1,7 @@
-# Copyright 2021 powERP enterprise network <https://www.powerp.it>
 #
-# License OPL-1 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
+# Copyright 2020-22 SHS-AV s.r.l. <https://www.zeroincombenze.it>
+# Copyright 2020-22 powERP enterprise network <https://www.powerp.it>
+# Copyright 2020-22 Didotech s.r.l. <https://www.didotech.com>
 #
 import typing
 
@@ -36,7 +37,6 @@ def same_payment_method(account_move_lines):
     
     return pay_method
     
-# end same_payment_method
 
 
 def allowed_payment_method(account_move_lines, payment_method_codes: typing.List[str]):
@@ -60,7 +60,6 @@ def allowed_payment_method(account_move_lines, payment_method_codes: typing.List
         
     # end for
     
-# end allowed_payment_method
 
 
 def assigned_to_payment_order(account_move_lines, assigned: bool):
@@ -95,7 +94,6 @@ def assigned_to_payment_order(account_move_lines, assigned: bool):
         
     # end for
     
-# end assigned_to_payment_order
 
 
 def same_payment_order(account_move_lines):
@@ -122,7 +120,6 @@ def same_payment_order(account_move_lines):
 
     return po_name
     
-# end same_payment_order
 
 
 def allowed_payment_order_status(account_move_lines, payment_order_status: typing.List[str]):
@@ -159,7 +156,6 @@ def allowed_payment_order_status(account_move_lines, payment_order_status: typin
         
     # end for
     
-# end assigned_to_payment_order
 
 
 def except_payment_order_status(account_move_lines,
@@ -181,7 +177,6 @@ def except_payment_order_status(account_move_lines,
 
     # end for
 
-# end except_payment_order_status
 
 
 def lines_has_payment(account_move_lines, paid: bool):
@@ -216,7 +211,6 @@ def lines_has_payment(account_move_lines, paid: bool):
 
     # end for
 
-# end lines_has_payment
 
 
 def lines_check_invoice_type(account_move_lines,
@@ -252,12 +246,8 @@ def lines_check_invoice_type(account_move_lines,
 
     # end for
 
-# end lines_check_invoice_type
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Validation compounds for specific cases
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 def insoluto(account_move_lines):
     same_payment_method(account_move_lines)
     assigned_to_payment_order(account_move_lines, assigned=True)
@@ -265,7 +255,6 @@ def insoluto(account_move_lines):
     allowed_payment_order_status(account_move_lines, ['done'])
     lines_has_payment(account_move_lines, paid=True)
     lines_check_invoice_type(account_move_lines, ['out_invoice'])
-# end insoluto
 
 
 def payment_confirm(account_move_lines):
@@ -282,4 +271,3 @@ def payment_confirm(account_move_lines):
     allowed_payment_order_status(account_move_lines, ['done'])
     same_payment_order(account_move_lines)
     lines_check_invoice_type(account_move_lines, ['out_invoice'])
-# end payment_confirm

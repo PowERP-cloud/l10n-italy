@@ -18,24 +18,18 @@
 Overview / Panoramica
 =====================
 
-|en| Common stuff used by payment methods
+|en| This module adds some fields to account.journal and res.partner.bank to manage wallet account.
+A wallet account is a special bank account with financial amounts.
+Any bank acount may be linked to one ore more wallet accounts.
+With this module, user can declare the bank account hierarchy.
 
 |
 
-|it| Funzionalità utilizzate dai metodi di pagamento
-
-|
-
-OCA comparation / Confronto con OCA
------------------------------------
-
-
-+-----------------------------------------------------------------+-------------------+----------------+--------------------------------+
-| Description / Descrizione                                       | Zeroincombenze    | OCA            | Notes / Note                   |
-+-----------------------------------------------------------------+-------------------+----------------+--------------------------------+
-| Coverage / Copertura test                                       |  |Codecov Status| | |OCA Codecov|  |                                |
-+-----------------------------------------------------------------+-------------------+----------------+--------------------------------+
-
+|it| Questo modulo aggiunge i campi per la gestione dei conti di portafoglio.
+I conti di portafoglio sono conti bancari speciali usati per la gestione degli importi SBF.
+Ogni conto bancario puà essere collegato ad uno o più conti di portafoglio.
+Ad esempio, la Banca Alpha oltre al conto di liquidità con IBAN ufficiale puà fornire un conto di portafoglio per la presentazione RIBA ed uno per gli anticipi fatture.
+Grazie a questo modulo l'utente può dichiarare la gerarchia dei conti bancari.
 
 |
 |
@@ -289,7 +283,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2022-01-18
+Last Update / Ultimo aggiornamento: 2022-01-21
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

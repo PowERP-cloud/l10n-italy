@@ -1,6 +1,7 @@
-# Copyright 2021 powERP enterprise network <https://www.powerp.it>
 #
-# License OPL-1 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
+# Copyright 2020-22 SHS-AV s.r.l. <https://www.zeroincombenze.it>
+# Copyright 2020-22 powERP enterprise network <https://www.powerp.it>
+# Copyright 2020-22 Didotech s.r.l. <https://www.didotech.com>
 #
 from . import misc
 
@@ -37,7 +38,6 @@ def get_bank_expenses_account(env):
         env, BANK_EXPENSES_ACCOUNT_EXTERNAL_ID
     )
     return [('user_type_id', '=', acct_type_id)]
-# end get_bank_expenses_account
 
 
 def domain_effetti_allo_sconto(env):
@@ -55,12 +55,10 @@ def domain_effetti_allo_sconto(env):
     #
     # return [('user_type_id', 'in', acct_type_ids)]
     return [('nature', '=', 'A')]
-# end omain_effetti_allo_sconto
 
 
 def domain_portafoglio_sbf():
     return ['|', ('nature', '=', 'P'), ('user_type_id.type', '=', 'liquidity')]
-# end domain_portafoglio_sbf
 
 
 get_expenses_account = get_bank_expenses_account
