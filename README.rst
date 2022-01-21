@@ -1,10 +1,10 @@
 
 ============================
-|icon| Due dates 12.0.4.8.29
+|icon| Due dates 12.0.4.8.30
 ============================
 
 
-**Due dates management**
+**Enhanced due dates management**
 
 .. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/accounting/12.0/account_duedates/static/description/icon.png
 
@@ -18,13 +18,21 @@
 Overview / Panoramica
 =====================
 
-|en| Manage enhanced due dates
+|en| This module adds stuff to manage due date from invoice and from due date menu.
+Due date can be change after invoice is validated too.
 
+* Added date effective to calculate due date; default is the same of invoice date
+* Tab with due dates and due amounts
+* Datas are added in account.move[.line] to migrate Odoo 13.0+
 
 |
 
-|it| Gestione evoluta delle scadenze
+|it| Questo modulo gestisce le scadenza della fattura e del relativo menù.
+Le date di scadenza possono essere modificate anche in fatture validate.
 
+* Aggiunta data effettiva per calcolo scadenze; defalt è data fattura
+* Tab con scadenzario fattura
+* I dati sono calcolati e riportati in account.move[.line] per migrare a Odoo 13.0+
 
 |
 |
@@ -147,6 +155,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.4.8.30 (2022-01-20)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Standard OCA
+
 12.0.4.8.29 (2021-12-22)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -202,11 +215,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] POW-509 Gestito errore singleton
-
-12.0.4.8.18 (2021-08-25)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Missed dependency: "sale" / Manca dipendenza "ordini clienti"
 
 
 
@@ -279,7 +287,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-12-22
+Last Update / Ultimo aggiornamento: 2022-01-21
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
