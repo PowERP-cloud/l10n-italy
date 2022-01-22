@@ -18,6 +18,7 @@
         'account_payment_mode',
     ],
     'data': [
+        'views/payment_method_view.xml',
         'data/payment_method.xml',
     ],
     'maintainer': 'powERP enterprise network',
