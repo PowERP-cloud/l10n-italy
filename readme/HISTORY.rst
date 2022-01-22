@@ -2,6 +2,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Standard OCA
+* [IMP] sale.order model moved to account_duedate_sale module
 
 12.0.4.8.29 (2021-12-22)
 ~~~~~~~~~~~~~~~~~~~~~~~~
