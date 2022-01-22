@@ -6,78 +6,79 @@
 # OCA Transbot <transbot@odoo-community.org>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-30 02:46+0000\n"
-"PO-Revision-Date: 2021-06-29 17:48+0000\n"
-"Last-Translator: Francesco Foresti <francesco.foresti@ooops404.com>\n"
-"Language-Team: Italian (https://www.transifex.com/oca/teams/23907/it/)\n"
-"Language: it\n"
+"POT-Creation-Date: 2018-06-01 02:42+0000\n"
+"PO-Revision-Date: 2020-08-13 19:59+0000\n"
+"Last-Translator: Matjaz Mozetic <matjaz@matmoz.si>\n"
+"Language-Team: Slovenian (https://www.transifex.com/oca/teams/23907/sl/)\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3.2\n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3;\n"
+"X-Generator: Weblate 3.10\n"
 
 #. module: account_payment_term_extension
 #: model:account.payment.term,name:account_payment_term_extension.sixty_days_end_of_month
 #: model:account.payment.term,note:account_payment_term_extension.sixty_days_end_of_month
 msgid "60 Days End of Month"
-msgstr "60 Giorni fine mese"
+msgstr "60 dni od konca meseca"
 
 #. module: account_payment_term_extension
 #: model:ir.model.fields,help:account_payment_term_extension.field_account_payment_term__sequential_lines
 msgid "Allows to apply a chronological order on lines."
-msgstr "Permette di applicare un ordine cronologico alle righe."
+msgstr "Omogoči kronološki vrstni red postavk."
 
 #. module: account_payment_term_extension
 #: model:ir.model.fields,field_description:account_payment_term_extension.field_account_payment_term_line__amount_round
 msgid "Amount Rounding"
-msgstr "Arrotondamento importo"
+msgstr "Zaokroževanje zneska"
 
 #. module: account_payment_term_extension
 #: model:ir.model.fields,field_description:account_payment_term_extension.field_account_payment_term_holiday__create_uid
 msgid "Created by"
-msgstr "Creato da"
+msgstr "Ustvaril"
 
 #. module: account_payment_term_extension
 #: model:ir.model.fields,field_description:account_payment_term_extension.field_account_payment_term_holiday__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Ustvarjeno"
 
 #. module: account_payment_term_extension
 #: code:addons/account_payment_term_extension/models/account_payment_term.py:41
 #, python-format
 msgid "Date %s cannot is both a holiday and a Postponed date"
-msgstr "La data %s non può essere sia un festivo che una Data Rinvio Pagamento"
+msgstr "Datum %s ne more biti oboje: praznik in odloženi datum"
 
 #. module: account_payment_term_extension
 #: model:ir.model.fields,field_description:account_payment_term_extension.field_account_payment_term_holiday__display_name
 msgid "Display Name"
-msgstr "Nome da visualizzare"
+msgstr "Prikazni naziv"
 
 #. module: account_payment_term_extension
 #: model:ir.model.fields,field_description:account_payment_term_extension.field_account_payment_term_holiday__holiday
 msgid "Holiday"
-msgstr "Festivo"
+msgstr "Praznik"
 
 #. module: account_payment_term_extension
 #: code:addons/account_payment_term_extension/models/account_payment_term.py:29
 #, python-format
 msgid "Holiday %s can only be postponed into the future"
-msgstr "Il festivo %s può essere solo rimandato al futuro"
+msgstr "Praznik %s se lahko prestavi le v prihodnost"
 
 #. module: account_payment_term_extension
 #: code:addons/account_payment_term_extension/models/account_payment_term.py:34
 #, python-format
 msgid "Holiday %s is duplicated in current payment term"
-msgstr "Il festivo %s è duplicato in questo termine di pagamento"
+msgstr "Praznik %s je podvojen v trenutnem plačilnem pogoju"
 
 #. module: account_payment_term_extension
 #: model:ir.model.fields,field_description:account_payment_term_extension.field_account_payment_term__holiday_ids
 #: model_terms:ir.ui.view,arch_db:account_payment_term_extension.view_payment_term_form
 msgid "Holidays"
-msgstr "Festivi"
+msgstr "Prazniki"
 
 #. module: account_payment_term_extension
 #: model:ir.model.fields,field_description:account_payment_term_extension.field_account_payment_term_holiday__id
@@ -87,63 +88,63 @@ msgstr "ID"
 #. module: account_payment_term_extension
 #: model:ir.model.fields,field_description:account_payment_term_extension.field_account_payment_term_holiday____last_update
 msgid "Last Modified on"
-msgstr "Ultima modifica il"
+msgstr "Zadnjič spremenjeno"
 
 #. module: account_payment_term_extension
 #: model:ir.model.fields,field_description:account_payment_term_extension.field_account_payment_term_holiday__write_uid
 msgid "Last Updated by"
-msgstr "Ultimo aggiornamento di"
+msgstr "Zadnji posodobil"
 
 #. module: account_payment_term_extension
 #: model:ir.model.fields,field_description:account_payment_term_extension.field_account_payment_term_holiday__write_date
 msgid "Last Updated on"
-msgstr "Ultimo aggiornamento il"
+msgstr "Zadnjič posodobljeno"
 
 #. module: account_payment_term_extension
 #: model:ir.model.fields,field_description:account_payment_term_extension.field_account_payment_term_line__months
 msgid "Number of Months"
-msgstr "Numero di Mesi"
+msgstr "Število mesecev"
 
 #. module: account_payment_term_extension
 #: model:ir.model.fields,field_description:account_payment_term_extension.field_account_payment_term_line__weeks
 msgid "Number of Weeks"
-msgstr "Numero di Settimane"
+msgstr "Število tednov"
 
 #. module: account_payment_term_extension
 #: model:ir.model.fields,field_description:account_payment_term_extension.field_account_payment_term_holiday__payment_id
 msgid "Payment"
-msgstr "Pagamento"
+msgstr "Plačilo"
 
 #. module: account_payment_term_extension
 #: model:ir.model,name:account_payment_term_extension.model_account_payment_term_holiday
 msgid "Payment Term Holidays"
-msgstr "Termini di Pagamento Festivi"
+msgstr "Plačilni pogoj praznik"
 
 #. module: account_payment_term_extension
 #: model:ir.model,name:account_payment_term_extension.model_account_payment_term
 msgid "Payment Terms"
-msgstr "Termini di pagamento"
+msgstr "Plačilni pogoji"
 
 #. module: account_payment_term_extension
 #: model:ir.model,name:account_payment_term_extension.model_account_payment_term_line
 msgid "Payment Terms Line"
-msgstr "RIga Termini di Pagamento"
+msgstr "Postavka plačilnih pogojev"
 
 #. module: account_payment_term_extension
 #: model:ir.model.fields,field_description:account_payment_term_extension.field_account_payment_term_line__payment_days
 msgid "Payment day(s)"
-msgstr "Giorno(i) di Pagamento"
+msgstr "Plačilo dan(ni)"
 
 #. module: account_payment_term_extension
 #: code:addons/account_payment_term_extension/models/account_payment_term.py:105
 #, python-format
 msgid "Payment days field format is not valid."
-msgstr "Il formato dei giorni di Pagamento non è valido."
+msgstr "Izpolnjeni format plačilnih dni ni veljaven."
 
 #. module: account_payment_term_extension
 #: model:ir.model.fields,field_description:account_payment_term_extension.field_account_payment_term_holiday__date_postponed
 msgid "Postponed date"
-msgstr "Data Rinvio Pagamento"
+msgstr "Odloženi datum"
 
 #. module: account_payment_term_extension
 #: model:ir.model.fields,help:account_payment_term_extension.field_account_payment_term_line__payment_days
@@ -151,14 +152,13 @@ msgid ""
 "Put here the day or days when the partner makes the payment. Separate each "
 "possible payment day with dashes (-), commas (,) or spaces ( )."
 msgstr ""
-"Inserisci qui il giorno o i giorni in cui il cliente effettua il pagamento. "
-"Separa ogni possibile giorno di pagamento con trattini (-), virgole (,) or "
-"spazi ( )."
+"Sem vpišite dneve, ko partner izvaja plačila. Ločite vsak mogoč dan plačila "
+"s črticami (-), vejicami (,) ali presledki ( )."
 
 #. module: account_payment_term_extension
 #: model:ir.model.fields,field_description:account_payment_term_extension.field_account_payment_term__sequential_lines
 msgid "Sequential lines"
-msgstr "Righe sequenziali"
+msgstr "Zaporedne vrstice"
 
 #. module: account_payment_term_extension
 #: model:ir.model.fields,help:account_payment_term_extension.field_account_payment_term_line__amount_round
@@ -166,15 +166,12 @@ msgid ""
 "Sets the amount so that it is a multiple of this value.\n"
 "To have amounts that end in 0.99, set rounding 1, surcharge -0.01"
 msgstr ""
-"Imposta l'importo in modo che sia un multiplo di questo valore\n"
-"Per avere importi che terminano in 0.99, imposta l'arrotondamento a 1 con "
-"maggiorazione di -0.01"
+"Znesek nastavi kot večkratnik te vrednosti.\n"
+"Da bi zneske, ki se končujejo z 0.99 zaokrožili na 1, dodajte -0.01"
 
 #. module: account_payment_term_extension
 #: model_terms:ir.ui.view,arch_db:account_payment_term_extension.view_payment_term_form
 msgid ""
 "When a payment term coincides with a holiday, it is postponed to the chosen "
 "date."
-msgstr ""
-"Quando un pagamento coincide con un giorno festivo, è rimandato alla data "
-"indicata."
+msgstr "Ko plačilni pogoj sovpada s praznikom, se prestavi na izbran datum."

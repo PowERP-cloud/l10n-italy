@@ -1,12 +1,12 @@
-# Copyright 2013-16 Camptocamp SA (Yannick Vaucher)
-# Copyright 2004-16 Odoo S.A. (www.odoo.com)
-# Copyright 2015-16 Akretion
+# Copyright 2013-2016 Camptocamp SA (Yannick Vaucher)
+# Copyright 2004-2016 Odoo S.A. (www.odoo.com)
+# Copyright 2015-2016 Akretion
 # (Alexis de Lattre <alexis.delattre@akretion.com>)
 # Copyright 2018 Simone Rubino - Agile Business Group
-# Copyright 2021 powERP enterprise network <https://www.powerp.it>
-#
-# License OPL-1 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
-#
+# Copyright 2020-2022 SHS-AV s.r.l. <https://www.zeroincombenze.it>
+# Copyright 2020-2022 powERP enterprise network <https://www.powerp.it>
+# Copyright 2020-2022 Didotech s.r.l. <https://www.didotech.com>
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from functools import reduce
 from dateutil.relativedelta import relativedelta
@@ -183,16 +183,11 @@ class AccountPaymentTerm(models.Model):
         date_ref = date_ref or fields.Date.today()
         amount = value  # Remaining invoice amount after each line
         result = []
-
-        # Select the currency to use
         if self.env.context.get('currency_id'):
             currency = self.env['res.currency'].browse(
                 self.env.context['currency_id'])
         else:
             currency = self.env.user.company_id.currency_id
-        # end if
-
-        # Set the precision for rounding
         prec = currency.decimal_places
 
         next_date = fields.Date.from_string(date_ref)
@@ -221,8 +216,6 @@ class AccountPaymentTerm(models.Model):
                 next_date = fields.Date.from_string(date_ref)
                 if float_is_zero(amt, precision_digits=prec):
                     continue
-                # end if
-            # end if
 
             # Compute the due date
             if line.option == 'day_after_invoice_date':
@@ -241,7 +234,6 @@ class AccountPaymentTerm(models.Model):
             elif line.option == 'day_current_month':
                 # Getting last day of next month
                 next_date += relativedelta(day=line.days, months=0)
-            # end if
 
             # Recompute next_date taking into account:
             # - payment days
@@ -261,8 +253,6 @@ class AccountPaymentTerm(models.Model):
                     }
                 ))
                 amount -= amt
-            # end if
-        # end for
 
         # Manage the remaining amount by computing the balance of the generated
         # due dates and the original amount.
@@ -273,16 +263,9 @@ class AccountPaymentTerm(models.Model):
 
         # If the balance is not zero add a last line
         if dist:
-
             default_date = fields.Date.today()
             default_methods = {'credit': False, 'debit': False}
-
             last_date = result and result[-1][0] or default_date
             last_payment_methods = result and result[-1][2] or default_methods
-
             result.append((last_date, dist, last_payment_methods))
-        # end if
-
         return result
-    # end compute
-# end AccountPaymentTerm

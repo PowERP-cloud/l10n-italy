@@ -8,13 +8,58 @@
             <p align="center">
                 <img src="https://raw.githubusercontent.com/zeroincombenze/grymb/master/flags/en_US.png" alt="English"/>
             </p>
-            <p class="oe_mt16" align="justify">Italian Localization</p>
+            <p class="oe_mt16" align="justify">This module extends the functionality of payment terms to :
+<p align="justify">
+<ul>
+<li>support rounding, months and weeks on payment term lines</li>
+<li>allow to set more than one day of payment in payment terms</li>
+<li>if a payment term date is a holiday, it is postponed to a selected date</li>
+<li>allow to apply a chronological order on lines</li>
+<li>evaluate tax amount to 1st rate, if required</li>
+<li>set payment method on all lines</li>
+<li>new payment term simulator</li>
+</ul>
+</p><p align="justify">
+  * for example, with a payment term which contains 2 lines
+</p><p align="justify">
+    * on standard, the due date of all lines is calculated from the invoice
+      date
+    * with this feature, the due date of the second line is calculated from
+      the due date of the first line
+</p><p align="justify">
+WARNING: This module was born to replace account_payment_term_extension in account-invoicing OCA repository.
+</p></p>
         </div>
         <div class="oe_span6">
             <p align="center">
                 <img src="https://raw.githubusercontent.com/zeroincombenze/grymb/master/flags/it_IT.png" alt="Italiano"/>
             </p>
-            <p class="oe_mt16" align="justify">Modulo per la gestione dei giorni e delle settimane nei termini di pagamento</p>
+            <p class="oe_mt16" align="justify">Questo modulo estende le funzionalit&#224; dei termini di pagamento per:
+<p align="justify">
+<ul>
+<li>gestione arrotondamenti, mesi e settimane nelle scadenze</li>
+<li>permette di impostare spostare la data di scadenza</li>
+<li>gestisce lo slittamento scadenze (es. agosto e dicembre)</li>
+<li>permette di gestire le scadenze in ordine cronologico</li>
+<li>permette di calcolare l'IVA su prima rate, se richiesto</li>
+<li>gestione metodi di pagamento sulle scadenze</li>
+<li>simulatore di scadenze</li>
+</ul>
+</p><p align="justify">
+ATTENZIONE: questo modulo &#232; stato progettato per sostituire il modulo account_payment_term_extension della repository account-invoicing.
+</p></p>
+        </div>
+    </div>
+    <div class="oe_row oe_spaced">
+        <h3 class="oe_slogan" style="color:#162832;">Usage / Utilizzo</h3>
+        <div class="oe_span12">
+Go to <b>Invoicing &gt; Customers &gt; Invoices</b> and edit any invoice or create a new
+one.
+<p align="justify">
+Select any payment term and set a date in invoice.
+</p><p align="justify">
+You must see the due date based on this payment term.
+</p>
         </div>
     </div>
     <div class="oe_row oe_spaced">
@@ -24,54 +69,6 @@
 <p align="justify">
 <ul>
 <li>[IMP] Added check and disable feature / Impostato controllo e disabilitazione modulo OCA</li>
-</ul>
-</p><p align="justify">
-<h3>12.0.0.1.7 (2020-12-23)</h3>
-</p><p align="justify">
-<ul>
-<li>[IMP] Added duedates simulator  / Inserito simulatore scadenze</li>
-</ul>
-</p><p align="justify">
-<h3>12.0.0.1.6 (2020-12-04)</h3>
-</p><p align="justify">
-<ul>
-<li>[IMP] Added field boolean for vat duedate  / Inserito campo flag per la gestione iva nella prima scadenza</li>
-</ul>
-</p><p align="justify">
-<h3>12.0.0.1.5 (2020-12-04)</h3>
-</p><p align="justify">
-<ul>
-<li>[REF] Refactoring compute  / Verifica calcolo scadenze</li>
-</ul>
-</p><p align="justify">
-<h3>12.0.0.1.4 (2020-10-14)</h3>
-</p><p align="justify">
-<ul>
-<li>[FIX] Checked all occurrences of inbound/outbound / Sostituite le occorrenze di inbound/outbound</li>
-</ul>
-</p><p align="justify">
-<h3>12.0.0.1.3 (2020-10-13)</h3>
-</p><p align="justify">
-<ul>
-<li>[REF] Update fields from inbound/outbound to credit/debit</li>
-</ul>
-</p><p align="justify">
-<h3>12.0.0.1.2 (2020-10-07)</h3>
-</p><p align="justify">
-<ul>
-<li>[REF] Refactoring "compute" method</li>
-</ul>
-</p><p align="justify">
-<h3>12.0.0.1.1 (2020-09-23)</h3>
-</p><p align="justify">
-<ul>
-<li>[IMP] Added fields inbound/outbound / Inserito metodo di pagamento in entrata ed in uscita</li>
-</ul>
-</p><p align="justify">
-<h3>12.0.0.1.0 (2020-09-20)</h3>
-</p><p align="justify">
-<ul>
-<li>[IMP] Module implementation / Implementazione modulo </li>
 </ul>
 </p>
         </div>
@@ -88,11 +85,23 @@
 <li><a href="https://www.powerp.it/">powERP</a></li>
 <li><a href="https://www.zeroincombenze.it/">SHS-AV s.r.l.</a></li>
 <li><a href="https://www.didotech.com/">Didotech srl</a></li>
+<li><a href="https://www.tecnativa.com/">Tecnativa</a></li>
 </ul></p>
         </div>
         <div class="oe_span6" align="left">
             <p class="oe_mt16">Contributors / Collaboratori:</p>
             <p class="oe_mt16"><ul>
+<li>Antonio Maria Vigliotti &lt;antoniomaria.vigliotti@gmail.com&gt;</li>
+<li>Marco Tosato &lt;marco.tosato@didotech.com&gt;</li>
+<li>Fabio Giovannelli &lt;fabio.giovannelli@didotech.com&gt;</li>
+<li>Yannick Vaucher &lt;yannick.vaucher@camptocamp.com&gt;</li>
+<li>Alexis de Lattre &lt;alexis.delattre@akretion.com&gt;</li>
+<li>Julien Coux &lt;julien.coux@camptocamp.com&gt;</li>
+<li>Simone Rubino &lt;simone.rubino@agilebg.com&gt; (www.agilebg.com)</li>
+<li>Pedro M. Baeza</li>
+<li>Vicent Cubells</li>
+<li>Pedro M. Baeza</li>
+<li>Vicent Cubells</li>
 <li>Antonio Maria Vigliotti &lt;antoniomaria.vigliotti@gmail.com&gt;</li>
 <li>Marco Tosato &lt;marco.tosato@didotech.com&gt;</li>
 <li>Fabio Giovannelli &lt;fabio.giovannelli@didotech.com&gt;</li>

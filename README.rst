@@ -18,12 +18,50 @@
 Overview / Panoramica
 =====================
 
-|en| Italian Localization
+|en| This module extends the functionality of payment terms to :
 
+* support rounding, months and weeks on payment term lines
+* allow to set more than one day of payment in payment terms
+* if a payment term date is a holiday, it is postponed to a selected date
+* allow to apply a chronological order on lines
+* evaluate tax amount to 1st rate, if required
+* set payment method on all lines
+* new payment term simulator
+
+  * for example, with a payment term which contains 2 lines
+
+    * on standard, the due date of all lines is calculated from the invoice
+      date
+    * with this feature, the due date of the second line is calculated from
+      the due date of the first line
+
+WARNING: This module was born to replace account_payment_term_extension in account-invoicing OCA repository.
 
 |
 
-|it| Modulo per la gestione dei giorni e delle settimane nei termini di pagamento
+|it| Questo modulo estende le funzionalità dei termini di pagamento per:
+
+* gestione arrotondamenti, mesi e settimane nelle scadenze
+* permette di impostare spostare la data di scadenza
+* gestisce lo slittamento scadenze (es. agosto e dicembre)
+* permette di gestire le scadenze in ordine cronologico
+* permette di calcolare l'IVA su prima rate, se richiesto
+* gestione metodi di pagamento sulle scadenze
+* simulatore di scadenze
+
+ATTENZIONE: questo modulo è stato progettato per sostituire il modulo account_payment_term_extension della repository account-invoicing.
+
+|
+
+Usage / Utilizzo
+----------------
+
+Go to **Invoicing > Customers > Invoices** and edit any invoice or create a new
+one.
+
+Select any payment term and set a date in invoice.
+
+You must see the due date based on this payment term.
 
 
 |
@@ -80,6 +118,22 @@ From UI: go to:
 * |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
 * |menu| Setting > Apps |right_do| Select **account_payment_term_plus** > Install
+
+
+|
+
+Configuration / Configurazione
+------------------------------
+
+To configure the Payment Terms and see the new options on the Payment Term
+Lines, you need to:
+
+#. Go to the menu Invoicing > Configuration > Management > Payment Terms.
+
+To use multiple payment days, define for each payment term line which payment
+days apply, separated by spaces, commas or dashes.
+To use holidays, insert the holiday and the date payment terms will be
+postponed to.
 
 
 |
@@ -152,46 +206,6 @@ ChangeLog History / Cronologia modifiche
 
 * [IMP] Added check and disable feature / Impostato controllo e disabilitazione modulo OCA
 
-12.0.0.1.7 (2020-12-23)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Added duedates simulator  / Inserito simulatore scadenze
-
-12.0.0.1.6 (2020-12-04)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Added field boolean for vat duedate  / Inserito campo flag per la gestione iva nella prima scadenza
-
-12.0.0.1.5 (2020-12-04)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Refactoring compute  / Verifica calcolo scadenze
-
-12.0.0.1.4 (2020-10-14)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Checked all occurrences of inbound/outbound / Sostituite le occorrenze di inbound/outbound
-
-12.0.0.1.3 (2020-10-13)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Update fields from inbound/outbound to credit/debit
-
-12.0.0.1.2 (2020-10-07)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Refactoring "compute" method
-
-12.0.0.1.1 (2020-09-23)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Added fields inbound/outbound / Inserito metodo di pagamento in entrata ed in uscita
-
-12.0.0.1.0 (2020-09-20)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Module implementation / Implementazione modulo 
-
 
 
 |
@@ -215,11 +229,23 @@ Authors / Autori
 * `powERP <https://www.powerp.it>`__
 * `SHS-AV s.r.l. <https://www.zeroincombenze.it>`__
 * `Didotech srl <https://www.didotech.com>`__
+* `Tecnativa <https://www.tecnativa.com>:`__
 
 
 Contributors / Collaboratori
 ----------------------------
 
+* Antonio Maria Vigliotti <antoniomaria.vigliotti@gmail.com>
+* Marco Tosato <marco.tosato@didotech.com>
+* Fabio Giovannelli <fabio.giovannelli@didotech.com>
+* Yannick Vaucher <yannick.vaucher@camptocamp.com>
+* Alexis de Lattre <alexis.delattre@akretion.com>
+* Julien Coux <julien.coux@camptocamp.com>
+* Simone Rubino <simone.rubino@agilebg.com> (www.agilebg.com)
+* Pedro M. Baeza
+* Vicent Cubells
+* Pedro M. Baeza
+* Vicent Cubells
 * Antonio Maria Vigliotti <antoniomaria.vigliotti@gmail.com>
 * Marco Tosato <marco.tosato@didotech.com>
 * Fabio Giovannelli <fabio.giovannelli@didotech.com>
@@ -263,7 +289,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-08-31
+Last Update / Ultimo aggiornamento: 2022-01-22
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
@@ -322,5 +348,5 @@ Last Update / Ultimo aggiornamento: 2021-08-31
 .. |FatturaPA| image:: https://raw.githubusercontent.com/zeroincombenze/grymb/master/certificates/ade/icons/fatturapa.png
    :target: https://github.com/zeroincombenze/grymb/blob/master/certificates/ade/scope/fatturapa.md
 .. |chat_with_us| image:: https://www.shs-av.com/wp-content/chat_with_us.gif
-   :target: https://t.me/axitec_helpdesk
+   :target: https://t.me/Assitenza_clienti_powERP
 
