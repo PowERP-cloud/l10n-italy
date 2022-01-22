@@ -1,12 +1,12 @@
 
-============================
-|icon| Due dates 12.0.4.8.30
-============================
+=======================================
+|icon| Sale order due dates 12.0.4.8.30
+=======================================
 
 
-**Enhanced due dates management**
+**Sale order plug-in for enhanced due dates**
 
-.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/accounting/12.0/account_duedates/static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/accounting/12.0/account_duedates_sale/static/description/icon.png
 
 |Maturity| |Build Status| |license opl|
 
@@ -18,21 +18,11 @@
 Overview / Panoramica
 =====================
 
-|en| This module adds stuff to manage due date from invoice and from due date menu.
-Due date can be change after invoice is validated too.
-
-* Added date effective to calculate due date; default is the same of invoice date
-* Tab with due dates and due amounts
-* Datas are added in account.move[.line] to migrate Odoo 13.0+
+|en| This module is a module bridge between account due date and sale order.
 
 |
 
-|it| Questo modulo gestisce le scadenza della fattura e del relativo menù.
-Le date di scadenza possono essere modificate anche in fatture validate.
-
-* Aggiunta data effettiva per calcolo scadenze; defalt è data fattura
-* Tab con scadenzario fattura
-* I dati sono calcolati e riportati in account.move[.line] per migrare a Odoo 13.0+
+|it| Modulo ponte tra il modulo scadenzario evoluto e gli ordini clienti
 
 |
 |
@@ -87,7 +77,7 @@ From UI: go to:
 
 * |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
-* |menu| Setting > Apps |right_do| Select **account_duedates** > Install
+* |menu| Setting > Apps |right_do| Select **account_duedates_sale** > Install
 
 
 |
@@ -158,64 +148,7 @@ ChangeLog History / Cronologia modifiche
 12.0.4.8.30 (2022-01-20)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-* [IMP] Standard OCA
-
-12.0.4.8.29 (2021-12-22)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Hotfix0.23 Rimosso ricalcolo scadenze nelle creazione fattura
-
-12.0.4.8.28 (2021-12-17)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Rimosso gestione campi conti bancari
-
-12.0.4.8.27 (2021-12-15)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito ricalcolo delle scadenze in create e write
-
-12.0.4.8.26 (2021-12-02)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Aggiunto filtri "In distinta" e "Effetti incassati"
-
-12.0.4.8.25 (2021-12-02)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Reimpostato filtro "Non in distinta"
-
-12.0.4.8.24 (2021-11-23)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Impostato e gestito aggiornamento campi banca aziendale e banca partner
-* [FIX] Impostato metodo di pagamento per le scadenze NON tecniche
-
-12.0.4.8.23 (2021-11-15)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Impostato campo banca aziendale
-
-12.0.4.8.22 (2021-10-28)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Impostato in elenco scadenze in stampa fattura il metodo di pagamento
-
-12.0.4.8.21 (2021-10-05)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Impostato  elenco scadenze in stampa fattura qualora siano più di una
-
-12.0.4.8.20 (2021-09-29)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito registrazione contabile fattura a zero
-
-12.0.4.8.19 (2021-09-29)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] POW-509 Gestito errore singleton
-
+* [NEW] New implementation
 
 
 |
@@ -287,7 +220,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2022-01-21
+Last Update / Ultimo aggiornamento: 2022-01-22
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
