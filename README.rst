@@ -1,8 +1,10 @@
 
 ==========================================
-|icon| Account Invoice 13 more 12.0.3.3.14
+|icon| Account Invoice 13 more 12.0.3.3.15
 ==========================================
 
+
+**Invoice like Odoo 13+**
 
 .. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/accounting/12.0/account_invoice_13_more/static/description/icon.png
 
@@ -16,28 +18,45 @@
 Overview / Panoramica
 =====================
 
-|en| Italian Localization
+|en| This module replicates some account.invoice fields on account.move.
+The account.move model has the some structure of Odoo 13.0 and more.
+This module simplify the backport from Odoo 13.0+.
 
+Common structure with Odoo 13.0+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* account.move.invoice_date
+* account.move.type (must be renamed to move_type)
+* account.move.fiscal_position_id
+* account.move.payment_term_id
+* account.move.partner_bank_id
+
+Difference from Odoo 13.0+
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* Draft and cancelled invoice has no account.move records
+* Events are still active on account.invoice model
 
 |
 
-|it| Localizzazione Italiana evoluta
+|it| Questo modulo replica alcuni campi della fattura nella registrazione contabile.
+Il modello account.move ha la stessa struttura di Odoo 13.0 e successive.
+Il modulo semplifica il backport da Odoo 13.0+
 
+Strutture comuni con Odoo 13.0+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+* account.move.invoice_date
+* account.move.type (deve essere rinominato move_type)
+* account.move.fiscal_position_id
+* account.move.payment_term_id
+* account.move.partner_bank_id
 
+Differenze da Odoo 13.0+
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-|
-
-OCA comparation / Confronto con OCA
------------------------------------
-
-
-+-----------------------------------------------------------------+-------------------+----------------+--------------------------------+
-| Description / Descrizione                                       | Zeroincombenze    | OCA            | Notes / Note                   |
-+-----------------------------------------------------------------+-------------------+----------------+--------------------------------+
-| Coverage / Copertura test                                       |  |Codecov Status| | |OCA Codecov|  |                                |
-+-----------------------------------------------------------------+-------------------+----------------+--------------------------------+
-
+* Draft and cancelled invoice has no account.move records
+* Events are still active on account.invoice model
 
 |
 |
@@ -160,6 +179,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.3.15 (2022-01-20)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Standard OCA
+
 12.0.3.3.14 (2021-11-24)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -190,8 +214,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Inserito campo banca fattura
-
-
 
 
 |
@@ -263,7 +285,7 @@ I soci fondatori sono:
 
 This module is part of accounting project.
 
-Last Update / Ultimo aggiornamento: 2021-11-24
+Last Update / Ultimo aggiornamento: 2022-01-22
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
