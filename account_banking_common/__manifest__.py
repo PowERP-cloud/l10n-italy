@@ -18,7 +18,7 @@
         'account_duedates',
         'account_payment_order',
         'account_payment_method',
-        'l10n_it_iban_in_stampa',
+        # 'l10n_it_iban_in_stampa',
     ],
     'data': [
         'views/res_partner_bank_view.xml',

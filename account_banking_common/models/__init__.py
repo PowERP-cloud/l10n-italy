@@ -9,4 +9,6 @@ from . import res_partner_bank
 from . import account_journal
 from . import account_invoice
 from . import account_move
+from . import mixin_base
+
 
