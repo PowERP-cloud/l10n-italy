@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+#
+# Copyright 2020-22 SHS-AV s.r.l. <https://www.zeroincombenze.it>
+# Copyright 2020-22 powERP enterprise network <https://www.powerp.it>
+# Copyright 2020-22 Didotech s.r.l. <https://www.didotech.com>
+#
 
-# from datetime import datetime
-# from dateutil.relativedelta import relativedelta
-# import odoo
 from odoo import models, fields
-# from odoo.osv import expression
 
 
 class AccountFiscalyear(models.Model):

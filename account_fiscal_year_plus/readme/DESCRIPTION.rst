@@ -5,6 +5,9 @@ Invoicing > Configuration > Accounting > Fiscal Years
 
 This is totally refactored compared to 11 version, because odoo 12 introduced `account.fiscal.year` object.
 See https://github.com/OCA/account-financial-tools/pull/706
+
+WARNING: This module was born to replace account_fiscal_year in account-financial_tools OCA repository.
+
 .. $else
 This module extends date.range.type to add fiscal_year flag.
 
