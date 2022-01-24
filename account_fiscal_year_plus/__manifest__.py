@@ -19,10 +19,11 @@
     "installable": True,
     "depends": [
         "account",
+        'account_fiscal_year',
         "date_range_plus",
     ],
     "data": [
-        "data/date_range_type.xml",
+        # "data/date_range_type.xml",
         "views/account_views.xml",
     ],
 }
