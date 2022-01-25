@@ -10,6 +10,7 @@
         <field name="prefix">DDT/%(range_year)s/</field>
         <field name="padding">4</field>
         <field name="use_date_range" eval="True"/>
+        <field name="implementation">no_gap</field>
     </record>
 
     <!-- DdT Type -->
