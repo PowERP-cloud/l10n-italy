@@ -3,11 +3,11 @@
 # Copyright 2020-22 powERP enterprise network <https://www.powerp.it>
 # Copyright 2020-22 Didotech s.r.l. <https://www.didotech.com>
 #
-
 from odoo import models, api
+from .mixin_base import BaseMixin
 
 
-class AccountMove(models.Model):
+class AccountMove(models.Model, BaseMixin):
     _inherit = 'account.move'
 
     @api.multi

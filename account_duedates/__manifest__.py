@@ -23,7 +23,7 @@
         'date_range_plus',
         'account_payment_term_plus',
         'account_payment_method',
-        'l10n_it_iban_in_stampa',
+        'account_common_mixin',
     ],
     'data': [
         'security/ir.model.access.csv',

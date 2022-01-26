@@ -6,10 +6,12 @@
 
 from odoo import models, fields, api
 from odoo.tools.float_utils import float_is_zero
+# from odoo.addons.account_common_mixin.models.mixin_base import BaseMixin
 
 from ..utils.misc import MOVE_TYPE_INV_CN
 
 
+# class AccountMove(models.Model, BaseMixin):
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
