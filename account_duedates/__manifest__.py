@@ -23,7 +23,6 @@
         'date_range_plus',
         'account_payment_term_plus',
         'account_payment_method',
-        'account_common_mixin',
     ],
     'data': [
         'security/ir.model.access.csv',

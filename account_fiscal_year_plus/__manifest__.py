@@ -20,9 +20,9 @@
     "depends": [
         "account",
         "date_range_plus",
+        "account_fiscal_year",
     ],
     "data": [
-        "data/date_range_type.xml",
         "views/account_views.xml",
     ],
 }

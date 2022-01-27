@@ -11,6 +11,14 @@ class AccountMove(models.Model, BaseMixin):
     _inherit = 'account.move'
 
     @api.multi
+    def post(self, invoice=False):
+        for move in self:
+            if invoice:
+                move.company_bank_id = invoice.company_bank_id
+                move.counterparty_bank_id = invoice.counterparty_bank_id
+        return super().post(invoice=invoice)
+
+    @api.multi
     def write(self, values):
         if 'company_bank_id' in values:
             lines = self.line_ids.filtered(

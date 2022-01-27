@@ -86,26 +86,6 @@ class AccountMove(models.Model):
             self.write_credit_debit_move_lines()
         # end if
 
-        # if 'company_bank_id' in values:
-        #     lines = self.line_ids.filtered(
-        #         lambda x: x.reconciled is False and x.payment_order.id is False
-        #     )
-        #
-        #     lines.write({
-        #         'company_bank_id': values['company_bank_id']
-        #     })
-        # # end if
-        #
-        # if 'counterparty_bank_id' in values:
-        #     lines = self.line_ids.filtered(
-        #         lambda x: x.reconciled is False and x.payment_order.id is False
-        #     )
-        #
-        #     lines.write({
-        #         'counterparty_bank_id': values['counterparty_bank_id']
-        #     })
-        # # end if
-
         return result
 
     # end write
