@@ -23,16 +23,16 @@
         </field>
     </record>
 
-    <menuitem id="menu_date_range_accounting" name="Date ranges"
-              parent="account.account_account_menu" sequence="50"/>
-    <menuitem action="account.actions_account_fiscal_year"
-              id="menu_actions_account_fiscal_year"
-              parent="menu_date_range_accounting"/>
-    <menuitem action="date_range.date_range_action" id="menu_date_range_action_accounting"
-              parent="menu_date_range_accounting"/>
-    <menuitem action="date_range.date_range_type_action"
-              id="menu_date_range_type_action_accounting" parent="menu_date_range_accounting"/>
-    <menuitem action="date_range.date_range_generator_action"
-              id="menu_date_range_generator_action" parent="menu_date_range_accounting"/>
+<!--    <menuitem id="menu_date_range_accounting" name="Date ranges"-->
+<!--              parent="account.account_account_menu" sequence="50"/>-->
+<!--    <menuitem action="account.actions_account_fiscal_year"-->
+<!--              id="menu_actions_account_fiscal_year"-->
+<!--              parent="menu_date_range_accounting"/>-->
+<!--    <menuitem action="date_range.date_range_action" id="menu_date_range_action_accounting"-->
+<!--              parent="menu_date_range_accounting"/>-->
+<!--    <menuitem action="date_range.date_range_type_action"-->
+<!--              id="menu_date_range_type_action_accounting" parent="menu_date_range_accounting"/>-->
+<!--    <menuitem action="date_range.date_range_generator_action"-->
+<!--              id="menu_date_range_generator_action" parent="menu_date_range_accounting"/>-->
 
 </odoo>

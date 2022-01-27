@@ -21,6 +21,7 @@
         "account",
         'account_fiscal_year',
         "date_range_plus",
+        "account_fiscal_year",
     ],
     "data": [
         # "data/date_range_type.xml",

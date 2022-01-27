@@ -5,7 +5,7 @@
 #
 {
     'name': 'Due dates',
-    'version': '12.0.4.8.30',
+    'version': '12.0.4.8.31',
     'category': 'Accounting',
     'summary': 'Enhanced due dates management',
     'author': 'powERP enterprise network and other partners',
@@ -23,7 +23,7 @@
         'date_range_plus',
         'account_payment_term_plus',
         'account_payment_method',
-        'l10n_it_iban_in_stampa',
+        'account_common_mixin',
     ],
     'data': [
         'security/ir.model.access.csv',
