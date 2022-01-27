@@ -75,6 +75,29 @@ class AccountInvoice(models.Model, BaseMixin):
         return super().write(vals)
     # end write
 
+    # Extend method that loads invoice data from PO
+    @api.onchange('purchase_id')
+    def purchase_order_change(self):
+        """Copy values from a Purchase Order to the new invoice form"""
+
+        # Save the Purchase Order reference since the superclass
+        # method will delete it once completed
+        po = self.purchase_id
+
+        # Call superclass function
+        res = super().purchase_order_change()
+
+        # Copy bank accounts related infos from Purchase Order object
+        if po:
+            self.company_bank_id = po.company_bank_id and po.company_bank_id
+            self.counterparty_bank_id = po.counterparty_bank_id and po.counterparty_bank_id
+        # end if
+
+        # Return the result
+        return res
+
+    # end purchase_order_change
+
     @api.multi
     def adapt_document(self):
         self.ensure_one()
@@ -126,3 +149,4 @@ class AccountInvoice(models.Model, BaseMixin):
         self.ensure_one()
         return self.type
     # end _get_doc_type
+
