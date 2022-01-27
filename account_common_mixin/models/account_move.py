@@ -44,3 +44,36 @@ class AccountMove(models.Model, BaseMixin):
 
     # end write
 
+    @api.multi
+    def adapt_document(self):
+
+        self.ensure_one()
+
+        p_t_id = self.payment_term_id
+        c_id = self.company_id
+        c_banks = c_id and c_id.partner_id.bank_ids
+
+        adapted_doc = {
+            'model': 'account.move',
+            'type': self.type,
+
+            # Payment infos
+            'fatturapa_pm_id': p_t_id and p_t_id.fatturapa_pm_id,
+            'payment_mode_id': None,  # payment_mode_id does not exist in move
+
+            # Default banks
+            'default_company_bank': c_banks and c_banks[0],
+        }
+
+        # Update with counterparty data
+        counterparty_bank_infos = self.partner_id.bank_infos()
+        adapted_doc.update(counterparty_bank_infos)
+
+        return adapted_doc
+    # end adapt_document
+
+    @api.multi
+    def _get_doc_type(self):
+        self.ensure_one()
+        return self.type
+    # end _get_doc_type

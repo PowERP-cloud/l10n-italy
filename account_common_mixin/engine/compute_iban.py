@@ -1,7 +1,6 @@
 def get_company_bank_account(document):
 
     adoc = document.adapt_document()
-    selected_bank = document.bank_2_print_selector
 
     if is_client_doc(adoc):
 
@@ -12,10 +11,7 @@ def get_company_bank_account(document):
             pm_id.bank_account_link == 'fixed'
         )
 
-        if not selected_bank:
-            return False
-
-        elif is_fixed:
+        if is_fixed:
             return pm_id.fixed_journal_id.bank_account_id
 
         elif adoc['assigned_income_bank']:
@@ -28,10 +24,7 @@ def get_company_bank_account(document):
 
     elif is_supplier_doc(adoc):
 
-        if not selected_bank:
-            return False
-
-        elif adoc['assigned_bank']:
+        if adoc['assigned_bank']:
             return adoc['assigned_bank']
 
         else:

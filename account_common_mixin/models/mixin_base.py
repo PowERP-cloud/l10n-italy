@@ -132,9 +132,10 @@ class BaseMixin:
             ctpt_bnk = doc.counterparty_bank_id
 
             # Update partner_bank_id
-            if doc._get_doc_type() in ('out_invoice', 'out_refund') and comp_bnk:
+            invoice_type = doc._get_doc_type()
+            if invoice_type in ('out_invoice', 'out_refund') and comp_bnk:
                 doc.partner_bank_id = comp_bnk
-            elif doc._get_doc_type() in ('in_invoice', 'in_refund') and ctpt_bnk:
+            elif invoice_type in ('in_invoice', 'in_refund') and ctpt_bnk:
                 doc.partner_bank_id = ctpt_bnk
             # end if
         # end for
