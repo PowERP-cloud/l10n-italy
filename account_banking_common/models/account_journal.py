@@ -27,7 +27,9 @@ class AccountJournal(models.Model):
                     WHERE account_move_line.account_id = {account_id}
                     and account_move_line.move_id = account_move.id
                     and account_move.state = 'posted'
-                """.format(account_id=rec.effetti_allo_sconto.id)
+                """.format(
+                    account_id=rec.effetti_allo_sconto.id
+                )
 
                 self.env.cr.execute(query_select_account_balance)
 
@@ -37,6 +39,7 @@ class AccountJournal(models.Model):
                 rec.importo_effetti_sbf = 0.0
             # end if
         # end for
+
     # end _importo_effetti
 
     @api.depends('portafoglio_sbf')
@@ -50,7 +53,9 @@ class AccountJournal(models.Model):
                     WHERE account_move_line.account_id = {account_id}
                     and account_move_line.move_id = account_move.id
                     and account_move.state = 'posted'
-                """.format(account_id=rec.portafoglio_sbf.id)
+                """.format(
+                    account_id=rec.portafoglio_sbf.id
+                )
 
                 self.env.cr.execute(query_select_account_balance)
 
@@ -60,15 +65,14 @@ class AccountJournal(models.Model):
                 rec.impegno_effetti_sbf = 0.0
             # end if
         # end for
+
     # end _impegno_effetti
 
     @api.depends('limite_effetti_sbf', 'importo_effetti_sbf')
     def _disponibilita_effetti(self):
         for rec in self:
-            residuo = (
-                    rec.limite_effetti_sbf -
-                    (rec.importo_effetti_sbf +
-                     rec.impegno_effetti_sbf)
+            residuo = rec.limite_effetti_sbf - (
+                rec.importo_effetti_sbf + rec.impegno_effetti_sbf
             )
 
             if residuo > 0:
@@ -77,6 +81,7 @@ class AccountJournal(models.Model):
                 rec.disponibilita_effetti_sbf = 0.0
             # end if
         # end for
+
     # end _disponibilita_effetti
 
     def _set_main_bank_account_id_default(self):
@@ -114,7 +119,9 @@ class AccountJournal(models.Model):
 
     # end _has_children
 
-    is_wallet = fields.Boolean(string="Conto di portafoglio", default=is_wallet_default)
+    is_wallet = fields.Boolean(
+        string="Conto di portafoglio", default=is_wallet_default
+    )
 
     wallet_ids = fields.One2many(
         comodel_name='account.journal',
@@ -134,16 +141,18 @@ class AccountJournal(models.Model):
         default=_set_main_bank_account_id_default,
     )
 
-    has_children = fields.Boolean(string="Conto padre", compute='_has_children')
+    has_children = fields.Boolean(
+        string="Conto padre", compute='_has_children'
+    )
 
     # ACCOUNTS
 
     invoice_financing_evaluate = fields.Selection(
         [
             ('invoice_amount', 'percentuale su totale'),
-            ('taxable_amount', 'imponibile su imponibile')
+            ('taxable_amount', 'imponibile su imponibile'),
         ],
-        string='Metodo calcolo anticipo fatture'
+        string='Metodo calcolo anticipo fatture',
     )
 
     invoice_financing_percent = fields.Float(
@@ -176,23 +185,19 @@ class AccountJournal(models.Model):
     )
 
     limite_effetti_sbf = fields.Float(
-        string='Affidamento bancario SBF',
-        default=0.0
+        string='Affidamento bancario SBF', default=0.0
     )
 
     importo_effetti_sbf = fields.Float(
-        string='Portafoglio utilizzato',
-        compute='_importo_effetti'
+        string='Portafoglio utilizzato', compute='_importo_effetti'
     )
 
     impegno_effetti_sbf = fields.Float(
-        string='Importo da presentare',
-        compute='_impegno_effetti'
+        string='Importo da presentare', compute='_impegno_effetti'
     )
 
     disponibilita_effetti_sbf = fields.Float(
-        string='Disponibilità residua',
-        compute='_disponibilita_effetti'
+        string='Disponibilità residua', compute='_disponibilita_effetti'
     )
 
     @api.model
@@ -220,11 +225,15 @@ class AccountJournal(models.Model):
         if not self.is_wallet:
             # empty parent
             if self.main_bank_account_id:
-                self.main_bank_account_id = self._set_main_bank_account_id_default()
+                self.main_bank_account_id = (
+                    self._set_main_bank_account_id_default()
+                )
             # end if
         # end if
         if self.bank_account_id:
-            bank_account = self.env['res.partner.bank'].browse(self.bank_account_id.id)
+            bank_account = self.env['res.partner.bank'].browse(
+                self.bank_account_id.id
+            )
             bank_account.write({'bank_is_wallet': self.is_wallet})
         # end if
 
@@ -252,6 +261,7 @@ class AccountJournal(models.Model):
         if not pct_set or not method:
             self.invoice_financing_percent = pct_default
         # end if
+
     # _onchange_invoice_financing_evaluate
 
     @api.model
@@ -266,4 +276,5 @@ class AccountJournal(models.Model):
                 'La percentuale deve essere maggiore di zero'
             )
         # end if
+
     # end _validate_invoice_financing_percent

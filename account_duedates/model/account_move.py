@@ -6,6 +6,7 @@
 
 from odoo import models, fields, api
 from odoo.tools.float_utils import float_is_zero
+
 # from odoo.addons.account_common_mixin.models.mixin_base import BaseMixin
 
 from ..utils.misc import MOVE_TYPE_INV_CN
@@ -25,22 +26,23 @@ class AccountMove(models.Model):
         string='Righe scadenze',
         comodel_name='account.duedate_plus.line',
         related='duedate_manager_id.duedate_line_ids',
-        readonly=False
+        readonly=False,
     )
 
     duedates_amount_current = fields.Monetary(
-        string='Ammontare scadenze',
-        compute='_compute_duedates_amounts'
+        string='Ammontare scadenze', compute='_compute_duedates_amounts'
     )
 
     duedates_amount_unassigned = fields.Monetary(
         string='Ammontare non assegnato a scadenze',
-        compute='_compute_duedates_amounts'
+        compute='_compute_duedates_amounts',
     )
 
-    date_effective = fields.Date(string='Data di decorrenza', readonly=True,
-                                 states={'draft': [('readonly', False)]},
-                                 )
+    date_effective = fields.Date(
+        string='Data di decorrenza',
+        readonly=True,
+        states={'draft': [('readonly', False)]},
+    )
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ORM METHODS OVERRIDE - begin
@@ -52,6 +54,7 @@ class AccountMove(models.Model):
 
         # Return the result of the write command
         return new_move
+
     # end create
 
     @api.multi
@@ -79,10 +82,10 @@ class AccountMove(models.Model):
 
         # Avoid infinite recursion
         if not writing_c_d_m_l and check_move_validity:
-        # Rewrite credit and debit lines only if:
-        #   - check_move_validity is enabled (aka avoid getting in the way
-        #     when adding lines manually)
-        #   - infinite recursion guard variable (writing_c_d_m_l) is not True
+            # Rewrite credit and debit lines only if:
+            #   - check_move_validity is enabled (aka avoid getting in the way
+            #     when adding lines manually)
+            #   - infinite recursion guard variable (writing_c_d_m_l) is not True
             self.write_credit_debit_move_lines()
         # end if
 
@@ -105,6 +108,7 @@ class AccountMove(models.Model):
             # Aggiorno il totale delle righe
             self._compute_duedates_amounts()
         # end if
+
     # end _onchange_duedate_line_ids
 
     @api.onchange('amount')
@@ -123,13 +127,17 @@ class AccountMove(models.Model):
             if self.duedates_amount_current == 0:
                 ratio = 0
             else:
-                ratio = self.duedates_amount_unassigned / self.duedates_amount_current
+                ratio = (
+                    self.duedates_amount_unassigned
+                    / self.duedates_amount_current
+                )
             # end if
 
             for line in self.duedate_line_ids:
                 line.proposed_new_value = line.due_amount * (1 + ratio)
             # end for
         # end if
+
     # end _onchange_amount
 
     @api.onchange('duedates_amount_unassigned')
@@ -140,11 +148,13 @@ class AccountMove(models.Model):
         precision = self.env.user.company_id.currency_id.rounding
 
         if float_is_zero(
-                self.duedates_amount_unassigned, precision_rounding=precision):
+            self.duedates_amount_unassigned, precision_rounding=precision
+        ):
             for line in self.duedate_line_ids:
                 line.proposed_new_value = 0
             # end for
         # end if
+
     # end _onchange_duedates_amount_unassigned
 
     # NB: il campo 'payment_term_id' è definito nel modulo 'account_move_plus'
@@ -152,11 +162,13 @@ class AccountMove(models.Model):
     @api.onchange('payment_term_id')
     def _onchange_payment_term_id(self):
         self.gen_duedates_and_update()
+
     # end _onchange_duedate_line_ids
 
     @api.onchange('invoice_date')
     def _onchange_invoice_date(self):
         self.gen_duedates_and_update()
+
     # end _onchange_invoice_date
 
     @api.onchange('date_effective')
@@ -164,6 +176,7 @@ class AccountMove(models.Model):
         if not self.date_effective:
             self.date_effective = self.invoice_date
         self.gen_duedates_and_update()
+
     # end _onchange_invoice_date
 
     @api.onchange('type')
@@ -178,6 +191,7 @@ class AccountMove(models.Model):
             self.move_type = 'payable_refund'
         return super()._onchange_type()
         # end if
+
     # end def _onchange_type
 
     # ONCHANGE METHODS - end
@@ -185,7 +199,6 @@ class AccountMove(models.Model):
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # PUBLIC METHODS - begin
-
 
     @api.multi
     def write_credit_debit_move_lines(self):
@@ -211,7 +224,9 @@ class AccountMove(models.Model):
                 if move_type_ok and is_draft and has_duedates:
 
                     # Compute the modifications to be performed
-                    move_lines_mods = move._compute_new_credit_debit_move_lines()
+                    move_lines_mods = (
+                        move._compute_new_credit_debit_move_lines()
+                    )
 
                     # Save changes
                     if move_lines_mods:
@@ -225,13 +240,13 @@ class AccountMove(models.Model):
 
     # end write_credit_debit_move_lines
 
-
     @api.multi
     def action_update_duedates_and_move_lines(self):
         # Update account.duedate_plus.line records
         for move in self:
             move.gen_duedates_and_write()
         # end for
+
     # end update_duedates_and_move_lines
 
     # PUBLIC METHODS - end
@@ -257,6 +272,7 @@ class AccountMove(models.Model):
             # Aggiornamento campo ammontare non assegnato a scadenze
             inv.duedates_amount_unassigned = inv.amount - lines_total
         # end for
+
     # end _compute_duedate_lines_amount
 
     # COMPUTE METHODS - end
@@ -275,6 +291,7 @@ class AccountMove(models.Model):
         if duedate_lines_mods:
             self.update(duedate_lines_mods)
         # end if
+
     # end _gen_duedates_and_update
 
     @api.model
@@ -287,15 +304,16 @@ class AccountMove(models.Model):
         if duedate_lines_mods:
             self.write(duedate_lines_mods)
         # end if
+
     # end _gen_duedates_and_write
 
     @api.model
     def _gen_duedates(self):
         '''
-            Compute the duedates.
-            Note: this method only returns a list of modifications to be performed to the duedates, it does NOT:
-                - call write() or update() methods to store the generated modifications
-                - modify the lines of the move object
+        Compute the duedates.
+        Note: this method only returns a list of modifications to be performed to the duedates, it does NOT:
+            - call write() or update() methods to store the generated modifications
+            - modify the lines of the move object
         '''
         # Ensure duedate_manager is configured
         self._get_duedate_manager()
@@ -308,12 +326,17 @@ class AccountMove(models.Model):
 
         # Remove old records
         if self.duedate_line_ids:
-            updates_list += [(2, duedate_line.id, 0) for duedate_line in self.duedate_line_ids]
+            updates_list += [
+                (2, duedate_line.id, 0)
+                for duedate_line in self.duedate_line_ids
+            ]
         # end if
 
         # Create new records
         if duedate_line_list:
-            updates_list += [(0, 0, duedate_line) for duedate_line in duedate_line_list]
+            updates_list += [
+                (0, 0, duedate_line) for duedate_line in duedate_line_list
+            ]
         # end if
 
         # Update the record
@@ -322,6 +345,7 @@ class AccountMove(models.Model):
         else:
             return None
         # end if
+
     # end _write_duedates
 
     @api.model
@@ -330,7 +354,9 @@ class AccountMove(models.Model):
 
         # Check if the move is an invoice or a credit note
         move_type_ok = self.type in MOVE_TYPE_INV_CN
-        move_has_duedates = self.duedate_line_ids and len(self.duedate_line_ids) > 0
+        move_has_duedates = (
+            self.duedate_line_ids and len(self.duedate_line_ids) > 0
+        )
         move_has_lines = self.line_ids and len(self.line_ids) > 0
 
         if not move_type_ok:
@@ -391,11 +417,11 @@ class AccountMove(models.Model):
                     # end if
 
                     # Set payment method
-                    new_data['payment_method_id'] = duedate_line.payment_method_id.id
+                    new_data[
+                        'payment_method_id'
+                    ] = duedate_line.payment_method_id.id
 
-                    move_lines_mods.append(
-                        (0, False, new_data)
-                    )
+                    move_lines_mods.append((0, False, new_data))
 
                 else:
                     # Duedate lines without duedate or without amount are ignored
@@ -411,6 +437,7 @@ class AccountMove(models.Model):
             # Return the modifications to be performed
             return {'line_ids': move_lines_mods}
         # end if
+
     # end _compute_new_credit_debit_move_lines
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -450,15 +477,17 @@ class AccountMove(models.Model):
 
         # Return the manager
         return self.duedate_manager_id
+
     # end get_duedate_manager
 
     def _create_duedate_manager(self):
         # Add the Duedates Manager
-        duedate_manager = self.env['account.duedate_plus.manager'].create({
-            'move_id': self.id
-        })
+        duedate_manager = self.env['account.duedate_plus.manager'].create(
+            {'move_id': self.id}
+        )
 
         self.update({'duedate_manager_id': duedate_manager})
+
     # end _create_duedate_manager
 
     @api.model
@@ -476,10 +505,9 @@ class AccountMove(models.Model):
                 'duedate_manager_id': self.duedate_manager_id.id,
             }
 
-            self.update(
-                {'duedate_line_ids': [(0, 0, new_duedate_line)]}
-            )
+            self.update({'duedate_line_ids': [(0, 0, new_duedate_line)]})
         # end if
+
     # end _ensure_duedate
 
     # PROTECTED METHODS - end
