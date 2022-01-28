@@ -17,16 +17,18 @@ class AccountMoveLine(models.Model):
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # INSOLUTO
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    
+
     @api.multi
     def open_wizard_insoluto(self):
-        
+
         # Retrieve the records
-        lines = self.env['account.move.line'].browse(self._context['active_ids'])
-        
+        lines = self.env['account.move.line'].browse(
+            self._context['active_ids']
+        )
+
         # Perform validations
         validate_selection.insoluto(lines)
-        
+
         # Open the wizard
         wiz_view = self.env.ref(
             'account_banking_common.wizard_account_banking_common_insoluto'
@@ -43,20 +45,22 @@ class AccountMoveLine(models.Model):
             'binding_model_id': 'account_banking_common.model_account_move_line',
             'context': {'active_ids': self._context['active_ids']},
         }
+
     # end validate_selection
-    
+
     @api.multi
     def registra_insoluto(self):
 
         # The payment method of the selected lines
         p_method = self.get_payment_method()
-        
+
         raise UserError(
             f'Procedura di registrazione insoluto non definita '
             f'per il metodo di pagamento {p_method.name}'
         )
+
     # end registra_insoluto
-    
+
     @api.multi
     def registra_insoluto_standard(self):
 
@@ -144,13 +148,15 @@ class AccountMoveLine(models.Model):
         # permette squadrature durante la sua manipolazione.
         # L'utilizzo di questa modalità è necessario per facilitare
         # la procedura di creazione di una nuova riconciliazione
-        new_move = self.env['account.move'].create({
-            'type': 'entry',
-            'date': fields.Date.today(),
-            'journal_id': po_journal.id,
-            'state': 'draft',
-            'ref': 'Insoluto',
-        })
+        new_move = self.env['account.move'].create(
+            {
+                'type': 'entry',
+                'date': fields.Date.today(),
+                'journal_id': po_journal.id,
+                'state': 'draft',
+                'ref': 'Insoluto',
+            }
+        )
 
         # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         # Eventuali costi bancari
@@ -162,24 +168,20 @@ class AccountMoveLine(models.Model):
                 # Avoid rounding problem by adjusting the amount
                 # of the last line processed
                 per_client_amount = round(
-                    expenses_amount / len(self),
-                    float_precision
+                    expenses_amount / len(self), float_precision
                 )
                 charge_client_for = [per_client_amount] * len(self)
 
                 # Manage the difference between rounded spread costs
                 # and original cost
                 charge_client_for_sum = round(
-                    per_client_amount * len(self),
-                    float_precision
+                    per_client_amount * len(self), float_precision
                 )
                 remain = round(
-                    expenses_amount - charge_client_for_sum,
-                    float_precision
+                    expenses_amount - charge_client_for_sum, float_precision
                 )
                 charge_client_for[-1] = round(
-                    charge_client_for[-1] + remain,
-                    float_precision
+                    charge_client_for[-1] + remain, float_precision
                 )
 
             else:
@@ -192,22 +194,26 @@ class AccountMoveLine(models.Model):
                 # Banca c/c
                 # bank_account_line =
 
-                move_line_model_no_check.create({
-                    'move_id': new_move.id,
-                    'account_id': acct_acct_bank_credit.id,
-                    'debit': 0,
-                    'credit': expenses_amount,
-                })
+                move_line_model_no_check.create(
+                    {
+                        'move_id': new_move.id,
+                        'account_id': acct_acct_bank_credit.id,
+                        'debit': 0,
+                        'credit': expenses_amount,
+                    }
+                )
 
                 # Spese bancarie
                 # expenses_account_line =
 
-                move_line_model.create({
-                    'move_id': new_move.id,
-                    'account_id': acct_acct_expe.id,
-                    'debit': expenses_amount,
-                    'credit': 0
-                })
+                move_line_model.create(
+                    {
+                        'move_id': new_move.id,
+                        'account_id': acct_acct_expe.id,
+                        'debit': expenses_amount,
+                        'credit': 0,
+                    }
+                )
             # end if
         # end if
 
@@ -228,18 +234,20 @@ class AccountMoveLine(models.Model):
             # New move line for the client
             my_invoice = move_line.invoice_id
 
-            insoluto_move_line = move_line_model_no_check.create({
-                'move_id': new_move.id,
-                'account_id': acct_acct_partner.id,
-                'partner_id': pol_partner.id,
-                'debit': move_line.debit + expenses_charged,
-                'credit': 0,
-                'name': str(
-                    f'Scadenza {move_line.date_maturity}'
-                    ' - '
-                    f'Fattura {my_invoice.name or "N/A"}'
-                ),
-            })
+            insoluto_move_line = move_line_model_no_check.create(
+                {
+                    'move_id': new_move.id,
+                    'account_id': acct_acct_partner.id,
+                    'partner_id': pol_partner.id,
+                    'debit': move_line.debit + expenses_charged,
+                    'credit': 0,
+                    'name': str(
+                        f'Scadenza {move_line.date_maturity}'
+                        ' - '
+                        f'Fattura {my_invoice.name or "N/A"}'
+                    ),
+                }
+            )
 
             # - - - - - - - - - - - - - - - - - - - - - - - -
             # Modify invoices reconciliation if needed
@@ -247,7 +255,9 @@ class AccountMoveLine(models.Model):
             if new_reconcile_needed:
 
                 # Ottenimento riga riconciliata con move_line
-                reconcile_line_list = move_line.full_reconcile_id.reconciled_line_ids
+                reconcile_line_list = (
+                    move_line.full_reconcile_id.reconciled_line_ids
+                )
 
                 if reconcile_line_list[0].id != move_line.id:
                     reconcile_line = reconcile_line_list[0]
@@ -269,20 +279,22 @@ class AccountMoveLine(models.Model):
         # Totale in Banca c/c
         # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         registered_expenses_amount = round(
-            sum(charge_client_for),
-            float_precision
+            sum(charge_client_for), float_precision
         )
 
         # This time let's use the "normal" account.move.line model so the
         # program can automatically verify the account.move is balanced
-        move_line_model.create({
-            'move_id': new_move.id,
-            'account_id': acct_acct_bank_credit.id,
-            'debit': 0,
-            'credit': amount_insoluti + registered_expenses_amount,
-        })
+        move_line_model.create(
+            {
+                'move_id': new_move.id,
+                'account_id': acct_acct_bank_credit.id,
+                'debit': 0,
+                'credit': amount_insoluti + registered_expenses_amount,
+            }
+        )
+
     # end registra_insoluto_standard
-    
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # PAYMENT CONFIRM
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -305,12 +317,14 @@ class AccountMoveLine(models.Model):
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': self.env.ref(
-                'account_banking_common.wizard_payment_order_confirm').id,
+                'account_banking_common.wizard_payment_order_confirm'
+            ).id,
             'target': 'new',
             'res_id': False,
             'context': {'active_ids': self._context['active_ids']},
-            "binding_model_id": "account.model_account_move_line"
+            "binding_model_id": "account.model_account_move_line",
         }
+
     # end validate_payment_confirm
 
     @api.multi
@@ -323,14 +337,16 @@ class AccountMoveLine(models.Model):
             f'Procedura di registrazione d\'incasso non definita '
             f'per il metodo di pagamento {p_method.name}'
         )
+
     # end registra_incasso
-    
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Metodi di utilità
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     @api.multi
     def get_payment_method(self):
         return validate_selection.same_payment_method(self)
+
     # end get_payment_method_code
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -354,23 +370,28 @@ class AccountMoveLine(models.Model):
         if payment_method:
             if payment_method.code == 'invoice_financing':
                 banks = defaultdict(lambda: {'count': 0, 'name': None})
-                msg = 'ATTENZIONE!\nSono state selezionate righe di scadenze' \
-                      ' che non hanno lo stesso conto per ' \
-                      'la banca aziendale.\n\n '
+                msg = (
+                    'ATTENZIONE!\nSono state selezionate righe di scadenze'
+                    ' che non hanno lo stesso conto per '
+                    'la banca aziendale.\n\n '
+                )
 
                 for line in lines:
                     if line.move_id.company_bank_id.id:
                         invoice_bank_id = line.move_id.company_bank_id.id
-                        invoice_bank_name = line.move_id.company_bank_id.bank_name
+                        invoice_bank_name = (
+                            line.move_id.company_bank_id.bank_name
+                        )
 
                         banks[invoice_bank_id]['count'] += 1
                         banks[invoice_bank_id]['name'] = invoice_bank_name
                     else:
                         fattura = line.stored_invoice_id.number
-                        raise UserError('ATTENZIONE!\nConto bancario aziendale '
-                                        'nella testata di registrazione '
-                                        '{fattura} non impostato.'.format(
-                                            fattura=fattura))
+                        raise UserError(
+                            'ATTENZIONE!\nConto bancario aziendale '
+                            'nella testata di registrazione '
+                            '{fattura} non impostato.'.format(fattura=fattura)
+                        )
                     # end if
 
                 # end for
@@ -384,9 +405,7 @@ class AccountMoveLine(models.Model):
 
         # Open the wizard
         model = 'account_banking_common'
-        wiz_view = self.env.ref(
-            model + '.wizard_account_payment_generate'
-        )
+        wiz_view = self.env.ref(model + '.wizard_account_payment_generate')
         return {
             'type': 'ir.actions.act_window',
             'name': 'Genera Distinta',
@@ -411,7 +430,8 @@ class AccountMoveLine(models.Model):
 
         # Retrieve the records
         lines = self.env['account.move.line'].browse(
-            self._context['active_ids'])
+            self._context['active_ids']
+        )
 
         # Perform validations
         payment_method = False
@@ -423,21 +443,27 @@ class AccountMoveLine(models.Model):
         if payment_method:
             if payment_method.code == 'invoice_financing':
                 banks = defaultdict(lambda: {'count': 0, 'name': None})
-                msg = 'ATTENZIONE!\nSono state selezionate righe di fatture' \
-                      ' che non hanno la stessa banca.\n\n '
+                msg = (
+                    'ATTENZIONE!\nSono state selezionate righe di fatture'
+                    ' che non hanno la stessa banca.\n\n '
+                )
 
                 for line in lines:
                     if line.move_id.company_bank_id.id:
                         invoice_bank_id = line.move_id.company_bank_id.id
-                        invoice_bank_name = line.move_id.company_bank_id.bank_name
+                        invoice_bank_name = (
+                            line.move_id.company_bank_id.bank_name
+                        )
 
                         banks[invoice_bank_id]['count'] += 1
                         banks[invoice_bank_id]['name'] = invoice_bank_name
                     else:
                         fattura = line.stored_invoice_id.number
-                        raise UserError('ATTENZIONE!\nConto bancario aziendale '
-                                        'nella fattura {fattura} non '
-                                        'impostato.'.format(fattura=fattura))
+                        raise UserError(
+                            'ATTENZIONE!\nConto bancario aziendale '
+                            'nella fattura {fattura} non '
+                            'impostato.'.format(fattura=fattura)
+                        )
                     # end if
 
                 # end for
@@ -466,6 +492,7 @@ class AccountMoveLine(models.Model):
             'binding_model_id': model + '.model_account_move_line',
             'context': {'active_ids': self._context['active_ids']},
         }
+
     # end open_wizard_payment_order_generate
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -477,7 +504,8 @@ class AccountMoveLine(models.Model):
         busy_lines = []
         # Retrieve the records
         lines = self.env['account.move.line'].browse(
-            self._context['active_ids'])
+            self._context['active_ids']
+        )
 
         if len(lines) > 0:
             for line in lines:
@@ -487,14 +515,17 @@ class AccountMoveLine(models.Model):
 
             error_busy = len(busy_lines) > 0
             if error_busy:
-                msg = 'ATTENZIONE!\nLe seguenti righe ' \
-                      'sono già parte di una distinta:\n\n - '
+                msg = (
+                    'ATTENZIONE!\nLe seguenti righe '
+                    'sono già parte di una distinta:\n\n - '
+                )
 
                 msg += '\n - '.join(
                     map(
-                        lambda x: x.invoice_id.number + '    ' + str(
-                            x.date_maturity),
-                        busy_lines
+                        lambda x: x.invoice_id.number
+                        + '    '
+                        + str(x.date_maturity),
+                        busy_lines,
                     )
                 )
                 raise UserError(msg)
@@ -502,9 +533,7 @@ class AccountMoveLine(models.Model):
 
         # Open the wizard
         model = 'account_banking_common'
-        wiz_view = self.env.ref(
-            model + '.wizard_set_payment_method'
-        )
+        wiz_view = self.env.ref(model + '.wizard_set_payment_method')
         return {
             'type': 'ir.actions.act_window',
             'name': 'Aggiorna metodi di pagamento',
@@ -519,4 +548,3 @@ class AccountMoveLine(models.Model):
         }
 
     # end open_wizard_set_payment_method
-
