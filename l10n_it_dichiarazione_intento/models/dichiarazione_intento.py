@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from datetime import datetime
+import datetime as dt
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
@@ -15,8 +16,18 @@ class DichiarazioneIntentoYearlyLimit(models.Model):
 
     company_id = fields.Many2one('res.company', string='Company')
     year = fields.Char(required=True)
-    limit_amount = fields.Float()
-    used_amount = fields.Float(compute='_compute_used_amount')
+    limit_amount = fields.Float(
+        string='Plafond'
+    )
+    # TODO align terms: used_amount > issued_declarations
+    used_amount = fields.Float(
+        string='Issued Declarations',
+        compute='_compute_used_amount'
+    )
+    actual_used_amount = fields.Float(
+        string='Actual Used Amount',
+        compute='_compute_used_amount'
+    )
 
     @api.multi
     def _compute_used_amount(self):
@@ -30,6 +41,7 @@ class DichiarazioneIntentoYearlyLimit(models.Model):
                 ('date_end', '<=', date_end),
                 ('type', '=', 'in'), ])
             record.used_amount = sum([d.limit_amount for d in dichiarazioni])
+            record.actual_used_amount = sum([d.used_amount for d in dichiarazioni])
 
 
 class DichiarazioneIntento(models.Model):
@@ -53,10 +65,10 @@ class DichiarazioneIntento(models.Model):
                                  required=True)
     telematic_protocol = fields.Char(required=True)
     partner_document_number = fields.Char(
-        required=True, string='Document Number',
+        string='Document Number',
         help='Number of partner\'s document')
     partner_document_date = fields.Date(
-        required=True, string='Document Date',
+        string='Document Date',
         help='Date of partner\'s document')
     taxes_ids = fields.Many2many('account.tax', string='Taxes',
                                  required=True)
@@ -81,8 +93,11 @@ class DichiarazioneIntento(models.Model):
         #       to create an in declaration
         # Declaration issued by company are "IN"
         if values.get('type', False) == 'in':
-            year = datetime.strptime(
-                values['date_start'], '%Y-%m-%d').strftime('%Y')
+            if isinstance(values['date_start'], dt.date):
+                year = str(values['date_start'].year)
+            else:
+                year = datetime.strptime(
+                    values['date_start'], '%Y-%m-%d').strftime('%Y')
             plafond = self.env.user.company_id.\
                 dichiarazione_yearly_limit_ids.filtered(
                     lambda r: r.year == year)
@@ -102,7 +117,7 @@ class DichiarazioneIntento(models.Model):
                 ])
             actual_limit_total = sum([d.limit_amount for d in dichiarazioni]) \
                 + values['limit_amount']
-            if actual_limit_total > plafond.limit_amount:
+            if actual_limit_total > plafond.limit_amount < plafond.actual_used_amount:
                 raise UserError(
                     _('Total of documents exceed yearly limit'))
         # ----- Assign a number to dichiarazione
