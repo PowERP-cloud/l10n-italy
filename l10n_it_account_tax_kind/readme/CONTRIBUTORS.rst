@@ -2,3 +2,4 @@
 * Lorenzo Battistini <lorenzo.battistini@agilebg.com>
 * Alex Comba <alex.comba@agilebg.com>
 * Gianmarco Conte <gconte@dinamicheaziendali.it>
+* Antonio Maria Vigliotti <antoniomaria.vigliotti@gmail.com>

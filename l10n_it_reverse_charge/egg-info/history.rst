@@ -1,3 +1,8 @@
+12.0.1.2.7_37 (2022-01-07)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Impostato tipo documento per l'autofattura da posizione fiscale
+
 12.0.1.2.7_36 (2021-12-30)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

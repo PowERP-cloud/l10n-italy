@@ -42,3 +42,9 @@ class AccountFiscalPosition(models.Model):
         default='',
     )
 
+    rc_fiscal_document_type_id = fields.Many2one(
+        'fiscal.document.type',
+        string="Self Invoice Fiscal Document Type",
+        )
+
+
