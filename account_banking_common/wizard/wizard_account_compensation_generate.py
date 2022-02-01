@@ -15,6 +15,9 @@ class AccountCompensationGenerate(models.TransientModel):
     def _set_same_account(self):
         return self._context['same_account']
 
+    def _set_compensation_amount(self):
+        return self._compute_compensation_amount()
+
     journal_id = fields.Many2one(
         'account.journal',
         string='Journal',
@@ -26,6 +29,7 @@ class AccountCompensationGenerate(models.TransientModel):
 
     compensation_amount = fields.Float(
         string='Importo di compensazione',
+        default=_set_compensation_amount,
     )
 
     same_account = fields.Boolean(
@@ -47,22 +51,10 @@ class AccountCompensationGenerate(models.TransientModel):
             lines.reconcile()
         else:
 
-            debit_amount = 0
-            credit_amount = 0
+            compensation_amount = self._compute_compensation_amount()
+            comp_sign = self._compute_compensation_sign()
 
-            for line in lines:
-                debit_amount += line.debit
-                credit_amount += line.credit
-
-            if debit_amount > credit_amount:
-                compensation_base = credit_amount
-                comp_unit = 'credit'
-            elif credit_amount > debit_amount:
-                compensation_base = debit_amount
-                comp_unit = 'debit'
-            else:
-                compensation_base = credit_amount
-                comp_unit = 'credit'
+            # Creazione registrazione contabile
 
             vals = self.env['account.move'].default_get([
                 'date_effective',
@@ -82,45 +74,167 @@ class AccountCompensationGenerate(models.TransientModel):
                 'ref': "Compensazione ",
                 'state': 'draft',
             })
-            # Creazione registrazione contabile
 
             move_id = self.env['account.move'].create(vals)
 
-            totally_compensate = dict()
+            # scadenze totalmente compensate
+            totally_compensate = self._totally_compensate_lines(
+                lines, comp_sign, move_id)
 
-            if comp_unit == 'credit':
-                tot_compensate_lines = lines.filtered(
-                    lambda x: x.credit > 0
-                )
-                tot_compensate_left = lines.filtered(
-                    lambda x: x.debit > 0
-                )
+            # scadenze da compensare anche parzialmente
+            if compensation_amount:
+                partial_compensate = self._partial_compensate_lines(comp_sign)
             else:
-                tot_compensate_lines = lines.filtered(
-                    lambda x: x.debit > 0
-                )
-                tot_compensate_left = lines.filtered(
-                    lambda x: x.credit > 0
-                )
+                partial_compensate = dict()
 
-            for line in tot_compensate_lines:
+            # movimenti della registrazione da memorizzare,
+            # accoppiare e riconciliare
+            move_line_model_no_check = \
+                self.env['account.move.line'].with_context(
+                    check_move_validity=False)
+
+            to_reconcile_full = self.env['account.move.line']
+            if totally_compensate:
+                for index, vals in totally_compensate.items():
+                    mvl = move_line_model_no_check.create(vals)
+                    to_reconcile_full += mvl
+                    to_rec = self.env['account.move.line'].browse(index)
+                    to_reconcile_full += to_rec
+                # end for
+            # end if
+
+            to_reconcile_partial = self.env['account.move.line']
+            if partial_compensate:
+                for index, vals in partial_compensate.items():
+                    mvl = move_line_model_no_check.create(vals)
+                    to_reconcile_partial += mvl
+                    to_rec = self.env['account.move.line'].browse(index)
+                    to_reconcile_partial += to_rec
+                # end for
+            # end if
+            # validate move
+            move_id.post()
+
+            # reconciliations
+            if to_reconcile_full:
+                to_reconcile_full.reconcile()
+
+            if to_reconcile_partial:
+                to_reconcile_partial.reconcile()
+            # end if
+        # end if
+
+    def _compute_compensation_amount(self):
+        total_debit_amount, total_credit_amount = \
+            self._compute_totals_debit_credit()
+
+        if total_debit_amount > total_credit_amount:
+            compensation_amount = total_credit_amount
+        elif total_credit_amount > total_debit_amount:
+            compensation_amount = total_debit_amount
+        else:
+            compensation_amount = total_debit_amount
+
+        return compensation_amount
+
+    def _compute_compensation_sign(self):
+        total_debit_amount, total_credit_amount = \
+            self._compute_totals_debit_credit()
+
+        if total_debit_amount > total_credit_amount:
+            sign = 'credit'
+        elif total_credit_amount > total_debit_amount:
+            sign = 'debit'
+        else:
+            sign = 'debit'
+
+        return sign
+
+    def _compute_totals_debit_credit(self):
+        lines = self.env['account.move.line'].browse(
+            self._context['active_ids']
+        )
+        total_debit_amount = 0
+        total_credit_amount = 0
+
+        for line in lines:
+            total_debit_amount += line.debit
+            total_credit_amount += line.credit
+
+        return total_debit_amount, total_credit_amount
+
+    def _totally_compensate_lines(self, lines, sign, move):
+
+        totally_compensate = dict()
+
+        if sign == 'credit':
+            tot_compensate_lines = lines.filtered(
+                lambda x: x.credit > 0
+            )
+        else:
+            tot_compensate_lines = lines.filtered(
+                lambda x: x.debit > 0
+            )
+
+        for line in tot_compensate_lines:
+            v = {
+                'partner_id': line.partner_id.id,
+                'account_id': line.account_id.id,
+                'debit': line.credit if sign == 'credit' else 0,
+                'credit': line.debit if sign == 'debit' else 0,
+                'move_id': move.id,
+            }
+            totally_compensate.update({
+                line.id: v
+            })
+        return totally_compensate
+
+    def _partial_compensate_lines(self, sign, lines, amount, move):
+
+        partial_compensate = dict()
+        left = amount
+        if sign == 'credit':
+            compensate_lines = lines.filtered(
+                lambda x: x.credit > 0
+            )
+        else:
+            compensate_lines = lines.filtered(
+                lambda x: x.debit > 0
+            )
+        # end if
+
+        for line in compensate_lines:
+
+            if sign == 'credit':
+                amount = line.credit
+            else:
+                amount = line.debit
+
+            if amount <= left:
                 v = {
                     'partner_id': line.partner_id.id,
                     'account_id': line.account_id.id,
-                    'debit': line.credit if comp_unit == 'credit' else 0,
-                    'credit': line.debit if comp_unit == 'debit' else 0,
-                    'move_id': move_id.id,
+                    'debit': line.debit if sign == 'credit' else 0,
+                    'credit': line.credit if sign == 'debit' else 0,
+                    'move_id': move.id,
                 }
-                totally_compensate.update({
+                partial_compensate.update({
                     line.id: v
                 })
-
-            for line in tot_compensate_left:
-                pass
-
-            # move_line_model_no_check = self.env['account.move.line'].with_context(
-            #     check_move_validity=False
-            # )
-
-        # end if
+                left -= amount
+            else:
+                v = {
+                    'partner_id': line.partner_id.id,
+                    'account_id': line.account_id.id,
+                    'debit': left if sign == 'credit' else 0,
+                    'credit': left if sign == 'debit' else 0,
+                    'move_id': move.id,
+                }
+                partial_compensate.update({
+                    line.id: v
+                })
+                break
+            # end if
+        # end for
+        return partial_compensate
 

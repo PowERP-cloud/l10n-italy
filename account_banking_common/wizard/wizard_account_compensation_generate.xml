@@ -6,6 +6,7 @@
         <field name="arch" type="xml">
             <form string="Compensazioni">
                 <group>
+                    <field name="same_account" invisible="1" />
                     <field
                         name="journal_id"
                         attrs="{'required': [('same_account', '=', False)], 'invisible': [('same_account', '=', True)]}"

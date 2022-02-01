@@ -560,10 +560,12 @@ class AccountMoveLine(models.Model):
             self._context['active_ids']
         )
 
+        # at least 2 records
         if len(lines) < 2:
             raise UserError('Per la compensazione selezionare almeno '
                             'due scadenze.')
 
+        # free duedates
         busy_lines = list()
         if len(lines) > 0:
             for line in lines:
@@ -588,6 +590,7 @@ class AccountMoveLine(models.Model):
                 )
                 raise UserError(msg)
 
+        # not reconciled duedates
         recon_lines = list()
         if len(lines) > 0:
             for line in lines:
@@ -612,7 +615,7 @@ class AccountMoveLine(models.Model):
                 )
                 raise UserError(msg)
 
-        # stesso partner
+        # same partner
         partners = list()
         accounts = list()
         debit_amount = 0
@@ -637,13 +640,13 @@ class AccountMoveLine(models.Model):
             # end if
             debit_amount += line.debit
             credit_amount += line.credit
-
         # end for
 
         if len(partners) > 1:
             raise UserError('Per la compensazione le scadenze devono avere '
                             'lo stesso partner.')
 
+        # difference between credit and debit
         if debit_amount == 0 or credit_amount == 0:
             raise UserError('Non sono state selezonate partite di storno!')
 
