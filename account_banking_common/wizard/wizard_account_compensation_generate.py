@@ -53,7 +53,7 @@ class AccountCompensationGenerate(models.TransientModel):
 
             compensation_amount = self._compute_compensation_amount()
             comp_sign = self._compute_compensation_sign()
-
+            to_reconcile = dict()
             # Creazione registrazione contabile
 
             vals = self.env['account.move'].default_get([
@@ -83,7 +83,8 @@ class AccountCompensationGenerate(models.TransientModel):
 
             # scadenze da compensare anche parzialmente
             if compensation_amount:
-                partial_compensate = self._partial_compensate_lines(comp_sign)
+                partial_compensate = self._partial_compensate_lines(
+                    comp_sign, lines, compensation_amount, move_id)
             else:
                 partial_compensate = dict()
 
@@ -97,9 +98,9 @@ class AccountCompensationGenerate(models.TransientModel):
             if totally_compensate:
                 for index, vals in totally_compensate.items():
                     mvl = move_line_model_no_check.create(vals)
-                    to_reconcile_full += mvl
-                    to_rec = self.env['account.move.line'].browse(index)
-                    to_reconcile_full += to_rec
+                    to_reconcile.update({
+                        index: mvl.id
+                    })
                 # end for
             # end if
 
@@ -107,22 +108,26 @@ class AccountCompensationGenerate(models.TransientModel):
             if partial_compensate:
                 for index, vals in partial_compensate.items():
                     mvl = move_line_model_no_check.create(vals)
-                    to_reconcile_partial += mvl
-                    to_rec = self.env['account.move.line'].browse(index)
-                    to_reconcile_partial += to_rec
+                    to_reconcile.update({
+                        index: mvl.id
+                    })
                 # end for
             # end if
             # validate move
             move_id.post()
 
             # reconciliations
-            if to_reconcile_full:
-                to_reconcile_full.reconcile()
-
-            if to_reconcile_partial:
-                to_reconcile_partial.reconcile()
-            # end if
-        # end if
+            if to_reconcile:
+                for index, index_to_rec in to_reconcile.items():
+                    to_reconcile_partial = self.env['account.move.line']
+                    mvl = self.env['account.move.line'].browse(index)
+                    to_reconcile_partial += mvl
+                    mvl_to_rec = self.env['account.move.line'].browse(
+                        index_to_rec)
+                    to_reconcile_partial += mvl_to_rec
+                    to_reconcile_partial.reconcile()
+                # end for
+        # # end if
 
     def _compute_compensation_amount(self):
         total_debit_amount, total_credit_amount = \
@@ -195,27 +200,27 @@ class AccountCompensationGenerate(models.TransientModel):
         left = amount
         if sign == 'credit':
             compensate_lines = lines.filtered(
-                lambda x: x.credit > 0
+                lambda x: x.debit > 0
             )
         else:
             compensate_lines = lines.filtered(
-                lambda x: x.debit > 0
+                lambda x: x.credit > 0
             )
         # end if
 
         for line in compensate_lines:
 
             if sign == 'credit':
-                amount = line.credit
-            else:
                 amount = line.debit
+            else:
+                amount = line.credit
 
             if amount <= left:
                 v = {
                     'partner_id': line.partner_id.id,
                     'account_id': line.account_id.id,
-                    'debit': line.debit if sign == 'credit' else 0,
-                    'credit': line.credit if sign == 'debit' else 0,
+                    'debit': amount if sign == 'debit' else 0,
+                    'credit': amount if sign == 'credit' else 0,
                     'move_id': move.id,
                 }
                 partial_compensate.update({
@@ -226,8 +231,8 @@ class AccountCompensationGenerate(models.TransientModel):
                 v = {
                     'partner_id': line.partner_id.id,
                     'account_id': line.account_id.id,
-                    'debit': left if sign == 'credit' else 0,
-                    'credit': left if sign == 'debit' else 0,
+                    'debit': left if sign == 'debit' else 0,
+                    'credit': left if sign == 'credit' else 0,
                     'move_id': move.id,
                 }
                 partial_compensate.update({
