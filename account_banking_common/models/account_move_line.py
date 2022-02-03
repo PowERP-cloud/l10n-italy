@@ -670,14 +670,14 @@ class AccountMoveLine(models.Model):
             'context': ctx,
         }
 
-    # end open_wizard_set_payment_method
+    # end open_wizard_duedate_compensate
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # PAYMENT REGISTER
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     #
     @api.multi
-    def open_wizard_payment_register(self):
+    def open_wizard_register_payment(self):
         # Retrieve the records
         lines = self.env['account.move.line'].browse(
             self._context['active_ids']
@@ -733,60 +733,75 @@ class AccountMoveLine(models.Model):
                 )
                 raise UserError(msg)
 
+        # same company bank account
+        bank_lines = list()
+        bank_ids = list()
+        if len(lines) > 0:
+            for line in lines:
+                # Detect lines already reconciled
+                if line.company_bank_id.id:
+                    if line.company_bank_id.id not in bank_ids:
+                        bank_ids.append(line.company_bank_id.id)
+                        bank_lines.append(line)
 
-        # same partner
-        partners = list()
-        accounts = list()
-        debit_amount = 0
-        credit_amount = 0
+            error_bank = len(bank_ids) > 1
+            if error_bank:
+                msg = (
+                    'ATTENZIONE!\nLe seguenti scadenze '
+                    'hanno conti bancari diversi:\n\n - '
+                )
 
-        for line in lines:
-            if line.partner_id:
-                if line.partner_id.id not in partners:
-                    partners.append(line.partner_id.id)
+                msg += '\n - '.join(
+                    map(
+                        lambda x: x.invoice_id.number
+                                  + '    '
+                                  + str(x.date_maturity),
+                        bank_lines,
+                    )
+                )
+                raise UserError(msg)
+
+        bank_lines = list()
+        if len(lines) > 0:
+            for line in lines:
+                # Detect lines already reconciled
+                if line.company_bank_id:
+                    if line.company_bank_id.bank_is_wallet is True:
+                        bank_lines.append(line)
+                    # end if
                 # end if
-            # end if
+            # end for
+            error_bank = len(bank_lines) > 0
+            if error_bank:
+                msg = (
+                    'ATTENZIONE!\nLe seguenti scadenze '
+                    'anno conti bancari di portafoglio:\n\n - '
+                )
 
-            if line.account_id:
-                if line.account_id.id not in accounts:
-                    accounts.append(line.account_id.id)
-
-                if line.account_id.user_type_id.type not in ('payable',
-                                                             'receivable'):
-                    raise UserError('Sono compensabili solo i conti di '
-                                    'debito/credito!')
-                # end if
-            # end if
-            debit_amount += line.debit
-            credit_amount += line.credit
-        # end for
-
-        if len(partners) > 1:
-            raise UserError('Per la compensazione le scadenze devono avere '
-                            'lo stesso partner.')
-
-        # difference between credit and debit
-        if debit_amount == 0 or credit_amount == 0:
-            raise UserError('Non sono state selezonate partite di storno!')
-
-        ctx = dict()
-        ctx['active_ids'] = self._context['active_ids']
-        ctx['same_account'] = True if len(accounts) < 2 else False
+                msg += '\n - '.join(
+                    map(
+                        lambda x: x.invoice_id.number
+                                  + '    '
+                                  + str(x.date_maturity),
+                        bank_lines,
+                    )
+                )
+                raise UserError(msg)
 
         # Open the wizard
         model = 'account_banking_common'
-        wiz_view = self.env.ref(model + '.wizard_account_compensation_generate')
+        wiz_view = self.env.ref(model + '.wizard_account_register_payment')
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Compensazione',
-            'res_model': 'wizard.account.compensation.generate',
+            'name': 'Registra pagamento',
+            'res_model': 'wizard.account.register.payment',
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': wiz_view.id,
             'target': 'new',
             'res_id': False,
             'binding_model_id': model + '.model_account_move_line',
-            'context': ctx,
+            'context': {'active_ids': self._context['active_ids']},
         }
 
-    # end open_wizard_set_payment_method
+    # end open_wizard_register_payment
