@@ -670,5 +670,138 @@ class AccountMoveLine(models.Model):
             'context': ctx,
         }
 
-    # end open_wizard_set_payment_method
+    # end open_wizard_duedate_compensate
 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # PAYMENT REGISTER
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    #
+    @api.multi
+    def open_wizard_register_payment(self):
+        # Retrieve the records
+        lines = self.env['account.move.line'].browse(
+            self._context['active_ids']
+        )
+
+        # free duedates
+        busy_lines = list()
+        if len(lines) > 0:
+            for line in lines:
+                # Detect lines already assigned to a payment order
+                if line.payment_line_ids:
+                    busy_lines.append(line)
+
+            error_busy = len(busy_lines) > 0
+            if error_busy:
+                msg = (
+                    'ATTENZIONE!\nLe seguenti scadenze '
+                    'sono già parte di una distinta:\n\n - '
+                )
+
+                msg += '\n - '.join(
+                    map(
+                        lambda x: x.invoice_id.number
+                                  + '    '
+                                  + str(x.date_maturity),
+                        busy_lines,
+                    )
+                )
+                raise UserError(msg)
+
+        # not reconciled duedates
+        recon_lines = list()
+        if len(lines) > 0:
+            for line in lines:
+                # Detect lines already reconciled
+                if line.reconciled:
+                    recon_lines.append(line)
+
+            error_recon = len(recon_lines) > 0
+            if error_recon:
+                msg = (
+                    'ATTENZIONE!\nLe seguenti scadenze '
+                    'sono state riconciliate:\n\n - '
+                )
+
+                msg += '\n - '.join(
+                    map(
+                        lambda x: x.invoice_id.number
+                                  + '    '
+                                  + str(x.date_maturity),
+                        recon_lines,
+                    )
+                )
+                raise UserError(msg)
+
+        # same company bank account
+        bank_lines = list()
+        bank_ids = list()
+        if len(lines) > 0:
+            for line in lines:
+                # Detect lines already reconciled
+                if line.company_bank_id.id:
+                    if line.company_bank_id.id not in bank_ids:
+                        bank_ids.append(line.company_bank_id.id)
+                        bank_lines.append(line)
+
+            error_bank = len(bank_ids) > 1
+            if error_bank:
+                msg = (
+                    'ATTENZIONE!\nLe seguenti scadenze '
+                    'hanno conti bancari diversi:\n\n - '
+                )
+
+                msg += '\n - '.join(
+                    map(
+                        lambda x: x.invoice_id.number
+                                  + '    '
+                                  + str(x.date_maturity),
+                        bank_lines,
+                    )
+                )
+                raise UserError(msg)
+
+        bank_lines = list()
+        if len(lines) > 0:
+            for line in lines:
+                # Detect lines already reconciled
+                if line.company_bank_id.id:
+                    if line.company_bank_id.bank_is_wallet is True:
+                        bank_lines.append(line)
+                    # end if
+                # end if
+            # end for
+            error_bank = len(bank_lines) > 0
+            if error_bank:
+                msg = (
+                    'ATTENZIONE!\nLe seguenti scadenze '
+                    'hanno conti bancari di portafoglio:\n\n - '
+                )
+
+                msg += '\n - '.join(
+                    map(
+                        lambda x: x.invoice_id.number
+                                  + '    '
+                                  + str(x.date_maturity),
+                        bank_lines,
+                    )
+                )
+                raise UserError(msg)
+
+        # Open the wizard
+        model = 'account_banking_common'
+        wiz_view = self.env.ref(model + '.wizard_account_register_payment')
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Registra pagamento',
+            'res_model': 'wizard.account.register.payment',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': wiz_view.id,
+            'target': 'new',
+            'res_id': False,
+            'binding_model_id': model + '.model_account_move_line',
+            'context': {'active_ids': self._context['active_ids']},
+        }
+
+    # end open_wizard_register_payment

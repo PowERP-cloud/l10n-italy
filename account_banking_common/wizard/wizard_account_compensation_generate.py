@@ -20,7 +20,7 @@ class AccountCompensationGenerate(models.TransientModel):
 
     journal_id = fields.Many2one(
         'account.journal',
-        string='Journal',
+        string='Registro',
     )
 
     compensation_date = fields.Date(
