@@ -739,9 +739,9 @@ class AccountMoveLine(models.Model):
         if len(lines) > 0:
             for line in lines:
                 # Detect lines already reconciled
-                if line.journal_id.id:
-                    if line.journal_id.id not in bank_ids:
-                        bank_ids.append(line.journal_id.id)
+                if line.company_bank_id.id:
+                    if line.company_bank_id.id not in bank_ids:
+                        bank_ids.append(line.company_bank_id.id)
                         bank_lines.append(line)
 
             error_bank = len(bank_ids) > 1
@@ -765,8 +765,8 @@ class AccountMoveLine(models.Model):
         if len(lines) > 0:
             for line in lines:
                 # Detect lines already reconciled
-                if line.journal_id.id:
-                    if line.journal_id.is_wallet is True:
+                if line.company_bank_id.id:
+                    if line.company_bank_id.bank_is_wallet is True:
                         bank_lines.append(line)
                     # end if
                 # end if

@@ -35,8 +35,8 @@ class AccountRegisterPayment(models.TransientModel):
         )
         for line in lines:
             # Detect lines already reconciled
-            if line.journal_id.id:
-                bank_account = line.journal_id
+            if line.company_bank_id.id:
+                bank_account = line.company_bank_id.journal_id
                 break
         return bank_account
 
@@ -45,6 +45,8 @@ class AccountRegisterPayment(models.TransientModel):
         if not self.journal_id.default_debit_account_id:
             raise UserError("Conto bancario dare di default nel registro "
                             "non impostato.")
+
+        to_reconcile = dict()
 
         lines = self.env['account.move.line'].browse(
             self._context['active_ids']
@@ -86,7 +88,11 @@ class AccountRegisterPayment(models.TransientModel):
                 'credit': line.debit,
                 'debit': 0
             }
-            move_line_model_no_check.create(conto_dare)
+            new_line = move_line_model_no_check.create(conto_dare)
+            if line.account_id.id not in to_reconcile:
+                to_reconcile[line.account_id.id] = self.env['account.move.line']
+            to_reconcile[line.account_id.id] += new_line
+
         # end for
 
         conto_avere = {
@@ -99,3 +105,7 @@ class AccountRegisterPayment(models.TransientModel):
 
         move_id.post()
 
+        for index, news in to_reconcile.items():
+            from_lines = lines.filtered(lambda x: x.account_id.id == index)
+            from_lines += news
+            from_lines.reconcile()
