@@ -14,8 +14,6 @@
                         name="registration_date"
                         readonly="1"
                     />
-                    <field name="bank_account"
-                           readonly="1"/>
                 </group>
 
                 <footer>

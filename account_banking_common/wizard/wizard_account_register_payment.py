@@ -13,24 +13,14 @@ class AccountRegisterPayment(models.TransientModel):
     _name = 'wizard.account.register.payment'
     _description = 'Register payment from duedates tree view'
 
-    def _set_account(self):
-        bank_account = self._get_bank_account()
-        return bank_account.id
-
     def _set_sezionale(self):
         bank_account = self._get_bank_account()
-        return bank_account.journal_id.id
+        return bank_account.id
 
     journal_id = fields.Many2one(
         'account.journal',
         string='Registro',
         default=_set_sezionale,
-    )
-
-    bank_account = fields.Many2one(
-        'res.partner.bank',
-        string='Conto bancario',
-        default=_set_account,
     )
 
     registration_date = fields.Date(
@@ -45,8 +35,9 @@ class AccountRegisterPayment(models.TransientModel):
         )
         for line in lines:
             # Detect lines already reconciled
-            if line.company_bank_id.id:
-                bank_account = line.company_bank_id
+            if line.journal_id.id:
+                bank_account = line.journal_id
+                break
         return bank_account
 
     def register(self):
