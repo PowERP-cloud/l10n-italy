@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.26
+|icon| Account Banking Common 12.0.3.7.29
 =========================================
 
 
@@ -152,6 +152,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.29 (2022-02-04)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostato funzionalità registra pagamenti
+
 12.0.3.7.26 (2022-01-27)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -206,11 +211,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Fix ricerca ordini in aggiungi a distinta
-
-12.0.3.7.15 (2021-11-30)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Impostato formattazione conto solo per tipo iban
 
 
 
@@ -283,7 +283,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-01-27
+Last Update / Ultimo aggiornamento: 2022-02-04
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

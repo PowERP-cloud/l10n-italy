@@ -13,8 +13,6 @@ class TestDichiarazioneIntento(TransactionCase):
     def _create_dichiarazione(self, partner, type_d):
         return self.env['dichiarazione.intento'].sudo().create({
             'partner_id': partner.id,
-            'partner_document_number': 'PartnerTest%s' % partner.id,
-            'partner_document_date': self.today_date.strftime('%Y-%m-%d'),
             'date': self.today_date.strftime('%Y-%m-%d'),
             'date_start': self.today_date.strftime('%Y-%m-%d'),
             'date_end': self.today_date.strftime('%Y-%m-%d'),
@@ -261,3 +259,7 @@ class TestDichiarazioneIntento(TransactionCase):
         self.invoice5.action_invoice_open()
         post_used_amount = self.dichiarazione4.used_amount
         self.assertAlmostEqual(post_used_amount, 900.0, 2)
+
+    def test_copy_dichiarazione_in(self):
+        dichiarazione_copy = self.dichiarazione4.copy()
+        self.assertTrue(dichiarazione_copy)
