@@ -1,5 +1,6 @@
 # Author(s): Silvio Gregorini (silviogregorini@openforce.it)
 # Copyright 2019 Openforce Srls Unipersonale (www.openforce.it)
+# Copyright 2021-22 powERP enterprise network <https://www.powerp.it>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import datetime
@@ -286,4 +287,3 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
             return self.do_generate().with_context(depreciated=True)
         else:
             return self.do_generate()
-

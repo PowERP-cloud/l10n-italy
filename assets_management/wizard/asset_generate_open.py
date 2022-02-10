@@ -1,7 +1,9 @@
-# Author(s): Silvio Gregorini (silviogregorini@openforce.it)
-# Copyright 2019 Openforce Srls Unipersonale (www.openforce.it)
-# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
-
+# Copyright 2021-22 powERP enterprise network <https://www.powerp.it>
+# Copyright 2021-22 Didotech s.r.l. <https://www.didotech.com>
+# Copyright 2021-22 SHS-AV s.r.l. <https://www.zeroincombenze.it>
+#
+#    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+#
 from odoo import api, fields, models, _
 
 
@@ -107,4 +109,3 @@ class WizardAssetsGenerateOpen(models.TransientModel):
                 'type': 'ir.actions.client',
                 'tag': 'reload'
             }
-

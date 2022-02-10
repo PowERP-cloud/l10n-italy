@@ -1,6 +1,6 @@
-# Copyright 2021 powERP enterprise network <https://www.powerp.it>
-# Copyright 2020-21 Didotech s.r.l. <https://www.didotech.com>
-# Copyright 2020-21 SHS-AV s.r.l. <https://www.zeroincombenze.it>
+# Copyright 2021-22 powERP enterprise network <https://www.powerp.it>
+# Copyright 2021-22 Didotech s.r.l. <https://www.didotech.com>
+# Copyright 2021-22 SHS-AV s.r.l. <https://www.zeroincombenze.it>
 #
 #    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 #
@@ -30,4 +30,3 @@ class ResCompany(models.Model):
             ('name', '=', 'ad_type_gestionale')
         ])
         return internal_sequence.res_id
-
