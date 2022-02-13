@@ -40,7 +40,7 @@ class AccountMove(models.Model):
     # Naming of 13.0 same as account.invoice.type
     # From 14.0 this field is renamed to move_type
     # TODO> rename to move_type
-    type = fields.Selection(
+    move_type = fields.Selection(
         [
             ('entry', 'Journal Entry'),
             ('out_invoice', 'Customer Invoice'),
@@ -57,6 +57,18 @@ class AccountMove(models.Model):
         default='entry',
         track_visibility='always',
         required=True,
+    )
+    # TODO> remove early
+    type = fields.Selection(
+        [
+            ('entry', 'Journal Entry'),
+            ('out_invoice', 'Customer Invoice'),
+            ('out_refund', 'Customer Credit Note'),
+            ('in_invoice', 'Vendor Bill'),
+            ('in_refund', 'Vendor Credit Note'),
+        ],
+        related='move_type',
+        readonly=True,
     )
     fiscal_position_id = fields.Many2one(
         'account.fiscal.position',
