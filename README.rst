@@ -84,7 +84,7 @@ Avaiable Addons / Moduli disponibili
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
 | account_payment_method               | 12.0.0.2.8 | |no_check| | Extended payment method                                                          |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| account_payment_term_plus            | 12.0.0.1.9 | |no_check| | Adds rounding, months, weeks and multiple payment days properties on payment ter |
+| account_payment_term_plus            | 12.0.0.1.1 | |no_check| | Adds rounding, months, weeks and multiple payment days properties on payment ter |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
 | account_vat_period_end_statement     | 12.0.1.7.0 | 12.0.1.8.0 | Allow to create the 'VAT Statement'.                                             |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
@@ -96,7 +96,7 @@ Avaiable Addons / Moduli disponibili
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
 | enhance_l10n_it_ddt                  | 12.0.0.4.0 | |no_check| |  OCA TD extensions                                                               |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| fiscal_epos_print                    | 12.0.1.3.2 | 12.0.1.3.5 | ePOS-Print XML Fiscal Printer Driver - Stampanti Epson compatibili: FP81II, FP90 |
+| fiscal_epos_print                    | 12.0.1.3.2 | 12.0.1.3.6 | ePOS-Print XML Fiscal Printer Driver - Stampanti Epson compatibili: FP81II, FP90 |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
 | fiscal_epos_print_fiscalcode         | 12.0.1.1.0 | |same|     | Consente di includere il codice fiscale negli scontrini                          |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
@@ -146,7 +146,7 @@ Avaiable Addons / Moduli disponibili
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
 | l10n_it_delivery_note_order_link     | 12.0.1.0.0 | |same|     | Crea collegamento tra i DDT e ordine di vendita                                  |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_dichiarazione_intento        | 12.0.0.1.6 | 12.0.0.1.1 | Gestione dichiarazioni di intento                                                |
+| l10n_it_dichiarazione_intento        | 12.0.0.1.1 | 12.0.0.2.0 | Gestione dichiarazioni di intento                                                |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
 | l10n_it_einvoice_import_zip          | 12.0.1.0.4 | |no_check| | Importazione di file XML di fatture elettroniche da uno ZIP                      |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
@@ -158,7 +158,7 @@ Avaiable Addons / Moduli disponibili
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
 | l10n_it_fatturapa_improved           | 12.0.0.0   | |no_check| | Corrections to official l10n_it_fatturapa                                        |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_fatturapa_in                 | 12.0.2.5.1 | 12.0.2.8.0 | Ricezione fatture elettroniche                                                   |
+| l10n_it_fatturapa_in                 | 12.0.2.5.1 | 12.0.2.8.1 | Ricezione fatture elettroniche                                                   |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
 | l10n_it_fatturapa_in_improved        | 12.0.0.3.1 | |no_check| | Corrections to official l10n_it_fatturapa_in                                     |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
@@ -170,7 +170,7 @@ Avaiable Addons / Moduli disponibili
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
 | l10n_it_fatturapa_out_ddt            | 12.0.1.3.0 | 12.0.1.4.0 | Modulo ponte tra emissione fatture elettroniche e DDT                            |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_fatturapa_out_di             | |no_check| | 12.0.1.0.0 | Dichiarazioni d'intento in fatturapa                                             |
+| l10n_it_fatturapa_out_di             | 12.0.1.0.0 | |same|     | Dichiarazioni d'intento in fatturapa                                             |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
 | l10n_it_fatturapa_out_improved       | 12.0.1.3.3 | |no_check| | Corrections to official l10n_it_fatturapa_out                                    |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
@@ -219,6 +219,8 @@ Avaiable Addons / Moduli disponibili
 | l10n_it_pec                          | 12.0.1.0.1 | |same|     | Aggiunge il campo email PEC al partner                                           |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
 | l10n_it_pos_fatturapa                | 12.0.1.0.2 | |same|     | Gestione dati fattura elettronica del cliente all'interno dell'interfaccia del P |
++--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
+| l10n_it_pos_fatturapa_send_directly  | |no_check| | 12.0.1.0.0 | Inviare automaticamente a SDI la fattura elettronica dal POS                     |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
 | l10n_it_pos_fiscalcode               | 12.0.1.0.1 | |same|     | Gestione codice fiscale del cliente all'interno dell'interfaccia del POS         |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
@@ -611,13 +613,6 @@ l10n_it_vat_registries: 12.0.1.2.5_2 (2021-08-31)
 * [FIX] Reimpostato l'elaborazione della stampa utilizzando il campo type invece di move_type
 
 
-l10n_it_split_payment: 12.0.1.0.1_7 (2021-08-31)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Impostato filtro sui movimenti contabili per l'inserimento nella fattura elettronica
-* [FIX] Corretto totale in xml
-
-
 l10n_it_fatturapa_out: 12.0.2.2.5_2 (2021-08-31)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -629,12 +624,6 @@ l10n_it_split_payment: 12.0.1.0.1_9 (2021-08-19)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [REF] Refactoring metodo di pagamento 'tax'
-
-
-l10n_it_split_payment: 12.0.1.0.1_8 (2021-08-17)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Corretto controllo versione oca
 
 
 
@@ -669,7 +658,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 |
 
 
-Last Update / Ultimo aggiornamento: 2022-02-10
+Last Update / Ultimo aggiornamento: 2022-02-14
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status

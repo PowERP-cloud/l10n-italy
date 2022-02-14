@@ -1,3 +1,8 @@
+12.0.4.8.32 (2022-02-14)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Move down date_effective in view / Spostata data compteneza in tab
+
 12.0.4.8.31 (2022-01-27)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
