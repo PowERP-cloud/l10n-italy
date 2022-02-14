@@ -113,6 +113,13 @@ TEST_RES_PARTNER = {
         'lang': 'it_IT',
     },
 }
+TEST_RES_PARTNER_BANK = {
+    'z0bug.bank_company_1': {
+        'acc_number': 'IT15A0123412345100000123456',
+        'partner_id': 'base.main_partner',
+        'acc_type': 'iban',
+    },
+}
 TEST_PRODUCT_TEMPLATE = {
     'by': 'default_code',
     'z0bug.product_template_1': {
@@ -133,6 +140,7 @@ TEST_SETUP = {
     'account.payment.term': TEST_ACCOUNT_PAYMENT_TERM,
     'account.fiscal.position': TEST_ACCOUNT_FISCAL_POSITION,
     'res.partner': TEST_RES_PARTNER,
+    'res.partner.bank': TEST_RES_PARTNER_BANK,
     'product.template': TEST_PRODUCT_TEMPLATE,
 }
 
@@ -152,8 +160,12 @@ TEST_ACCOUNT_INVOICE = {
         'partner_id': 'z0bug.res_partner_1',
         'origin': 'P1/2021/0001',
         'reference': 'P1/2021/0001',
-        'type': 'out_invoice',
+        'type': 'out_invoice',                                  # Field to test
         'journal_id': 'external.INV',
+        'fiscal_position_id': 'z0bug.fiscalpos_it',             # Field to test
+        'payment_term_id': 'z0bug.payment_1',                   # Field to test
+        'partner_bank_id': 'z0bug.bank_company_1',              # Field to test
+        'date_invoice': '2022-01-01',                           # Field to test
     },
 }
 
@@ -413,15 +425,10 @@ class TestAccountMove(common.TransactionCase):
             inv = self.model_make(model, vals, item)
 
             model = 'account.invoice.line'
-            # invoice_line_ids = []
             for line in TEST_ACCOUNT_INVOICE_LINE.values():
-                # invoice_line_ids.append(self.get_values(
-                #     model, line))
                 vals = self.get_values(model, line)
                 vals['invoice_id'] = inv.id
                 self.model_make(model, vals, False)
-            # TEST_ACCOUNT_INVOICE[item]['invoice_line_ids'] = (
-            #     0, 0, invoice_line_ids)
             inv.compute_taxes()
             inv.action_invoice_open()
             move = inv.move_id
