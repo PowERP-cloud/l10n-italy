@@ -27,6 +27,7 @@ class DueDateLine(models.Model):
         string='Metodo di pagamento',
         requred=False  # Non sempre è impostato il metodo di pagamento nei termini di pagamento
     )
+    # Invoice currency amount
     due_amount = fields.Float(string='Importo', required=True)
 
     move_line_id = fields.One2many(
@@ -200,4 +201,3 @@ class DueDateLine(models.Model):
 
     # UPDATE MOVE LINE METHODS - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-

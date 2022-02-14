@@ -126,10 +126,10 @@ class AccountInvoice(models.Model):
         return result
     # end write
 
-    def post(self):
-        result = super().post()
-        return result
-    # end post
+    # def post(self):
+    #     result = super().post()
+    #     return result
+    # # end post
 
     @api.multi
     def invoice_validate(self):
@@ -208,7 +208,6 @@ class AccountInvoice(models.Model):
         head_lines = [
             ml
             for ml in move_lines
-            # if (ml[2]['tax_ids'] is False and ml[2]['tax_line_id'] is False)
             if move_lines_model.get_line_type(
                 ml[2], duedate_mode=True) in ('receivable', 'payable')
         ]
@@ -240,7 +239,16 @@ class AccountInvoice(models.Model):
         tax_pm_id = self.env['account.payment.method'].search(
             [('code', '=', 'tax')])
 
-        for duedate in self.duedate_manager_id.duedate_line_ids:
+        inv_currency_amount = sum(
+            [x.due_amount for x in self.duedate_manager_id.duedate_line_ids]
+        )
+        inv_company_amount = sum(
+            [(x[2]['debit'] - x[2]['credit']) for x in head_lines]
+        )
+        rate = inv_currency_amount / inv_company_amount
+
+        residual = inv_company_amount
+        for ii, duedate in enumerate(self.duedate_manager_id.duedate_line_ids):
 
             # Create the new line
             new_line_dict = prototype_line.copy()
@@ -252,13 +260,17 @@ class AccountInvoice(models.Model):
             new_line_dict['duedate_line_id'] = duedate.id
 
             # Update - set amount
+            if (ii + 1) == len(self.duedate_manager_id.duedate_line_ids):
+                company_due_amount = residual
+            else:
+                company_due_amount = duedate.due_amount / rate
             if new_line_dict['credit']:
-                new_line_dict['credit'] = duedate.due_amount
+                new_line_dict['credit'] = company_due_amount
             elif new_line_dict['debit']:
-                new_line_dict['debit'] = duedate.due_amount
+                new_line_dict['debit'] = company_due_amount
             else:
                 pass
-            # end if
+            residual -= company_due_amount
 
             # Update - payment method
             new_line_dict['payment_method'] = duedate.payment_method_id.id

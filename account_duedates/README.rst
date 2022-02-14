@@ -158,7 +158,8 @@ ChangeLog History / Cronologia modifiche
 12.0.4.8.32 (2022-02-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-* [IMP] Move down date_effective in view / Spostata data compteneza in tab
+* [IMP] Move down date_effective in view / Spostata data competeneza in tab
+* [FIX] Currency invoice cannot be validated / Fattura in valuta non può essere validata
 
 12.0.4.8.31 (2022-01-27)
 ~~~~~~~~~~~~~~~~~~~~~~~~
