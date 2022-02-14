@@ -16,9 +16,7 @@ class AssetDepreciationLine(models.Model):
     )
 
     asset_accounting_info_ids = fields.One2many(
-        'asset.accounting.info',
-        'dep_line_id',
-        string="Accounting Info"
+        'asset.accounting.info', 'dep_line_id', string="Accounting Info"
     )
 
     asset_id = fields.Many2one(
@@ -27,7 +25,7 @@ class AssetDepreciationLine(models.Model):
         # readonly=True,
         # related='depreciation_id.asset_id',
         # store=True,
-        string="Asset"
+        string="Asset",
     )
 
     balance = fields.Monetary(
@@ -66,8 +64,7 @@ class AssetDepreciationLine(models.Model):
     )
 
     depreciation_line_type_id = fields.Many2one(
-        'asset.depreciation.line.type',
-        string="Depreciation Type"
+        'asset.depreciation.line.type', string="Depreciation Type"
     )
 
     depreciation_nr = fields.Integer(
@@ -88,20 +85,19 @@ class AssetDepreciationLine(models.Model):
         string="Force Dep. Num",
     )
 
-    move_id = fields.Many2one(
-        'account.move',
-        string="Move"
-    )
+    move_id = fields.Many2one('account.move', string="Move")
 
     move_type = fields.Selection(
-        [('depreciated', 'Depreciation'),
-         ('historical', 'Historical'),
-         ('in', 'In'),
-         ('out', 'Out'),
-         ('loss', 'Capital Loss'),
-         ('gain', 'Capital Gain')],
+        [
+            ('depreciated', 'Depreciation'),
+            ('historical', 'Historical'),
+            ('in', 'In'),
+            ('out', 'Out'),
+            ('loss', 'Capital Loss'),
+            ('gain', 'Capital Gain'),
+        ],
         string="Type",
-        required=True
+        required=True,
     )
 
     name = fields.Char(
@@ -109,13 +105,9 @@ class AssetDepreciationLine(models.Model):
         string="Name",
     )
 
-    partial_dismissal = fields.Boolean(
-        string="Partial Dismissal"
-    )
+    partial_dismissal = fields.Boolean(string="Partial Dismissal")
 
-    percentage = fields.Float(
-        string="%"
-    )
+    percentage = fields.Float(string="%")
 
     requires_account_move = fields.Boolean(
         readonly=True,
@@ -126,7 +118,7 @@ class AssetDepreciationLine(models.Model):
     requires_depreciation_nr = fields.Boolean(
         compute='_compute_requires_depreciation_nr',
         search='_search_requires_depreciation_nr_lines',
-        string="Requires Dep Num"
+        string="Requires Dep Num",
     )
 
     final = fields.Boolean(
@@ -146,10 +138,16 @@ class AssetDepreciationLine(models.Model):
 
     @api.model
     def create(self, vals):
-        if self._context.get('depreciated_by_line') \
-            and vals['move_type'] == 'depreciated':
-            raise ValidationError(_("L'ammortamento non è consentito "
-                                    "da questa interfaccia.\n"))
+        if (
+            self._context.get('depreciated_by_line')
+            and vals['move_type'] == 'depreciated'
+        ):
+            raise ValidationError(
+                _(
+                    "L'ammortamento non è consentito "
+                    "da questa interfaccia.\n"
+                )
+            )
 
         line = super().create(vals)
         if line.need_normalize_depreciation_nr():
@@ -176,9 +174,12 @@ class AssetDepreciationLine(models.Model):
             lines = self.filtered('asset_accounting_info_ids')
             name_list = "\n".join([l[-1] for l in lines.name_get()])
             raise ValidationError(
-                _("The lines you you are trying to delete are currently"
-                  " linked to accounting info. Please remove them if"
-                  " necessary before removing these lines:\n") + name_list
+                _(
+                    "The lines you you are trying to delete are currently"
+                    " linked to accounting info. Please remove them if"
+                    " necessary before removing these lines:\n"
+                )
+                + name_list
             )
         if any([m.state != 'draft' for m in self.mapped('move_id')]):
             lines = self.filtered(
@@ -186,8 +187,11 @@ class AssetDepreciationLine(models.Model):
             )
             name_list = "\n".join([l[-1] for l in lines.name_get()])
             raise ValidationError(
-                _("Following lines are linked to posted account moves, and"
-                  " cannot be deleted:\n") + name_list
+                _(
+                    "Following lines are linked to posted account moves, and"
+                    " cannot be deleted:\n"
+                )
+                + name_list
             )
         self.mapped('move_id').unlink()
         return super().unlink()
@@ -202,9 +206,10 @@ class AssetDepreciationLine(models.Model):
             comp = dep_line.get_linked_aa_info_records().mapped('company_id')
             if len(comp) > 1 or (comp and comp != dep_line.company_id):
                 raise ValidationError(
-                    _("`{}`: cannot change depreciation line's company once"
-                      " it's already related to an asset.")
-                    .format(dep_line.make_name())
+                    _(
+                        "`{}`: cannot change depreciation line's company once"
+                        " it's already related to an asset."
+                    ).format(dep_line.make_name())
                 )
 
     @api.constrains('depreciation_nr')
@@ -223,7 +228,7 @@ class AssetDepreciationLine(models.Model):
     def _compute_balance(self):
         for line in self:
             if line.move_type in ['out', 'depreciated', 'historical', 'loss']:
-                line.balance = - line.amount
+                line.balance = -line.amount
             else:
                 line.balance = line.amount
 
@@ -235,9 +240,7 @@ class AssetDepreciationLine(models.Model):
     @api.multi
     def _search_requires_depreciation_nr_lines(self, operator, value):
         if operator not in ('=', '!='):
-            raise ValidationError(
-                _("Invalid search operator!")
-            )
+            raise ValidationError(_("Invalid search operator!"))
 
         if (operator == '=' and value) or (operator == '!=' and not value):
             return [('move_type', 'in', self.get_numbered_move_types())]
@@ -256,9 +259,10 @@ class AssetDepreciationLine(models.Model):
         for dep in self.asset_id.depreciation_ids:
             ids.append(dep.id)
         # end for
-    # if ids:
+        # if ids:
         res['domain'] = {
-            'depreciation_id': [('id', '=', ids)], }
+            'depreciation_id': [('id', '=', ids)],
+        }
         # end if
         return res
 
@@ -267,7 +271,7 @@ class AssetDepreciationLine(models.Model):
         return self.asset_accounting_info_ids
 
     def get_balances_grouped(self):
-        """ Groups balances of line in `self` by line.move_type """
+        """Groups balances of line in `self` by line.move_type"""
         balances_grouped = {}
         for line in self:
             if line.move_type not in balances_grouped:
@@ -276,7 +280,7 @@ class AssetDepreciationLine(models.Model):
         return balances_grouped
 
     def get_depreciation_nr_dict(self):
-        """ Returns dict {line: new number} """
+        """Returns dict {line: new number}"""
         dep = self.mapped('depreciation_id')
         dep.ensure_one()
         lines = dep.line_ids.filtered('requires_depreciation_nr').sorted()
@@ -287,10 +291,7 @@ class AssetDepreciationLine(models.Model):
         if dep.force_first_dep_nr and dep.first_dep_nr > 0:
             first_num = dep.first_dep_nr
 
-        return {
-            line: nr + first_num
-            for nr, line in enumerate(lines)
-        }
+        return {line: nr + first_num for nr, line in enumerate(lines)}
 
     def get_non_residual_move_types(self):
         """
@@ -300,7 +301,7 @@ class AssetDepreciationLine(models.Model):
         return self._non_residual_move_types
 
     def get_numbered_move_types(self):
-        """ Returns list of `move_type` vals that require numeration """
+        """Returns list of `move_type` vals that require numeration"""
         return self._numbered_move_types
 
     def get_update_move_types(self):
@@ -311,17 +312,19 @@ class AssetDepreciationLine(models.Model):
         return self._update_move_types
 
     def is_depreciation_nr_required(self):
-        """ Defines if a line requires to be numbered """
+        """Defines if a line requires to be numbered"""
         self.ensure_one()
-        return self.move_type in self.get_numbered_move_types() \
+        return (
+            self.move_type in self.get_numbered_move_types()
             and not self.partial_dismissal
+        )
 
     def make_name(self):
         self.ensure_one()
         return "{} ({})".format(self.name, self.depreciation_id.make_name())
 
     def need_normalize_depreciation_nr(self):
-        """ Check if numbers need to be normalized """
+        """Check if numbers need to be normalized"""
         dep = self.mapped('depreciation_id')
         dep.ensure_one()
 
@@ -424,7 +427,7 @@ class AssetDepreciationLine(models.Model):
         }
 
     def get_account_move_line_vals(self):
-        """ Switcher between methods """
+        """Switcher between methods"""
         method = self.get_account_move_line_vals_methods().get(self.move_type)
         if not method:
             raise NotImplementedError(
@@ -449,23 +452,28 @@ class AssetDepreciationLine(models.Model):
         if not self.partial_dismissal:
 
             if self.depreciation_id.mode_id.indirect_depreciation:
-                credit_account_id = self.asset_id.category_id.fund_account_id.id
+                credit_account_id = (
+                    self.asset_id.category_id.fund_account_id.id
+                )
             else:
-                credit_account_id = \
+                credit_account_id = (
                     self.asset_id.category_id.asset_account_id.id
+                )
 
-            debit_account_id = self.asset_id.category_id \
-                .depreciation_account_id.id
+            debit_account_id = (
+                self.asset_id.category_id.depreciation_account_id.id
+            )
 
         # Asset partial dismissal
         else:
             if self.depreciation_id.mode_id.indirect_depreciation:
                 debit_account_id = self.asset_id.category_id.fund_account_id.id
             else:
-                debit_account_id = self.asset_id.category_id.asset_account_id.id
+                debit_account_id = (
+                    self.asset_id.category_id.asset_account_id.id
+                )
 
-            credit_account_id = self.asset_id.category_id\
-                .asset_account_id.id
+            credit_account_id = self.asset_id.category_id.asset_account_id.id
 
         amt = abs(self.amount)
         credit_line_vals = {
@@ -504,8 +512,10 @@ class AssetDepreciationLine(models.Model):
 
     def get_historical_account_move_line_vals(self):
         raise NotImplementedError(
-            _("Cannot create account move lines for lines of type"
-              " `Historical`")
+            _(
+                "Cannot create account move lines for lines of type"
+                " `Historical`"
+            )
         )
 
     def get_in_account_move_line_vals(self):
@@ -587,4 +597,3 @@ class AssetDepreciationLine(models.Model):
         )
         if to_create_move:
             to_create_move.generate_account_move()
-

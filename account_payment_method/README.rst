@@ -1,10 +1,10 @@
 
 ========================================
-|icon| Account Payment Method 12.0.0.2.7
+|icon| Account Payment Method 12.0.0.2.8
 ========================================
 
 
-**Extend payment method model**
+**Extended payment method**
 
 .. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/l10n-italy/12.0/account_payment_method/static/description/icon.png
 
@@ -18,14 +18,18 @@
 Overview / Panoramica
 =====================
 
-|en| This module add account.payment.kind table to manage due records.
+|en| Technical module which adds some default payment mathods, mainly the "tax" method.
+The "tax" method is required to manage some special VAT law, like withholding tax.
+Invoices with these special VAT law, total amount and amout to pay are different.
+So the difference amount is records in a account.move.line with "tax" payment method.
 
 
 |
 
-|it| Gestione tipi di pagamento
-
-Aggiunge tabella tipi pagamento per scadenzario
+|it| Modulo tecnico con che dichiara alcuni metodi di pagamento predefiniti, principalmente "tax".
+Il metodo "tax" è necessario per gestire alcuni regimi IVA speciali, ad esempi la ritenuta d'acconto.
+Nelle fatture con questi regimi IVA speciali, l'importo della fattura e totale da pagare sono diversi.
+La differenza è posta in una riga di account.move.line con il metodo "tax".
 
 
 |
@@ -149,6 +153,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.0.2.8 (2022-01-20)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Pulizia campi duplicati active e bank_required
+
 12.0.0.2.7 (2021-11-30)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -184,11 +193,6 @@ ChangeLog History / Cronologia modifiche
 
 * [IMP] No som default methods / Rimossi alcuni metodi pagamento predefiniti
 
-
-12.0.0.1.1 (2020-10-12)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Added credit/debit field / Aggiunto il campo debito/credito
 
 
 
@@ -261,7 +265,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-11-30
+Last Update / Ultimo aggiornamento: 2022-01-21
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

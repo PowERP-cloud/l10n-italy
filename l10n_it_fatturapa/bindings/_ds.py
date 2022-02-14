@@ -9,7 +9,7 @@ import io
 import logging
 
 # Import bindings for namespaces imported into schema
-import pyxb.binding.datatypes
+# import pyxb.binding.datatypes
 
 _logger = logging.getLogger(__name__)
 try:

@@ -8,8 +8,6 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='payment_type']" position="after">
                 <field name="debit_credit"/>
-                <field name="active"/>
-                <field name="bank_account_required"/>
             </xpath>
         </field>
     </record>
@@ -21,11 +19,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='payment_type']" position="after">
                 <field name="debit_credit"/>
-                <field name="active"/>
-<!--                <field name="bank_account_required"/>-->
             </xpath>
         </field>
     </record>
 
 </odoo>
-

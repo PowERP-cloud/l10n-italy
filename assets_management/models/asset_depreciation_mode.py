@@ -67,8 +67,11 @@ class AssetDepreciationMode(models.Model):
                     "linked to categories."
                 )
             )
-        if self.env['asset.depreciation'].sudo().search([
-            ('mode_id', 'in', self.ids)]):
+        if (
+            self.env['asset.depreciation']
+            .sudo()
+            .search([('mode_id', 'in', self.ids)])
+        ):
             raise UserError(
                 _(
                     "Cannot delete depreciation modes while they're still "
