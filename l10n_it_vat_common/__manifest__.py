@@ -11,6 +11,7 @@
     'license': 'OPL-1',
     'depends': [
         'account',
+        'account_fiscal_year',
     ],
     'data': [],
     'installable': True,
