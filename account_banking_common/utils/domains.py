@@ -41,6 +41,7 @@ def get_bank_expenses_account(env):
 
 
 def domain_effetti_allo_sconto(env):
+
     # acct_type_ids = list()
     #
     # acct_type_ids.append(misc.external_id_to_id(
@@ -54,7 +55,8 @@ def domain_effetti_allo_sconto(env):
     # ))
     #
     # return [('user_type_id', 'in', acct_type_ids)]
-    return [('nature', '=', 'A')]
+    return [('nature', '=', 'A'), ('user_type_id.type', 'not in',
+                                   ['payable', 'receivable'])]
 
 
 def domain_portafoglio_sbf():

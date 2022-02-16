@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.29
+|icon| Account Banking Common 12.0.3.7.30
 =========================================
 
 
@@ -152,6 +152,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.30 (2022-02-16)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Aggiornato controlli wizard conferma pagamenti
+
 12.0.3.7.29 (2022-02-04)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -206,11 +211,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Impostato metodo che valorizza il conto per il credit
-
-12.0.3.7.16 (2021-11-30)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Fix ricerca ordini in aggiungi a distinta
 
 
 
@@ -283,7 +283,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-02-04
+Last Update / Ultimo aggiornamento: 2022-02-16
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

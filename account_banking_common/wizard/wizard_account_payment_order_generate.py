@@ -210,6 +210,12 @@ class AccountPaymentGenerate(models.TransientModel):
                                         'maggiore di zero.')
                     # end if
 
+            if self.journal_id.is_wallet and \
+                self.journal_id.bank_account_id.bank_is_wallet:
+                lines.write({
+                    'company_bank_id': self.journal_id.bank_account_id.id
+                })
+
             # Creazione distinta
             payment_order = self.env['account.payment.order'].create({
                 'payment_mode_id': self.payment_mode_id.id,

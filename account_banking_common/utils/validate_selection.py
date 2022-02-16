@@ -268,14 +268,14 @@ def same_bank_account_wallet(account_move_lines):
 
         line_bank_wallet = line.company_bank_id
 
+        if bank_wallet is None:
+            bank_wallet = line_bank_wallet
+
         if bank_wallet.bank_is_wallet is False:
             raise UserError(
                 'Le scadenze selezionate devono avere '
                 'un conto bancario di portafoglio'
             )
-
-        if bank_wallet is None:
-            bank_wallet = line_bank_wallet
 
         elif line_bank_wallet.id != bank_wallet.id:
             raise UserError(
