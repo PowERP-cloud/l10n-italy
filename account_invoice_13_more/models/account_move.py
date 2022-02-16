@@ -67,8 +67,13 @@ class AccountMove(models.Model):
             ('in_invoice', 'Vendor Bill'),
             ('in_refund', 'Vendor Credit Note'),
         ],
-        related='move_type',
         readonly=True,
+        states={'draft': [('readonly', False)]},
+        index=True,
+        change_default=True,
+        default='entry',
+        track_visibility='always',
+        required=True,
     )
     fiscal_position_id = fields.Many2one(
         'account.fiscal.position',

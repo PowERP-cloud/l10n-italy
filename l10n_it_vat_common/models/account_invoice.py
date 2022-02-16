@@ -87,14 +87,17 @@ class AccountInvoice(models.Model):
     def create(self, vals):
         if 'date_apply_vat' in vals and not vals['date_apply_vat']:
             vals['date_apply_vat'] = vals['date']
-        # end if
+        # TODO> to remove early
+        if 'type' in vals:
+            vals['move_type'] = vals['type']
         return super().create(vals)
 
     @api.multi
     def write(self, vals):
         if 'date_apply_vat' in vals and not vals['date_apply_vat']:
             vals['date_apply_vat'] = self.date
-        # end if
+        # TODO> to remove early
+        if 'type' in vals:
+            vals['move_type'] = vals['type']
         res = super().write(vals)
         return res
-
