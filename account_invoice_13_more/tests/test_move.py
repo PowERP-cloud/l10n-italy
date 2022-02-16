@@ -1,13 +1,13 @@
-# -*- coding: utf-8 -*-
 """
-Tests are based on test environment created by module mk_test_env of repository
+Tests are based on test environment created by module mk_test_env in repository
 https://github.com/zeroincombenze/zerobug-test
 
-Each model must have a+one or mode dictionary; name should be TEST_model,
+Each model is declared by a dictionary which name should be "TEST_model",
 where model is the upercase model name with dot replaced by '_'
 i.e.: res_partner -> TEST_RES_PARTNER
 
-Every key of the model dictionary is the external reference with data dictionary
+Every record is declared in the model dictionary by a key which is the external
+reference used to retrieve the record.
 i.e.:
 TEST_RES_PARTNER = {
     'z0bug.partner1': {
@@ -16,7 +16,8 @@ TEST_RES_PARTNER = {
         ...
     }
 }
-The dictionary TEST_SETUP is the dictionary with data to load at setup.
+
+The magic dictionary TEST_SETUP contains data to load at test setup.
 TEST_SETUP = {
     'res.partner': TEST_RES_PARTNER,
     ...
@@ -24,70 +25,175 @@ TEST_SETUP = {
 
 In setup() function, the following code
     self.setup_records(lang='it_IT')
-creates all record declared by above data; lang is optional parameter.
+creates all record declared by above data; lang is an optional parameter.
 
 Final notes:
 * Many2one value must be declared as external identifier
+* Written on 2022-02-16 13:13:48.981084 by mk_test_env 12.0.0.7.2
 """
 from odoo.tests import common
 
 TEST_ACCOUNT_ACCOUNT = {
-    'external.3101': {
-        'code': '3101',
-        'name': 'merci c/vendite',
-        'user_type_id': 'account.data_account_type_revenue',
-        'reconcile': False
-    },
-    'external.4101': {
-        'code': '4101',
-        'name': 'merci c/acquisti',
-        'user_type_id': 'account.data_account_type_expenses',
-        'reconcile': False
+    'external.2601': {
+        'code': '2601',
+        'name': 'IVA n/debito',
+        'user_type_id': 'account.data_account_type_current_liabilities',
+        'reconcile': False,
     },
     'external.1601': {
         'code': '1601',
         'name': 'IVA n/credito',
         'user_type_id': 'account.data_account_type_current_assets',
-        'reconcile': False
+        'reconcile': False,
     },
-    'external.2601': {
-        'code': '2601',
-        'name': 'IVA n/debito ',
-        'user_type_id': 'account.data_account_type_current_liabilities',
-        'reconcile': False
+    'external.3112': {
+        'code': '3112',
+        'name': 'Ricavi da merci e servizi',
+        'user_type_id': 'account.data_account_type_revenue',
+        'reconcile': False,
+    },
+    'external.4101': {
+        'code': '4101',
+        'name': 'Acq. Merce',
+        'user_type_id': 'account.data_account_type_direct_costs',
+        'reconcile': False,
+    },
+    'external.3101': {
+        'code': '3101',
+        'name': 'Merci c/vendita',
+        'user_type_id': 'account.data_account_type_revenue',
+        'reconcile': False,
+    },
+}
+TEST_ACCOUNT_FISCAL_POSITION = {
+    'z0bug.fiscalpos_it': {
+        'name': 'Italia',
+    },
+}
+TEST_ACCOUNT_JOURNAL = {
+    'external.INV': {
+        'name': 'Fatture di vendita',
+        'code': 'INV',
+        'type': 'sale',
+        'update_posted': True,
+    },
+    'z0bug.jou_ncc': {
+        'name': 'Note credito a clienti',
+        'code': 'NCC',
+        'type': 'sale',
+        'update_posted': True,
+    },
+    'external.ACQ|FATTU|BILL': {
+        'name': 'Fatture di acquisto',
+        'code': 'ACQ',
+        'type': 'purchase',
+        'update_posted': True,
+    },
+    'z0bug.jou_ncf': {
+        'name': 'Note credito da fornitori',
+        'code': 'NCF',
+        'type': 'purchase',
+        'update_posted': True,
+    },
+}
+TEST_ACCOUNT_PAYMENT_TERM = {
+    'z0bug.payment_1': {
+        'name': 'RiBA 30GG/FM',
+        'fatturapa_pt_id': 'l10n_it_fiscal_payment_term.fatturapa_tp02',
+        'fatturapa_pm_id': 'l10n_it_fiscal_payment_term.fatturapa_mp12',
+    },
+    'z0bug.payment_5': {
+        'name': 'BB 45GG',
+        'fatturapa_pt_id': 'l10n_it_fiscal_payment_term.fatturapa_tp02',
+        'fatturapa_pm_id': 'l10n_it_fiscal_payment_term.fatturapa_mp05',
     },
 }
 TEST_ACCOUNT_TAX = {
     'by': 'description',
     'external.22v': {
         'description': '22v',
-        'name': 'IVA 22%',
+        'name': 'IVA 22% su vendite',
         'amount': 22,
         'amount_type': 'percent',
         'type_tax_use': 'sale',
-        'account_id': 'external.1601',
-        'refund_account_id': 'external.1601',
+        'price_include': True,
+        'account_id': 'external.2601',
+        'refund_account_id': 'external.2601',
     },
     'external.22a': {
         'description': '22a',
-        'name': 'IVA 22%',
+        'name': 'IVA 22% da acquisti',
         'amount': 22,
         'amount_type': 'percent',
         'type_tax_use': 'purchase',
+        'price_include': True,
         'account_id': 'external.1601',
         'refund_account_id': 'external.1601',
     },
+    'z0bug.tax_2220': {
+        'description': '2220',
+        'name': 'IVA 22% detraibile 20%',
+        'amount': 22,
+        'amount_type': 'group',
+        'type_tax_use': 'purchase',
+        'price_include': True,
+    },
 }
-TEST_ACCOUNT_PAYMENT_TERM = {
-    'z0bug.payment_1': {
-        'name': 'RiBA 30GG/FM',
-        'riba': True,
-        'riba_payment_cost': 2.5,
-    }
+TEST_PRODUCT_TEMPLATE = {
+    'by': 'default_code',
+    'z0bug.product_template_1': {
+        'default_code': 'AA',
+        'name': 'Prodotto Alpha',
+        'lst_price': 0.84,
+        'standard_price': 0.42,
+        'type': 'consu',
+        'taxes_id': 'external.22v',
+        'supplier_taxes_id': 'external.22a',
+        'property_account_income_id': 'external.3112',
+        'property_account_expense_id': 'external.4101',
+        'uom_id': 'product.product_uom_unit',
+        'uom_po_id': 'product.product_uom_unit',
+        'weight': 0.1,
+        'intrastat_type': 'good',
+        'intrastat_code_id': 'z0bug.istat_84401020',
+    },
+    'z0bug.product_template_4': {
+        'default_code': 'DD',
+        'name': 'Prodotto Delta',
+        'lst_price': 2.64,
+        'standard_price': 1.32,
+        'type': 'consu',
+        'taxes_id': 'external.22v',
+        'supplier_taxes_id': 'external.22a',
+        'property_account_income_id': 'external.3112',
+        'property_account_expense_id': 'external.4101',
+        'uom_id': 'product.product_uom_unit',
+        'uom_po_id': 'product.product_uom_unit',
+        'weight': 0.24,
+        'intrastat_type': 'good',
+        'intrastat_code_id': 'z0bug.istat_84401010',
+    },
+    'z0bug.product_template_0': {
+        'default_code': 'MISC',
+        'name': 'Varie',
+        'lst_price': 18,
+        'standard_price': 9.5,
+        'type': 'consu',
+        'taxes_id': 'external.22v',
+        'supplier_taxes_id': 'external.22a',
+        'property_account_income_id': 'external.3112',
+        'property_account_expense_id': 'external.4101',
+        'uom_id': 'product.product_uom_unit',
+        'uom_po_id': 'product.product_uom_unit',
+        'intrastat_type': 'exclude',
+        'intrastat_code_id': 'z0bug.istat_84401010',
+    },
 }
-TEST_ACCOUNT_FISCAL_POSITION = {
-    'z0bug.fiscalpos_it': {
-        'name': 'Italia',
+TEST_RES_BANK = {
+    'z0bug.bank_bps': {
+        'name': 'Banca Popolare del Software',
+        'bic': 'BPSWITMM',
+        'country': 'base.it',
     },
 }
 TEST_RES_PARTNER = {
@@ -108,8 +214,41 @@ TEST_RES_PARTNER = {
         'property_account_position_id': 'z0bug.fiscalpos_it',
         'property_payment_term_id': 'z0bug.payment_1',
         'property_supplier_payment_term_id': 'z0bug.payment_1',
-        'electronic_invoice_subjected': 1,
+        'electronic_invoice_subjected': True,
         'codice_destinatario': 'A1B2C3X',
+        'lang': 'it_IT',
+    },
+    'base.main_partner': {
+        'name': 'Test Company',
+        'street': 'Via dei Matti, 0',
+        'country_id': 'base.it',
+        'zip': '20080',
+        'city': 'Ozzero',
+        'state_id': 'base.state_it_mi',
+        'customer': True,
+        'supplier': True,
+        'is_company': True,
+        'email': 'info@testcompany.org',
+        'phone': '+39 025551234',
+        'vat': 'IT05111810015',
+        'website': 'https://www.testcompany.org',
+        'lang': 'it_IT',
+    },
+    'z0bug.res_partner_11': {
+        'name': 'Caffè Eleven S.p.A.',
+        'street': 'C. Soricillo, 11',
+        'street2': 'Palazzo NUVOLA',
+        'country_id': 'base.it',
+        'zip': '10151',
+        'city': 'Torino',
+        'state_id': 'base.state_it_to',
+        'customer': True,
+        'supplier': True,
+        'is_company': True,
+        'email': 'commercial@eleven-caffe.it',
+        'vat': 'IT01250630504',
+        'website': 'http://www.eleven-caffe.it',
+        'property_supplier_payment_term_id': 'z0bug.payment_5',
         'lang': 'it_IT',
     },
 }
@@ -118,54 +257,89 @@ TEST_RES_PARTNER_BANK = {
         'acc_number': 'IT15A0123412345100000123456',
         'partner_id': 'base.main_partner',
         'acc_type': 'iban',
+        'bank_id': 'z0bug.bank_bps',
+    },
+    'z0bug.bank_partner_1': {
+        'acc_number': 'IT73C0102001011010101987654',
+        'partner_id': 'z0bug.res_partner_1',
+        'acc_type': 'iban',
     },
 }
-TEST_PRODUCT_TEMPLATE = {
-    'by': 'default_code',
-    'z0bug.product_template_1': {
-        'default_code': 'AA',
-        'name': 'Prodotto Alpha',
-        'lst_price': 0.84,
-        'standard_price': 0.42,
-        'type': 'consu',
-        'taxes_id': 'external.22v',
-        'supplier_taxes_id': 'external.22a',
-        'property_account_income_id': 'external.3101',
-        'property_account_expense_id': 'external.4101',
-    },
-}
-TEST_SETUP = {
+TEST_SETUP =  {
     'account.account': TEST_ACCOUNT_ACCOUNT,
-    'account.tax': TEST_ACCOUNT_TAX,
-    'account.payment.term': TEST_ACCOUNT_PAYMENT_TERM,
     'account.fiscal.position': TEST_ACCOUNT_FISCAL_POSITION,
+    'account.journal': TEST_ACCOUNT_JOURNAL,
+    'account.payment.term': TEST_ACCOUNT_PAYMENT_TERM,
+    'account.tax': TEST_ACCOUNT_TAX,
+    'product.template': TEST_PRODUCT_TEMPLATE,
+    'res.bank': TEST_RES_BANK,
     'res.partner': TEST_RES_PARTNER,
     'res.partner.bank': TEST_RES_PARTNER_BANK,
-    'product.template': TEST_PRODUCT_TEMPLATE,
 }
 
 TEST_ACCOUNT_INVOICE_LINE = {
-    '1': {
-        # 'invoice_id': 'z0bug.invoice_Z0_1',
+    'z0bug.invoice_Z0_1_01': {
         'product_id': 'z0bug.product_product_1',
         'name': 'Prodotto Alpha',
         'quantity': 1,
+        'account_id': 'external.3112',
         'price_unit': 0.84,
-        'account_id': 'external.3101',
         'invoice_line_tax_ids': 'external.22v',
     },
 }
+
 TEST_ACCOUNT_INVOICE = {
     'z0bug.invoice_Z0_1': {
         'partner_id': 'z0bug.res_partner_1',
         'origin': 'P1/2021/0001',
         'reference': 'P1/2021/0001',
-        'type': 'out_invoice',                                  # Field to test
+        'date_invoice': '2022-01-31',
+        'type': 'out_invoice',
         'journal_id': 'external.INV',
-        'fiscal_position_id': 'z0bug.fiscalpos_it',             # Field to test
-        'payment_term_id': 'z0bug.payment_1',                   # Field to test
-        'partner_bank_id': 'z0bug.bank_company_1',              # Field to test
-        'date_invoice': '2022-01-01',                           # Field to test
+        'fiscal_position_id': 'z0bug.fiscalpos_it',
+        'currency_id': 'base.EUR',
+        'partner_bank_id': 'z0bug.bank_company_1',
+        'payment_term_id': 'z0bug.payment_1',
+        'bank_2_print_selector': 'partner',
+        'company_bank_id': 'z0bug.bank_company_1',
+        'counterparty_bank_id': 'z0bug.bank_partner_1',
+    },
+    'z0bug.invoice_Z0_7': {
+        'partner_id': 'z0bug.res_partner_1',
+        'origin': 'P1/2021/0001',
+        'reference': 'P1/2021/0001',
+        'date_invoice': '2022-01-31',
+        'type': 'out_refund',
+        'journal_id': 'z0bug.jou_ncc',
+        'fiscal_position_id': 'z0bug.fiscalpos_it',
+        'currency_id': 'base.EUR',
+        'payment_term_id': 'z0bug.payment_1',
+        'counterparty_bank_id': 'z0bug.bank_partner_1',
+    },
+    'z0bug.invoice_ZI_2': {
+        'partner_id': 'z0bug.res_partner_11',
+        'origin': '21/TO/1234',
+        'reference': '21/TO/1234',
+        'date_invoice': '2021-12-31',
+        'date': '2022-01-01',
+        'date_apply_vat': '2022-01-01',
+        'type': 'in_invoice',
+        'journal_id': 'external.ACQ|FATTU|BILL',
+        'fiscal_position_id': 'z0bug.fiscalpos_it',
+        'currency_id': 'base.EUR',
+        'payment_term_id': 'z0bug.payment_5',
+    },
+    'z0bug.invoice_ZI_7': {
+        'partner_id': 'z0bug.res_partner_11',
+        'origin': '21/TO/1590',
+        'reference': '21/TO/1590',
+        'date_invoice': '2022-01-10',
+        'date': '2022-01-20',
+        'type': 'in_refund',
+        'journal_id': 'z0bug.jou_ncf',
+        'fiscal_position_id': 'z0bug.fiscalpos_it',
+        'currency_id': 'base.EUR',
+        'payment_term_id': 'z0bug.payment_5',
     },
 }
 
@@ -181,7 +355,7 @@ class TestAccountMove(common.TransactionCase):
         """Simulate External Reference
         This function simulates self.env.ref() searching for model record.
         Ordinary xref is formatted as "MODULE.NAME"; when MODULE = "external"
-        this function is executed.
+        this function is called.
         Record is searched by <by> parameter, default is 'code' or 'name';
         id NAME is formatted as "FIELD=VALUE", FIELD value is assigned to <by>
         If company_id is supplied, it is added in search domain;
@@ -216,7 +390,11 @@ class TestAccountMove(common.TransactionCase):
         elif case == 'lower':
             name = name.lower()
         domain = [(by, '=', name)]
-        if company_id and 'company_id' in _fields:
+        if (model not in ('product.product',
+                          'product.template',
+                          'res.partner',
+                          'res.users') and
+                company_id and 'company_id' in _fields):
             domain.append(('company_id', '=', company_id))
         objs = self.env[model].search(domain)
         if len(objs) == 1:
@@ -255,7 +433,7 @@ class TestAccountMove(common.TransactionCase):
         return obj
 
     def add_xref(self, xref, model, xid):
-        """Add external reference to use in next tests.
+        """Add external reference that will be used in next tests.
         If xref exist, result ID will be upgraded"""
         module, name = xref.split('.', 1)
         if module == 'external':
@@ -275,8 +453,8 @@ class TestAccountMove(common.TransactionCase):
         return xrefs[0]
 
     def get_values(self, model, values, by=None, company_id=None, case=None):
-        """Load data values and set them in dictionary to create
-        * Not existents fields are ignored
+        """Load data values and set them in a dictionary for create function
+        * Not existent fields are ignored
         * Many2one field are filled with current record ID
         """
         _fields = self.env[model].fields_get()
@@ -294,7 +472,8 @@ class TestAccountMove(common.TransactionCase):
                     company_id=company_id,
                     case=case,
                 )
-                vals[item] = res.id if res else res
+                if res:
+                    vals[item] = res.id
             elif (_fields[item]['type'] == 'many2many' and
                   '.' in values[item] and
                   ' ' not in values[item]):
@@ -305,8 +484,9 @@ class TestAccountMove(common.TransactionCase):
                     company_id=company_id,
                     case=case,
                 )
-                vals[item] = [(6, 0, [res.id])] if res else res
-            else:
+                if res:
+                    vals[item] = [(6, 0, [res.id])]
+            elif values[item] is not None:
                 vals[item] = values[item]
         return vals
 
@@ -317,20 +497,29 @@ class TestAccountMove(common.TransactionCase):
             self.add_xref(xref, model, res.id)
         return res
 
-    def model_browse(self, model, xid):
+    def model_browse(self, model, xid, company_id=None, by=None,
+                     raise_if_not_found=True):
         """Browse a record by external ID"""
-        res_id = self.ref(xid) if isinstance(xid, str) else xid
-        return self.env[model].browse(res_id)
+        res = self.env_ref(
+            xid,
+            model=model,
+            company_id=company_id,
+            by=by,
+        )
+        if res:
+            return res
+        return self.env[model]
 
-    def model_make(self, model, values, xref):
+    def model_make(self, model, values, xref, company_id=None, by=None):
         """Create or write a test record and set external ID to next tests"""
-        res_id = self.env_ref(xref, model=model)
-        if res_id:
-            recs = self.env[model].search([('id', '=', res_id)])
-            if recs:
-                rec = recs[0]
-                rec.write(values)
-                return rec
+        res = self.model_browse(model,
+                                xref,
+                                company_id=company_id,
+                                by=by,
+                                raise_if_not_found=False)
+        if res:
+            res.write(values)
+            return res
         return self.model_create(model, values, xref=xref)
 
     def default_company(self):
@@ -373,8 +562,22 @@ class TestAccountMove(common.TransactionCase):
             vals = {'lang': iso}
             self.env['base.update.translations'].create(vals).act_update()
 
-    def setup_records(self, lang=None, locale=None, company=None):
-        """Create all record from declared data. See above doc"""
+    def setup_records(self, lang=None, locale=None, company=None,
+                      save_as_demo=None):
+        """Create all record from declared data. See above doc
+
+        Args:
+            lang (str): install & load specific language
+            locale (str): install locale module with CoA; i.e l10n_it
+            company (obj): declare default company for tests
+            save_as_demo (bool): commit all test data as they are demo data
+            Warning: usa save_as_demo carefully; is used in multiple tests,
+            like in travis this option can be cause to failue of tests
+            This option can be used in local tests with "run_odoo_debug -T"
+
+        Returns:
+            None
+        """
 
         def iter_data(model, model_data, company):
             for item in model_data.keys():
@@ -384,7 +587,10 @@ class TestAccountMove(common.TransactionCase):
                     model,
                     model_data[item],
                     company_id=company.id)
-                res = self.model_make(model, vals, item)
+                res = self.model_make(
+                    model, vals, item,
+                    company_id=company.id,
+                    by=by)
                 if model == 'product.template':
                     model2 = 'product.product'
                     vals = self.get_values(
@@ -393,8 +599,11 @@ class TestAccountMove(common.TransactionCase):
                         company_id=company.id)
                     vals['product_tmpl_id'] = res.id
                     self.model_make(
-                        model2, vals, item.replace('template', 'product'))
+                        model2, vals, item.replace('template', 'product'),
+                        company_id=company.id,
+                        by=by)
 
+        self.save_as_demo = save_as_demo or False
         if locale:
             self.set_locale(locale)
         if lang:
@@ -414,7 +623,11 @@ class TestAccountMove(common.TransactionCase):
     # ------------------ #
     def setUp(self):
         super().setUp()
-        self.setup_records(lang='it_IT')
+        self.setup_records(lang='it_IT', save_as_demo=True)
+
+    def tearDown(self):
+        if self.save_as_demo:
+            self.env.cr.commit()               # pylint: disable=invalid-commit
 
     def test_invoice_validate(self):
         for item in TEST_ACCOUNT_INVOICE:
