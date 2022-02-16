@@ -40,7 +40,7 @@ class AccountMove(models.Model):
     # Naming of 13.0 same as account.invoice.type
     # From 14.0 this field is renamed to move_type
     # TODO> rename to move_type
-    move_type = fields.Selection(
+    type = fields.Selection(
         [
             ('entry', 'Journal Entry'),
             ('out_invoice', 'Customer Invoice'),
@@ -49,23 +49,6 @@ class AccountMove(models.Model):
             ('in_refund', 'Vendor Credit Note'),
             # ('out_receipt', 'Sales Receipt'),
             # ('in_receipt', 'Purchase Receipt'),
-        ],
-        readonly=True,
-        states={'draft': [('readonly', False)]},
-        index=True,
-        change_default=True,
-        default='entry',
-        track_visibility='always',
-        required=True,
-    )
-    # TODO> remove early
-    type = fields.Selection(
-        [
-            ('entry', 'Journal Entry'),
-            ('out_invoice', 'Customer Invoice'),
-            ('out_refund', 'Customer Credit Note'),
-            ('in_invoice', 'Vendor Bill'),
-            ('in_refund', 'Vendor Credit Note'),
         ],
         readonly=True,
         states={'draft': [('readonly', False)]},
@@ -113,7 +96,6 @@ class AccountMove(models.Model):
                 move.invoice_date = invoice.date_invoice
                 move.type = invoice.type
                 move.payment_term_id = invoice.payment_term_id
-                move.partner_bank_id = invoice.partner_bank_id
                 move.partner_bank_id = invoice.partner_bank_id
                 move.fiscal_position_id = invoice.fiscal_position_id
         return super().post(invoice=invoice)
