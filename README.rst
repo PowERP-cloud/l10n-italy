@@ -64,7 +64,7 @@ Avaiable Addons / Moduli disponibili
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
 | Name / Nome                          | Version    | OCA Ver.   | Description / Descrizione                                                        |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| account_banking_common               | 12.0.3.7.2 | |no_check| | Common stuff for payment modules                                                 |
+| account_banking_common               | 12.0.3.7.3 | |no_check| | Common stuff for payment modules                                                 |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
 | account_common_mixin                 | 12.0.1.0.0 | |no_check| | Common account fields                                                            |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
@@ -234,7 +234,7 @@ Avaiable Addons / Moduli disponibili
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
 | l10n_it_split_payment                | 12.0.1.0.1 | 12.0.1.0.1 | Split Payment                                                                    |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
-| l10n_it_vat_common                   | 12.0.1.0.3 | |no_check| | Vat methods enhanced                                                             |
+| l10n_it_vat_common                   | 12.0.1.0.4 | |no_check| | Vat methods enhanced                                                             |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
 | l10n_it_vat_registries               | 12.0.1.2.5 | 12.0.1.2.5 | ITA - Registri IVA                                                               |
 +--------------------------------------+------------+------------+----------------------------------------------------------------------------------+
@@ -393,6 +393,12 @@ Proposals for enhancement
 History / Cronologia
 --------------------
 
+l10n_it_vat_common: 12.0.1.0.4 (2022-02-15)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Shadow move_type field / Campo nascosto move_type
+
+
 l10n_it_reverse_charge: 12.0.1.2.7_37 (2022-01-07)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -525,7 +531,6 @@ l10n_it_vat_common: 12.0.1.0.0 (2021-09-30)
 * [IMP] Spostata funzione di calcolo delle tasse in apposito modulo l10n_it_vat_common
 
 
-
 l10n_it_reverse_charge: 12.0.1.2.7_30 (2021-09-29)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -620,12 +625,6 @@ l10n_it_fatturapa_out: 12.0.2.2.5_2 (2021-08-31)
 
 
 
-l10n_it_split_payment: 12.0.1.0.1_9 (2021-08-19)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Refactoring metodo di pagamento 'tax'
-
-
 
 
 
@@ -658,7 +657,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 |
 
 
-Last Update / Ultimo aggiornamento: 2022-02-14
+Last Update / Ultimo aggiornamento: 2022-02-17
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-red.png
     :target: https://odoo-community.org/page/development-status

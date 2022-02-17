@@ -91,11 +91,14 @@ class AccountMove(models.Model):
 
     @api.multi
     def post(self, invoice=False):
-        for move in self:
-            if invoice:
+        if invoice:
+            for move in self:
+                for field in ('type',):
+                    move[field] = getattr(invoice, field)
+                move.move_type = getattr(invoice, 'type')
                 move.invoice_date = invoice.date_invoice
-                move.type = invoice.type
-                move.payment_term_id = invoice.payment_term_id
-                move.partner_bank_id = invoice.partner_bank_id
-                move.fiscal_position_id = invoice.fiscal_position_id
+                for field in ('payment_term_id',
+                              'fiscal_position_id',
+                              'partner_bank_id'):
+                    move[field] = getattr(invoice, field)
         return super().post(invoice=invoice)

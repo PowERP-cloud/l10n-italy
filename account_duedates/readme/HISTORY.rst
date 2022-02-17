@@ -1,3 +1,9 @@
+12.0.4.8.33 (2022-02-16)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Refund cannot be validated / N.C. non può essere validata
+* [IMP] Regression test
+
 12.0.4.8.32 (2022-02-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

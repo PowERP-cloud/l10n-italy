@@ -15,9 +15,9 @@ class AccountInvoice(models.Model):
         for inv in self:
 
             updates = dict()
-
             for field in ('type',):
                 updates[field] = getattr(inv, field)
+            updates['move_type'] = getattr(inv, 'type')
             updates['invoice_date'] = getattr(inv, 'date_invoice')
             for field in ('payment_term_id',
                           'fiscal_position_id',

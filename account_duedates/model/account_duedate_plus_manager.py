@@ -14,23 +14,26 @@ class DueDateManager(models.Model):
 
     move_id = fields.Many2one(
         comodel_name='account.move',
-        domain=[('journal_id.type', 'in', ['sale', 'sale_refund', 'purchase',
-                                           'purchase_refund'])],
+        domain=[
+            (
+                'journal_id.type',
+                'in',
+                ['sale', 'sale_refund', 'purchase', 'purchase_refund'],
+            )
+        ],
         string='Registrazione contabile',
-        requred=False
+        requred=False,
     )
 
     invoice_id = fields.Many2one(
-        comodel_name='account.invoice',
-        string='Documento',
-        requred=False
+        comodel_name='account.invoice', string='Documento', requred=False
     )
 
     duedate_line_ids = fields.One2many(
         string='Righe scadenze',
         comodel_name='account.duedate_plus.line',
         inverse_name='duedate_manager_id',
-        requred=False
+        requred=False,
     )
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -40,12 +43,14 @@ class DueDateManager(models.Model):
     def create(self, values):
         result = super().create(values)
         return result
+
     # end create
 
     @api.multi
     def write(self, values):
         result = super().write(values)
         return result
+
     # end write
 
     # ORM METHODS OVERRIDE - end
@@ -72,6 +77,7 @@ class DueDateManager(models.Model):
         if new_dudate_lines:
             self.env['account.duedate_plus.line'].create(new_dudate_lines)
         # end if
+
     # end write_duedate_lines
 
     @api.model
@@ -90,6 +96,7 @@ class DueDateManager(models.Model):
         # end if
 
         return new_dudate_lines
+
     # end generate_duedate_lines
 
     # PUBLIC METHODS - end
@@ -111,6 +118,7 @@ class DueDateManager(models.Model):
     @api.model
     def update_amount(self):
         self._compute_duedate_lines_amount()
+
     # end update_amount
 
     # PUBLIC API - end
@@ -166,7 +174,9 @@ class DueDateManager(models.Model):
         # end if
 
         # Sorted list of dates (least date -> least index)
-        duedates_list = sorted([duedate.due_date for duedate in self.duedate_line_ids])
+        duedates_list = sorted(
+            [duedate.due_date for duedate in self.duedate_line_ids]
+        )
 
         if len(duedates_list) <= 1:
             # No duedates or just one date -> validation successful
@@ -181,15 +191,15 @@ class DueDateManager(models.Model):
             return None
 
         else:  # Validation FAILED
-            # When the execution arrives here the following conditions are TRUE:
+            # When the execution arrives here following conditions are TRUE:
             # - there duedates
             # - the first and second due_dates are prior to the invoice date
             # so the dates are not valid!!
             return {
                 'title': 'Scadenza - Data di scadenza',
-                'message': 'Solo la prima scadenza può essere precedente alla data fattura'
+                'message': ('Solo la prima scadenza può essere precedente '
+                            'alla data fattura'),
             }
-
         # end if
 
     # end _validate_duedates_date
@@ -228,15 +238,17 @@ class DueDateManager(models.Model):
         if duedates_amounts and (difference != 0):  # Validation FAILED
             return {
                 'title': 'Scadenze - Totale importi',
-                'message': 'Il totale degli importi delle scadenze ({}) deve coincidere'
-                ' con il totale della registrazione ({}). Differenza: ({})'.format(
+                'message': ('Il totale degli importi delle scadenze ({}) '
+                            'deve coincidere con il totale della '
+                            'registrazione ({}). Differenza: ({})').format(
                     amounts_sum, amount_total, difference
-                )
+                ),
             }
 
         else:  # Validation succesful!
             return None
         # end if
+
     # end _validate_duedates_amount
 
     # VALIDATION METHODS - end
@@ -274,9 +286,10 @@ class DueDateManager(models.Model):
             # end if
 
             common_args['total_amount'] = self.move_id.amount
-            common_args['type_error_msg'] = \
-                'move_type for move must be one of: receivable, ' \
+            common_args['type_error_msg'] = (
+                'move_type for move must be one of: receivable, '
                 'payable_refund, payable, receivable_refund'
+            )
             common_args['partner_id'] = self.move_id.partner_id
 
             return self._duedates_common(common_args)
@@ -301,20 +314,18 @@ class DueDateManager(models.Model):
             common_args['invoice_date'] = fields.Date.today()
 
         common_args['total_amount'] = self.invoice_id.amount_total
-        common_args['type_error_msg'] = 'account for invoice must be one of: ' \
-                                        'receivable, payable_refund, ' \
-                                        'payable, receivable_refund'
+        common_args['type_error_msg'] = (
+            'account for invoice must be one of: '
+            'receivable, payable_refund, '
+            'payable, receivable_refund'
+        )
         common_args['partner_id'] = self.invoice_id.partner_id
 
         return self._duedates_common(common_args)
+
     # end _duedates_from_invoice
 
     @api.model
-    # def _duedates_common(
-    #         self,
-    #         payment_terms, doc_type, invoice_date, total_amount, type_error_msg,
-    #         partner_id
-    # ):
     def _duedates_common(self, param_cm):
         '''
         Duedates generation function: this is the part of the algorithm in
@@ -334,7 +345,9 @@ class DueDateManager(models.Model):
 
         if types['is_split'] or types['is_rc'] or types['is_ra']:
             # get tax payment method
-            payment_method_tax = self.env['account.payment.method'].get_payment_method_tax()
+            payment_method_tax = self.env[
+                'account.payment.method'
+            ].get_payment_method_tax()
         else:
             payment_method_tax = self.env['account.payment.method']
         # end if
@@ -348,7 +361,8 @@ class DueDateManager(models.Model):
 
         # update total amount
         param_cm['total_amount'] = self._set_amount_total(
-            types, param_cm['total_amount'])
+            types, param_cm['total_amount']
+        )
 
         # If no payment terms generate only ONE due date line
         # with due_date equal to the invoice date
@@ -358,18 +372,21 @@ class DueDateManager(models.Model):
             # invoice amount is not zero
             if param_cm['total_amount'] > 0:
                 idate = param_cm['invoice_date'].strftime('%Y-%m-%d')
-                inv_date = self._get_split_date_period(param_cm['partner_id'],
-                                                       param_cm['doc_type'],
-                                                       idate)
-                new_dudate_lines.append({
-                    'duedate_manager_id': self.id,
-                    'due_date': inv_date,
-                    'due_amount': param_cm['total_amount'],
-                    'payment_method_id': False,
-                })
+                inv_date = self._get_split_date_period(
+                    param_cm['partner_id'], param_cm['doc_type'], idate
+                )
+                new_dudate_lines.append(
+                    {
+                        'duedate_manager_id': self.id,
+                        'due_date': inv_date,
+                        'due_amount': param_cm['total_amount'],
+                        'payment_method_id': False,
+                    }
+                )
 
-                extra_line = self._extra_line(inv_date, payment_method_tax.id,
-                                              types)
+                extra_line = self._extra_line(
+                    inv_date, payment_method_tax.id, types
+                )
 
                 if extra_line:
                     new_dudate_lines.append(extra_line)
@@ -390,18 +407,22 @@ class DueDateManager(models.Model):
 
             # calculate duedates
             due_dates = param_cm['payment_terms'].compute(
-                param_cm['total_amount'], param_cm['invoice_date'])[0]
+                param_cm['total_amount'], param_cm['invoice_date']
+            )[0]
 
             # canonical lines
-            new_dudate_lines = self._compute_duedates_lines(due_dates, param_cm,
-                                                            tax)
+            new_dudate_lines = self._compute_duedates_lines(
+                due_dates, param_cm, tax
+            )
             # extra line (sp, ra, rc)
-            extra_line = self._extra_duedate_line(param_cm, types_amount,
-                                                  payment_method_tax.id)
+            extra_line = self._extra_duedate_line(
+                param_cm, types_amount, payment_method_tax.id
+            )
             if extra_line:
                 new_dudate_lines.append(extra_line)
 
         return new_dudate_lines
+
     # end _duedates_common
 
     def _compute_duedates_lines(self, due_dates, param_cm, tax):
@@ -429,16 +450,18 @@ class DueDateManager(models.Model):
                 due_amount = due_date[1]
             # end if
 
-            line_date = self._get_split_date_period(param_cm['partner_id'],
-                                                    param_cm['doc_type'],
-                                                    due_date[0])
+            line_date = self._get_split_date_period(
+                param_cm['partner_id'], param_cm['doc_type'], due_date[0]
+            )
 
-            lines.append({
-                'duedate_manager_id': self.id,
-                'payment_method_id': payment_method.id,
-                'due_date': line_date,
-                'due_amount': due_amount
-            })
+            lines.append(
+                {
+                    'duedate_manager_id': self.id,
+                    'payment_method_id': payment_method.id,
+                    'due_date': line_date,
+                    'due_amount': due_amount,
+                }
+            )
         return lines
 
     @api.model
@@ -453,8 +476,9 @@ class DueDateManager(models.Model):
                     enable_period = period.enable_supplier
 
                 if enable_period and (
-                        period.period_id.date_start <= comparison_date <=
-                        period.period_id.date_end
+                    period.period_id.date_start
+                    <= comparison_date
+                    <= period.period_id.date_end
                 ):
                     return period.split_date.strftime('%Y-%m-%d')
         return date
@@ -491,43 +515,50 @@ class DueDateManager(models.Model):
 
         if bool(types_amount['split_amount']):
             split_date = self._get_split_date_period(
-                param_cm['partner_id'], param_cm['doc_type'],
-                param_cm['invoice_date'].strftime('%Y-%m-%d'))
+                param_cm['partner_id'],
+                param_cm['doc_type'],
+                param_cm['invoice_date'].strftime('%Y-%m-%d'),
+            )
 
             line = {
                 'duedate_manager_id': self.id,
                 'payment_method_id': payment_method_id,
                 'due_date': split_date,
-                'due_amount': types_amount['split_amount']
+                'due_amount': types_amount['split_amount'],
             }
         # end if
 
         if bool(types_amount['ra_amount']):
             if self.invoice_id.date:
-                ra_date_fifteen = self.invoice_id.date_due + \
-                                  datetime.timedelta(days=15)
+                ra_date_fifteen = (
+                    self.invoice_id.date_due + datetime.timedelta(days=15)
+                )
                 ra_date = self._get_split_date_period(
-                    param_cm['partner_id'], param_cm['doc_type'],
-                    ra_date_fifteen.strftime('%Y-%m-%d'))
+                    param_cm['partner_id'],
+                    param_cm['doc_type'],
+                    ra_date_fifteen.strftime('%Y-%m-%d'),
+                )
 
                 line = {
                     'duedate_manager_id': self.id,
                     'payment_method_id': payment_method_id,
                     'due_date': ra_date,
-                    'due_amount': types_amount['ra_amount']
+                    'due_amount': types_amount['ra_amount'],
                 }
         # end if
 
         if bool(types_amount['rc_amount']):
             split_date = self._get_split_date_period(
-                param_cm['partner_id'], param_cm['doc_type'],
-                param_cm['invoice_date'].strftime('%Y-%m-%d'))
+                param_cm['partner_id'],
+                param_cm['doc_type'],
+                param_cm['invoice_date'].strftime('%Y-%m-%d'),
+            )
 
             line = {
                 'duedate_manager_id': self.id,
                 'payment_method_id': payment_method_id,
                 'due_date': split_date,
-                'due_amount': types_amount['rc_amount']
+                'due_amount': types_amount['rc_amount'],
             }
         # end if
 
@@ -538,10 +569,10 @@ class DueDateManager(models.Model):
     @api.model
     def _set_amount_total(self, types, amount):
         """
-            Compute invoice total according to tax type
-            - split payment (subtract from total)
-            - wt (subtract from total)
-            - rc local  (subtract from total)
+        Compute invoice total according to tax type
+        - split payment (subtract from total)
+        - wt (subtract from total)
+        - rc local  (subtract from total)
         """
 
         if types['is_split']:
@@ -568,35 +599,42 @@ class DueDateManager(models.Model):
         # end if
 
         if types['is_ra']:
-            tax_amount = self.invoice_id.amount_tax - \
-                         self.invoice_id.withholding_tax_amount
+            tax_amount = (
+                self.invoice_id.amount_tax
+                - self.invoice_id.withholding_tax_amount
+            )
         # end if
 
         if types['is_rc']:
-            tax_amount = self.invoice_id.amount_tax - \
-                         self.invoice_id.amount_rc
+            tax_amount = self.invoice_id.amount_tax - self.invoice_id.amount_rc
         # end if
 
         return tax_amount
+
     # end _compute_tax_to_add
 
     @api.model
     def _get_amount_tax_type(self):
         return {
             'split_amount': getattr(self.invoice_id, 'amount_sp', None),
-            'ra_amount': getattr(self.invoice_id, 'withholding_tax_amount', None),
+            'ra_amount': getattr(
+                self.invoice_id, 'withholding_tax_amount', None
+            ),
             'rc_amount': getattr(self.invoice_id, 'amount_rc', None),
         }
+
     # end _get_amount_tax_type
 
     @api.model
     def _get_tax_type(self):
         return {
             'is_split': bool(getattr(self.invoice_id, 'amount_sp', None)),
-            'is_ra': bool(getattr(self.invoice_id, 'withholding_tax_amount',
-                                  None)),
+            'is_ra': bool(
+                getattr(self.invoice_id, 'withholding_tax_amount', None)
+            ),
             'is_rc': bool(getattr(self.invoice_id, 'amount_rc', None)),
         }
+
     # end _get_amount_tax_type
 
     # PRIVATE METHODS - end

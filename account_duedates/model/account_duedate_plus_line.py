@@ -25,7 +25,8 @@ class DueDateLine(models.Model):
     payment_method_id = fields.Many2one(
         comodel_name='account.payment.method',
         string='Metodo di pagamento',
-        requred=False  # Non sempre è impostato il metodo di pagamento nei termini di pagamento
+        # Metodo pagamento non sempre impostato nei termini di pagamento
+        requred=False,
     )
     # Invoice currency amount
     due_amount = fields.Float(string='Importo', required=True)
@@ -40,13 +41,15 @@ class DueDateLine(models.Model):
 
     is_paid = fields.Boolean(string='Pagato', compute='_get_paid')
 
-    schedule_payment = fields.Boolean(string='In pagamento',
-                                      compute='_get_scheduled_payment')
+    schedule_payment = fields.Boolean(
+        string='In pagamento', compute='_get_scheduled_payment'
+    )
 
     def _get_scheduled_payment(self):
         for line in self:
-            rec = self.env['account.payment.line'].search([
-                ('move_line_id', 'in', [x.id for x in line.move_line_id])])
+            rec = self.env['account.payment.line'].search(
+                [('move_line_id', 'in', [x.id for x in line.move_line_id])]
+            )
             if rec:
                 line.schedule_payment = True
             else:
@@ -80,6 +83,7 @@ class DueDateLine(models.Model):
             result = super().create(values)
             return result
         # end if
+
     # end create
 
     @api.multi
@@ -90,9 +94,7 @@ class DueDateLine(models.Model):
         if not self.env.context.get('RecStop'):
             if 'due_date' in values:
                 for duedate_line in self:
-                    duedate_line.with_context(
-                        RecStop=True
-                    ).update_duedate()
+                    duedate_line.with_context(RecStop=True).update_duedate()
                 # end for
             # end for
 
@@ -106,6 +108,7 @@ class DueDateLine(models.Model):
         # end if
 
         return result
+
     # end write
 
     # ORM METHODS OVERRIDE - end
@@ -125,6 +128,7 @@ class DueDateLine(models.Model):
         if float_is_zero(difference, precision_rounding=precision):
             self.proposed_new_value = 0
         # end if
+
     # end _onchange_due_amount
 
     # @api.onchange('due_date')
@@ -166,7 +170,7 @@ class DueDateLine(models.Model):
     #     error = self._validate_due_amount()
     #     if error:
     #         raise UserError(error['message'])
-        # end if
+    # end if
     # end _check_due_amount
 
     # CONSTRAINTS - end
@@ -190,6 +194,7 @@ class DueDateLine(models.Model):
         if self.move_line_id:
             self.move_line_id[0].date_maturity = self.due_date
         # end if
+
     # end _update_duedate
 
     @api.onchange('payment_method_id')
@@ -197,6 +202,7 @@ class DueDateLine(models.Model):
         if self.move_line_id:
             self.move_line_id[0].payment_method = self.payment_method_id
         # end if
+
     # end _update_payment_method
 
     # UPDATE MOVE LINE METHODS - end

@@ -16,34 +16,40 @@ class AccountMoveLine(models.Model):
 
     @api.model
     def set_default_company_bank(self):
-        if self.invoice_id.type == 'out_invoice' and \
-                hasattr(self.move_id, 'company_bank_id') and \
-                self.move_id.company_bank_id:
+        if (
+            self.invoice_id.type == 'out_invoice'
+            and hasattr(self.move_id, 'company_bank_id')
+            and self.move_id.company_bank_id
+        ):
             return self.move_id.company_bank_id.id
         else:
             return False
         # end if
+
     # end set_default_company_bank
 
     @api.model
     def set_default_counterparty_bank(self):
-        if self.invoice_id.type == 'out_invoice' and \
-                hasattr(self.move_id, 'counterparty_bank_id') and \
-                self.move_id.counterparty_bank_id:
+        if (
+            self.invoice_id.type == 'out_invoice'
+            and hasattr(self.move_id, 'counterparty_bank_id')
+            and self.move_id.counterparty_bank_id
+        ):
             return self.move_id.counterparty_bank_id
         else:
             return False
         # end if
+
     # end set_default_counterparty_bank
 
-    payment_method = fields.Many2one('account.payment.method',
-                                     string="Metodo di pagamento")
+    payment_method = fields.Many2one(
+        'account.payment.method', string="Metodo di pagamento"
+    )
 
     calculate_field = fields.Char(string='Domain test', compute='_domain_test')
 
     is_duedate = fields.Boolean(
-        string='Riga di scadenza',
-        compute='_compute_is_dudate'
+        string='Riga di scadenza', compute='_compute_is_dudate'
     )
 
     duedate_line_id = fields.Many2one(
@@ -55,18 +61,20 @@ class AccountMoveLine(models.Model):
     payment_order = fields.Many2one(
         string='Record ordine di pagamento',
         related='payment_line_ids.order_id',
-        readonly=True
+        readonly=True,
     )
 
     payment_order_name = fields.Char(
         string='Ordine di pagamento',
         related='payment_line_ids.order_id.name',
-        readonly=True)
+        readonly=True,
+    )
 
     state = fields.Selection(
         string='Stato',
         related='payment_line_ids.order_id.state',
-        readonly=True)
+        readonly=True,
+    )
 
     in_order = fields.Boolean(
         string='In distinta',
@@ -74,14 +82,15 @@ class AccountMoveLine(models.Model):
         inverse='_inverse_has_order',
         search='_search_has_order',
     )
-    
+
     payment_order_lines = fields.One2many(
         comodel_name='account.payment.line',
         inverse_name='move_line_id',
     )
 
-    incasso_effettuato = fields.Boolean(string='Incasso effettuato',
-                                        default=False)
+    incasso_effettuato = fields.Boolean(
+        string='Incasso effettuato', default=False
+    )
 
     prorogation_ctr = fields.Integer(string='Numero di proroghe')
 
@@ -93,8 +102,9 @@ class AccountMoveLine(models.Model):
         comodel_name='res.partner.bank',
         string='Conto Bancario aziendale',
         default=set_default_company_bank,
-        domain=lambda self:
-            [('partner_id', '=', self.env.user.company_id.partner_id.id)]
+        domain=lambda self: [
+            ('partner_id', '=', self.env.user.company_id.partner_id.id)
+        ],
     )
 
     counterparty_bank_id = fields.Many2one(
@@ -114,14 +124,21 @@ class AccountMoveLine(models.Model):
 
         if self.account_id:
             account_type = self.env['account.account.type'].search(
-                [('id', '=', self.account_id.user_type_id.id)])
+                [('id', '=', self.account_id.user_type_id.id)]
+            )
             if account_type:
                 if account_type.type == 'payable':
-                    domain = ['|', ('debit_credit', '=', 'debit'),
-                              ('debit_credit', '=', False)]
+                    domain = [
+                        '|',
+                        ('debit_credit', '=', 'debit'),
+                        ('debit_credit', '=', False),
+                    ]
                 elif account_type.type == 'receivable':
-                    domain = ['|', ('debit_credit', '=', 'credit'),
-                              ('debit_credit', '=', False)]
+                    domain = [
+                        '|',
+                        ('debit_credit', '=', 'credit'),
+                        ('debit_credit', '=', False),
+                    ]
             # end if
         # end if
 
@@ -134,8 +151,9 @@ class AccountMoveLine(models.Model):
 
     def _has_order(self):
         for line in self:
-            rec = self.env['account.payment.line'].search([
-                ('move_line_id', '=', line.id)])
+            rec = self.env['account.payment.line'].search(
+                [('move_line_id', '=', line.id)]
+            )
             if rec:
                 line.in_order = True
             else:
@@ -143,8 +161,9 @@ class AccountMoveLine(models.Model):
 
     def _inverse_has_order(self):
         for line in self:
-            rec = self.env['account.payment.line'].search([
-                ('move_line_id', '=', line.id)])
+            rec = self.env['account.payment.line'].search(
+                [('move_line_id', '=', line.id)]
+            )
             if rec:
                 line.in_order = True
             else:
@@ -161,18 +180,21 @@ class AccountMoveLine(models.Model):
 
             not_vat_line = (not line.tax_ids) and (not line.tax_line_id)
             credit_or_debit = line.account_id.user_type_id.type in (
-                'payable', 'receivable'
+                'payable',
+                'receivable',
             )
 
             line.is_duedate = not_vat_line and credit_or_debit
         # end for
+
     # end _compute_is_dudate
 
     def _domain_test(self):
         for rec in self:
             if rec.account_id:
                 account_type = self.env['account.account.type'].search(
-                    [('id', '=', rec.account_id.user_type_id.id)])
+                    [('id', '=', rec.account_id.user_type_id.id)]
+                )
                 if account_type:
                     if account_type.type == 'payable':
                         rec.calculate_field = 'debit'
@@ -183,6 +205,7 @@ class AccountMoveLine(models.Model):
     def create(self, values):
         res = super().create(values)
         return res
+
     # end create
 
     @api.multi
@@ -193,22 +216,19 @@ class AccountMoveLine(models.Model):
         if not self.env.context.get('RecStop'):
             if 'date_maturity' in values:
                 for move in self:
-                    move.with_context(
-                        RecStop=True
-                    ).update_date_maturity()
+                    move.with_context(RecStop=True).update_date_maturity()
                 # end for
             # end if
 
             if 'payment_method' in values:
                 for move in self:
-                    move.with_context(
-                        RecStop=True
-                    ).update_payment_method()
+                    move.with_context(RecStop=True).update_payment_method()
                 # end for
             # end if
         # end if
 
         return result
+
     # end write
 
     # Update the associated duedate_line
@@ -216,10 +236,12 @@ class AccountMoveLine(models.Model):
     def update_date_maturity(self):
         if self.duedate_line_id:
             self.duedate_line_id.due_date = self.date_maturity
+
     # end _update_date_maturity
 
     @api.model
     def update_payment_method(self):
         if self.duedate_line_id:
             self.duedate_line_id.payment_method_id = self.payment_method
+
     # end _update_payment_method

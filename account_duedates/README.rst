@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.4.8.32
+|icon| Due dates 12.0.4.8.33
 ============================
 
 
@@ -155,6 +155,12 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.4.8.33 (2022-02-16)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Refund cannot be validated / N.C. non può essere validata
+* [IMP] Regression test
+
 12.0.4.8.32 (2022-02-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -212,11 +218,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Impostato in elenco scadenze in stampa fattura il metodo di pagamento
-
-12.0.4.8.21 (2021-10-05)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Impostato  elenco scadenze in stampa fattura qualora siano più di una
 
 
 
@@ -289,7 +290,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-02-14
+Last Update / Ultimo aggiornamento: 2022-02-17
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
