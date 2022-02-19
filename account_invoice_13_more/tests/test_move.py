@@ -29,10 +29,14 @@ creates all record declared by above data; lang is an optional parameter.
 
 Final notes:
 * Many2one value must be declared as external identifier
-* Written on 2022-02-16 13:13:48.981084 by mk_test_env 12.0.0.7.2
+* Written on 2022-02-18 13:47:33.226322 by mk_test_env 12.0.0.7.2
 """
+import logging
 from odoo.tests import common
 
+_logger = logging.getLogger(__name__)
+
+# Record data for base models
 TEST_ACCOUNT_ACCOUNT = {
     'external.2601': {
         'code': '2601',
@@ -83,9 +87,9 @@ TEST_ACCOUNT_JOURNAL = {
         'type': 'sale',
         'update_posted': True,
     },
-    'external.ACQ|FATTU|BILL': {
+    'external.BILL': {
         'name': 'Fatture di acquisto',
-        'code': 'ACQ',
+        'code': 'BILL',
         'type': 'purchase',
         'update_posted': True,
     },
@@ -277,8 +281,10 @@ TEST_SETUP = {
     'res.partner.bank': TEST_RES_PARTNER_BANK,
 }
 
+# Record data for child models
 TEST_ACCOUNT_INVOICE_LINE = {
     'z0bug.invoice_Z0_1_01': {
+        'invoice_id': 'z0bug.invoice_Z0_1',
         'product_id': 'z0bug.product_product_1',
         'name': 'Prodotto Alpha',
         'quantity': 1,
@@ -286,8 +292,38 @@ TEST_ACCOUNT_INVOICE_LINE = {
         'price_unit': 0.84,
         'invoice_line_tax_ids': 'external.22v',
     },
+    'z0bug.invoice_Z0_7_1': {
+        'invoice_id': 'z0bug.invoice_Z0_7',
+        'product_id': 'z0bug.product_product_4',
+        'name': 'Prodotto Alpha',
+        'quantity': 100,
+        'account_id': 'external.3101',
+        'price_unit': 0.42,
+        'invoice_line_tax_ids': 'external.22v',
+    },
+    'z0bug.invoice_ZI_2_1': {
+        'invoice_id': 'z0bug.invoice_ZI_2',
+        'product_id': 'z0bug.product_product_1',
+        'name': 'Prodotto Alpha',
+        'quantity': 1000,
+        'account_id': 'external.4101',
+        'price_unit': 0.42,
+        'invoice_line_tax_ids': 'z0bug.tax_2220',
+    },
+    'z0bug.invoice_ZI_7_1': {
+        'invoice_id': 'z0bug.invoice_ZI_7',
+        'product_id': 'z0bug.product_product_0',
+        'name': 'Sconto su ns. fattura 21/TO/1234',
+        'quantity': 1,
+        'account_id': 'external.4101',
+        'price_unit': 60,
+        'invoice_line_tax_ids': 'external.22a',
+        'accrual_start_date': '2021-02-28',
+        'accrual_end_date': '2023-01-31',
+    },
 }
 
+# Record data for models to test
 TEST_ACCOUNT_INVOICE = {
     'z0bug.invoice_Z0_1': {
         'partner_id': 'z0bug.res_partner_1',
@@ -300,7 +336,6 @@ TEST_ACCOUNT_INVOICE = {
         'currency_id': 'base.EUR',
         'partner_bank_id': 'z0bug.bank_company_1',
         'payment_term_id': 'z0bug.payment_1',
-        'bank_2_print_selector': 'partner',
         'company_bank_id': 'z0bug.bank_company_1',
         'counterparty_bank_id': 'z0bug.bank_partner_1',
     },
@@ -324,7 +359,7 @@ TEST_ACCOUNT_INVOICE = {
         'date': '2022-01-01',
         'date_apply_vat': '2022-01-01',
         'type': 'in_invoice',
-        'journal_id': 'external.ACQ|FATTU|BILL',
+        'journal_id': 'external.BILL',
         'fiscal_position_id': 'z0bug.fiscalpos_it',
         'currency_id': 'base.EUR',
         'payment_term_id': 'z0bug.payment_5',
@@ -343,29 +378,31 @@ TEST_ACCOUNT_INVOICE = {
     },
 }
 
+TNL_RECORDS = {
+    'product.product': {
+        # 'type': ['product', 'consu'],
+    },
+    'product.template': {
+        # 'type': ['product', 'consu'],
+    },
+}
 
-class TestAccountMove(common.TransactionCase):
+
+class TestAccountMove(common.SingleTransactionCase):
 
     # --------------------------------------- #
     # Common code: may be share among modules #
     # --------------------------------------- #
 
-    def simulate_xref(
-        self,
-        xref,
-        raise_if_not_found=None,
-        model=None,
-        by=None,
-        company_id=None,
-        case=None,
-    ):
+    def simulate_xref(self, xref, raise_if_not_found=None,
+                      model=None, by=None, company=None, case=None):
         """Simulate External Reference
         This function simulates self.env.ref() searching for model record.
         Ordinary xref is formatted as "MODULE.NAME"; when MODULE = "external"
         this function is called.
         Record is searched by <by> parameter, default is 'code' or 'name';
         id NAME is formatted as "FIELD=VALUE", FIELD value is assigned to <by>
-        If company_id is supplied, it is added in search domain;
+        If company is supplied, it is added in search domain;
 
         Args:
             xref (str): external reference
@@ -373,7 +410,7 @@ class TestAccountMove(common.TransactionCase):
                                        if more records found
             model (str): external reference model
             by (str): default field to search object record,
-            company_id (int): company ID
+            company (obj): default company
             case: apply for uppercase or lowercase
 
         Returns:
@@ -397,18 +434,12 @@ class TestAccountMove(common.TransactionCase):
         elif case == 'lower':
             name = name.lower()
         domain = [(by, '=', name)]
-        if (
-            model
-            not in (
-                'product.product',
-                'product.template',
-                'res.partner',
-                'res.users',
-            )
-            and company_id
-            and 'company_id' in _fields
-        ):
-            domain.append(('company_id', '=', company_id))
+        if (model not in ('product.product',
+                          'product.template',
+                          'res.partner',
+                          'res.users') and
+                company and 'company_id' in _fields):
+            domain.append(('company_id', '=', company.id))
         objs = self.env[model].search(domain)
         if len(objs) == 1:
             return objs[0]
@@ -416,15 +447,8 @@ class TestAccountMove(common.TransactionCase):
             raise ValueError('External ID not found in the system: %s' % xref)
         return False
 
-    def env_ref(
-        self,
-        xref,
-        raise_if_not_found=None,
-        model=None,
-        by=None,
-        company_id=None,
-        case=None,
-    ):
+    def env_ref(self, xref, raise_if_not_found=None,
+                model=None, by=None, company=None, case=None):
         """Get External Reference
         This function is like self.env.ref(); if xref does not exist and
         xref prefix is 'external.', engage simulate_xref
@@ -434,7 +458,7 @@ class TestAccountMove(common.TransactionCase):
             raise_if_not_found (bool): raise exception if xref not found
             model (str): external ref. model; required for "external." prefix
             by (str): field to search for object record (def 'code' or 'name')
-            company_id (int): company ID
+            company (obj): default company
 
         Returns:
             obj: the model record
@@ -445,9 +469,11 @@ class TestAccountMove(common.TransactionCase):
         if not obj:
             module, name = xref.split('.', 1)
             if module == 'external':
-                return self.simulate_xref(
-                    xref, model=model, by=by, company_id=company_id, case=case
-                )
+                return self.simulate_xref(xref,
+                                          model=model,
+                                          by=by,
+                                          company=company,
+                                          case=case)
         return obj
 
     def add_xref(self, xref, model, xid):
@@ -463,44 +489,49 @@ class TestAccountMove(common.TransactionCase):
             'model': model,
             'res_id': xid,
         }
-        xrefs = ir_model.search([('module', '=', module), ('name', '=', name)])
+        xrefs = ir_model.search([('module', '=', module),
+                                 ('name', '=', name)])
         if not xrefs:
             return ir_model.create(vals)
         xrefs[0].write(vals)
         return xrefs[0]
 
-    def get_values(self, model, values, by=None, company_id=None, case=None):
+    def get_values(self, model, values, by=None, company=None, case=None):
         """Load data values and set them in a dictionary for create function
         * Not existent fields are ignored
         * Many2one field are filled with current record ID
         """
         _fields = self.env[model].fields_get()
         vals = {}
+        if model in TNL_RECORDS:
+            for item in TNL_RECORDS[model].keys():
+                if item in values:
+                    (old, new) = TNL_RECORDS[model][item]
+                    if values[item] == old:
+                        values[item] = new
         for item in values.keys():
             if item not in _fields:
                 continue
             if item == 'company_id' and not values[item]:
-                vals[item] = company_id
+                vals[item] = company.id
             elif _fields[item]['type'] == 'many2one':
                 res = self.env_ref(
                     values[item],
                     model=_fields[item]['relation'],
                     by=by,
-                    company_id=company_id,
+                    company=company,
                     case=case,
                 )
                 if res:
                     vals[item] = res.id
-            elif (
-                _fields[item]['type'] == 'many2many'
-                and '.' in values[item]
-                and ' ' not in values[item]
-            ):
+            elif (_fields[item]['type'] == 'many2many' and
+                  '.' in values[item] and
+                  ' ' not in values[item]):
                 res = self.env_ref(
                     values[item],
                     model=_fields[item]['relation'],
                     by=by,
-                    company_id=company_id,
+                    company=company,
                     case=case,
                 )
                 if res:
@@ -516,25 +547,26 @@ class TestAccountMove(common.TransactionCase):
             self.add_xref(xref, model, res.id)
         return res
 
-    def model_browse(
-        self, model, xid, company_id=None, by=None, raise_if_not_found=True
-    ):
+    def model_browse(self, model, xid, company=None, by=None,
+                     raise_if_not_found=True):
         """Browse a record by external ID"""
         res = self.env_ref(
             xid,
             model=model,
-            company_id=company_id,
+            company=company,
             by=by,
         )
         if res:
             return res
         return self.env[model]
 
-    def model_make(self, model, values, xref, company_id=None, by=None):
+    def model_make(self, model, values, xref, company=None, by=None):
         """Create or write a test record and set external ID to next tests"""
-        res = self.model_browse(
-            model, xref, company_id=company_id, by=by, raise_if_not_found=False
-        )
+        res = self.model_browse(model,
+                                xref,
+                                company=company,
+                                by=by,
+                                raise_if_not_found=False)
         if res:
             res.write(values)
             return res
@@ -556,8 +588,7 @@ class TestAccountMove(common.TransactionCase):
         else:
             if raise_if_not_found:
                 raise ValueError(
-                    'Module %s not found in the system' % locale_name
-                )
+                    'Module %s not found in the system' % locale_name)
 
     def install_language(self, iso, overwrite=None, force_translation=None):
         iso = iso or 'en_US'
@@ -566,9 +597,8 @@ class TestAccountMove(common.TransactionCase):
         lang_model = self.env['res.lang']
         languages = lang_model.search([('code', '=', iso)])
         if not languages:
-            languages = lang_model.search(
-                [('code', '=', iso), ('active', '=', False)]
-            )
+            languages = lang_model.search([('code', '=', iso),
+                                           ('active', '=', False)])
             if languages:
                 languages.write({'active': True})
                 load = True
@@ -605,30 +635,34 @@ class TestAccountMove(common.TransactionCase):
                 if isinstance(model_data[item], str):
                     continue
                 vals = self.get_values(
-                    model, model_data[item], company_id=company.id
-                )
+                    model,
+                    model_data[item],
+                    company=company)
                 res = self.model_make(
-                    model, vals, item, company_id=company.id, by=by
-                )
+                    model, vals, item,
+                    company=company,
+                    by=by)
                 if model == 'product.template':
                     model2 = 'product.product'
                     vals = self.get_values(
-                        model2, model_data[item], company_id=company.id
-                    )
+                        model2,
+                        model_data[item],
+                        company=company)
                     vals['product_tmpl_id'] = res.id
                     self.model_make(
-                        model2,
-                        vals,
-                        item.replace('template', 'product'),
-                        company_id=company.id,
-                        by=by,
-                    )
+                        model2, vals, item.replace('template', 'product'),
+                        company=company,
+                        by=by)
 
         self.save_as_demo = save_as_demo or False
         if locale:
             self.set_locale(locale)
         if lang:
             self.install_language('it_IT')
+        if not self.env['ir.module.module'].search(
+                [('name', '=', 'stock'), ('state', '=', 'installed')]):
+            TNL_RECORDS['product.product']['type'] = ['product', 'consu']
+            TNL_RECORDS['product.template']['type'] = ['product', 'consu']
         self.by = {}
         for model, model_data in TEST_SETUP.items():
             by = model_data.get('by')
@@ -644,24 +678,30 @@ class TestAccountMove(common.TransactionCase):
     # ------------------ #
     def setUp(self):
         super().setUp()
-        self.setup_records(lang='it_IT', save_as_demo=True)
+        self.setup_records(lang='it_IT')
 
     def tearDown(self):
+        super().tearDown()
         if self.save_as_demo:
-            self.env.cr.commit()  # pylint: disable=invalid-commit
+            self.env.cr.commit()               # pylint: disable=invalid-commit
 
     def test_invoice_validate(self):
-        for item in TEST_ACCOUNT_INVOICE:
-            model = 'account.invoice'
-            vals = self.get_values(model, TEST_ACCOUNT_INVOICE[item])
-            inv = self.model_make(model, vals, item)
+        model = 'account.invoice'
+        model_child = 'account.invoice.line'
+        for xref in TEST_ACCOUNT_INVOICE:
+            _logger.info(
+                "🎺 Testing %s[%s]" % (model, xref)
+            )
+            vals = self.get_values(
+                model,
+                TEST_ACCOUNT_INVOICE[xref])
+            inv = self.model_make(model, vals, xref)
 
-            model = 'account.invoice.line'
-            for line in TEST_ACCOUNT_INVOICE_LINE.values():
-                vals = self.get_values(model, line)
-                vals['invoice_id'] = inv.id
-                self.model_make(model, vals, False)
-            inv.compute_taxes()
+            for xref_child in TEST_ACCOUNT_INVOICE_LINE.values():
+                if xref_child['invoice_id'] == xref:
+                    vals = self.get_values(model_child, xref_child)
+                    vals['invoice_id'] = inv.id
+                    self.model_make(model_child, vals, False)
             inv.action_invoice_open()
             move = inv.move_id
             for field in (
@@ -671,6 +711,18 @@ class TestAccountMove(common.TransactionCase):
                 'partner_bank_id',
             ):
                 self.assertEqual(getattr(inv, field), getattr(move, field))
+                self.assertEqual(
+                    getattr(inv, field),
+                    getattr(move, field),
+                    msg='Move & Invoice %s are different' % field
+                )
             self.assertEqual(
-                getattr(inv, 'date_invoice'), getattr(move, 'invoice_date')
+                inv.date_invoice,
+                move.invoice_date,
+                msg='Move & Invoice date invoice are different'
+            )
+            self.assertEqual(
+                inv.type,
+                move.move_type,
+                msg='Move & Invoice move_type are different'
             )

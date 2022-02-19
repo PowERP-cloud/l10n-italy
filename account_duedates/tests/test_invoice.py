@@ -646,8 +646,9 @@ class TestAccountMove(common.TransactionCase):
             vals = {'lang': iso}
             self.env['base.update.translations'].create(vals).act_update()
 
-    def setup_records(self, lang=None, locale=None, company=None,
-                      save_as_demo=None):
+    def setup_records(
+        self, lang=None, locale=None, company=None, save_as_demo=None
+    ):
         """Create all record from declared data. See above doc
 
         Args:

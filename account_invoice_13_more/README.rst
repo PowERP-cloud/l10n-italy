@@ -23,7 +23,7 @@ The account.move model has the some structure of Odoo 13.0 and more.
 This module simplify the backport from Odoo 13.0+.
 
 Common structure with Odoo 13.0+
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------------
 
 * account.move.invoice_date
 * account.move.type (must be renamed to move_type)
@@ -32,10 +32,11 @@ Common structure with Odoo 13.0+
 * account.move.partner_bank_id
 
 Difference from Odoo 13.0+
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------
 
 * Draft and cancelled invoice has no account.move records
 * Events are still active on account.invoice model
+
 
 |
 
@@ -44,7 +45,7 @@ Il modello account.move ha la stessa struttura di Odoo 13.0 e successive.
 Il modulo semplifica il backport da Odoo 13.0+
 
 Strutture comuni con Odoo 13.0+
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------
 
 * account.move.invoice_date
 * account.move.type (deve essere rinominato move_type)
@@ -53,10 +54,11 @@ Strutture comuni con Odoo 13.0+
 * account.move.partner_bank_id
 
 Differenze da Odoo 13.0+
-~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------
 
 * Draft and cancelled invoice has no account.move records
 * Events are still active on account.invoice model
+
 
 |
 |
@@ -168,6 +170,15 @@ and/or submit pull requests on `GitHub Issues
 
 In case of trouble, please check there if your issue has already been reported.
 
+|
+
+Known issues / Roadmap
+----------------------
+
+* Field with name "type" will be removed: it is replaced by "move_type" field
+* Add onchange control to avoid entry type with VAT registries and vice-versa
+
+
 Proposals for enhancement
 -------------------------
 
@@ -276,7 +287,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-02-17
+Last Update / Ultimo aggiornamento: 2022-02-19
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

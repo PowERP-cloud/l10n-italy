@@ -6,24 +6,23 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
+
             <xpath expr="//field[@name='date']" position="before">
-                <field name="type" attrs="{'readonly': [('lines_count', '>', 0)]}" force_save="1"/>
+                <field name="move_type" attrs="{'readonly': [('lines_count', '>', 0)]}" force_save="1"/>
                 <field name="invoice_date"
-                       attrs="{'required': [('type', 'in', ['out_invoice', 'in_invoice', 'out_refund', 'in_refund'])]}"
+                       attrs="{'required': [('move_type', 'in', ['out_invoice', 'in_invoice', 'out_refund', 'in_refund'])]}"
                        />
                 <field name="lines_count" invisible="1"/>
             </xpath>
 
             <xpath expr="//field[@name='company_id']" position="after">
-                <field name="type" invisible="1" />
                 <field
                       name="payment_term_id"
                       attrs="{
-                      'invisible': [('type', 'not in', ['out_invoice', 'out_refund', 'in_invoice','in_refund'])],
-                      'readonly': [('state', 'not in', ['draft',])]
+                      'invisible': [('move_type', 'not in', ['out_invoice', 'out_refund', 'in_invoice', 'in_refund'])],
                       }"
                       />
-                <field name="partner_bank_id" attrs="{'readonly':[('type', '!=', 'entry')]}"/>
+                <field name="partner_bank_id" attrs="{'readonly': [('move_type', '==', 'entry')]}"/>
             </xpath>
 
         </field>

@@ -24,12 +24,11 @@ class AccountMove(models.Model):
         for rec in self:
             rec.lines_count = len(rec.line_ids)
         # end for
-
     # end def
 
     # Naming of 13.0 differs from account.invoice.date_invoice
     invoice_date = fields.Date(
-        string='Data documento',
+        string='Invoice Date',
         readonly=True,
         index=True,
         copy=False,
@@ -37,9 +36,27 @@ class AccountMove(models.Model):
         default=_get_default_invoice_date,
         help="Keep empty to use the current date",
     )
-    # Naming of 13.0 same as account.invoice.type
-    # From 14.0 this field is renamed to move_type
-    # TODO> rename to move_type
+    # Name of 13.0 is account.move.type, like in account.invoice
+    # From 14.0 this field is renamed to account.move.move_type
+    move_type = fields.Selection(
+        [
+            ('entry', 'Journal Entry'),
+            ('out_invoice', 'Customer Invoice'),
+            ('out_refund', 'Customer Credit Note'),
+            ('in_invoice', 'Vendor Bill'),
+            ('in_refund', 'Vendor Credit Note'),
+            # ('out_receipt', 'Sales Receipt'),
+            # ('in_receipt', 'Purchase Receipt'),
+        ],
+        string='Entry type',
+        readonly=True,
+        states={'draft': [('readonly', False)]},
+        index=True,
+        change_default=True,
+        default=lambda self: self._context.get('type', 'entry'),
+        track_visibility='always',
+        required=True,
+    )
     type = fields.Selection(
         [
             ('entry', 'Journal Entry'),
@@ -50,6 +67,7 @@ class AccountMove(models.Model):
             # ('out_receipt', 'Sales Receipt'),
             # ('in_receipt', 'Purchase Receipt'),
         ],
+        string='Deprecated',
         readonly=True,
         states={'draft': [('readonly', False)]},
         index=True,
@@ -73,7 +91,7 @@ class AccountMove(models.Model):
 
     payment_term_id = fields.Many2one(
         comodel_name='account.payment.term',
-        string='Termine di pagamento',
+        string='Payment Term',
         oldname='payment_id',
     )
 
@@ -102,3 +120,19 @@ class AccountMove(models.Model):
                               'partner_bank_id'):
                     move[field] = getattr(invoice, field)
         return super().post(invoice=invoice)
+
+    @api.model
+    def create(self, values):
+        if values.get('type') and not values.get('move_type'):
+            values['move_type'] = values['type']
+        elif not values.get('type') and values.get('move_type'):
+            values['type'] = values['move_type']
+        return super().create(values)
+
+    @api.multi
+    def write(self, values):
+        if values.get('type') and not values.get('move_type'):
+            values['move_type'] = values['type']
+        elif not values.get('type') and values.get('move_type'):
+            values['type'] = values['move_type']
+        return super().write(values)
