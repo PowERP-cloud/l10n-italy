@@ -10,46 +10,46 @@ from odoo.exceptions import UserError
 
 def same_payment_method(account_move_lines):
     '''Ensures all lines have the same payment method'''
-    
+
     assert len(account_move_lines) > 0
-    
+
     pay_method = None
-    
+
     for line in account_move_lines:
-        
+
         line_pay_method = line.payment_method
-        
+
         if pay_method is None:
             pay_method = line_pay_method
-            
+
         elif line_pay_method.id != pay_method.id:
             raise UserError(
                 'Le scadenze selezionate devono avere '
                 'tutte lo stesso metodo di pagamento'
             )
-        
+
         else:
             pass
-        
+
         # end if
-        
+
     # end for
-    
+
     return pay_method
-    
+
 
 
 def allowed_payment_method(account_move_lines, payment_method_codes: typing.List[str]):
     '''Ensures the selected lines have a supported payment method'''
-    
+
     assert len(account_move_lines) > 0
-    
+
     assert len(payment_method_codes) > 0, \
         'At least one payment method code must be specified ' \
         '...otherwise what are you calling this function for????'
-    
+
     for line in account_move_lines:
-        
+
         if line.payment_method.code not in payment_method_codes:
             raise UserError(
                 'La funzione è supportata solo '
@@ -57,25 +57,25 @@ def allowed_payment_method(account_move_lines, payment_method_codes: typing.List
                 ' ' + ', '.join(payment_method_codes)
             )
         # end if
-        
+
     # end for
-    
+
 
 
 def assigned_to_payment_order(account_move_lines, assigned: bool):
     '''
     Check if the selected lines are assigned to a payment order or not.
     If the "assigned" parameters is:
-    
+
       - True the method requires that all lines have been assigned to a
         payment order, raises an exception otherwise
-    
+
       - False the method requires that all lines have NOT been assigned to a
         payment order, raises an exception otherwise
     '''
-    
+
     assert len(account_move_lines) > 0
-    
+
     for line in account_move_lines:
 
         if assigned and not line.in_order:
@@ -91,20 +91,20 @@ def assigned_to_payment_order(account_move_lines, assigned: bool):
         else:
             pass
         # end if
-        
+
     # end for
-    
+
 
 
 def same_payment_order(account_move_lines):
     '''Ensures that all the move lines are in the same payment_order'''
-    
+
     assert len(account_move_lines) > 0
-    
+
     po_name = account_move_lines[0].payment_order_name
-    
+
     for line in account_move_lines:
-        
+
         if line.payment_order_name != po_name:
             raise UserError(
                 'Per poter procedere con l\'operazione tutte le righe '
@@ -113,13 +113,13 @@ def same_payment_order(account_move_lines):
             )
         else:
             pass
-        
+
         # end if
-        
+
     # end for
 
     return po_name
-    
+
 
 
 def allowed_payment_order_status(account_move_lines, payment_order_status: typing.List[str]):
@@ -127,35 +127,35 @@ def allowed_payment_order_status(account_move_lines, payment_order_status: typin
     Ensures that all the payment orders referenced by the lines are in one of
     the valid statuses listed in the payment_order_status parameter
     '''
-    
+
     assert len(account_move_lines) > 0
-    
+
     assert len(payment_order_status) > 0, \
         'At least one state must be specified ' \
         '...otherwise what are you calling this function for????'
-    
+
     for line in account_move_lines:
 
         if line.state not in payment_order_status:
-            
+
             # Translate the values to user friendly labels
             val_to_label = dict(line.fields_get(['state'])['state']['selection'])
             labels_list = [val_to_label[x] for x in payment_order_status]
-            
+
             if len(payment_order_status) > 1:
                 msg = 'in uno dei seguenti stati: ' + ', '.join(labels_list)
             else:
                 msg = 'nello stato: ' + labels_list[0]
             # end if
-            
+
             raise UserError(
                 'Per poter procedere con l\'operazione l\'ordine di pagamento '
                 'di ciascuna scadenza selezionata deve essere ' + msg
             )
         # end if
-        
+
     # end for
-    
+
 
 
 def except_payment_order_status(account_move_lines,
@@ -257,6 +257,42 @@ def insoluto(account_move_lines):
     lines_check_invoice_type(account_move_lines, ['out_invoice'])
 
 
+def same_bank_account_wallet(account_move_lines):
+    '''Ensures all lines have the same payment method'''
+
+    assert len(account_move_lines) > 0
+
+    bank_wallet = None
+
+    for line in account_move_lines:
+
+        line_bank_wallet = line.company_bank_id
+
+        if bank_wallet is None:
+            bank_wallet = line_bank_wallet
+
+        if bank_wallet.bank_is_wallet is False:
+            raise UserError(
+                'Le scadenze selezionate devono avere '
+                'un conto bancario di portafoglio'
+            )
+
+        elif line_bank_wallet.id != bank_wallet.id:
+            raise UserError(
+                'Le scadenze selezionate devono avere '
+                'tutte lo stesso conto bancario di portafoglio'
+            )
+
+        else:
+            pass
+
+        # end if
+
+    # end for
+
+    return bank_wallet
+
+
 def payment_confirm(account_move_lines):
 
     # incasso effettuato deve essere False
@@ -269,5 +305,12 @@ def payment_confirm(account_move_lines):
     )
     assigned_to_payment_order(account_move_lines, assigned=True)
     allowed_payment_order_status(account_move_lines, ['done'])
-    same_payment_order(account_move_lines)
+
+    # same res partner bank and must be a wallet bank account
+    same_bank_account_wallet(account_move_lines)
+
+    # control no more needed
+    # we catch lines from different orders
+    # same_payment_order(account_move_lines)
+
     lines_check_invoice_type(account_move_lines, ['out_invoice'])

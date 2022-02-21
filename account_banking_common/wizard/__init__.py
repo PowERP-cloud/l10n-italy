@@ -9,3 +9,7 @@ from . import wizard_insoluto
 from . import wizard_account_payment_order_generate
 from . import wizard_account_payment_order_add_move_lines
 from . import wizard_set_payment_method
+from . import wizard_account_compensation_generate
+from . import wizard_account_register_payment
+
+
