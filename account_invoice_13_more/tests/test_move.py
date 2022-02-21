@@ -711,18 +711,19 @@ class TestAccountMove(common.SingleTransactionCase):
                 'partner_bank_id',
             ):
                 self.assertEqual(getattr(inv, field), getattr(move, field))
-                self.assertEqual(
-                    getattr(inv, field),
-                    getattr(move, field),
-                    msg='Move & Invoice %s are different' % field
-                )
+            self.assertEqual(
+                {
+                    'entry': 'other',
+                    'out_invoice': 'receivable',
+                    'out_refund': 'receivable_refund',
+                    'in_invoice': 'payable',
+                    'in_refund': 'payable_refund',
+                }[inv.type],
+                move.move_type,
+                msg='Move & Invoice %s are different' % field
+            )
             self.assertEqual(
                 inv.date_invoice,
                 move.invoice_date,
                 msg='Move & Invoice date invoice are different'
-            )
-            self.assertEqual(
-                inv.type,
-                move.move_type,
-                msg='Move & Invoice move_type are different'
             )

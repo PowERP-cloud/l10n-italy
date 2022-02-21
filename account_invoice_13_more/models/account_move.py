@@ -5,6 +5,22 @@
 #
 from odoo import api, fields, models
 
+TYPE_2_MOVE_TYPE = {
+    'entry': 'other',
+    'out_invoice': 'receivable',
+    'out_refund': 'receivable_refund',
+    'in_invoice': 'payable',
+    'in_refund': 'payable_refund',
+}
+MOVE_TYPE_2_TYPE = {
+    'other': 'entry',
+    'liquidity': 'entry',
+    'receivable': 'out_invoice',
+    'receivable_refund': 'out_refund',
+    'payable': 'in_invoice',
+    'payable_refund': 'in_refund',
+}
+
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
@@ -17,6 +33,14 @@ class AccountMove(models.Model):
             in ('in_invoice', 'in_refund', 'in_receipt')
             else False
         )
+
+    @api.model
+    def _cvt_type2move_type(self, type):
+        return TYPE_2_MOVE_TYPE[type]
+
+    @api.model
+    def _cvt_move_type2type(self, move_type):
+        return MOVE_TYPE_2_TYPE[move_type]
 
     @api.multi
     @api.depends('line_ids')
@@ -36,27 +60,28 @@ class AccountMove(models.Model):
         default=_get_default_invoice_date,
         help="Keep empty to use the current date",
     )
-    # Name of 13.0 is account.move.type, like in account.invoice
-    # From 14.0 this field is renamed to account.move.move_type
+    # This is the field name and values for Odoo 14+
+    # This field replaces old "type" field
     move_type = fields.Selection(
         [
-            ('entry', 'Journal Entry'),
-            ('out_invoice', 'Customer Invoice'),
-            ('out_refund', 'Customer Credit Note'),
-            ('in_invoice', 'Vendor Bill'),
-            ('in_refund', 'Vendor Credit Note'),
-            # ('out_receipt', 'Sales Receipt'),
-            # ('in_receipt', 'Purchase Receipt'),
+            ('other', 'Other'),
+            ('liquidity', 'Liquidity'),
+            ('receivable', 'Receivable'),
+            ('receivable_refund', 'Receivable refund'),
+            ('payable', 'Payable'),
+            ('payable_refund', 'Payable refund'),
         ],
         string='Entry type',
         readonly=True,
         states={'draft': [('readonly', False)]},
         index=True,
         change_default=True,
-        default=lambda self: self._context.get('type', 'entry'),
+        default=lambda self: self._context.get('move_type', 'other'),
         track_visibility='always',
         required=True,
     )
+    # This is the field name and the values for Odoo 13-
+    # This field is for compatibility with old Odoo version
     type = fields.Selection(
         [
             ('entry', 'Journal Entry'),
@@ -113,7 +138,7 @@ class AccountMove(models.Model):
             for move in self:
                 for field in ('type',):
                     move[field] = getattr(invoice, field)
-                move.move_type = getattr(invoice, 'type')
+                move.move_type = move._cvt_type2move_type(invoice.type)
                 move.invoice_date = invoice.date_invoice
                 for field in ('payment_term_id',
                               'fiscal_position_id',
@@ -124,15 +149,15 @@ class AccountMove(models.Model):
     @api.model
     def create(self, values):
         if values.get('type') and not values.get('move_type'):
-            values['move_type'] = values['type']
+            values['move_type'] = self._cvt_type2move_type(values['type'])
         elif not values.get('type') and values.get('move_type'):
-            values['type'] = values['move_type']
+            values['type'] = self._cvt_move_type2type(values['move_type'])
         return super().create(values)
 
     @api.multi
     def write(self, values):
         if values.get('type') and not values.get('move_type'):
-            values['move_type'] = values['type']
+            values['move_type'] = self._cvt_type2move_type(values['type'])
         elif not values.get('type') and values.get('move_type'):
-            values['type'] = values['move_type']
+            values['type'] = self._cvt_move_type2type(values['move_type'])
         return super().write(values)
