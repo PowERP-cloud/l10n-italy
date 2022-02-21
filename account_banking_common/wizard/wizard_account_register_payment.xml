@@ -1,0 +1,28 @@
+<odoo>
+
+    <record id="wizard_account_register_payment" model="ir.ui.view">
+        <field name="name">wizard.account.register.payment.form</field>
+        <field name="model">wizard.account.register.payment</field>
+        <field name="arch" type="xml">
+            <form string="Registra pagamento">
+                <group>
+                    <field
+                        name="journal_id"
+                        readonly="1"
+                    />
+                    <field
+                        name="registration_date"
+                        readonly="1"
+                    />
+                </group>
+
+                <footer>
+                    <button type="object" name="register" string="Conferma" class="oe_highlight"/>
+                    <button special="cancel" string="Cancel" class="oe_link"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>
+
