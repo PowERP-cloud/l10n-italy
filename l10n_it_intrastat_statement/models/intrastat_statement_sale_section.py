@@ -196,7 +196,7 @@ class IntrastatStatementSaleSection1(models.Model):
             if self.triangulation:
                 nb_code = ''
             else:
-                nb_code = self.nature_B_id.code
+                nb_code = self.transaction_nature_b_id.code
             rcd += format_x(nb_code, 1)
 
             rcd += format_x(self.country_origin_id.code, 2)
