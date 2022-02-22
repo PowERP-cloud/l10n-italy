@@ -147,6 +147,7 @@
                     <field name="code"/>
                     <field name="name"/>
                     <field name="triangulation"/>
+                    <field name="active"/>
                 </tree>
             </field>
         </record>
@@ -160,6 +161,7 @@
                         <field name="code"/>
                         <field name="name"/>
                         <field name="triangulation"/>
+                        <field name="active"/>
                     </group>
                 </form>
             </field>

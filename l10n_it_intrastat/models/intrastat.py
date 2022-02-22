@@ -117,6 +117,11 @@ class AccountIntrastatTransationNature(models.Model):
         string="Triangulation",
     )
 
+    active = fields.Boolean(
+        string="Active",
+        default=True,
+    )
+
 
 class AccountIntrastatTransationNatureB(models.Model):
     _name = 'account.intrastat.transaction.nature.b'

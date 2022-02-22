@@ -257,7 +257,7 @@
                             </group>
                             <group>
                                 <group>
-                                    <field name="nature_B_id" attrs="{'required': [('triangulation','=', False)]}"/>
+                                    <field name="transaction_nature_b_id" attrs="{'required': [('triangulation','=', False)]}"/>
                                 </group>
                                 <group>
                                     <field name="country_origin_id" required="1"/>

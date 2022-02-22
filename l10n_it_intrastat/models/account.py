@@ -585,6 +585,10 @@ class AccountInvoiceIntrastat(models.Model):
     transaction_nature_id = fields.Many2one(
         comodel_name='account.intrastat.transaction.nature',
         string="Transaction Nature")
+    transaction_nature_b_id = fields.Many2one(
+        comodel_name='account.intrastat.transaction.nature.b',
+        string="Transaction Nature B")
+
     weight_kg = fields.Float(
         string="Net Mass (kg)")
     additional_units = fields.Float(
@@ -647,6 +651,19 @@ class AccountInvoiceIntrastat(models.Model):
     country_payment_id = fields.Many2one(
         comodel_name='res.country',
         string="Payment Country")
+
+    triangulation = fields.Boolean(
+        string="Triangulation",
+        default=False,
+    )
+
+    @api.onchange('transaction_nature_id')
+    def _onchange_transaction_nature_id(self):
+        domain = [('nature_parent_id', '=', self.transaction_nature_id.id)]
+        recs = self.env['account.intrastat.transaction.nature.b'].search(domain)
+        return {
+            'domain': {'transaction_nature_b_id': [('id', 'in', recs.ids)]}
+        }
 
     @api.onchange('weight_kg')
     def change_weight_kg(self):

@@ -57,7 +57,7 @@ class IntrastatStatementSaleSection1(models.Model):
     province_origin_id = fields.Many2one(
         comodel_name='res.country.state',
         string="Origin Province")
-    nature_B_id = fields.Many2one(
+    transaction_nature_b_id = fields.Many2one(
         comodel_name='account.intrastat.transaction.nature.b',
         string="Transaction Nature B"
     )
@@ -85,7 +85,7 @@ class IntrastatStatementSaleSection1(models.Model):
     @api.onchange('weight_kg')
     def change_weight_kg(self):
         if self.statement_id.company_id.intrastat_additional_unit_from == \
-                'weight':
+            'weight':
             self.additional_units = self.weight_kg
 
     @api.onchange('transaction_nature_id')
@@ -93,7 +93,7 @@ class IntrastatStatementSaleSection1(models.Model):
         domain = [('nature_parent_id', '=', self.transaction_nature_id.id)]
         recs = self.env['account.intrastat.transaction.nature.b'].search(domain)
         return {
-            'domain': {'nature_B_id': [('id', 'in', recs.ids)]}
+            'domain': {'transaction_nature_b_id': [('id', 'in', recs.ids)]}
         }
 
     @api.model
@@ -126,6 +126,16 @@ class IntrastatStatementSaleSection1(models.Model):
             statement_id.company_id or company_id,
             # dp_model.precision_get('Account'))
             0)
+        # not setting default yet
+        nature_b_model = self.env['account.intrastat.transaction.nature.b']
+
+        if inv_intra_line.transaction_nature_b_id:
+            transaction_nature_b_id = inv_intra_line.transaction_nature_b_id
+        else:
+            transaction_nature_b_id = nature_b_model
+
+        triangulation = inv_intra_line.triangulation
+        country_good_origin_id = inv_intra_line.country_good_origin_id
 
         res.update({
             'transaction_nature_id': transaction_nature_id.id,
@@ -136,6 +146,9 @@ class IntrastatStatementSaleSection1(models.Model):
             'transport_code_id': transport_code_id.id,
             'country_destination_id': inv_intra_line.country_destination_id.id,
             'province_origin_id': province_origin_id.id,
+            'transaction_nature_b_id': transaction_nature_b_id.id,
+            'triangulation': triangulation,
+            'country_origin_id': country_good_origin_id.id
         })
         return res
 
@@ -154,7 +167,7 @@ class IntrastatStatementSaleSection1(models.Model):
         rcd += format_9(self.amount_euro, 13)
 
         # Codice della natura della transazione
-        if self.triangulation: # in caso triangolazione
+        if self.triangulation:  # in caso triangolazione
             rcd += format_x(self.transaction_nature_id.triangulation, 1)
         else:
             rcd += format_x(self.transaction_nature_id.code, 1)
