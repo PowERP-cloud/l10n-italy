@@ -673,6 +673,15 @@ class AccountIntrastatStatement(models.Model):
 #                 self._format_negative_number_frontispiece(amount)
             rcd += format_9b(self[section_op_amount_field], 13)
 
+        if self.sale_section1_operation_number:
+            rcd += format_9(self.sale_section1_operation_number, 5)
+        elif self.sale_section2_operation_number:
+            rcd += format_9(self.sale_section2_operation_number, 5)
+        elif self.sale_section3_operation_number:
+            rcd += format_9(self.sale_section3_operation_number, 5)
+        elif self.sale_section4_operation_number:
+            rcd += format_9(self.sale_section4_operation_number, 5)
+
         rcd += "\r\n"
         return rcd
 
