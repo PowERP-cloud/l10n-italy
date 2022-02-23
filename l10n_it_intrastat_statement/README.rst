@@ -1,12 +1,12 @@
 
-====================================================
-|icon| ITA - Dichiarazione Intrastat 12.0.1.1.8
-====================================================
+=======================================================
+|icon| ITA - Dichiarazione Intrastat Plus 12.0.1.2.4_11
+=======================================================
 
 
 **Dichiarazione Intrastat Plus per l"Agenzia delle Dogane**
 
-.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/accounting/12.0/l10n_it_intrastat_statement/static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/l10n-italy/12.0/l10n_it_intrastat_statement/static/description/icon.png
 
 |Maturity| |Build Status| |license opl|
 
@@ -28,6 +28,67 @@ Overview / Panoramica
 Questo modulo si occupa di generare la dichiarazione Intrastat e le relative stampe.
 
 Le specifiche per tali stampe e i file da inviare sono in https://www.adm.gov.it/portale/dogane/operatore/modulistica/elenchi-scambi-intracomunitari-di-beni, in particolare gli allegati XI e XII.
+
+
+|
+
+Usage / Utilizzo
+----------------
+
+**Italiano**
+
+
+**Dichiarazione Intrastat**
+
+Accedere a *Fatturazione/Contabilità → Contabilità → Intrastat → Dichiarazioni Intrastat* ed utilizzare il pulsante «Crea» per creare una nuova dichiarazione.
+
+N.B.: il menù "Contabilità" è visibile solo se vengono abilitate le funzionalità contabili complete.
+
+Nella parte superiore della maschera, inserire i dati:
+
+- *Azienda*: popolato in automatico con il nome dell'azienda;
+- *Partita IVA contribuente*: la partita IVA, popolata in automatico con il nome dell'azienda;
+- *Data di presentazione*: popolata in automatico con la data corrente;
+- *Anno*: l'anno di presentazione, scelto dal menù a tendina che visualizza gli anni fiscali configurati a sistema;
+- *Tipo periodo*: l’orizzonte temporale a cui fa riferimento la dichiarazione, scelto da menù a tendina con le voci “Mese” o “Trimestre”;
+- *Periodo*: il periodo temporale a cui fa riferimento la dichiarazione. Inserire il numero del mese (es. 9 per settembre, se nel campo "Tipo periodo" è stato selezionato “Mese”, oppure in numero del trimestre (es: 1 per il trimestre gennaio-marzo), se nel campo "Tipo periodo" è stato selezionato “Trimestre”;
+- *Caselle di selezione “Cessioni” e “Acquisti”*: da selezionare in base alla tipologia di operazioni che si vogliono inserire nella dichiarazione;
+- *Numero*: progressivo della dichiarazione proposto in automatico dal sistema;
+- *Tipo di contenuto*: selezionare la voce di competenza dal menù a tendina;
+- *Casi speciali*: selezionare la voce di competenza dal menù a tendina;
+- *Sezione doganale*: selezionare la voce di riferimento dal menù a tendina.
+
+Inseriti e salvati i dati, utilizzare il pulsante «Ricalcola» per popolare la dichiarazione. Per ciascuna scheda (”Cessioni” e “Acquisti”) verranno inserite nelle sezioni di riferimento:
+
+- Cessioni:
+
+  - Cessione beni - Sezione 1 → fatture di vendita di merci
+  - Rettifica beni - Sezione 2 → note di credito su vendita merci
+  - Cessione servizi - Sezione 3 → fatture di vendita di servizi
+  - Rettifica servizi - Sezione 4 → note di credito su vendita servizi
+
+- Acquisti:
+
+  - Acquisto beni - Sezione 1 → fatture di acquisto di merci
+  - Rettifica beni - Sezione 2 → note di credito su acquisto merci
+  - Acquisto servizi - Sezione 3 → fatture di acquisto di servizi
+  - Rettifica servizi - Sezione 4 → note di credito su acquisto servizi
+
+I dati presi dalle fatture e dalle note di credito indicate come soggette ad Intrastat, relative al periodo di riferimento.
+
+N.B.: i record presenti nelle schede "Rettifica beni - Sezione 2" e "Rettifica servizi - Sezione 4", sia per gli acquisti che per le vendite, vanno modificati per inserire i dati obbligatori mancanti.
+
+Inseriti i dati e salvata la dichiarazione, è possibile procedere all’elaborazione dei file da inviare all’Agenzia delle Dogane tramite l’apposito pulsante «Esporta file». 
+
+Il pulsante fa partire una procedura guidata, che permette di scegliere quale tipo di file estrarre:
+
+- file di invio (complessivo)
+- file acquisti.cee
+- file cessioni.cee
+
+Il file potrà essere scaricato tramite l’apposito link visualizzato nella maschera della procedura guidata. Di seguito un esempio per lo scaricamento del file cessioni.cee (il nome del file da scaricare è SCAMBI.CEE).
+
+Dalla voce *Stampa* è possibile generare gli elenchi riepilogativi delle cessioni o degli acquisti intracomunitari: modello INTRA-1, INTRA-1 Bis, INTRA-1 Ter, INTRA-2, INTRA-2 Bis.
 
 
 |
@@ -89,12 +150,12 @@ Installation / Installazione
     source $HOME/devel/activate_tools
     # *** End of tools installation or upgrade ***
     # Odoo repository installation; OCB repository must be installed
-    odoo_install_repository accounting -b 12.0 -O powerp -o $HOME/12.0
+    odoo_install_repository l10n-italy -b 12.0 -O powerp -o $HOME/12.0
     vem create $HOME/12.0/venv_odoo -O 12.0 -a "*" -DI -o $HOME/12.0
 
 From UI: go to:
 
-* |menu| Setting > Activate Developer mode
+* |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
 * |menu| Setting > Apps |right_do| Select **l10n_it_intrastat_statement** > Install
 
@@ -120,7 +181,7 @@ Upgrade / Aggiornamento
     source $HOME/devel/activate_tools
     # *** End of tools installation or upgrade ***
     # Odoo repository upgrade
-    odoo_install_repository accounting -b 12.0 -o $HOME/12.0 -U
+    odoo_install_repository l10n-italy -b 12.0 -o $HOME/12.0 -U
     vem amend $HOME/12.0/venv_odoo -o $HOME/12.0
     # Adjust following statements as per your system
     sudo systemctl restart odoo
@@ -135,7 +196,7 @@ Support / Supporto
 
 This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
 
-Developer companies are / I soci sviluppatoro sono:
+Developer companies are / I soci sviluppatori sono:
 
 * `Didotech s.r.l. <http://www.didotech.com>`__
 * `SHS-AV s.r.l. <https://www.shs-av.com/>`__
@@ -149,7 +210,7 @@ Get involved / Ci mettiamo in gioco
 
 Bug reports are welcome! You can use the issue tracker to report bugs,
 and/or submit pull requests on `GitHub Issues
-<https://github.com/PowERP-cloud/accounting/issues>`_.
+<https://github.com/PowERP-cloud/l10n-italy/issues>`_.
 
 In case of trouble, please check there if your issue has already been reported.
 
@@ -163,6 +224,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.1.2.4_11 (2022-02-23)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Refactoring dei formati da inviare all'Agenzia Doganale
 
 12.0.1.1.9 (2021-08-03)
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -234,12 +300,10 @@ Maintainer / Manutenzione
 -------------------------
 
 
-This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
-
-Developer companies are / I soci sviluppatoro sono:
-
-* `Didotech s.r.l. <http://www.didotech.com>`__
-* `SHS-AV s.r.l. <https://www.shs-av.com/>`__
+This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese Powerp <http://www.powerp.it/>
+Developer companies are / I soci sviluppatori sono:
+* Didotech s.r.l. <http://www.didotech.com>
+* SHS-AV s.r.l. <https://www.shs-av.com/>
 
 
 |
@@ -268,15 +332,15 @@ I soci fondatori sono:
 
 |
 
-This module is part of accounting project.
+This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-08-06
+Last Update / Ultimo aggiornamento: 2022-02-23
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
-    :alt:
-.. |Build Status| image:: https://travis-ci.org/PowERP-cloud/accounting.svg?branch=12.0
-    :target: https://travis-ci.com/PowERP-cloud/accounting
+    :alt: 
+.. |Build Status| image:: https://travis-ci.org/PowERP-cloud/l10n-italy.svg?branch=12.0
+    :target: https://travis-ci.com/PowERP-cloud/l10n-italy
     :alt: github.com
 .. |license gpl| image:: https://img.shields.io/badge/licence-LGPL--3-7379c3.svg
     :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
@@ -284,11 +348,11 @@ Last Update / Ultimo aggiornamento: 2021-08-06
 .. |license opl| image:: https://img.shields.io/badge/licence-OPL-7379c3.svg
     :target: https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html
     :alt: License: OPL
-.. |Coverage Status| image:: https://coveralls.io/repos/github/PowERP-cloud/accounting/badge.svg?branch=12.0
-    :target: https://coveralls.io/github/PowERP-cloud/accounting?branch=12.0
+.. |Coverage Status| image:: https://coveralls.io/repos/github/PowERP-cloud/l10n-italy/badge.svg?branch=12.0
+    :target: https://coveralls.io/github/PowERP-cloud/l10n-italy?branch=12.0
     :alt: Coverage
-.. |Codecov Status| image:: https://codecov.io/gh/PowERP-cloud/accounting/branch/12.0/graph/badge.svg
-    :target: https://codecov.io/gh/PowERP-cloud/accounting/branch/12.0
+.. |Codecov Status| image:: https://codecov.io/gh/PowERP-cloud/l10n-italy/branch/12.0/graph/badge.svg
+    :target: https://codecov.io/gh/PowERP-cloud/l10n-italy/branch/12.0
     :alt: Codecov
 .. |Tech Doc| image:: https://www.zeroincombenze.it/wp-content/uploads/ci-ct/prd/button-docs-12.svg
     :target: https://wiki.zeroincombenze.org/en/Odoo/12.0/dev
@@ -299,8 +363,8 @@ Last Update / Ultimo aggiornamento: 2021-08-06
 .. |Try Me| image:: https://www.zeroincombenze.it/wp-content/uploads/ci-ct/prd/button-try-it-12.svg
     :target: https://erp12.zeroincombenze.it
     :alt: Try Me
-.. |OCA Codecov| image:: https://codecov.io/gh/OCA/accounting/branch/12.0/graph/badge.svg
-    :target: https://codecov.io/gh/OCA/accounting/branch/12.0
+.. |OCA Codecov| image:: https://codecov.io/gh/OCA/l10n-italy/branch/12.0/graph/badge.svg
+    :target: https://codecov.io/gh/OCA/l10n-italy/branch/12.0
     :alt: Codecov
 .. |Odoo Italia Associazione| image:: https://www.odoo-italia.org/images/Immagini/Odoo%20Italia%20-%20126x56.png
    :target: https://odoo-italia.org
@@ -329,5 +393,5 @@ Last Update / Ultimo aggiornamento: 2021-08-06
 .. |FatturaPA| image:: https://raw.githubusercontent.com/zeroincombenze/grymb/master/certificates/ade/icons/fatturapa.png
    :target: https://github.com/zeroincombenze/grymb/blob/master/certificates/ade/scope/fatturapa.md
 .. |chat_with_us| image:: https://www.shs-av.com/wp-content/chat_with_us.gif
-   :target: https://t.me/axitec_helpdesk
+   :target: https://t.me/Assitenza_clienti_powERP
 

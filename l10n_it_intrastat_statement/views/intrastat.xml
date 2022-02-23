@@ -234,6 +234,7 @@
                                 </group>
                                 <group>
                                     <field name="transaction_nature_id" required="1"/>
+                                    <field name="triangulation" />
                                 </group>
                             </group>
                             <newline/>
@@ -252,6 +253,14 @@
                                     <field name="transport_code_id" required="1"/>
                                     <field name="country_destination_id" required="1"/>
                                     <field name="province_origin_id" required="1"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="transaction_nature_b_id" attrs="{'required': [('triangulation','=', False)]}"/>
+                                </group>
+                                <group>
+                                    <field name="country_origin_id" required="1"/>
                                 </group>
                             </group>
                         </form>
@@ -450,6 +459,7 @@
                                 </group>
                                 <group>
                                     <field name="transaction_nature_id" required="1"/>
+                                    <field name="transaction_nature_b_id" required="1"/>
                                 </group>
                             </group>
                             <newline/>
