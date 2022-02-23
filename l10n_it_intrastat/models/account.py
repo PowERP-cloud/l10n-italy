@@ -48,6 +48,9 @@ class AccountInvoiceLine(models.Model):
         # Transaction
         self._prepare_intrastat_line_transaction(company_id, res)
 
+        # Transaction B
+        self._prepare_intrastat_line_transaction_b(company_id, res)
+
         # Delivery
         self._prepare_intrastat_line_delivery(company_id, res)
 
@@ -286,6 +289,20 @@ class AccountInvoiceLine(models.Model):
             'amount_currency': amount_currency,
             'amount_euro': amount_euro,
             'statistic_amount_euro': statistic_amount_euro})
+
+    @api.multi
+    def _prepare_intrastat_line_transaction_b(self, company_id, res):
+        self.ensure_one()
+        if self.invoice_id.type in ('out_invoice', 'out_refund'):
+            res.update({
+                'transaction_nature_b_id':
+                    company_id.intrastat_sale_transaction_nature_b_id.id
+            })
+        elif self.invoice_id.type in ('in_invoice', 'in_refund'):
+            res.update({
+                'transaction_nature_b_id':
+                    company_id.intrastat_purchase_transaction_nature_b_id.id
+            })
 
 
 class AccountInvoice(models.Model):
@@ -659,6 +676,13 @@ class AccountInvoiceIntrastat(models.Model):
     triangulation = fields.Boolean(
         string="Triangulation",
         default=False,
+    )
+
+    invoice_type = fields.Selection(
+        string="Invoice Type",
+        related="invoice_id.type",
+        store=False,
+        readonly=True,
     )
 
     @api.onchange('transaction_nature_id')
