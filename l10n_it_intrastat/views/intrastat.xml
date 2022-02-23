@@ -214,6 +214,6 @@
 
         <menuitem id="menu_account_transaction_nature_b" name="Transaction Nature B"
             action="action_account_intrastat_transaction_nature_transport_b" parent="menu_account_intrastat_configuration"
-            groups="account.group_account_user" sequence="40"/>
+            groups="account.group_account_user" sequence="41"/>
 
 </odoo>
