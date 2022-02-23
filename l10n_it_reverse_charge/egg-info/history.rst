@@ -1,3 +1,8 @@
+12.0.1.2.7_38 (2022-02-22)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Invalid tax nature check / Errato controllo natura codice IVA
+
 12.0.1.2.7_37 (2022-01-07)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
