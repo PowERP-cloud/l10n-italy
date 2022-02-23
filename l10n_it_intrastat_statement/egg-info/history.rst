@@ -1,3 +1,8 @@
+12.0.1.2.4_11 (2022-02-23)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Refactoring dei formati da inviare all'Agenzia Doganale
+
 12.0.1.1.9 (2021-08-03)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
