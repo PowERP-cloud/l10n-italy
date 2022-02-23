@@ -672,15 +672,10 @@ class AccountIntrastatStatement(models.Model):
 #             if section_number == 2:
 #                 self._format_negative_number_frontispiece(amount)
             rcd += format_9b(self[section_op_amount_field], 13)
-
-        if self.sale_section1_operation_number:
-            rcd += format_9(self.sale_section1_operation_number, 5)
-        elif self.sale_section2_operation_number:
-            rcd += format_9(self.sale_section2_operation_number, 5)
-        elif self.sale_section3_operation_number:
-            rcd += format_9(self.sale_section3_operation_number, 5)
-        elif self.sale_section4_operation_number:
-            rcd += format_9(self.sale_section4_operation_number, 5)
+        # solo per  cessioni di beni e servizi resi
+        # Numero di righe dettaglio della sezione 5 (non gestita)
+        if kind == 'sale':
+            rcd += format_9(0, 5)
 
         rcd += "\r\n"
         return rcd
