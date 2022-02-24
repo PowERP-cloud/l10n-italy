@@ -199,8 +199,13 @@ class IntrastatStatementPurchaseSection1(models.Model):
             rcd += format_x(self.country_good_origin_id.code, 2)
             # Codice della provincia di destinazione della merce
             rcd += format_x(self.province_destination_id.code, 2)
+
             # Codice della natura della transazione B
-            rcd += format_x(self.transaction_nature_b_id.code, 1)
+            if self.transaction_nature_b_id \
+                and self.transaction_nature_b_id.code:
+                rcd += format_x(self.transaction_nature_b_id.code, 1)
+            else:
+                rcd += format_x("", 1)
 
         rcd += "\r\n"
         return rcd
