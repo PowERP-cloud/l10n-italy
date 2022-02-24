@@ -1,3 +1,14 @@
+12.0.1.2.4_13 (2022-02-24)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato la natura della transazione B come non obbligatoria
+* [FIX] Verificato tracciato spazio per transazione B
+
+12.0.1.2.4_11 (2022-02-23)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Refactoring dei formati da inviare all'Agenzia Doganale
+
 12.0.1.1.9 (2021-08-03)
 ~~~~~~~~~~~~~~~~~~~~~~~
 

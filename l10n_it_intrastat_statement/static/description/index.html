@@ -23,10 +23,83 @@ Le specifiche per tali stampe e i file da inviare sono in https://www.adm.gov.it
         </div>
     </div>
     <div class="oe_row oe_spaced">
+        <h3 class="oe_slogan" style="color:#162832;">Usage / Utilizzo</h3>
+        <div class="oe_span12">
+**Italiano**
+<p align="justify">
+</p><p align="justify">
+**Dichiarazione Intrastat**
+</p><p align="justify">
+Accedere a <i>Fatturazione/Contabilit&#224; &#8594; Contabilit&#224; &#8594; Intrastat &#8594; Dichiarazioni Intrastat</i> ed utilizzare il pulsante &#171;Crea&#187; per creare una nuova dichiarazione.
+</p><p align="justify">
+N.B.: il men&#249; "Contabilit&#224;" &#232; visibile solo se vengono abilitate le funzionalit&#224; contabili complete.
+</p><p align="justify">
+Nella parte superiore della maschera, inserire i dati:
+</p><p align="justify">
+- <i>Azienda</i>: popolato in automatico con il nome dell'azienda;
+- <i>Partita IVA contribuente</i>: la partita IVA, popolata in automatico con il nome dell'azienda;
+- <i>Data di presentazione</i>: popolata in automatico con la data corrente;
+- <i>Anno</i>: l'anno di presentazione, scelto dal men&#249; a tendina che visualizza gli anni fiscali configurati a sistema;
+- <i>Tipo periodo</i>: l&#8217;orizzonte temporale a cui fa riferimento la dichiarazione, scelto da men&#249; a tendina con le voci &#8220;Mese&#8221; o &#8220;Trimestre&#8221;;
+- <i>Periodo</i>: il periodo temporale a cui fa riferimento la dichiarazione. Inserire il numero del mese (es. 9 per settembre, se nel campo "Tipo periodo" &#232; stato selezionato &#8220;Mese&#8221;, oppure in numero del trimestre (es: 1 per il trimestre gennaio-marzo), se nel campo "Tipo periodo" &#232; stato selezionato &#8220;Trimestre&#8221;;
+- <i>Caselle di selezione &#8220;Cessioni&#8221; e &#8220;Acquisti&#8221;</i>: da selezionare in base alla tipologia di operazioni che si vogliono inserire nella dichiarazione;
+- <i>Numero</i>: progressivo della dichiarazione proposto in automatico dal sistema;
+- <i>Tipo di contenuto</i>: selezionare la voce di competenza dal men&#249; a tendina;
+- <i>Casi speciali</i>: selezionare la voce di competenza dal men&#249; a tendina;
+- <i>Sezione doganale</i>: selezionare la voce di riferimento dal men&#249; a tendina.
+</p><p align="justify">
+Inseriti e salvati i dati, utilizzare il pulsante &#171;Ricalcola&#187; per popolare la dichiarazione. Per ciascuna scheda (&#8221;Cessioni&#8221; e &#8220;Acquisti&#8221;) verranno inserite nelle sezioni di riferimento:
+</p><p align="justify">
+- Cessioni:
+</p><p align="justify">
+  - Cessione beni - Sezione 1 &#8594; fatture di vendita di merci
+  - Rettifica beni - Sezione 2 &#8594; note di credito su vendita merci
+  - Cessione servizi - Sezione 3 &#8594; fatture di vendita di servizi
+  - Rettifica servizi - Sezione 4 &#8594; note di credito su vendita servizi
+</p><p align="justify">
+- Acquisti:
+</p><p align="justify">
+  - Acquisto beni - Sezione 1 &#8594; fatture di acquisto di merci
+  - Rettifica beni - Sezione 2 &#8594; note di credito su acquisto merci
+  - Acquisto servizi - Sezione 3 &#8594; fatture di acquisto di servizi
+  - Rettifica servizi - Sezione 4 &#8594; note di credito su acquisto servizi
+</p><p align="justify">
+I dati presi dalle fatture e dalle note di credito indicate come soggette ad Intrastat, relative al periodo di riferimento.
+</p><p align="justify">
+N.B.: i record presenti nelle schede "Rettifica beni - Sezione 2" e "Rettifica servizi - Sezione 4", sia per gli acquisti che per le vendite, vanno modificati per inserire i dati obbligatori mancanti.
+</p><p align="justify">
+Inseriti i dati e salvata la dichiarazione, &#232; possibile procedere all&#8217;elaborazione dei file da inviare all&#8217;Agenzia delle Dogane tramite l&#8217;apposito pulsante &#171;Esporta file&#187;. 
+</p><p align="justify">
+Il pulsante fa partire una procedura guidata, che permette di scegliere quale tipo di file estrarre:
+</p><p align="justify">
+- file di invio (complessivo)
+- file acquisti.cee
+- file cessioni.cee
+</p><p align="justify">
+Il file potr&#224; essere scaricato tramite l&#8217;apposito link visualizzato nella maschera della procedura guidata. Di seguito un esempio per lo scaricamento del file cessioni.cee (il nome del file da scaricare &#232; SCAMBI.CEE).
+</p><p align="justify">
+Dalla voce <i>Stampa</i> &#232; possibile generare gli elenchi riepilogativi delle cessioni o degli acquisti intracomunitari: modello INTRA-1, INTRA-1 Bis, INTRA-1 Ter, INTRA-2, INTRA-2 Bis.
+</p>
+        </div>
+    </div>
+    <div class="oe_row oe_spaced">
         <h3 class="oe_slogan" style="color:#162832;">History / Cronologia</h3>
         <div class="oe_span12">
-<h3>12.0.1.1.9 (2021-08-03)</h3>
+<h3>12.0.1.2.4_13 (2022-02-24)</h3>
 <p align="justify">
+<ul>
+<li>[FIX] Impostato la natura della transazione B come non obbligatoria</li>
+<li>[FIX] Verificato tracciato spazio per transazione B</li>
+</ul>
+</p><p align="justify">
+<h3>12.0.1.2.4_11 (2022-02-23)</h3>
+</p><p align="justify">
+<ul>
+<li>[REF] Refactoring dei formati da inviare all'Agenzia Doganale</li>
+</ul>
+</p><p align="justify">
+<h3>12.0.1.1.9 (2021-08-03)</h3>
+</p><p align="justify">
 <ul>
 <li>[FIX] Wrong year section 2 and 4 again</li>
 </ul>
@@ -110,6 +183,6 @@ Le specifiche per tali stampe e i file da inviare sono in https://www.adm.gov.it
         </div>
     </div>
     <div class="oe_row oe_spaced">
-        <p>This module is part of accounting project.</p>
+        <p>This module is part of l10n-italy project.</p>
     </div>
 </section>

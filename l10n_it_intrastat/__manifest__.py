@@ -4,7 +4,7 @@
 
 {
     'name': "ITA - Intrastat",
-    'version': '12.0.1.2.0_1',
+    'version': '12.0.1.2.5',
     'category': 'Account',
     'summary': 'Riclassificazione merci e servizi per dichiarazioni Intrastat',
     'author': "Openforce, Link IT srl, Agile Business Group, "
@@ -15,13 +15,13 @@
     'depends': [
         'sale_management',
         'product',
-        'stock',
-        'stock_account',
+        'account',
         'uom',
     ],
     'data': [
         'security/ir.model.access.csv',
         'data/account.intrastat.transaction.nature.csv',
+        'data/account.intrastat.transaction.nature.b.csv',
         'data/account.intrastat.transport.csv',
         'data/account.intrastat.custom.csv',
         'data/report.intrastat.code.csv',

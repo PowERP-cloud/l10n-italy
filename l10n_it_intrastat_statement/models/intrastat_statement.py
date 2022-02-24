@@ -672,6 +672,10 @@ class AccountIntrastatStatement(models.Model):
 #             if section_number == 2:
 #                 self._format_negative_number_frontispiece(amount)
             rcd += format_9b(self[section_op_amount_field], 13)
+        # solo per  cessioni di beni e servizi resi
+        # Numero di righe dettaglio della sezione 5 (non gestita)
+        if kind == 'sale':
+            rcd += format_9(0, 5)
 
         rcd += "\r\n"
         return rcd
@@ -679,57 +683,86 @@ class AccountIntrastatStatement(models.Model):
     @api.multi
     def generate_file_export(self):
         self.ensure_one()
-        file_content = ''
-        # Head
-        if not self.env.context.get('export_without_head'):
-            file_content += self._prepare_export_head()
-        content_sale = self.env.context.get('sale')
-        content_purchase = self.env.context.get('purchase')
-        # Purchase
-        if (
-                self.purchase_section1_operation_number or
-                self.purchase_section2_operation_number or
-                self.purchase_section3_operation_number or
-                self.purchase_section4_operation_number
-        ) and content_purchase:
-            ref_number = self.purchase_statement_sequence
-            # frontispiece
-            file_content += self._prepare_export_frontispiece(
-                'purchase', ref_number)
-            # Section 1
-            purchase_lines = [
-                self.purchase_section1_ids,
-                self.purchase_section2_ids,
-                self.purchase_section3_ids,
-                self.purchase_section4_ids,
-            ]
-            for section_lines in purchase_lines:
-                for line in section_lines:
-                    rcd = self._prepare_export_prefix(ref_number, line)
-                    rcd += line._prepare_export_line()
-                    file_content += rcd
-        # Sale
-        if (
+
+        def set_purchase(self, content_purchase):
+            # Purchase
+            purchase_content = ''
+            if (
+                    self.purchase_section1_operation_number or
+                    self.purchase_section2_operation_number or
+                    self.purchase_section3_operation_number or
+                    self.purchase_section4_operation_number
+            ) and content_purchase:
+                ref_number = self.purchase_statement_sequence
+                # frontispiece
+                purchase_content += self._prepare_export_frontispiece(
+                    'purchase', ref_number)
+                # Section 1
+                purchase_lines = [
+                    self.purchase_section1_ids,
+                    self.purchase_section2_ids,
+                    self.purchase_section3_ids,
+                    self.purchase_section4_ids,
+                ]
+                for section_lines in purchase_lines:
+                    for line in section_lines:
+                        rcd = self._prepare_export_prefix(ref_number, line)
+                        rcd += line._prepare_export_line()
+                        purchase_content += rcd
+            return purchase_content
+
+        def set_sale(self, content_sale):
+            # Sale
+            sale_content = ''
+            if (
                 (self.sale_section1_operation_number
                  or self.sale_section2_operation_number
                  or self.sale_section3_operation_number
                  or self.sale_section4_operation_number)
-                and content_sale):
-            ref_number = self.sale_statement_sequence
-            # frontispiece
-            file_content += self._prepare_export_frontispiece(
-                'sale', ref_number)
-            sale_lines = [
-                self.sale_section1_ids,
-                self.sale_section2_ids,
-                self.sale_section3_ids,
-                self.sale_section4_ids,
-            ]
-            for section_lines in sale_lines:
-                for line in section_lines:
-                    rcd = self._prepare_export_prefix(ref_number, line)
-                    rcd += line._prepare_export_line()
-                    file_content += rcd
+                 and content_sale):
+                ref_number = self.sale_statement_sequence
+                # frontispiece
+                sale_content += self._prepare_export_frontispiece(
+                    'sale', ref_number)
+                sale_lines = [
+                    self.sale_section1_ids,
+                    self.sale_section2_ids,
+                    self.sale_section3_ids,
+                    self.sale_section4_ids,
+                ]
+                for section_lines in sale_lines:
+                    for line in section_lines:
+                        rcd = self._prepare_export_prefix(ref_number, line)
+                        rcd += line._prepare_export_line()
+                        sale_content += rcd
+            return sale_content
+
+        file_content = ''
+        # Head
+        if not self.env.context.get('export_without_head'):
+            file_content += self._prepare_export_head()
+
+        content_sale = self.env.context.get('sale')
+        content_purchase = self.env.context.get('purchase')
+
+        if content_sale and content_purchase:
+
+            purchase_seq = self.purchase_statement_sequence
+            sale_seq = self.sale_statement_sequence
+
+            if purchase_seq > sale_seq:
+                file_content += set_sale(self, content_sale)
+                file_content += set_purchase(self, content_purchase)
+            elif sale_seq > purchase_seq:
+                file_content += set_purchase(self, content_purchase)
+                file_content += set_sale(self, content_sale)
+            else:
+                file_content += set_purchase(self, content_purchase)
+                file_content += set_sale(self, content_sale)
+        elif content_sale:
+            file_content += set_sale(self, content_sale)
+        elif content_purchase:
+            file_content += set_purchase(self, content_purchase)
 
         # Data validation
         if not file_content:
