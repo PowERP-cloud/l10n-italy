@@ -8,7 +8,7 @@
 #
 {
     'name': 'ITA - Dichiarazione Intrastat Plus',
-    'version': '12.0.1.2.4_12',
+    'version': '12.0.1.2.4_13',
     'category': 'Account',
     'summary': 'Dichiarazione Intrastat Plus per l"Agenzia delle Dogane',
     'author': 'Odoo Community Association (OCA) and other partners',

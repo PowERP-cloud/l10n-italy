@@ -1,7 +1,8 @@
-12.0.1.2.4_12 (2022-02-24)
+12.0.1.2.4_13 (2022-02-24)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Impostato la natura della transazione B come non obbligatoria
+* [FIX] Verificato tracciato spazio per transazione B
 
 12.0.1.2.4_11 (2022-02-23)
 ~~~~~~~~~~~~~~~~~~~~~~~

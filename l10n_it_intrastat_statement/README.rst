@@ -1,6 +1,6 @@
 
 =======================================================
-|icon| ITA - Dichiarazione Intrastat Plus 12.0.1.2.4_12
+|icon| ITA - Dichiarazione Intrastat Plus 12.0.1.2.4_13
 =======================================================
 
 
@@ -78,7 +78,7 @@ I dati presi dalle fatture e dalle note di credito indicate come soggette ad Int
 
 N.B.: i record presenti nelle schede "Rettifica beni - Sezione 2" e "Rettifica servizi - Sezione 4", sia per gli acquisti che per le vendite, vanno modificati per inserire i dati obbligatori mancanti.
 
-Inseriti i dati e salvata la dichiarazione, è possibile procedere all’elaborazione dei file da inviare all’Agenzia delle Dogane tramite l’apposito pulsante «Esporta file».
+Inseriti i dati e salvata la dichiarazione, è possibile procedere all’elaborazione dei file da inviare all’Agenzia delle Dogane tramite l’apposito pulsante «Esporta file». 
 
 Il pulsante fa partire una procedura guidata, che permette di scegliere quale tipo di file estrarre:
 
@@ -155,7 +155,7 @@ Installation / Installazione
 
 From UI: go to:
 
-* |menu| Setting > Activate Developer mode
+* |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
 * |menu| Setting > Apps |right_do| Select **l10n_it_intrastat_statement** > Install
 
@@ -225,11 +225,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
-
-12.0.1.2.4_12 (2022-02-24)
+12.0.1.2.4_13 (2022-02-24)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Impostato la natura della transazione B come non obbligatoria
+* [FIX] Verificato tracciato spazio per transazione B
 
 12.0.1.2.4_11 (2022-02-23)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -340,12 +340,11 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-
 Last Update / Ultimo aggiornamento: 2022-02-24
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
-    :alt:
+    :alt: 
 .. |Build Status| image:: https://travis-ci.org/PowERP-cloud/l10n-italy.svg?branch=12.0
     :target: https://travis-ci.com/PowERP-cloud/l10n-italy
     :alt: github.com

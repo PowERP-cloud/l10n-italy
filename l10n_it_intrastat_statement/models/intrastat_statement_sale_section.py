@@ -126,13 +126,13 @@ class IntrastatStatementSaleSection1(models.Model):
             statement_id.company_id or company_id,
             # dp_model.precision_get('Account'))
             0)
-        # not setting default yet
-        nature_b_model = self.env['account.intrastat.transaction.nature.b']
+
+        nature_b_company = company_id.intrastat_sale_transaction_nature_b_id
 
         if inv_intra_line.transaction_nature_b_id:
             transaction_nature_b_id = inv_intra_line.transaction_nature_b_id
         else:
-            transaction_nature_b_id = nature_b_model
+            transaction_nature_b_id = nature_b_company
 
         triangulation = inv_intra_line.triangulation
         country_good_origin_id = inv_intra_line.country_good_origin_id
@@ -196,7 +196,12 @@ class IntrastatStatementSaleSection1(models.Model):
             if self.triangulation:
                 nb_code = ''
             else:
-                nb_code = self.transaction_nature_b_id.code
+                if self.transaction_nature_b_id \
+                    and self.transaction_nature_b_id.code:
+                    nb_code = self.transaction_nature_b_id.code
+                else:
+                    nb_code = ''
+
             rcd += format_x(nb_code, 1)
 
             rcd += format_x(self.country_origin_id.code, 2)
