@@ -1,3 +1,8 @@
+12.0.1.2.4_12 (2022-02-24)
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato la natura della transazione B come non obbligatoria
+
 12.0.1.2.4_11 (2022-02-23)
 ~~~~~~~~~~~~~~~~~~~~~~~
 
