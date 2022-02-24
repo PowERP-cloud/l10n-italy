@@ -1,6 +1,6 @@
 
 =======================================================
-|icon| ITA - Dichiarazione Intrastat Plus 12.0.1.2.4_11
+|icon| ITA - Dichiarazione Intrastat Plus 12.0.1.2.4_12
 =======================================================
 
 
@@ -225,6 +225,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.4_12 (2022-02-24)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato la natura della transazione B come non obbligatoria
+
 12.0.1.2.4_11 (2022-02-23)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -334,7 +339,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-02-23
+Last Update / Ultimo aggiornamento: 2022-02-24
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
