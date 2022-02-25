@@ -157,7 +157,7 @@ class AccountPaymentOrder(models.Model):
 
     @api.multi
     def unlink(self):
-        
+
         for order in self:
             if order.state != 'cancel':
                 raise UserError(
@@ -166,9 +166,19 @@ class AccountPaymentOrder(models.Model):
                 )
             # end if
         # end for
-        
+
         return super(AccountPaymentOrder, self).unlink()
     # end unlink
+
+    @api.multi
+    def cancel2draft(self):
+        res = super().cancel2draft()
+        for order in self:
+            lines = self.env['account.move.line'].search(
+                [('payment_order', '=', order.id)])
+            lines.write({'incasso_effettuato': False})
+
+        return res
 
     @api.model
     def get_move_config(self):
