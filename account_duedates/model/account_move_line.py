@@ -25,7 +25,6 @@ class AccountMoveLine(models.Model):
         else:
             return False
         # end if
-
     # end set_default_company_bank
 
     @api.model
@@ -39,7 +38,6 @@ class AccountMoveLine(models.Model):
         else:
             return False
         # end if
-
     # end set_default_counterparty_bank
 
     payment_method = fields.Many2one(
@@ -186,7 +184,6 @@ class AccountMoveLine(models.Model):
 
             line.is_duedate = not_vat_line and credit_or_debit
         # end for
-
     # end _compute_is_dudate
 
     def _domain_test(self):
@@ -201,12 +198,11 @@ class AccountMoveLine(models.Model):
                     elif account_type.type == 'receivable':
                         rec.calculate_field = 'credit'
 
-    @api.model
-    def create(self, values):
-        res = super().create(values)
-        return res
-
-    # end create
+    # @api.model
+    # def create(self, values):
+    #     res = super().create(values)
+    #     return res
+    # # end create
 
     @api.multi
     def write(self, values):
@@ -228,7 +224,6 @@ class AccountMoveLine(models.Model):
         # end if
 
         return result
-
     # end write
 
     # Update the associated duedate_line
@@ -236,12 +231,10 @@ class AccountMoveLine(models.Model):
     def update_date_maturity(self):
         if self.duedate_line_id:
             self.duedate_line_id.due_date = self.date_maturity
-
     # end _update_date_maturity
 
     @api.model
     def update_payment_method(self):
         if self.duedate_line_id:
             self.duedate_line_id.payment_method_id = self.payment_method
-
     # end _update_payment_method

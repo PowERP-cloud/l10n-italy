@@ -83,7 +83,6 @@ class DueDateLine(models.Model):
             result = super().create(values)
             return result
         # end if
-
     # end create
 
     @api.multi
@@ -108,7 +107,6 @@ class DueDateLine(models.Model):
         # end if
 
         return result
-
     # end write
 
     # ORM METHODS OVERRIDE - end
@@ -128,7 +126,6 @@ class DueDateLine(models.Model):
         if float_is_zero(difference, precision_rounding=precision):
             self.proposed_new_value = 0
         # end if
-
     # end _onchange_due_amount
 
     # @api.onchange('due_date')
@@ -194,7 +191,6 @@ class DueDateLine(models.Model):
         if self.move_line_id:
             self.move_line_id[0].date_maturity = self.due_date
         # end if
-
     # end _update_duedate
 
     @api.onchange('payment_method_id')
@@ -202,7 +198,6 @@ class DueDateLine(models.Model):
         if self.move_line_id:
             self.move_line_id[0].payment_method = self.payment_method_id
         # end if
-
     # end _update_payment_method
 
     # UPDATE MOVE LINE METHODS - end

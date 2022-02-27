@@ -71,7 +71,6 @@ class AccountInvoice(models.Model):
 
         # Return the result of the write command
         return new_invoice
-
     # end create
 
     @api.multi
@@ -128,7 +127,6 @@ class AccountInvoice(models.Model):
         # end if "StopRecursion"
 
         return result
-
     # end write
 
     # def post(self):
@@ -144,7 +142,6 @@ class AccountInvoice(models.Model):
             # end if
         # end for
         return super().invoice_validate()
-
     # end invoice_validate
 
     # ORM METHODS OVERRIDE - end
@@ -159,7 +156,6 @@ class AccountInvoice(models.Model):
         for invoice in self:
             invoice.update_duedates()
         # end for
-
     # end update_duedates_and_move_lines
 
     @api.multi
@@ -201,7 +197,6 @@ class AccountInvoice(models.Model):
         # end for
 
         return True
-
     # end action_move_create
 
     @api.multi
@@ -216,8 +211,8 @@ class AccountInvoice(models.Model):
         head_lines = [
             ml
             for ml in move_lines
-            if move_lines_model.get_line_type(ml[2], duedate_mode=True)
-            in ('receivable', 'payable')
+            if move_lines_model.get_line_type(
+                ml[2], duedate_mode=True) in ('receivable', 'payable')
         ]
 
         # may be empty if account_total is zero
@@ -228,8 +223,9 @@ class AccountInvoice(models.Model):
         new_lines = [
             ml
             for ml in move_lines
-            if move_lines_model.get_line_type(ml[2], duedate_mode=True)
-            not in ('receivable', 'payable')
+            if move_lines_model.get_line_type(
+                ml[2], duedate_mode=True
+            ) not in ('receivable', 'payable')
         ]
 
         prototype_line = head_lines[0][2]
@@ -261,6 +257,8 @@ class AccountInvoice(models.Model):
                 [(x[2]['debit'] - x[2]['credit']) for x in head_lines]
             )
         rate = inv_currency_amount / inv_company_amount
+        round_curr = self.company_id.currency_id.round
+        inv_company_amount = round_curr(inv_company_amount)
 
         residual = inv_company_amount
         for ii, duedate in enumerate(self.duedate_manager_id.duedate_line_ids):
@@ -276,28 +274,37 @@ class AccountInvoice(models.Model):
 
             # Update - set amount
             if (ii + 1) == len(self.duedate_manager_id.duedate_line_ids):
-                company_due_amount = residual
+                company_due_amount = round_curr(residual)
             else:
-                company_due_amount = duedate.due_amount / rate
+                company_due_amount = round_curr(duedate.due_amount / rate)
+            new_line_dict['currency_id'] = self.currency_id.id
+            if self.type in ('in_refund', 'out_invoice'):
+                new_line_dict['amount_currency'] = duedate.due_amount
+            else:
+                new_line_dict['amount_currency'] = -duedate.due_amount
             if new_line_dict['credit']:
                 new_line_dict['credit'] = company_due_amount
             elif new_line_dict['debit']:
                 new_line_dict['debit'] = company_due_amount
-            else:
-                pass
+            # else:
+            #     pass
             residual -= company_due_amount
 
             # Update - payment method
-            new_line_dict['payment_method'] = duedate.payment_method_id.id
+            if hasattr(move_lines_model, 'payment_method'):
+                new_line_dict['payment_method'] = duedate.payment_method_id.id
 
             if duedate.payment_method_id.id == tax_pm_id.id:
-                tax_pm_lines.append((0, 0, new_line_dict))
+                tax_pm_lines.append(
+                    (0, 0, new_line_dict)
+                )
             else:
-                new_lines.append((0, 0, new_line_dict))
+                new_lines.append(
+                    (0, 0, new_line_dict)
+                )
         # end for
 
         return tax_pm_lines + new_lines
-
     # end finalize_invoice_move_lines
 
     @api.multi
@@ -332,7 +339,6 @@ class AccountInvoice(models.Model):
             if updates_list:
                 inv.update({'duedate_line_ids': updates_list})
             # end if
-
     # end update_duedates
 
     def checks_payment(self):
@@ -346,7 +352,6 @@ class AccountInvoice(models.Model):
                     invoice.check_duedates_payment = True
                 # end if
             # end for
-
     # end checks_payment
 
     @api.multi
@@ -372,32 +377,27 @@ class AccountInvoice(models.Model):
         # end if
         super()._onchange_invoice_line_ids()
         self.update_duedates()
-
     # end _onchange_invoice_line_ids
 
     @api.onchange('duedate_line_ids')
     def _onchange_duedate_line_ids(self):
         self._compute_duedates_amounts()
-
     # end _onchange_duedate_line_ids
 
     @api.onchange('payment_term_id')
     def _onchange_payment_term_id(self):
         self.update_duedates()
-
     # end _onchange_payment_term_id
 
     @api.onchange('date_invoice')
     def _onchange_date_invoice(self):
         self._update_date_effective()
-
     # end _onchange_date_invoice
 
     @api.onchange('date')
     def _onchange_date(self):
         self._update_date_effective()
         # return super()._onchange_date()
-
     # end _onchange_date_invoice
 
     @api.onchange('duedates_amount_unassigned')
@@ -414,7 +414,6 @@ class AccountInvoice(models.Model):
                 line.proposed_new_value = 0
             # end for
         # end if
-
     # end _onchange_duedates_amount_unassigned
 
     @api.onchange('payment_term_id', 'date_invoice')
@@ -439,7 +438,6 @@ class AccountInvoice(models.Model):
         elif self.date_due and (date_invoice > self.date_due):
             self.date_due = date_invoice
         # end if
-
     # end _onchange_payment_term_date_invoice
 
     @api.onchange('date_effective')
@@ -488,7 +486,6 @@ class AccountInvoice(models.Model):
             # end if
         # end if
         return False
-
     # end _check_limit_date
 
     @api.model
@@ -509,7 +506,6 @@ class AccountInvoice(models.Model):
 
         # Return the manager
         return self.duedate_manager_id
-
     # end get_duedate_manager
 
     @api.model
@@ -520,7 +516,6 @@ class AccountInvoice(models.Model):
         )
 
         self.update({'duedate_manager_id': duedate_manager})
-
     # end _create_duedate_manager
 
     @api.model
@@ -553,7 +548,6 @@ class AccountInvoice(models.Model):
             # Aggiornamento campo ammontare non assegnato a scadenze
             inv.duedates_amount_unassigned = inv.amount_total - lines_total
         # end for
-
     # end _compute_duedate_lines_amount
 
     @api.model
@@ -561,7 +555,6 @@ class AccountInvoice(models.Model):
         if not self.date_effective:
             self.date_effective = self.date_invoice
         # end if
-
     # end _default_date_effective
 
     @api.model

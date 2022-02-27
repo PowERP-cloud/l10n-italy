@@ -39,19 +39,17 @@ class DueDateManager(models.Model):
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ORM METHODS OVERRIDE - begin
 
-    @api.model
-    def create(self, values):
-        result = super().create(values)
-        return result
+    # @api.model
+    # def create(self, values):
+    #     result = super().create(values)
+    #     return result
+    # # end create
 
-    # end create
-
-    @api.multi
-    def write(self, values):
-        result = super().write(values)
-        return result
-
-    # end write
+    # @api.multi
+    # def write(self, values):
+    #     result = super().write(values)
+    #     return result
+    # # end write
 
     # ORM METHODS OVERRIDE - end
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -77,7 +75,6 @@ class DueDateManager(models.Model):
         if new_dudate_lines:
             self.env['account.duedate_plus.line'].create(new_dudate_lines)
         # end if
-
     # end write_duedate_lines
 
     @api.model
@@ -96,7 +93,6 @@ class DueDateManager(models.Model):
         # end if
 
         return new_dudate_lines
-
     # end generate_duedate_lines
 
     # PUBLIC METHODS - end
@@ -118,7 +114,6 @@ class DueDateManager(models.Model):
     @api.model
     def update_amount(self):
         self._compute_duedate_lines_amount()
-
     # end update_amount
 
     # PUBLIC API - end
@@ -248,7 +243,6 @@ class DueDateManager(models.Model):
         else:  # Validation succesful!
             return None
         # end if
-
     # end _validate_duedates_amount
 
     # VALIDATION METHODS - end
@@ -322,7 +316,6 @@ class DueDateManager(models.Model):
         common_args['partner_id'] = self.invoice_id.partner_id
 
         return self._duedates_common(common_args)
-
     # end _duedates_from_invoice
 
     @api.model
@@ -422,12 +415,11 @@ class DueDateManager(models.Model):
                 new_dudate_lines.append(extra_line)
 
         return new_dudate_lines
-
     # end _duedates_common
 
     def _compute_duedates_lines(self, due_dates, param_cm, tax):
         lines = list()
-        payment_method = False
+        # payment_method = False
         add_tax = False
 
         if param_cm['payment_terms'].first_duedate_tax and self.invoice_id:
@@ -610,7 +602,6 @@ class DueDateManager(models.Model):
         # end if
 
         return tax_amount
-
     # end _compute_tax_to_add
 
     @api.model
@@ -622,7 +613,6 @@ class DueDateManager(models.Model):
             ),
             'rc_amount': getattr(self.invoice_id, 'amount_rc', None),
         }
-
     # end _get_amount_tax_type
 
     @api.model
@@ -634,7 +624,6 @@ class DueDateManager(models.Model):
             ),
             'is_rc': bool(getattr(self.invoice_id, 'amount_rc', None)),
         }
-
     # end _get_amount_tax_type
 
     # PRIVATE METHODS - end

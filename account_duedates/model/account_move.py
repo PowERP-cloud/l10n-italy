@@ -47,14 +47,13 @@ class AccountMove(models.Model):
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ORM METHODS OVERRIDE - begin
 
-    @api.model
-    def create(self, values):
-        # Apply modifications inside DB transaction
-        new_move = super().create(values)
-
-        # Return the result of the write command
-        return new_move
-
+    # @api.model
+    # def create(self, values):
+    #     # Apply modifications inside DB transaction
+    #     new_move = super().create(values)
+    #
+    #     # Return the result of the write command
+    #     return new_move
     # end create
 
     @api.multi
@@ -376,12 +375,20 @@ class AccountMove(models.Model):
             # Extract credit and debit lines
             lines_cd = list()
             lines_other = list()
+            rate = 1
+            round_curr = self.company_id.currency_id.round
 
             for line in self.line_ids:
-                line._compute_line_type()
+                if not line.line_type:
+                    line._compute_line_type()
                 line_type = line.line_type
-                if line_type in ('credit', 'debit'):
+                # TODO> 'debit' / 'credit' will be removed early
+                if line_type in ('credit', 'debit', 'receivable', 'payable'):
                     lines_cd.append(line)
+                    if line['debit']:
+                        rate = abs(line['amount_currency']) / line['debit']
+                    elif line['credit']:
+                        rate = abs(line['amount_currency']) / line['credit']
                 else:
                     lines_other.append(line)
                 # end if
@@ -396,7 +403,8 @@ class AccountMove(models.Model):
             move_lines_mods = list()
 
             # Add the new move lines
-            for duedate_line in self.duedate_line_ids:
+            residual = self.amount
+            for ii, duedate_line in enumerate(self.duedate_line_ids):
 
                 has_duedate = (duedate_line.due_date and True) or False
                 has_amount = (duedate_line.due_amount and True) or False
@@ -410,12 +418,24 @@ class AccountMove(models.Model):
                     # Set the date_maturity field
                     new_data['date_maturity'] = duedate_line.due_date
 
-                    # Set the amount
-                    if new_data['credit'] > 0:
-                        new_data['credit'] = duedate_line.due_amount
+                    if self.type in ('in_refund', 'out_invoice'):
+                        new_data['amount_currency'] = duedate_line.due_amount
                     else:
-                        new_data['debit'] = duedate_line.due_amount
-                    # end if
+                        new_data['amount_currency'] = -duedate_line.due_amount
+                    if (ii + 1) == len(self.duedate_line_ids):
+                        if new_data['credit']:
+                            new_data['credit'] = round_curr(residual)
+                        elif new_data['debit']:
+                            new_data['debit'] = round_curr(residual)
+                    else:
+                        if new_data['credit']:
+                            new_data['credit'] = round_curr(
+                                duedate_line.due_amount / rate)
+                            residual -= new_data['credit']
+                        elif new_data['debit']:
+                            new_data['debit'] = round_curr(
+                                duedate_line.due_amount / rate)
+                            residual -= new_data['debit']
 
                     # Set payment method
                     new_data[
