@@ -74,10 +74,12 @@ class AccountMoveLine(models.Model):
                     if account_type.type == 'payable' and \
                             not line.tax_ids and not line.tax_line_id \
                             and line.journal_id.type == 'purchase':
+                        # TODO> set "payable" early
                         line.line_type = 'debit'
                     elif account_type.type == 'receivable' and \
                             not line.tax_ids and not line.tax_line_id \
                             and line.journal_id.type == 'sale':
+                        # TODO> set "receivable" early
                         line.line_type = 'credit'
                     elif line.tax_ids and line.journal_id.type in \
                             ('purchase', 'sale'):

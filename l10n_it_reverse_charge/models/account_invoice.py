@@ -26,9 +26,7 @@ class AccountInvoiceLine(models.Model):
             else:
                 line.line_rc_type = False
             # end if
-
         # end for
-
     # end compute_rc_type
 
     @api.multi
@@ -49,7 +47,7 @@ class AccountInvoiceLine(models.Model):
     @api.onchange('invoice_line_tax_ids')
     def onchange_invoice_line_tax_id(self):
         res = dict()
-        rc_mismatch = True
+        rc_mismatch = False
         invoice_rc_type = self.invoice_id.fiscal_position_id.rc_type
         if self.invoice_id.type in [
             'in_invoice',
@@ -59,21 +57,14 @@ class AccountInvoiceLine(models.Model):
             'self',
         ]:
             for tax in self.invoice_line_tax_ids:
-                if tax.kind_id.code and (
-                    (tax.kind_id.code.startswith('N3') and
-                     tax.kind_id.code != 'N3.5') or
-                    tax.kind_id.code.startswith('N6')
-                ):
-                    rc_mismatch = False
-                if rc_mismatch:
+                if tax.rc_type != invoice_rc_type:
+                    rc_mismatch = True
                     raise UserError(
-                        _('Natura %s di codice IVA %s '
+                        _('Tipo RC %s di codice IVA %s '
                           'non valida per reverse charge.' % (
-                            tax.kind_id and tax.kind_id.code or '',
-                            tax.description)
+                            tax.rc_type, tax.description)
                           )
                     )
-
         if not res:
             self._set_rc_flag(self.invoice_id)
         # end if
