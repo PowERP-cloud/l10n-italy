@@ -304,10 +304,10 @@ class AccountMoveLine(models.Model):
             self._context['active_ids'])
         # reset flag
         payment_line_ids = self.env['account.payment.line']
-        lines.write(
+        res = lines.write(
             {
                 'incasso_effettuato': False,
-                'payment_line_ids': payment_line_ids,
+                'payment_line_ids': [(5, 0, 0)],
             })
 
     # end registra_insoluto_standard
