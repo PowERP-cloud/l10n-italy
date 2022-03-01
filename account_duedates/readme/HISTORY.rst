@@ -2,6 +2,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Currency invoces / Fatture in valuta
+* [REF] Campo ordine di pagamento
 
 12.0.4.8.33 (2022-02-16)
 ~~~~~~~~~~~~~~~~~~~~~~~~

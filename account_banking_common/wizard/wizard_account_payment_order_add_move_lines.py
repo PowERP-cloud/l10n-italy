@@ -86,6 +86,10 @@ class AccountPaymentAddMoveLines(models.TransientModel):
             # Aggiunta linee a distinta
             lines.create_payment_line_from_move_line(payment_order)
 
+            lines.write({
+                'payment_order': payment_order.id
+            })
+
             if payment_method and payment_method.code == 'invoice_financing':
                 if order['massimale'] == order['bank_invoice_financing_amount']:
                     payment_order.bank_invoice_financing_amount = \

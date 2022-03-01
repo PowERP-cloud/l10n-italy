@@ -57,14 +57,14 @@ class AccountMoveLine(models.Model):
     )
 
     payment_order = fields.Many2one(
+        comodel_name='account.payment.order',
         string='Record ordine di pagamento',
-        related='payment_line_ids.order_id',
         readonly=True,
     )
 
     payment_order_name = fields.Char(
         string='Ordine di pagamento',
-        related='payment_line_ids.order_id.name',
+        related='payment_order.name',
         readonly=True,
     )
 

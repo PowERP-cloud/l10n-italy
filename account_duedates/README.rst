@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.4.8.33
+|icon| Due dates 12.0.4.8.34
 ============================
 
 
@@ -155,6 +155,12 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.4.8.34 (2022-02-25)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Currency invoces / Fatture in valuta
+* [REF] Campo ordine di pagamento
+
 12.0.4.8.33 (2022-02-16)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -213,11 +219,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Impostato campo banca aziendale
-
-12.0.4.8.22 (2021-10-28)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Impostato in elenco scadenze in stampa fattura il metodo di pagamento
 
 
 
@@ -290,7 +291,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-02-17
+Last Update / Ultimo aggiornamento: 2022-03-01
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

@@ -129,7 +129,7 @@ class AccountMoveLine(models.Model):
         # but check on wallet
         if po_journal.is_wallet:
             acct_acct_bank_credit = (
-                po_journal.mainmain_bank_account_id.default_credit_account_id)
+                po_journal.main_bank_account_id.default_credit_account_id)
         else:
             acct_acct_bank_credit = po_journal.default_credit_account_id
         # end if
@@ -302,13 +302,11 @@ class AccountMoveLine(models.Model):
 
         lines = self.env['account.move.line'].browse(
             self._context['active_ids'])
-        # reset flag order
-        #
-        payment_line_ids = self.env['account.payment.line']
-        lines.write({
-            'incasso_effettuato': False,
-            'payment_line_ids': payment_line_ids,
-        })
+        # reset flag
+        lines.write(
+            {
+                'incasso_effettuato': False,
+            })
 
     # end registra_insoluto_standard
 
