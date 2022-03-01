@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.31
+|icon| Account Banking Common 12.0.3.7.32
 =========================================
 
 
@@ -82,7 +82,7 @@ Installation / Installazione
 
 From UI: go to:
 
-* |menu| Setting > Activate Developer mode
+* |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
 * |menu| Setting > Apps |right_do| Select **account_banking_common** > Install
 
@@ -155,6 +155,11 @@ ChangeLog History / Cronologia modifiche
 12.0.3.7.31 (2022-03-01)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+* [REF] Refactoring ordine di pagamento in riga scadenza
+
+12.0.3.7.31 (2022-03-01)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
 * [FIX] Corretto la gestione del portafoglio nella registrazione dell'insoluto
 * [FIX] Resettato il flag incasso_effettuato a False nella registrazione dell'insoluto
 * [IMP] Gestito conto spese bancarie con verifica del registro
@@ -209,11 +214,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Gestito iban non impostato
-
-12.0.3.7.18 (2021-12-10)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Corretto formattazione conti
 
 
 
@@ -286,15 +286,11 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-<<<<<<< HEAD
 Last Update / Ultimo aggiornamento: 2022-03-01
-=======
-Last Update / Ultimo aggiornamento: 2022-02-25
->>>>>>> 12.0
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
-    :alt:
+    :alt: 
 .. |Build Status| image:: https://travis-ci.org/PowERP-cloud/l10n-italy.svg?branch=12.0
     :target: https://travis-ci.com/PowERP-cloud/l10n-italy
     :alt: github.com

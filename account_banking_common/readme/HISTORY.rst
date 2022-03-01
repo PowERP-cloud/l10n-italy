@@ -1,6 +1,11 @@
 12.0.3.7.31 (2022-03-01)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+* [REF] Refactoring ordine di pagamento in riga scadenza
+
+12.0.3.7.31 (2022-03-01)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
 * [FIX] Corretto la gestione del portafoglio nella registrazione dell'insoluto
 * [FIX] Resettato il flag incasso_effettuato a False nella registrazione dell'insoluto
 * [IMP] Gestito conto spese bancarie con verifica del registro

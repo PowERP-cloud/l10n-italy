@@ -226,6 +226,10 @@ class AccountPaymentGenerate(models.TransientModel):
             # Aggiunta linee a distinta
             lines.create_payment_line_from_move_line(payment_order)
 
+            lines.write({
+                'payment_order': payment_order.id
+            })
+
             if self.payment_mode_id.payment_method_code == 'invoice_financing':
                 if hasattr(payment_order, 'bank_invoice_financing_amount') and \
                         not payment_order.bank_invoice_financing_amount:
