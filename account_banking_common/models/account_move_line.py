@@ -303,7 +303,12 @@ class AccountMoveLine(models.Model):
         lines = self.env['account.move.line'].browse(
             self._context['active_ids'])
         # reset flag
-        lines.write({'incasso_effettuato': False})
+        payment_line_ids = self.env['account.payment.line']
+        lines.write(
+            {
+                'incasso_effettuato': False,
+                'payment_line_ids': payment_line_ids,
+            })
 
     # end registra_insoluto_standard
 
