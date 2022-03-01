@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.30
+|icon| Account Banking Common 12.0.3.7.31
 =========================================
 
 
@@ -152,6 +152,12 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.31 (2022-02-25)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Gestito conto spese bancarie con verifica del registro
+* [IMP] Gestito il flag incasso_effettuato quando si riporta in bozza una distinta
+
 12.0.3.7.30 (2022-02-16)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -206,11 +212,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Corretto formattazione conti
-
-12.0.3.7.17 (2021-12-02)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Impostato metodo che valorizza il conto per il credit
 
 
 
@@ -283,7 +284,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-02-16
+Last Update / Ultimo aggiornamento: 2022-02-25
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
