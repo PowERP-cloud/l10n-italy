@@ -126,7 +126,14 @@ class AccountMoveLine(models.Model):
         # - - - - - - - - - - - -
 
         # account.account -> Bank
-        acct_acct_bank_credit = po_journal.default_credit_account_id
+        # but check on wallet
+        if po_journal.is_wallet:
+            acct_acct_bank_credit = (
+                po_journal.mainmain_bank_account_id.default_credit_account_id)
+        else:
+            acct_acct_bank_credit = po_journal.default_credit_account_id
+        # end if
+
         if not acct_acct_bank_credit:
             raise UserError(
                 f'Conto "avere" non configurato per non configurato per '
@@ -292,6 +299,17 @@ class AccountMoveLine(models.Model):
                 'credit': amount_insoluti + registered_expenses_amount,
             }
         )
+
+        lines = self.env['account.move.line'].browse(
+            self._context['active_ids'])
+        # reset flag order
+        #
+        payment_line_ids = self.env['account.payment.line']
+        lines.write(
+        {
+            'incasso_effettuato': False,
+            'payment_line_ids': payment_line_ids,
+        })
 
     # end registra_insoluto_standard
 
