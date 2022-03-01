@@ -305,8 +305,7 @@ class AccountMoveLine(models.Model):
         # reset flag order
         #
         payment_line_ids = self.env['account.payment.line']
-        lines.write(
-        {
+        lines.write({
             'incasso_effettuato': False,
             'payment_line_ids': payment_line_ids,
         })
