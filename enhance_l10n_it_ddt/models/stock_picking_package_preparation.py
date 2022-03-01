@@ -76,7 +76,7 @@ class StockPickingPackagePreparation(models.Model):
         ddt_id = super(StockPickingPackagePreparation, self).create(vals)
         partner_invoice_id = ddt_id.get_partner_bysaleorder_id('invoice')
         partner_shipping_id = ddt_id.get_partner_bysaleorder_id('address')
-        ddt_type_id = ddt_id.partner_id.ddt_type_id
+        ddt_type_id = ddt_id.partner_id.ddt_type_id or ddt_id.ddt_type_id
         if partner_invoice_id:
             if ddt_id.partner_id.ddt_type_id:
                 ddt_type_id = ddt_id.partner_id.ddt_type_id
