@@ -1,3 +1,9 @@
+12.0.3.7.31 (2022-03-01)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Corretto la gestione del portafoglio nella registrazione dell'insoluto
+* [FIX] Resettato il flag incasso_effettuato a False nella registrazione dell'insoluto
+
 12.0.3.7.30 (2022-02-16)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
