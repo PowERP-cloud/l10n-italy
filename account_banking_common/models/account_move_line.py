@@ -129,7 +129,7 @@ class AccountMoveLine(models.Model):
         # but check on wallet
         if po_journal.is_wallet:
             acct_acct_bank_credit = (
-                po_journal.mainmain_bank_account_id.default_credit_account_id)
+                po_journal.main_bank_account_id.default_credit_account_id)
         else:
             acct_acct_bank_credit = po_journal.default_credit_account_id
         # end if
