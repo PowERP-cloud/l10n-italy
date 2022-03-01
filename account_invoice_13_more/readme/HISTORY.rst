@@ -1,3 +1,8 @@
+12.0.3.3.16 (2022-03-01)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Aggiornata vista con valori corretti del campo move_type
+
 12.0.3.3.15 (2022-01-20)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -11,7 +16,7 @@
 12.0.3.3.13 (2021-11-24)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* [IMP] Aggiornato campi company bank e counterparty bank 
+* [IMP] Aggiornato campi company bank e counterparty bank
 
 12.0.3.3.12 (2021-10-20)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

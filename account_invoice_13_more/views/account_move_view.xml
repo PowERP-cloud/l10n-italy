@@ -10,7 +10,7 @@
             <xpath expr="//field[@name='date']" position="before">
                 <field name="move_type" attrs="{'readonly': [('lines_count', '>', 0)]}" force_save="1"/>
                 <field name="invoice_date"
-                       attrs="{'required': [('move_type', 'in', ['out_invoice', 'in_invoice', 'out_refund', 'in_refund'])]}"
+                       attrs="{'required': [('move_type', 'in', ['payable_refund', 'payable', 'receivable', 'receivable_refund'])]}"
                        />
                 <field name="lines_count" invisible="1"/>
             </xpath>
@@ -19,10 +19,10 @@
                 <field
                       name="payment_term_id"
                       attrs="{
-                      'invisible': [('move_type', 'not in', ['out_invoice', 'out_refund', 'in_invoice', 'in_refund'])],
+                      'invisible': [('move_type', 'not in', ['payable_refund', 'payable', 'receivable', 'receivable_refund'])],
                       }"
                       />
-                <field name="partner_bank_id" attrs="{'readonly': [('move_type', '==', 'entry')]}"/>
+                <field name="partner_bank_id" attrs="{'readonly': [('move_type', 'in', ['other', 'liquidity'])]}"/>
             </xpath>
 
         </field>

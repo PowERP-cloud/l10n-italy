@@ -16,7 +16,8 @@ This module simplify the backport from Odoo 13.0+.
 </p><p align="justify">
 <ul>
 <li>account.move.invoice_date</li>
-<li>account.move.type (must be renamed to move_type)</li>
+<li>account.move.move_type</li>
+<li>account.move.type (will be remove early)</li>
 <li>account.move.fiscal_position_id</li>
 <li>account.move.payment_term_id</li>
 <li>account.move.partner_bank_id</li>
@@ -27,6 +28,7 @@ This module simplify the backport from Odoo 13.0+.
 <ul>
 <li>Draft and cancelled invoice has no account.move records</li>
 <li>Events are still active on account.invoice model</li>
+<li>Field move_type is compatible with Odoo 14+ not with Odoo 13.0</li>
 </ul>
 </p></p>
         </div>
@@ -42,7 +44,8 @@ Il modulo semplifica il backport da Odoo 13.0+
 </p><p align="justify">
 <ul>
 <li>account.move.invoice_date</li>
-<li>account.move.type (deve essere rinominato move_type)</li>
+<li>account.move.move_type</li>
+<li>account.move.move_type (sar&#224; rimosso a breve)</li>
 <li>account.move.fiscal_position_id</li>
 <li>account.move.payment_term_id</li>
 <li>account.move.partner_bank_id</li>
@@ -51,8 +54,9 @@ Il modulo semplifica il backport da Odoo 13.0+
 <h2>Invoice like Odoo 13+ / Fatture come in Odoo 13+</h2>
 </p><p align="justify">
 <ul>
-<li>Draft and cancelled invoice has no account.move records</li>
-<li>Events are still active on account.invoice model</li>
+<li>Le fatture in bozza e cancellate non hanno registrazioni contabili</li>
+<li>La gestione degli eventi &#232; sul modello account.invoice</li>
+<li>Il campo move_type &#232; compatibile con Odoo 14+ non con Odoo 13.0</li>
 </ul>
 </p></p>
         </div>
@@ -60,8 +64,14 @@ Il modulo semplifica il backport da Odoo 13.0+
     <div class="oe_row oe_spaced">
         <h3 class="oe_slogan" style="color:#162832;">History / Cronologia</h3>
         <div class="oe_span12">
-<h3>12.0.3.3.15 (2022-01-20)</h3>
+<h3>12.0.3.3.16 (2022-03-01)</h3>
 <p align="justify">
+<ul>
+<li>[FIX] Aggiornata vista con valori corretti del campo move_type</li>
+</ul>
+</p><p align="justify">
+<h3>12.0.3.3.15 (2022-01-20)</h3>
+</p><p align="justify">
 <ul>
 <li>[IMP] Standard OCA</li>
 </ul>
@@ -75,7 +85,7 @@ Il modulo semplifica il backport da Odoo 13.0+
 <h3>12.0.3.3.13 (2021-11-24)</h3>
 </p><p align="justify">
 <ul>
-<li>[IMP] Aggiornato campi company bank e counterparty bank </li>
+<li>[IMP] Aggiornato campi company bank e counterparty bank</li>
 </ul>
 </p><p align="justify">
 <h3>12.0.3.3.12 (2021-10-20)</h3>

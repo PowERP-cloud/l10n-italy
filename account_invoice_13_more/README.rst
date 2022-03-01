@@ -1,6 +1,6 @@
 
 ==========================================
-|icon| Account Invoice 13 more 12.0.3.3.15
+|icon| Account Invoice 13 more 12.0.3.3.16
 ==========================================
 
 
@@ -26,7 +26,8 @@ Common structure with Odoo 13.0+
 --------------------------------
 
 * account.move.invoice_date
-* account.move.type (must be renamed to move_type)
+* account.move.move_type
+* account.move.type (will be remove early)
 * account.move.fiscal_position_id
 * account.move.payment_term_id
 * account.move.partner_bank_id
@@ -36,6 +37,7 @@ Difference from Odoo 13.0+
 
 * Draft and cancelled invoice has no account.move records
 * Events are still active on account.invoice model
+* Field move_type is compatible with Odoo 14+ not with Odoo 13.0
 
 
 |
@@ -48,7 +50,8 @@ Strutture comuni con Odoo 13.0+
 -------------------------------
 
 * account.move.invoice_date
-* account.move.type (deve essere rinominato move_type)
+* account.move.move_type
+* account.move.move_type (sarà rimosso a breve)
 * account.move.fiscal_position_id
 * account.move.payment_term_id
 * account.move.partner_bank_id
@@ -56,8 +59,9 @@ Strutture comuni con Odoo 13.0+
 Differenze da Odoo 13.0+
 ------------------------
 
-* Draft and cancelled invoice has no account.move records
-* Events are still active on account.invoice model
+* Le fatture in bozza e cancellate non hanno registrazioni contabili
+* La gestione degli eventi è sul modello account.invoice
+* Il campo move_type è compatibile con Odoo 14+ non con Odoo 13.0
 
 
 |
@@ -190,6 +194,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.3.16 (2022-03-01)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Aggiornata vista con valori corretti del campo move_type
+
 12.0.3.3.15 (2022-01-20)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -203,7 +212,7 @@ ChangeLog History / Cronologia modifiche
 12.0.3.3.13 (2021-11-24)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-* [IMP] Aggiornato campi company bank e counterparty bank 
+* [IMP] Aggiornato campi company bank e counterparty bank
 
 12.0.3.3.12 (2021-10-20)
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -287,7 +296,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-02-19
+Last Update / Ultimo aggiornamento: 2022-03-01
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

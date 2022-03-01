@@ -5,7 +5,7 @@
 #
 {
     'name': 'Account Invoice 13 more',
-    'version': '12.0.3.3.15',
+    'version': '12.0.3.3.16',
     'category': 'Accounting',
     'summary': 'Invoice like Odoo 13+',
     'author': 'powERP enterprise network and other partners',
