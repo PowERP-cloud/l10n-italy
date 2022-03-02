@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.4.8.34
+|icon| Due dates 12.0.4.8.35
 ============================
 
 
@@ -155,6 +155,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.4.8.35 (2022-03-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Aggiunto il campo pagamento effettuato per le scadenze fornitore
+
 12.0.4.8.34 (2022-02-25)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -214,11 +219,6 @@ ChangeLog History / Cronologia modifiche
 
 * [FIX] Impostato e gestito aggiornamento campi banca aziendale e banca partner
 * [FIX] Impostato metodo di pagamento per le scadenze NON tecniche
-
-12.0.4.8.23 (2021-11-15)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Impostato campo banca aziendale
 
 
 
@@ -291,7 +291,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-03-01
+Last Update / Ultimo aggiornamento: 2022-03-02
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

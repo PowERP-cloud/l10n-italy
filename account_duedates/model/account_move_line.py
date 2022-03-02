@@ -112,6 +112,10 @@ class AccountMoveLine(models.Model):
         copy=True,
     )
 
+    pagamento_effettuato = fields.Boolean(
+        string='Pagamento effettuato', default=False
+    )
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ONCHANGE METHODS
 
