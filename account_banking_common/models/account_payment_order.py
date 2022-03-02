@@ -11,6 +11,19 @@ from odoo.exceptions import UserError
 class AccountPaymentOrder(models.Model):
     _inherit = 'account.payment.order'
 
+    @api.depends('payment_line_ids')
+    def _compute_incassi_effettuati(self):
+        for order in self:
+            order.has_incassi_effettuati = False
+            for line in order.payment_line_ids:
+                if line.move_line_id.incasso_effettuato:
+                    order.has_incassi_effettuati = True
+                    break
+                # end if
+            # end for
+        # end for
+    # end _compute_incassi_effettuati
+
     payment_method_code = fields.Char(
         string='Codice metodo di pagamento',
         related='payment_method_id.code',
@@ -19,6 +32,11 @@ class AccountPaymentOrder(models.Model):
     is_wallet_company_bank = fields.Boolean(
         string='Conto di portafoglio aziendale',
         related='company_partner_bank_id.bank_is_wallet',
+    )
+
+    has_incassi_effettuati = fields.Boolean(
+        string='Ha incassi effettuati',
+        compute='_compute_incassi_effettuati',
     )
 
     @api.multi
