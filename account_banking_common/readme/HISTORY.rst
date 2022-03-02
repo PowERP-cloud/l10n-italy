@@ -1,3 +1,9 @@
+12.0.3.7.32 (2022-02-25)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+ * [IMP] Possibilità di scegliere sezionale e data registrazione contabile al momento della registrazione del pagamento
+ * [FIX] Correzione nome modello
+
 12.0.3.7.31 (2022-02-25)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

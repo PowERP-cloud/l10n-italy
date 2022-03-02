@@ -20,6 +20,7 @@ class AccountRegisterPayment(models.TransientModel):
     journal_id = fields.Many2one(
         'account.journal',
         string='Registro',
+        domain=[('is_wallet', '=', False), ('type', 'in', ('bank', 'cash'))],
         default=_set_sezionale,
     )
 
@@ -29,7 +30,7 @@ class AccountRegisterPayment(models.TransientModel):
     )
 
     def _get_bank_account(self):
-        bank_account = self.env['res.partner.bank']
+        bank_account = self.env['account.journal']
         lines = self.env['account.move.line'].browse(
             self._context['active_ids']
         )
