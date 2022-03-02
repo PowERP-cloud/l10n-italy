@@ -23,4 +23,28 @@
         </field>
     </record>
 
+        <!-- DdT Type Views -->
+
+        <record id="view_ddt_type_form_enhance" model="ir.ui.view">
+            <field name="name">stock.ddt.type.form.enhance</field>
+            <field name="model">stock.ddt.type</field>
+            <field name="inherit_id" ref="l10n_it_ddt.view_ddt_type_form"/>
+            <field name="arch" type="xml">
+                <field name="sequence_id" position="after">
+                     <field name="override_ddt_conds"/>
+                </field>
+            </field>
+        </record>
+ 
+         <record id="view_ddt_type_tree_enhance" model="ir.ui.view">
+            <field name="name">stock.ddt.type.tree.enhance</field>
+            <field name="model">stock.ddt.type</field>
+            <field name="inherit_id" ref="l10n_it_ddt.view_ddt_type_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                     <field name="override_ddt_conds"/>
+                </field>
+            </field>
+        </record>
+
 </odoo>

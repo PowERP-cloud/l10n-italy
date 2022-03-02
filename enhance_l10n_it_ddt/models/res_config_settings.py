@@ -132,21 +132,32 @@ class ResConfigSettings(models.TransientModel):
         tmp_id = self.env["ir.config_parameter"].sudo().get_param(config_parameter) or "0"
         return entity_type.browse(int(tmp_id))
 
-    def _get_td_conditions(self, partner_id):
+    def _get_td_conditions(self, ddt_id):
         """
-            Returns Transport Document conditions, choosing by partner
-             or by default values.
+            Returns Transport Document conditions, choosing by TD,
+             partner or by default values.
         """
+        
         carriage_condition_id = self._carriage_condition_get()
         goods_description_id = self._goods_description_get()
         transportation_reason_id = self._transportation_reason_get()
         transportation_method_id = self._transportation_method_get()
 
-        if partner_id:
-            carriage_condition_id = partner_id.carriage_condition_id if partner_id.carriage_condition_id else carriage_condition_id
-            goods_description_id = partner_id.goods_description_id if partner_id.goods_description_id else goods_description_id
-            transportation_reason_id = partner_id.transportation_reason_id if partner_id.transportation_reason_id else transportation_reason_id
-            transportation_method_id = partner_id.transportation_method_id if partner_id.transportation_method_id else transportation_method_id
+        if ddt_id:
+            override_ddt_conds = False
+            if ddt_id.ddt_type_id:
+                type_id = ddt_id.ddt_type_id
+                override_ddt_conds = type_id.override_ddt_conds
+                carriage_condition_id = type_id.default_carriage_condition_id if type_id.default_carriage_condition_id else carriage_condition_id
+                goods_description_id = type_id.default_goods_description_id if type_id.default_goods_description_id else goods_description_id
+                transportation_reason_id = type_id.default_transportation_reason_id if type_id.default_transportation_reason_id else transportation_reason_id
+                transportation_method_id = type_id.default_transportation_method_id if type_id.default_transportation_method_id else transportation_method_id
+            if ddt_id.partner_id and not override_ddt_conds:
+                partner_id = ddt_id.partner_id 
+                carriage_condition_id = partner_id.carriage_condition_id if partner_id.carriage_condition_id else carriage_condition_id
+                goods_description_id = partner_id.goods_description_id if partner_id.goods_description_id else goods_description_id
+                transportation_reason_id = partner_id.transportation_reason_id if partner_id.transportation_reason_id else transportation_reason_id
+                transportation_method_id = partner_id.transportation_method_id if partner_id.transportation_method_id else transportation_method_id
 
         return {
                 'carriage_condition_id': carriage_condition_id.id,
