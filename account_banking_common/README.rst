@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.32
+|icon| Account Banking Common 12.0.3.7.33
 =========================================
 
 
@@ -152,11 +152,20 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
-12.0.3.7.31 (2022-03-01)
+12.0.3.7.33 (2022-03-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito annullamento distinta che ha scadenze con incasso effettuato
+
+12.0.3.7.32 (2022-03-01)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [REF] Refactoring ordine di pagamento in riga scadenza
 * [FIX] Corretto la gestione del portafoglio nella registrazione dell'insoluto
+
+12.0.3.7.31 (2022-03-01)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
 * [FIX] Resettato il flag incasso_effettuato a False nella registrazione dell'insoluto
 * [IMP] Gestito conto spese bancarie con verifica del registro
 * [IMP] Gestito il flag incasso_effettuato quando si riporta in bozza una distinta
@@ -205,16 +214,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Gestito conti bancari nelle scadenze
-
-12.0.3.7.19 (2021-12-13)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito iban non impostato
-
-12.0.3.7.18 (2021-12-10)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Corretto formattazione conti
 
 
 
@@ -287,7 +286,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-03-01
+Last Update / Ultimo aggiornamento: 2022-03-02
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

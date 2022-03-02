@@ -1,8 +1,17 @@
-12.0.3.7.31 (2022-03-01)
+12.0.3.7.33 (2022-03-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito annullamento distinta che ha scadenze con incasso effettuato
+
+12.0.3.7.32 (2022-03-01)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [REF] Refactoring ordine di pagamento in riga scadenza
 * [FIX] Corretto la gestione del portafoglio nella registrazione dell'insoluto
+
+12.0.3.7.31 (2022-03-01)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
 * [FIX] Resettato il flag incasso_effettuato a False nella registrazione dell'insoluto
 * [IMP] Gestito conto spese bancarie con verifica del registro
 * [IMP] Gestito il flag incasso_effettuato quando si riporta in bozza una distinta
