@@ -30,11 +30,11 @@ class AccountRegisterPayment(models.TransientModel):
     )
 
     expenses_account = fields.Many2one(
-        comodel_name='account.journal',
+        comodel_name='account.account',
         string='Conto spese bancarie',
     )
 
-    expenses_amount = fields.Integer(string='Importo spese')
+    expenses_amount = fields.Float(string='Importo spese')
 
     def _get_bank_account(self):
         bank_account = self.env['account.journal']
