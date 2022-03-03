@@ -10,16 +10,12 @@
                         name="journal_id"
                         domain="[('is_wallet', '=', False), ('type', 'in', ('bank', 'cash'))]"
                     />
-                    <!--
-                    <field
-                        name="journal_id"
-                        domain="[('is_wallet', '=', False), ('type', '=', 'liquidity')]"
-                    />
-                    -->
+                    <field name="registration_date"/>
+                </group>
 
-                    <field
-                        name="registration_date"
-                    />
+                <group>
+                    <field name="expenses_account"/>
+                    <field name="expenses_amount" attrs="{'invisible': [('expenses_account', '=', False)]}"/>
                 </group>
 
                 <footer>

@@ -2,7 +2,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
  * [IMP] Gestione operazioni di registrazione pagamenti fornitori e compensazione tra fatture e note di credito nelle registrazioni
- * [IMP] Aggiunta gestione spese bancarie
+ * [IMP] Gestione spese bancarie
 
 12.0.3.7.32 (2022-03-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~
