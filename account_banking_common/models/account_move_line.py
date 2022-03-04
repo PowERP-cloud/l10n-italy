@@ -245,7 +245,7 @@ class AccountMoveLine(models.Model):
                 {
                     'move_id': new_move.id,
                     'account_id': acct_acct_partner.id,
-                    'partner_id': pol_partner.id,
+                    'partner_id': my_invoice.partner_id.id,
                     'debit': move_line.debit + expenses_charged,
                     'credit': 0,
                     'name': str(

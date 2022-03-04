@@ -267,7 +267,12 @@ class AccountPaymentGenerate(models.TransientModel):
 
             # Detect lines already assigned to a payment order
             if line.payment_line_ids:
-                busy_lines.append(line)
+                # insoluto?
+                if line.unpaid_ctr > 0 and line.incasso_effettuato is False:
+                    msg = line.invoice_id.number + ' ' + str(line.date_maturity)
+                    _logger.debug('riga insoluto {msg}'.format(msg=msg))
+                else:
+                    busy_lines.append(line)
             # end if
 
             # Check same payment method
