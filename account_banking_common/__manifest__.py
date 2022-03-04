@@ -5,7 +5,7 @@
 #
 {
     'name': 'Account Banking Common',
-    'version': '12.0.3.7.33',
+    'version': '12.0.3.7.35',
     'category': 'Accounting',
     'summary': 'Common stuff for payment modules',
     'author': 'powERP enterprise network and other partners',
@@ -40,6 +40,7 @@
         'views/action_duedates_compensate.xml',
         'views/account_bank_journal_form.xml',
         'views/account_invoice_view.xml',
+        'views/account_move_line_view.xml',
     ],
     'maintainer': 'powERP enterprise network',
     'installable': True,

@@ -51,25 +51,30 @@ class AccountPaymentGenerate(models.TransientModel):
             # end for
         # end if
 
-        if payment_method and payment_method.code and \
-                payment_method.code == 'invoice_financing':
+        if payment_method and payment_method.code:
+            if payment_method.code == 'invoice_financing':
 
-            journal_ids = []
-            default_mode_id = self._set_default_mode()
-            if default_mode_id:
-                journal_ids = self._set_journals_invoice_financing(
-                    default_mode_id)
-                # default_mode = self.env['account.payment.mode'].browse(default_mode_id)
-                # if default_mode.bank_account_link == 'fixed':
-                #     journal_ids.appned(default_mode.fixed_journal_id.id)
-                # elif default_mode.bank_account_link == 'variable':
-                #
-                #     journal_ids = [jrn.id for jrn in
-                #                    default_mode.variable_journal_ids]
+                journal_ids = []
+                default_mode_id = self._set_default_mode()
+                if default_mode_id:
+                    journal_ids = self._set_journals_invoice_financing(
+                        default_mode_id)
+                    # default_mode = self.env['account.payment.mode'].browse(default_mode_id)
+                    # if default_mode.bank_account_link == 'fixed':
+                    #     journal_ids.appned(default_mode.fixed_journal_id.id)
+                    # elif default_mode.bank_account_link == 'variable':
+                    #
+                    #     journal_ids = [jrn.id for jrn in
+                    #                    default_mode.variable_journal_ids]
 
+                    return [('id', 'in', tuple(journal_ids))]
+                else:
+                    return default_domain
+            elif payment_method.code == 'RB-o':
+                journal_ids = self.env['account.journal'].search(
+                    ['is_wallet', '=', False])
                 return [('id', 'in', tuple(journal_ids))]
-            else:
-                return default_domain
+
         else:
             return default_domain
         # end if
@@ -183,6 +188,7 @@ class AccountPaymentGenerate(models.TransientModel):
 
             # Check for errors standard
             self._raise_on_errors(lines)
+            self._check_riba_supplier(lines)
 
             # Check for same bank for invoice_financing
             if self.payment_mode_id.payment_method_code == 'invoice_financing':
@@ -209,6 +215,8 @@ class AccountPaymentGenerate(models.TransientModel):
                                         'impostata nel conto deve essere '
                                         'maggiore di zero.')
                     # end if
+                # end if
+            # end if
 
             if self.journal_id.is_wallet and \
                 self.journal_id.bank_account_id.bank_is_wallet:
@@ -259,7 +267,12 @@ class AccountPaymentGenerate(models.TransientModel):
 
             # Detect lines already assigned to a payment order
             if line.payment_line_ids:
-                busy_lines.append(line)
+                # insoluto?
+                if line.unpaid_ctr > 0 and line.incasso_effettuato is False:
+                    msg = line.invoice_id.number + ' ' + str(line.date_maturity)
+                    _logger.debug('riga insoluto {msg}'.format(msg=msg))
+                else:
+                    busy_lines.append(line)
             # end if
 
             # Check same payment method
@@ -369,6 +382,29 @@ class AccountPaymentGenerate(models.TransientModel):
         # end if
 
     # end _check_invoice_financing_line_bank
+
+    @staticmethod
+    def _check_riba_supplier(lines):
+        reconciled_lines = list()
+        for line in lines:
+            if line.reconciled:
+                reconciled_lines.append(line)
+            # end if
+        # end for
+
+        if reconciled_lines:
+            msg = 'ATTENZIONE!\nLe seguenti righe ' \
+                  'sono già state riconciliate:\n\n - '
+
+            msg += '\n - '.join(
+                map(
+                    lambda x: x.invoice_id.number + '    ' + str(
+                        x.date_maturity),
+                    reconciled_lines
+                )
+            )
+            raise UserError(msg)
+        # end if
 
     def _set_journals_invoice_financing(self, default_mode_id):
         journal_ids = []

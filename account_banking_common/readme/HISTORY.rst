@@ -1,3 +1,13 @@
+12.0.3.7.35 (2022-03-04)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito controllo su distinte insolute
+
+12.0.3.7.34 (2022-03-03)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito controllo su distinte riconciliate
+
 12.0.3.7.33 (2022-03-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
