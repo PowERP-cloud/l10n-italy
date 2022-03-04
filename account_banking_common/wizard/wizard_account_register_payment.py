@@ -112,7 +112,7 @@ class AccountRegisterPayment(models.TransientModel):
                 })
             elif supplier_payment_reg_op:
 
-                bank_credit = in_debit_total - in_credit_total
+                bank_credit = in_credit_total - in_debit_total
 
                 # Create the bank line
                 bank_line = move_line_model_no_check.create({
