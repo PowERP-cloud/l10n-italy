@@ -47,6 +47,7 @@ class AccountRegisterPayment(models.TransientModel):
                 bank_account = line.company_bank_id.journal_id
                 break
         return bank_account
+    # end _get_bank_account
 
     def register(self):
 
@@ -98,13 +99,32 @@ class AccountRegisterPayment(models.TransientModel):
                 to_reconcile.append(in_line | new_line)
             # end for
 
-            # Create the bank line
-            bank_line = move_line_model_no_check.create({
-                'move_id': payment_reg_move.id,
-                'account_id': bank_line_account.id,
-                'credit': in_credit_total,
-                'debit': in_debit_total,
-            })
+            if client_payment_reg_op:
+
+                bank_debit = in_debit_total - in_credit_total
+
+                # Create the bank line
+                bank_line = move_line_model_no_check.create({
+                    'move_id': payment_reg_move.id,
+                    'account_id': bank_line_account.id,
+                    'credit': 0,
+                    'debit': bank_debit,
+                })
+            elif supplier_payment_reg_op:
+
+                bank_credit = in_debit_total - in_credit_total
+
+                # Create the bank line
+                bank_line = move_line_model_no_check.create({
+                    'move_id': payment_reg_move.id,
+                    'account_id': bank_line_account.id,
+                    'credit': bank_credit,
+                    'debit': 0,
+                })
+            else:
+
+                assert False
+            # end if
         # end payment_reg_move_add_lines
 
         def payment_reg_move_add_expenses():
