@@ -152,6 +152,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.34 (2022-03-03)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito controllo su distinte riconciliate
+
 12.0.3.7.33 (2022-03-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -209,11 +214,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Impostato default per importo accreditato
-
-12.0.3.7.20 (2021-12-17)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito conti bancari nelle scadenze
 
 
 
@@ -286,7 +286,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-03-02
+Last Update / Ultimo aggiornamento: 2022-03-03
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

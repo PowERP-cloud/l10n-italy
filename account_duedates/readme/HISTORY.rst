@@ -1,3 +1,8 @@
+12.0.4.8.35 (2022-03-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Aggiunto il campo pagamento effettuato per le scadenze fornitore
+
 12.0.4.8.34 (2022-02-25)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

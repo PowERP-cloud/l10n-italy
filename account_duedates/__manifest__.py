@@ -5,7 +5,7 @@
 #
 {
     'name': 'Due dates',
-    'version': '12.0.4.8.34',
+    'version': '12.0.4.8.35',
     'category': 'Accounting',
     'summary': 'Enhanced due dates management',
     'author': 'powERP enterprise network and other partners',
