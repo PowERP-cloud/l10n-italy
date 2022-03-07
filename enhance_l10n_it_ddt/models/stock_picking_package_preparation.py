@@ -96,8 +96,15 @@ class StockPickingPackagePreparation(models.Model):
                 res.update({
                     'ddt_type_id': ddt_type_id.id,
                     })
-            res.update(self.env['res.config.settings']._get_td_conditions(ddt_id.partner_id))
+            res.update(self.env['res.config.settings']._get_td_conditions(ddt_id))
         ddt_id.write(res)
         return ddt_id
-    
-    
+
+
+class StockDdtType(models.Model):
+    _inherit = 'stock.ddt.type'
+
+    override_ddt_conds = fields.Boolean(
+        string='Overrides transport conditions',
+        help='These ddt settings about transport conditions overrides any other (Partner / Default).',
+        default=False)

@@ -18,8 +18,9 @@ class AccountRegisterPayment(models.TransientModel):
         return bank_account.id
 
     journal_id = fields.Many2one(
-        'account.journal',
+        comodel_name='account.journal',
         string='Registro',
+        domain=[('is_wallet', '=', False), ('type', 'in', ('bank', 'cash'))],
         default=_set_sezionale,
     )
 
@@ -28,8 +29,15 @@ class AccountRegisterPayment(models.TransientModel):
         default=fields.Date.today()
     )
 
+    expenses_account = fields.Many2one(
+        comodel_name='account.account',
+        string='Conto spese bancarie',
+    )
+
+    expenses_amount = fields.Float(string='Importo spese')
+
     def _get_bank_account(self):
-        bank_account = self.env['res.partner.bank']
+        bank_account = self.env['account.journal']
         lines = self.env['account.move.line'].browse(
             self._context['active_ids']
         )
@@ -39,73 +47,256 @@ class AccountRegisterPayment(models.TransientModel):
                 bank_account = line.company_bank_id.journal_id
                 break
         return bank_account
+    # end _get_bank_account
 
     def register(self):
 
-        if not self.journal_id.default_debit_account_id:
-            raise UserError("Conto bancario dare di default nel registro "
-                            "non impostato.")
+        def payment_reg_move_create():
 
-        to_reconcile = dict()
+            # Create the new account.move
+            payment_reg_move_vals = self.env['account.move'].default_get([
+                'date_effective',
+                'fiscalyear_id',
+                'invoice_date',
+                'narration',
+                'payment_term_id',
+                'reverse_date',
+                'tax_type_domain',
+            ])
 
-        lines = self.env['account.move.line'].browse(
-            self._context['active_ids']
+            payment_reg_move_vals.update({
+                'date': self.registration_date,
+                'date_apply_vat': self.registration_date,
+                'journal_id': self.journal_id.id,
+                'type': 'entry',
+                'ref': "Registrazione pagamento ",
+                'state': 'draft',
+            })
+
+            created_move = self.env['account.move'].create(payment_reg_move_vals)
+
+            return created_move
+        # end create_payment_reg_move
+
+        def payment_reg_move_add_lines():
+
+            # For each input line add one line to the new account.move
+            for in_line in in_lines_list:
+
+                # Create the new line with credit and debit swapped relative to the in_line
+                # NOTE: Odoo ensures each account.move.line has a credit value != 0 OR a debit value !=0
+                #       (that is: Odoo forbids account-move.lines with both credit and debit != 0)
+                new_line = move_line_model_no_check.create({
+                    'move_id': payment_reg_move.id,
+                    'account_id': in_line.account_id.id,
+                    'partner_id': in_line.partner_id.id,
+                    'credit': in_line.debit,
+                    'debit': in_line.credit,
+                })
+
+                # Reconciliation pair. The actual reconciliation will be performed
+                # AFTER the confirmation (post() method call) of the new move.
+                to_reconcile.append(in_line | new_line)
+            # end for
+
+            if client_payment_reg_op:
+
+                bank_debit = in_debit_total - in_credit_total
+
+                # Create the bank line
+                bank_line = move_line_model_no_check.create({
+                    'move_id': payment_reg_move.id,
+                    'account_id': bank_line_account.id,
+                    'credit': 0,
+                    'debit': bank_debit,
+                })
+            elif supplier_payment_reg_op:
+
+                bank_credit = in_credit_total - in_debit_total
+
+                # Create the bank line
+                bank_line = move_line_model_no_check.create({
+                    'move_id': payment_reg_move.id,
+                    'account_id': bank_line_account.id,
+                    'credit': bank_credit,
+                    'debit': 0,
+                })
+            else:
+
+                assert False
+            # end if
+        # end payment_reg_move_add_lines
+
+        def payment_reg_move_add_expenses():
+
+            if self.expenses_account and self.expenses_account.id:
+
+                # Riga di costo
+                cost_line = move_line_model_no_check.create({
+                    'move_id': payment_reg_move.id,
+                    'account_id': self.expenses_account.id,
+                    'credit': 0,
+                    'debit': self.expenses_amount,
+                })
+
+                # Riga di banca
+                bank_line = move_line_model_no_check.create({
+                    'move_id': payment_reg_move.id,
+                    'account_id': bank_expenses_account.id,
+                    'credit': self.expenses_amount,
+                    'debit': 0,
+                })
+            # end if
+        # payment_reg_move_add_expenses
+
+        def payment_reg_move_confirm_and_reconcile():
+
+            # Confirm the account.move
+            payment_reg_move.post()
+
+            # Create reconciliations
+            for pair in to_reconcile:
+                pair.reconcile()
+            # end if
+        # end payment_reg_move_confirm_and_reconcile
+
+        # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        # Initial variables
+
+        in_credit_total = 0
+        in_debit_total = 0
+
+        bank_line_account = None
+
+        to_reconcile = list()
+
+        move_line_model_no_check = self.env['account.move.line'].with_context(
+            check_move_validity=False
         )
 
-        vals = self.env['account.move'].default_get([
-            'date_effective',
-            'fiscalyear_id',
-            'invoice_date',
-            'narration',
-            'payment_term_id',
-            'reverse_date',
-            'tax_type_domain',
-        ])
+        # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        # Retrieve and validate lines
 
-        vals.update({
-            'date': self.registration_date,
-            'date_apply_vat': self.registration_date,
-            'journal_id': self.journal_id.id,
-            'type': 'entry',
-            'ref': "Registrazione pagamento ",
-            'state': 'draft',
-        })
+        # Get account.line objects from web UI selection
+        selected_lines_ids = self._context['active_ids']
+        in_lines_list = self.env['account.move.line'].browse(selected_lines_ids)
 
-        move_id = self.env['account.move'].create(vals)
+        # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        # Validate the type of operation
 
-        move_line_model_no_check = \
-            self.env['account.move.line'].with_context(
-                check_move_validity=False)
+        # Identify the type of operation
+        client_payment_reg_op = any(filter(
+            lambda ln: ln.user_type_id.type == 'receivable', in_lines_list
+        ))
+        supplier_payment_reg_op = any(filter(
+            lambda ln: ln.user_type_id.type == 'payable', in_lines_list
+        ))
+        assert client_payment_reg_op or supplier_payment_reg_op, (
+            'Nessuna linea selezionata per l\'operazione '
+            'di registrazione pagamento.'
+        )
 
-        total_amount = 0.0
+        # Ensure than there are only client OR supplier lines but NOT BOTH
+        if client_payment_reg_op and supplier_payment_reg_op:
+            msg = (
+                'Non è possibile creare un\'unica registrazione per '
+                'registrare contemporaneamente pagamenti cliente e '
+                'fornitore.\nUtilizzare la funzione di compensazione.'
+            )
+            raise UserError(msg)
+        # end if
 
-        for line in lines:
-            total_amount += line.debit
-            conto_dare = {
-                'move_id': move_id.id,
-                'account_id': line.account_id.id,
-                'partner_id': line.partner_id.id,
-                'credit': line.debit,
-                'debit': 0
-            }
-            new_line = move_line_model_no_check.create(conto_dare)
-            if line.account_id.id not in to_reconcile:
-                to_reconcile[line.account_id.id] = self.env['account.move.line']
-            to_reconcile[line.account_id.id] += new_line
+        # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        # Validate the amount of the operation
 
-        # end for
+        # Ensure we are not inverting the operation or
+        # doing a pure reconciliation due to:
+        #   - having mixed invoices and credit notes
+        #   - total amount of credit notes >= total amount of invoices
+        in_credit_total = sum([in_line.credit for in_line in in_lines_list])
+        in_debit_total = sum([in_line.debit for in_line in in_lines_list])
 
-        conto_avere = {
-            'move_id': move_id.id,
-            'account_id': self.journal_id.default_debit_account_id.id,
-            'credit': 0,
-            'debit': total_amount
-        }
-        move_line_model_no_check.create(conto_avere)
+        if client_payment_reg_op and not in_debit_total > in_credit_total:
+            raise UserError(
+                'L\'importo delle note di credito deve essere '
+                'minore dell\'importo delle fatture cliente'
+            )
+        # end if
 
-        move_id.post()
+        if supplier_payment_reg_op and not in_credit_total > in_debit_total:
+            raise UserError(
+                'L\'importo delle note di credito deve essere '
+                'minore dell\'importo delle fatture fornitore'
+            )
+        # end if
 
-        for index, news in to_reconcile.items():
-            from_lines = lines.filtered(lambda x: x.account_id.id == index)
-            from_lines += news
-            from_lines.reconcile()
+        # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        # Identify the account.account to be used for the bank line
+
+        # Ensure the required default account is set in the bank registry
+        if client_payment_reg_op:
+
+            bank_line_account = self.journal_id.default_debit_account_id
+
+            if not (bank_line_account and bank_line_account.id):
+                raise UserError(
+                    'Conto dare di default non impostato '
+                    'nel registro della banca.'
+                )
+            # end if
+
+        elif supplier_payment_reg_op:
+
+            bank_line_account = self.journal_id.default_credit_account_id
+
+            if not(bank_line_account and bank_line_account.id):
+                raise UserError(
+                    'Conto avere di default non impostato '
+                    'nel registro della banca.'
+                )
+            # end if
+
+        # end if
+
+        assert bank_line_account and bank_line_account.id, (
+            'Non è stato possibile identificare il conto da '
+            'utilizzare per creare la move.line della banca.'
+        )
+        # end if
+
+        # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        # Validate expenses
+        if self.expenses_account and self.expenses_account.id:
+
+            # Importo spese
+            if self.expenses_amount <= 0:
+                raise UserError(
+                    'L\'importo delle spese deve essere maggiore di zero'
+                )
+            # end if
+
+            # Conto di registrazione delle spese nel journal della banca
+            bank_expenses_account = self.journal_id.default_credit_account_id
+
+            if not(bank_expenses_account and bank_expenses_account.id):
+                raise UserError(
+                    'Conto avere di default non impostato nel registro '
+                    'della banca, questo conto è necessario per '
+                    'registrare le spese bancarie.'
+                )
+            # end if
+        # end if
+
+        # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        # Create the registration
+
+        # Payment registration move
+        payment_reg_move = payment_reg_move_create()
+        payment_reg_move_add_lines()
+        payment_reg_move_add_expenses()
+        payment_reg_move_confirm_and_reconcile()
+
+        # TODO: riga inserita per debug, rimuovere a sviluppo completato
+        print('Operation completed!!!!')
+    # end register
+# end AccountRegisterPayment

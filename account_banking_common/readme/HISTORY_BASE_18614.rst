@@ -1,27 +1,3 @@
-<<<<<<< HEAD
-12.0.3.7.35 (2022-03-04)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito controllo su distinte insolute
-
-12.0.3.7.34 (2022-03-03)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito controllo su distinte riconciliate
-=======
-12.0.3.7.35 (2022-03-03)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
- * [IMP] Gestione operazioni di registrazione pagamenti fornitori e compensazione tra fatture e note di credito nelle registrazioni
- * [IMP] Gestione spese bancarie
-
-12.0.3.7.34 (2022-03-02)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
- * [IMP] Possibilità di scegliere sezionale e data registrazione contabile al momento della registrazione del pagamento
- * [FIX] Correzione nome modello
->>>>>>> 12.0
-
 12.0.3.7.33 (2022-03-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
