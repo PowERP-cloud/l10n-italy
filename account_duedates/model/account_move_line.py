@@ -53,14 +53,14 @@ class AccountMoveLine(models.Model):
     )
 
     payment_order = fields.Many2one(
+        comodel_name='account.payment.order',
         string='Record ordine di pagamento',
-        related='payment_line_ids.order_id',
         readonly=True
     )
 
     payment_order_name = fields.Char(
         string='Ordine di pagamento',
-        related='payment_line_ids.order_id.name',
+        related='payment_order.name',
         readonly=True)
 
     state = fields.Selection(
@@ -74,7 +74,7 @@ class AccountMoveLine(models.Model):
         inverse='_inverse_has_order',
         search='_search_has_order',
     )
-    
+
     payment_order_lines = fields.One2many(
         comodel_name='account.payment.line',
         inverse_name='move_line_id',
