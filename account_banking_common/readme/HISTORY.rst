@@ -25,9 +25,6 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Resettato il flag incasso_effettuato a False nella registrazione dell'insoluto
-
-12.0.3.7.31 (2022-02-25)
-~~~~~~~~~~~~~~~~~~~~~~~~
 * [IMP] Gestito conto spese bancarie con verifica del registro
 * [IMP] Gestito il flag incasso_effettuato quando si riporta in bozza una distinta
 
