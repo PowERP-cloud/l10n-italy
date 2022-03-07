@@ -383,4 +383,12 @@ msgstr "."
 msgid "wizard.payment.order.credit"
 msgstr ""
 
+#. module: account_banking_common
+#: model_terms:ir.ui.view,arch_db:account_banking_common.view_move_line_form_duedates_orders
+msgid "Orders"
+msgstr "Ordini"
 
+#. module: account_banking_common
+#: model_terms:ir.ui.view,arch_db:account_banking_common.view_move_line_form_duedates_orders
+msgid "Payment Orders"
+msgstr "Pagamento Ordini"

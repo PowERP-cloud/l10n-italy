@@ -40,6 +40,7 @@
         'views/action_duedates_compensate.xml',
         'views/account_bank_journal_form.xml',
         'views/account_invoice_view.xml',
+        'views/account_move_line_view.xml',
     ],
     'maintainer': 'powERP enterprise network',
     'installable': True,
