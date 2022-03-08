@@ -102,7 +102,6 @@ class AccountIntrastatTransationNature(models.Model):
         required=True)
     name = fields.Char(
         string="Name")
-
     triangulation = fields.Selection(
         selection=[
             ('A', 'A'),
@@ -116,11 +115,7 @@ class AccountIntrastatTransationNature(models.Model):
         ],
         string="Triangulation",
     )
-
-    active = fields.Boolean(
-        string="Active",
-        default=True,
-    )
+    active = fields.Boolean(default=True)
 
 
 class AccountIntrastatTransationNatureB(models.Model):
@@ -133,10 +128,7 @@ class AccountIntrastatTransationNatureB(models.Model):
         required=True)
     name = fields.Char(
         string="Name")
-
     nature_parent_id = fields.Many2one(
         comodel_name='account.intrastat.transaction.nature',
         string="Transaction Nature"
     )
-
-

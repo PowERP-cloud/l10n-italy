@@ -494,7 +494,7 @@ class AccountInvoiceIntrastat(models.Model):
 
     @api.multi
     @api.depends('invoice_id.type', 'intrastat_code_type')
-    def _get_statement_section(self):
+    def _compute_statement_section(self):
         """
         Compute where the invoice intrastat data will be computed.
         This field is used to show the right values to fill in
@@ -705,7 +705,7 @@ class AccountInvoiceIntrastat(models.Model):
 
     @api.onchange('intrastat_code_type')
     def change_intrastat_code_type(self):
-        self.statement_section = self._get_statement_section()
+        self.statement_section = self._compute_statement_section()
         self.intrastat_code_id = False
 
 

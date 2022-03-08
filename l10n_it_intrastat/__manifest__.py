@@ -4,10 +4,11 @@
 
 {
     'name': "ITA - Intrastat",
-    'version': '12.0.1.2.5',
+    'version': '12.0.1.2.2',
     'category': 'Account',
     'summary': 'Riclassificazione merci e servizi per dichiarazioni Intrastat',
     'author': "Openforce, Link IT srl, Agile Business Group, "
+              "Powerp network, "
               "Odoo Community Association (OCA)",
     'website': 'https://github.com/OCA/l10n-italy/tree/'
                '12.0/l10n_it_intrastat',
