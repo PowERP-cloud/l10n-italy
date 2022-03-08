@@ -214,6 +214,7 @@
                    <field name="country_destination_id"/>
                    <field name="province_origin_id"/>
                    <field name="amount_euro" sum="Total"/>
+                   <field name="statistic_amount_euro" sum="Statistic total"/>
                </tree>
             </field>
         </record>
@@ -231,6 +232,8 @@
                         </group>
                         <group>
                             <field name="transaction_nature_id" required="1"/>
+                            <field name="triangulation" />
+                            <field name="transaction_nature_b_id" attrs="{'required': [('triangulation','=', False)]}"/>
                         </group>
                     </group>
                     <newline/>
@@ -246,9 +249,10 @@
                         </group>
                         <group>
                             <field name="delivery_code_id"/>
-                            <field name="transport_code_id"/>
+                            <field name="transport_code_id" required="1"/>
                             <field name="country_destination_id" required="1"/>
                             <field name="province_origin_id" required="1"/>
+                            <field name="country_origin_id" required="1"/>
                         </group>
                     </group>
                 </form>
@@ -347,11 +351,11 @@
                             <field name="amount_euro"/>
                         </group>
                         <group>
-                            <field name="invoice_number"/>
-                            <field name="invoice_date"/>
-                            <field name="supply_method"/>
-                            <field name="payment_method"/>
-                            <field name="country_payment_id" required="True"/>
+                            <field name="invoice_number" required="1"/>
+                            <field name="invoice_date" required="1"/>
+                            <field name="supply_method" required="1"/>
+                            <field name="payment_method" required="1"/>
+                            <field name="country_payment_id" required="1"/>
                         </group>
                     </group>
                 </form>
@@ -402,11 +406,11 @@
                             <field name="amount_euro"/>
                         </group>
                         <group>
-                            <field name="invoice_number"/>
-                            <field name="invoice_date"/>
-                            <field name="supply_method"/>
-                            <field name="payment_method"/>
-                            <field name="country_payment_id"/>
+                            <field name="invoice_number" required="1"/>
+                            <field name="invoice_date" required="1"/>
+                            <field name="supply_method" required="1"/>
+                            <field name="payment_method" required="1"/>
+                            <field name="country_payment_id" required="1"/>
                         </group>
                     </group>
                 </form>
@@ -447,6 +451,7 @@
                         </group>
                         <group>
                             <field name="transaction_nature_id" required="1"/>
+                            <field name="transaction_nature_b_id" />
                         </group>
                     </group>
                     <newline/>
@@ -468,7 +473,7 @@
                             <field name="country_good_origin_id" required="1"/>
                             <field name="province_destination_id"/>
                             <field name="delivery_code_id"/>
-                            <field name="transport_code_id"/>
+                            <field name="transport_code_id" required="1"/>
                         </group>
                     </group>
                 </form>
@@ -625,11 +630,11 @@
                             <field name="amount_currency"/>
                         </group>
                         <group>
-                            <field name="invoice_number"/>
-                            <field name="invoice_date"/>
-                            <field name="supply_method"/>
-                            <field name="payment_method"/>
-                            <field name="country_payment_id"/>
+                            <field name="invoice_number" required="1"/>
+                            <field name="invoice_date" required="1"/>
+                            <field name="supply_method" required="1"/>
+                            <field name="payment_method" required="1"/>
+                            <field name="country_payment_id" required="1"/>
                         </group>
                     </group>
                 </form>

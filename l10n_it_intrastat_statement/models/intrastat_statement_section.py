@@ -94,8 +94,10 @@ class IntrastatStatementSection(models.AbstractModel):
 
     @api.model
     def get_section_number(self):
-        raise UserError("Section number must be overridden by every section")
+        raise UserError(
+            _("Section number must be overridden by every section"))
 
     @api.model
     def get_section_type(self):
-        raise UserError("Section type must be overridden by every section")
+        raise UserError(
+            -("Section type must be overridden by every section"))

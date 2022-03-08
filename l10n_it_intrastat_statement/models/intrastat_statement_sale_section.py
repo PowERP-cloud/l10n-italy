@@ -62,6 +62,17 @@ class IntrastatStatementSaleSection1(models.Model):
     province_origin_id = fields.Many2one(
         comodel_name='res.country.state',
         string="Origin Province")
+    transaction_nature_b_id = fields.Many2one(
+        comodel_name='account.intrastat.transaction.nature.b',
+        string="Transaction Nature B"
+    )
+    country_origin_id = fields.Many2one(
+        comodel_name='res.country',
+        string="Origin Country")
+    triangulation = fields.Boolean(
+        string="Triangulation",
+        default=False,
+    )
 
     @api.model
     def get_section_number(self):
@@ -81,6 +92,14 @@ class IntrastatStatementSaleSection1(models.Model):
         if self.statement_id.company_id.intrastat_additional_unit_from == \
                 'weight':
             self.additional_units = self.weight_kg
+
+    @api.onchange('transaction_nature_id')
+    def _onchange_transaction_nature_id(self):
+        domain = [('nature_parent_id', '=', self.transaction_nature_id.id)]
+        recs = self.env['account.intrastat.transaction.nature.b'].search(domain)
+        return {
+            'domain': {'transaction_nature_b_id': [('id', 'in', recs.ids)]}
+        }
 
     @api.model
     def _prepare_statement_line(self, inv_intra_line, statement_id=None):
@@ -112,6 +131,15 @@ class IntrastatStatementSaleSection1(models.Model):
             statement_id.company_id or company_id,
             dp_model.precision_get('Account'))
 
+        nature_b_company = company_id.intrastat_sale_transaction_nature_b_id
+
+        if inv_intra_line.transaction_nature_b_id:
+            transaction_nature_b_id = inv_intra_line.transaction_nature_b_id
+        else:
+            transaction_nature_b_id = nature_b_company
+        triangulation = inv_intra_line.triangulation
+        country_good_origin_id = inv_intra_line.country_good_origin_id
+
         # check if additional_units has a value
         has_additional_units = bool(inv_intra_line.additional_units)
         res.update({
@@ -124,6 +152,9 @@ class IntrastatStatementSaleSection1(models.Model):
             'transport_code_id': transport_code_id.id,
             'country_destination_id': inv_intra_line.country_destination_id.id,
             'province_origin_id': province_origin_id.id,
+            'transaction_nature_b_id': transaction_nature_b_id.id,
+            'triangulation': triangulation,
+            'country_origin_id': country_good_origin_id.id
         })
         return res
 
@@ -136,31 +167,55 @@ class IntrastatStatementSaleSection1(models.Model):
         # Codice dello Stato membro dell’acquirente
         country_id = self.country_partner_id or self.partner_id.country_id
         rcd += format_x(country_id.code, 2)
-        #  Codice IVA dell’acquirente
+        # Codice IVA dell’acquirente
         rcd += format_x(self.vat_code.replace(' ', ''), 12)
         # Ammontare delle operazioni in euro
         rcd += format_9(self.amount_euro, 13)
         # Codice della natura della transazione
-        rcd += format_x(self.transaction_nature_id.code, 1)
+        if not self.transaction_nature_id:
+            raise ValidationError(
+                _("Missing nature code on section %s") % (
+                    self.get_section_number()))
+        if self.triangulation:  # in caso triangolazione
+            rcd += format_x(self.transaction_nature_id.triangulation, 1)
+        else:
+            rcd += format_x(self.transaction_nature_id.code, 1)
         # Codice della nomenclatura combinata della merce
         rcd += format_9(self.intrastat_code_id.name, 8)
         if self.statement_id.period_type == 'M':
-            #  Massa netta in chilogrammi
+            # Massa netta in chilogrammi
             rcd += format_9(self.weight_kg, 10)
-            #  Quantità espressa nell'unità di misura supplementare
+            # Quantità espressa nell'unità di misura supplementare
             rcd += format_9(self.additional_units, 10)
-            #  Valore statistico in euro
+            # Valore statistico in euro
             rcd += format_9(self.statistic_amount_euro, 13)
-            #  Codice delle condizioni di consegna
+            # Codice delle condizioni di consegna
             delivery_code = self.delivery_code_id.code or ''
             rcd += format_x(delivery_code[:1], 1)
-            #  Codice del modo di trasporto
-            transport_code = self.transport_code_id.code
-            rcd += format_9(transport_code, 1)
-            #  Codice del paese di destinazione
+            # Codice del modo di trasporto
+            if not self.transport_code_id:
+                raise ValidationError(
+                    _("Missing transport code on section %s") % (
+                        self.get_section_number()))
+            rcd += format_9(self.transport_code_id.code, 1)
+            # Codice del paese di destinazione
             rcd += format_x(self.country_destination_id.code, 2)
-            #  Codice del paese di origine della merce
+            # Codice del paese di origine della merce
             rcd += format_x(self.province_origin_id.code, 2)
+
+            # new fields
+            if self.triangulation:
+                nb_code = ''
+            else:
+                if (self.transaction_nature_b_id and
+                        self.transaction_nature_b_id.code):
+                    nb_code = self.transaction_nature_b_id.code
+                else:
+                    nb_code = ''
+
+            rcd += format_x(nb_code, 1)
+
+            rcd += format_x(self.country_origin_id.code, 2)
 
         rcd += "\r\n"
         return rcd
@@ -261,26 +316,30 @@ class IntrastatStatementSaleSection2(models.Model):
         rcd = ''
         # Mese di riferimento del riepilogo da rettificare
         rcd += format_9(self.month, 2)
-        #  Trimestre di riferimento del riepilogo da rettificare
+        # Trimestre di riferimento del riepilogo da rettificare
         rcd += format_9(self.quarterly, 1)
         # Anno periodo di ref da modificare
-        year = (self.year_id or 0) // 100
+        year = (self.year_id or 0) % 100
         rcd += format_9(year, 2)
         # Codice dello Stato membro dell’acquirente
         country_id = self.country_partner_id or self.partner_id.country_id
         rcd += format_x(country_id.code, 2)
-        #  Codice IVA dell’acquirente
+        # Codice IVA dell’acquirente
         rcd += format_x(self.vat_code.replace(' ', ''), 12)
-        #  Segno da attribuire alle variazioni da X(1) apportare
+        # Segno da attribuire alle variazioni da X(1) apportare
         rcd += format_x(self.sign_variation, 1)
         # Ammontare delle operazioni in euro
         rcd += format_9(self.amount_euro, 13)
         # Codice della natura della transazione
+        if not self.transaction_nature_id:
+            raise ValidationError(
+                _("Missing nature code on section %s") % (
+                    self.get_section_number()))
         rcd += format_x(self.transaction_nature_id.code, 1)
         # Codice della nomenclatura combinata della merce
         rcd += format_9(self.intrastat_code_id.name, 8)
         if self.statement_id.period_type == 'M':
-            #  Valore statistico in euro
+            # Valore statistico in euro
             rcd += format_9(self.statistic_amount_euro, 13)
 
         rcd += "\r\n"
@@ -347,7 +406,7 @@ class IntrastatStatementSaleSection3(models.Model):
         # Codice dello Stato membro dell’acquirente
         country_id = self.country_partner_id or self.partner_id.country_id
         rcd += format_x(country_id.code, 2)
-        #  Codice IVA del fornitore
+        # Codice IVA del fornitore
         rcd += format_x(self.vat_code.replace(' ', ''), 12)
         # Ammontare delle operazioni in euro
         rcd += format_9(self.amount_euro, 13)
@@ -450,6 +509,15 @@ class IntrastatStatementSaleSection4(models.Model):
         if not self.progressive_to_modify:
             raise ValidationError(
                 _("Missing progressive to adjust on 'Sales - Section 4'"))
+        if (not self.invoice_number) or (not self.invoice_date):
+            raise ValidationError(
+                _("Missing invoice data on 'Sales - Section 4'"))
+        if not self.supply_method:
+            raise ValidationError(
+                _("Missing supply method on 'Sales - Section 4'"))
+        if not self.payment_method:
+            raise ValidationError(
+                _("Missing payment method on 'Sales - Section 4'"))
         if not self.country_payment_id:
             raise ValidationError(
                 _("Missing payment country on 'Sales - Section 4'"))
@@ -472,7 +540,7 @@ class IntrastatStatementSaleSection4(models.Model):
         # Codice dello Stato membro dell’acquirente
         country_id = self.country_partner_id or self.partner_id.country_id
         rcd += format_x(country_id.code, 2)
-        #  Codice IVA dell’acquirente
+        # Codice IVA dell’acquirente
         rcd += format_x(self.vat_code.replace(' ', ''), 12)
         # Ammontare delle operazioni in euro
         rcd += format_9(self.amount_euro, 13)
