@@ -33,6 +33,11 @@ class WizardPaymentOrderCredit(models.TransientModel):
 
     amount_expense = fields.Float(string='Importo', )
 
+    credit_date = fields.Date(
+        string='Data accredito',
+        default=fields.Date.today(),
+    )
+
     @api.multi
     def registra_accredito(self):
         '''Create on new account.move for each line of payment order'''
@@ -42,6 +47,7 @@ class WizardPaymentOrderCredit(models.TransientModel):
         recordset.with_context({
             'expenses_account_id': self.account_expense.id,
             'expenses_amount': self.amount_expense,
+            'credit_date': self.credit_date,
         }).registra_accredito()
 
         return {'type': 'ir.actions.act_window_close'}

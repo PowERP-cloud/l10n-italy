@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.35
+|icon| Account Banking Common 12.0.3.7.36
 =========================================
 
 
@@ -152,6 +152,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.36 (2022-03-09)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Inserita data accredito da wizard
+
 12.0.3.7.35 (2022-03-04)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -209,11 +214,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Gestione viste conto di portafoglio
-
-12.0.3.7.22 (2022-01-14)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestione registrazioni contabili con conto di portafoglio
 
 
 
@@ -286,7 +286,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-03-04
+Last Update / Ultimo aggiornamento: 2022-03-09
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
