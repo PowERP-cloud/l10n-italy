@@ -79,6 +79,10 @@ class AccountPaymentOrder(models.Model):
 
         account_expense_id = self._context.get('expenses_account_id')
         amount_expense = self._context.get('expenses_amount')
+        credit_date = self._context.get('credit_date')
+
+        if not credit_date:
+            credit_date = fields.Date.today()
 
         for payment_order in self:
 
@@ -157,8 +161,8 @@ class AccountPaymentOrder(models.Model):
                     'tax_type_domain',
                 ])
                 vals.update({
-                    'date': fields.Date.today(),
-                    'date_apply_vat': fields.Date.today(),
+                    'date': credit_date,
+                    'date_apply_vat': credit_date,
                     'journal_id': cfg['sezionale'].id,
                     'type': 'entry',
                     'ref': "Accreditamento ",
