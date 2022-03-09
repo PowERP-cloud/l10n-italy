@@ -24,6 +24,7 @@
             </field>
 
             <xpath expr="//field[@name='quantity']" position="after">
+                <field name="amount_into_payment_line"/>
                 <field name="prorogation_ctr"/>
                 <field name="unpaid_ctr"/>
             </xpath>

@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.4.8.35
+|icon| Due dates 12.0.4.8.36
 ============================
 
 
@@ -155,6 +155,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.4.8.36 (2022-03-09)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Aggiunto il campo importo in distinta nella scadenza
+
 12.0.4.8.35 (2022-03-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -213,12 +218,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Reimpostato filtro "Non in distinta"
-
-12.0.4.8.24 (2021-11-23)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Impostato e gestito aggiornamento campi banca aziendale e banca partner
-* [FIX] Impostato metodo di pagamento per le scadenze NON tecniche
 
 
 
@@ -291,7 +290,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-03-02
+Last Update / Ultimo aggiornamento: 2022-03-09
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
