@@ -50,6 +50,14 @@
                 <attribute name="string">Importo</attribute>
             </xpath>
 
+            <xpath expr="//field[@name='invoice_origin']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='amount_residual_currency']" position="after">
+                <field name="amount_into_payment_line" />
+            </xpath>
+
         </field>
     </record>
 
