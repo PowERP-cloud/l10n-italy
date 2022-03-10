@@ -230,7 +230,7 @@ class AccountMoveLine(models.Model):
         for move_line, expenses_charged in zip(self, charge_client_for):
 
             # Update the total amount of insoluti
-            amount_insoluti = amount_insoluti + move_line.debit
+            amount_insoluti = amount_insoluti + move_line.amount_into_payment_line
 
             # Increase the unpaid counter for this line
             move_line.unpaid_ctr = move_line.unpaid_ctr + 1
@@ -246,7 +246,7 @@ class AccountMoveLine(models.Model):
                     'move_id': new_move.id,
                     'account_id': acct_acct_partner.id,
                     'partner_id': my_invoice.partner_id.id,
-                    'debit': move_line.debit + expenses_charged,
+                    'debit': move_line.amount_into_payment_line + expenses_charged,
                     'credit': 0,
                     'name': str(
                         f'Scadenza {move_line.date_maturity}'

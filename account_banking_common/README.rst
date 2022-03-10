@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.36
+|icon| Account Banking Common 12.0.3.7.37
 =========================================
 
 
@@ -152,6 +152,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.37 (2022-03-10)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito importi scadenze in insoluto standard
+
 12.0.3.7.36 (2022-03-09)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -209,11 +214,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Gestione visibiltà pulsante accredito
-
-12.0.3.7.23 (2022-01-14)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestione viste conto di portafoglio
 
 
 
@@ -286,7 +286,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-03-09
+Last Update / Ultimo aggiornamento: 2022-03-10
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
