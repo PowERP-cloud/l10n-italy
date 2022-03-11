@@ -5,7 +5,7 @@
 #
 {
     'name': 'Account Banking Common',
-    'version': '12.0.3.7.40',
+    'version': '12.0.3.7.41',
     'category': 'Accounting',
     'summary': 'Common stuff for payment modules',
     'author': 'powERP enterprise network and other partners',
@@ -22,7 +22,6 @@
     ],
     'data': [
         'views/res_partner_bank_view.xml',
-        'views/action_insoluto.xml',
         'wizard/wizard_insoluto.xml',
         'wizard/wizard_payment_order_confirm.xml',
         'wizard/wizard_payment_order_credit.xml',
@@ -31,13 +30,8 @@
         'wizard/wizard_set_payment_method.xml',
         'wizard/wizard_account_compensation_generate.xml',
         'wizard/wizard_account_register_payment.xml',
-        'views/action_payment_confirm.xml',
         'views/account_payment_order.xml',
-        'views/action_payment_register.xml',
         'views/action_order_generate.xml',
-        'views/action_order_add_move_lines.xml',
-        'views/action_duedates_update.xml',
-        'views/action_duedates_compensate.xml',
         'views/account_bank_journal_form.xml',
         'views/account_invoice_view.xml',
         'views/account_move_line_view.xml',
