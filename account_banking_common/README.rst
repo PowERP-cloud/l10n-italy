@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.37
+|icon| Account Banking Common 12.0.3.7.38
 =========================================
 
 
@@ -152,6 +152,12 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.38 (2022-03-11)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostato configurazione conti di abbuono e abbuono delta
+* [FIX] Esposto in tutti i registri il conto spese bancarie
+
 12.0.3.7.37 (2022-03-10)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -209,11 +215,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [REF] Refactoring impostazione conti trasferiti nel registro
-
-12.0.3.7.24 (2022-01-14)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestione visibiltà pulsante accredito
 
 
 
@@ -286,7 +287,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-03-10
+Last Update / Ultimo aggiornamento: 2022-03-11
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
