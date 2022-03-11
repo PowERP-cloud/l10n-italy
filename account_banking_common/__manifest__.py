@@ -5,7 +5,7 @@
 #
 {
     'name': 'Account Banking Common',
-    'version': '12.0.3.7.38',
+    'version': '12.0.3.7.40',
     'category': 'Accounting',
     'summary': 'Common stuff for payment modules',
     'author': 'powERP enterprise network and other partners',

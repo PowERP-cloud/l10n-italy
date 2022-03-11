@@ -152,32 +152,43 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
-
-12.0.3.7.38 (2022-03-11)
+12.0.3.7.40 (2022-03-11)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Impostato configurazione conti di abbuono e abbuono delta
 * [FIX] Esposto in tutti i registri il conto spese bancarie
 
-12.0.3.7.37 (2022-03-10)
+12.0.3.7.39 (2022-03-10)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Gestito importi scadenze in insoluto standard
 
-12.0.3.7.36 (2022-03-09)
+12.0.3.7.38 (2022-03-09)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Inserita data accredito da wizard
 
-12.0.3.7.35 (2022-03-04)
+12.0.3.7.37 (2022-03-04)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Gestito controllo su distinte insolute
 
-12.0.3.7.34 (2022-03-03)
+12.0.3.7.36 (2022-03-03)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Gestito controllo su distinte riconciliate
+
+12.0.3.7.35 (2022-03-03)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+ * [IMP] Gestione operazioni di registrazione pagamenti fornitori e compensazione tra fatture e note di credito nelle registrazioni
+ * [IMP] Gestione spese bancarie
+
+12.0.3.7.34 (2022-03-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+ * [IMP] Possibilità di scegliere sezionale e data registrazione contabile al momento della registrazione del pagamento
+ * [FIX] Correzione nome modello
 
 12.0.3.7.33 (2022-03-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -202,6 +213,10 @@ ChangeLog History / Cronologia modifiche
 
 * [IMP] Aggiornato controlli wizard conferma pagamenti
 
+12.0.3.7.29 (2022-02-04)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostato funzionalità registra pagamenti
 
 
 
