@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.38
+|icon| Account Banking Common 12.0.3.7.41
 =========================================
 
 
@@ -152,6 +152,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.41 (2022-03-11)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostato ordinamento delle azioni nel rispettivo menù di pagamenti e scadenze
+
 12.0.3.7.40 (2022-03-11)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -212,11 +217,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Aggiornato controlli wizard conferma pagamenti
-
-12.0.3.7.29 (2022-02-04)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Impostato funzionalità registra pagamenti
 
 
 

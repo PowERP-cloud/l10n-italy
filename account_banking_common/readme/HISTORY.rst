@@ -1,3 +1,8 @@
+12.0.3.7.41 (2022-03-11)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostato ordinamento delle azioni nel rispettivo menù di pagamenti e scadenze
+
 12.0.3.7.40 (2022-03-11)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
