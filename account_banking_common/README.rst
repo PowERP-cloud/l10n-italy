@@ -152,6 +152,7 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+
 12.0.3.7.38 (2022-03-11)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -201,20 +202,6 @@ ChangeLog History / Cronologia modifiche
 
 * [IMP] Aggiornato controlli wizard conferma pagamenti
 
-12.0.3.7.29 (2022-02-04)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Impostato funzionalità registra pagamenti
-
-12.0.3.7.26 (2022-01-27)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Update dependencies
-
-12.0.3.7.25 (2022-01-18)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Refactoring impostazione conti trasferiti nel registro
 
 
 

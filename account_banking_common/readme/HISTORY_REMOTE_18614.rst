@@ -1,29 +1,3 @@
-12.0.3.7.40 (2022-03-11)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Impostato configurazione conti di abbuono e abbuono delta
-* [FIX] Esposto in tutti i registri il conto spese bancarie
-
-12.0.3.7.39 (2022-03-10)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito importi scadenze in insoluto standard
-
-12.0.3.7.38 (2022-03-09)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Inserita data accredito da wizard
-
-12.0.3.7.37 (2022-03-04)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito controllo su distinte insolute
-
-12.0.3.7.36 (2022-03-03)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito controllo su distinte riconciliate
-
 12.0.3.7.35 (2022-03-03)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -51,6 +25,9 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Resettato il flag incasso_effettuato a False nella registrazione dell'insoluto
+
+12.0.3.7.31 (2022-02-25)
+~~~~~~~~~~~~~~~~~~~~~~~~
 * [IMP] Gestito conto spese bancarie con verifica del registro
 * [IMP] Gestito il flag incasso_effettuato quando si riporta in bozza una distinta
 

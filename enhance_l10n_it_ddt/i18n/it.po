@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-02 09:05+0000\n"
-"PO-Revision-Date: 2021-04-02 09:05+0000\n"
+"POT-Creation-Date: 2022-03-02 08:07+0000\n"
+"PO-Revision-Date: 2022-03-02 08:07+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,17 +16,27 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: enhance_l10n_it_ddt
+#: model:ir.model,name:enhance_l10n_it_ddt.model_add_pickings_to_ddt
+msgid "Add picking to TD"
+msgstr "Aggiunta prelievo al DDT"
+
+#. module: enhance_l10n_it_ddt
 #: selection:res.partner,ddt_invoicing_group:0
 msgid "Billing Partner"
 msgstr "Partner di fatturazione"
 
 #. module: enhance_l10n_it_ddt
-#: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_galileo_res_partner__carriage_condition_id
 #: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_res_config_settings__sale_ddt_carriage_condition_id
 #: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_res_partner__carriage_condition_id
 #: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_res_users__carriage_condition_id
 msgid "Carriage Condition"
 msgstr "Condizione di trasporto"
+
+#. module: enhance_l10n_it_ddt
+#: model:ir.model.fields,help:enhance_l10n_it_ddt.field_res_partner__is_delivery_carrier
+#: model:ir.model.fields,help:enhance_l10n_it_ddt.field_res_users__is_delivery_carrier
+msgid "Choose this option if this partner would be used as delivery carrier."
+msgstr "Scegli questa opzione se questo partner debba essere usato come corriere per consegna."
 
 #. module: enhance_l10n_it_ddt
 #: selection:res.partner,ddt_invoicing_group:0
@@ -44,7 +54,6 @@ msgid "Contact"
 msgstr "Contatto"
 
 #. module: enhance_l10n_it_ddt
-#: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_galileo_res_partner__goods_description_id
 #: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_res_config_settings__sale_ddt_goods_description_id
 #: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_res_partner__goods_description_id
 #: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_res_users__goods_description_id
@@ -52,16 +61,125 @@ msgid "Goods Description"
 msgstr "Descrizione Merci"
 
 #. module: enhance_l10n_it_ddt
+#: model_terms:ir.ui.view,arch_db:enhance_l10n_it_ddt.ddt_stock_picking_package_preparation_search_inherit
+msgid "In Pack"
+msgstr "Nel Collo"
+
+#. module: enhance_l10n_it_ddt
+#: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_res_partner__is_delivery_carrier
+#: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_res_users__is_delivery_carrier
+msgid "Is it a Delivery Carrier"
+msgstr "E` un corriere per consegne"
+
+#. module: enhance_l10n_it_ddt
+#: model:ir.model.fields,help:enhance_l10n_it_ddt.field_res_config_settings__setup_lock_ddt_on_payment_terms
+msgid "Locks TD generation based on payment terms from sale orders."
+msgstr "Blocca la generazione del DDT in base ai termini di pagamento dell' ordine di vendita."
+
+#. module: enhance_l10n_it_ddt
 #: selection:res.partner,ddt_invoicing_group:0
 msgid "One TD - One Invoice"
 msgstr "Un DDT - Una fattura"
 
 #. module: enhance_l10n_it_ddt
-#: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_galileo_res_partner__ddt_type_id
+#: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_stock_ddt_type__override_ddt_conds
+msgid "Overrides transport conditions"
+msgstr "Sovrascrive le condizioni di trasporto"
+
+#. module: enhance_l10n_it_ddt
+#: model:ir.model,name:enhance_l10n_it_ddt.model_stock_picking_package_preparation
+msgid "Package Preparation"
+msgstr "Preparazione collo"
+
+#. module: enhance_l10n_it_ddt
+#: code:addons/enhance_l10n_it_ddt/wizard/add_picking_to_ddt.py:68
+#, python-format
+msgid "Picking %s already in TD"
+msgstr "Il prelievo %s è già nel DDT"
+
+#. module: enhance_l10n_it_ddt
 #: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_res_partner__ddt_type_id
 #: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_res_users__ddt_type_id
 msgid "Preferred Transport Document Type"
 msgstr "Tipo di Documento di Trasporto preferenziale"
+
+#. module: enhance_l10n_it_ddt
+#: code:addons/enhance_l10n_it_ddt/wizard/add_picking_to_ddt.py:83
+#, python-format
+msgid "Sale order %s and DDT %s have different carriage condition"
+msgstr "L' ordine di vendita %s e DDT %s hanno differenti condizioni di trasporto"
+
+#. module: enhance_l10n_it_ddt
+#: code:addons/enhance_l10n_it_ddt/wizard/add_picking_to_ddt.py:98
+#, python-format
+msgid "Sale order %s and DDT %s have different goods description"
+msgstr "L' ordine di vendita %s e DDT %s hanno differenti descrizioni dei beni"
+
+#. module: enhance_l10n_it_ddt
+#: code:addons/enhance_l10n_it_ddt/wizard/add_picking_to_ddt.py:128
+#, python-format
+msgid "Sale order %s and DDT %s have different transportation method"
+msgstr "L' ordine di vendita %s e DDT %s hanno differenti metodi di trasporto"
+
+#. module: enhance_l10n_it_ddt
+#: code:addons/enhance_l10n_it_ddt/wizard/add_picking_to_ddt.py:113
+#, python-format
+msgid "Sale order %s and DDT %s have different transportation reason"
+msgstr "L' ordine di vendita %s e DDT %s hanno differenti causali di trasporto"
+
+#. module: enhance_l10n_it_ddt
+#: code:addons/enhance_l10n_it_ddt/wizard/add_picking_to_ddt.py:73
+#, python-format
+msgid "Selected Picking %s have different Partner"
+msgstr "Il prelievo selezionato %s ha Partner differente"
+
+#. module: enhance_l10n_it_ddt
+#: code:addons/enhance_l10n_it_ddt/wizard/ddt_from_picking.py:76
+#, python-format
+msgid "Selected Pickings have different Partner"
+msgstr "I prelievi selezionati hanno Partner differente"
+
+#. module: enhance_l10n_it_ddt
+#: code:addons/enhance_l10n_it_ddt/wizard/ddt_from_picking.py:117
+#, python-format
+msgid "Selected Pickings have different carriage condition"
+msgstr "I prelievi selezionati hanno condizioni di trasporto"
+
+#. module: enhance_l10n_it_ddt
+#: code:addons/enhance_l10n_it_ddt/wizard/ddt_from_picking.py:218
+#, python-format
+msgid "Selected Pickings have different carrier"
+msgstr "I prelievi selezionati hanno differente corriere di consegna"
+
+#. module: enhance_l10n_it_ddt
+#: code:addons/enhance_l10n_it_ddt/wizard/ddt_from_picking.py:142
+#, python-format
+msgid "Selected Pickings have different goods description"
+msgstr "I prelievi selezionati hanno differente descrizoni dei beni"
+
+#. module: enhance_l10n_it_ddt
+#: code:addons/enhance_l10n_it_ddt/wizard/ddt_from_picking.py:107
+#, python-format
+msgid "Selected Pickings have different parcels"
+msgstr "I prelievi selezionati hanno pacchi differenti"
+
+#. module: enhance_l10n_it_ddt
+#: code:addons/enhance_l10n_it_ddt/wizard/ddt_from_picking.py:193
+#, python-format
+msgid "Selected Pickings have different transportation method"
+msgstr "I prelievi selezionati hanno differenti methodi di trasporto"
+
+#. module: enhance_l10n_it_ddt
+#: code:addons/enhance_l10n_it_ddt/wizard/ddt_from_picking.py:167
+#, python-format
+msgid "Selected Pickings have different transportation reason"
+msgstr "I prelievi selezionati hanno differenti causali di trasporto"
+
+#. module: enhance_l10n_it_ddt
+#: code:addons/enhance_l10n_it_ddt/wizard/ddt_from_picking.py:95
+#, python-format
+msgid "Selected pickings have different destinations"
+msgstr "I prelievi selezionati hanno differenti destinazioni"
 
 #. module: enhance_l10n_it_ddt
 #: model_terms:ir.ui.view,arch_db:enhance_l10n_it_ddt.res_config_settings_view_form_sale_ddt_extend
@@ -72,6 +190,18 @@ msgstr "Impostazione predefinite di spedizione"
 #: selection:res.partner,ddt_invoicing_group:0
 msgid "Shipping Partner"
 msgstr "Partner di spedizione"
+
+#. module: enhance_l10n_it_ddt
+#: model:ir.model,name:enhance_l10n_it_ddt.model_stock_ddt_type
+msgid "Stock TD Type"
+msgstr "Tipo DDT di magazzino"
+
+#. module: enhance_l10n_it_ddt
+#: code:addons/enhance_l10n_it_ddt/wizard/add_picking_to_ddt.py:150
+#: code:addons/enhance_l10n_it_ddt/wizard/ddt_from_picking.py:247
+#, python-format
+msgid "TD"
+msgstr "DDT"
 
 #. module: enhance_l10n_it_ddt
 #: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_res_config_settings__setup_business_eu_ddt_type_id
@@ -110,16 +240,35 @@ msgid "TD Type to be used as default creating a new contact"
 msgstr "Modello di DDT da usare nella creazione di un nuovo contatto"
 
 #. module: enhance_l10n_it_ddt
-#: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_galileo_res_partner__ddt_invoicing_group
+#: model:ir.model,name:enhance_l10n_it_ddt.model_ddt_from_pickings
+msgid "TD from pickings"
+msgstr "DDT da consegne"
+
+#. module: enhance_l10n_it_ddt
 #: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_res_partner__ddt_invoicing_group
 #: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_res_users__ddt_invoicing_group
 msgid "TD invoicing group"
 msgstr "Gruppo fatturazione DDT"
 
 #. module: enhance_l10n_it_ddt
-#: model_terms:ir.ui.view,arch_db:enhance_l10n_it_ddt.res_config_settings_view_form_sale_ddt_extend
+#: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_res_config_settings__setup_lock_ddt_on_payment_terms
+msgid "TD lock on payment terms"
+msgstr "DDT bloccato sui termini di pagamento"
+
+#. module: enhance_l10n_it_ddt
+#: model:ir.model.fields,help:enhance_l10n_it_ddt.field_stock_ddt_type__override_ddt_conds
+msgid "These ddt settings about transport conditions overrides any other (Partner / Default)."
+msgstr "Queste impostazioni del DDT circa le condizioni di trasporto sovrascrivono ogni altra (Partner o Predefinite)."
+
+#. module: enhance_l10n_it_ddt
+#: model_terms:ir.ui.view,arch_db:enhance_l10n_it_ddt.res_config_settings_view_form_stock_ddt_extend
 msgid "Transport Document Defaults"
 msgstr "Modelli di documento di trasporto"
+
+#. module: enhance_l10n_it_ddt
+#: model_terms:ir.ui.view,arch_db:enhance_l10n_it_ddt.res_config_settings_view_form_stock_ddt_extend
+msgid "Transport Document Terms"
+msgstr "Documento di trasporto Termini"
 
 #. module: enhance_l10n_it_ddt
 #: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_res_config_settings__partner_ddt_type_method_id
@@ -127,7 +276,6 @@ msgid "Transport Document Type"
 msgstr "Tipo di Documento di Trasporto"
 
 #. module: enhance_l10n_it_ddt
-#: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_galileo_res_partner__transportation_method_id
 #: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_res_config_settings__sale_ddt_transportation_method_id
 #: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_res_partner__transportation_method_id
 #: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_res_users__transportation_method_id
@@ -135,7 +283,6 @@ msgid "Transportation Method"
 msgstr "Metodo di trasporto"
 
 #. module: enhance_l10n_it_ddt
-#: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_galileo_res_partner__transportation_reason_id
 #: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_res_config_settings__sale_ddt_transportation_reason_id
 #: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_res_partner__transportation_reason_id
 #: model:ir.model.fields,field_description:enhance_l10n_it_ddt.field_res_users__transportation_reason_id
