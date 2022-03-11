@@ -17,6 +17,15 @@ class AccountRegisterPayment(models.TransientModel):
         bank_account = self._get_bank_account()
         return bank_account.id
 
+    def _set_total_amount(self):
+        amount = 0.0
+        lines = self.env['account.move.line'].browse(
+            self._context['active_ids']
+        )
+        for line in lines:
+            amount += line.balance
+        return amount
+
     journal_id = fields.Many2one(
         comodel_name='account.journal',
         string='Registro',
@@ -36,6 +45,27 @@ class AccountRegisterPayment(models.TransientModel):
 
     expenses_amount = fields.Float(string='Importo spese')
 
+    total_amount = fields.Float(
+        string='Importo pagamento',
+        default=_set_total_amount
+    )
+
+    note = fields.Text(string='Nota')
+
+    payment_difference = fields.Float(
+        string='Differenza di pagamento',
+        default=0.0
+    )
+
+    payment_difference_handling = fields.Selection(
+        [
+            ('open', 'Lasciare aperta'),
+            ('reconcile', 'Chiudere')
+        ], default='open',
+        string="Payment Difference Handling",
+        copy=False
+    )
+
     def _get_bank_account(self):
         bank_account = self.env['account.journal']
         lines = self.env['account.move.line'].browse(
@@ -48,6 +78,10 @@ class AccountRegisterPayment(models.TransientModel):
                 break
         return bank_account
     # end _get_bank_account
+
+    @api.onchange('total_amount')
+    def _onchange_total_amount(self):
+        pass
 
     def register(self):
 
