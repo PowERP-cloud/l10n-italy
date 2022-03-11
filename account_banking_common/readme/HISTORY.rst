@@ -1,3 +1,9 @@
+12.0.3.7.38 (2022-03-11)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostato configurazione conti di abbuono e abbuono delta
+* [FIX] Esposto in tutti i registri il conto spese bancarie
+
 12.0.3.7.37 (2022-03-10)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
