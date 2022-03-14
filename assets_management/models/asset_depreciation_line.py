@@ -11,12 +11,6 @@ class AssetDepreciationLine(models.Model):
     _description = "Assets Depreciations Lines"
     _order = "date asc, name asc"
 
-    @api.depends('asset_id')
-    def _set_last_depreciation_date(self):
-        for line in self:
-            line.last_depreciation_date = line.asset_id.last_depreciation_date
-    # end _get_last_depreciation_date
-
     amount = fields.Monetary(
         string="Amount",
     )
@@ -131,12 +125,6 @@ class AssetDepreciationLine(models.Model):
         string="Final",
         # readonly=True,
         # states={'draft': [('readonly', False)]},
-    )
-
-    last_depreciation_date = fields.Date(
-        'Last depreciation date asset',
-        compute=_set_last_depreciation_date,
-        store=True,
     )
 
     # Non-default parameter: set which `move_types` require numeration

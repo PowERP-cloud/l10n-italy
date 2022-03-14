@@ -1,3 +1,8 @@
+12.0.1.0.0_19 (2021-12-22)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Fix visualizzazione creazione righe di altra natura (non ammortamento)
+
 12.0.1.0.0_18 (2021-12-21)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
