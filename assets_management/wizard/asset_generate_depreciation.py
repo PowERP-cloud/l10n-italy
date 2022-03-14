@@ -110,9 +110,6 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
             #     assets.append(dep.asset_id)
             # # end if
 
-            if dep.state == "non_depreciated":
-                continue
-
             # already closed
             if dep.state == "totally_depreciated":
                 raise UserError(
