@@ -125,6 +125,10 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
             # existenz of lines beyond
             lines = dep.line_ids
 
+            # not depreciated type
+            extra = lines.filtered(lambda line: line.move_type != 'depreciated'
+                                   and line.final is False)
+
             # start
             year = self.date_dep.year
             start_year = datetime.date(year, 1, 1)
@@ -157,6 +161,15 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
                 if newer_lines:
                     newer_lines.button_remove_account_move()
                     newer_lines.unlink()
+            # end if
+
+            if extra and self.final:
+                for ln in extra:
+                    if ln.move_id and ln.move_id.state == 'draft':
+                        ln.move_id.post()
+                        ln.final = True
+                    # end if
+                # end for
             # end if
 
         dep_lines = deps.generate_depreciation_lines(self.date_dep)
@@ -223,6 +236,26 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
                               ' {curr} è fuori esercizio (superiore a quella '
                               'usuale per l\'anno indicato {endy}).'.format(
                                 curr=current_date_str, endy=end_year_str)}))
+
+            # get assets
+            deps = self.get_depreciations().with_context(dep_date=self.date_dep,
+                                                         final=self.final)
+            for dep in deps:
+                extra = dep.line_ids.filtered(lambda l:
+                                              l.move_type != 'depreciated'
+                                              and l.final is False)
+                if extra:
+                    for ln in extra:
+                        tipo = ln.depreciation_line_type_id.display_name
+                        asset = ln.depreciation_id.display_name
+                        lines.append((0, 0, {
+                            'reason': 'ATTENZIONE: il movimento "{movimento}" '
+                                      'di tipo {tipo} per il bene "{asset}" '
+                                      'risulta non consolidato'.format(
+                                       movimento=ln.name,
+                                       asset=asset,
+                                       tipo=tipo)
+                        }))
 
             wz_id = self.env['asset.generate.warning'].create({
                 'wizard_id': wizard.id,
