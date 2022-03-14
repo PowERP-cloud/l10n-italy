@@ -507,18 +507,19 @@ class AssetDepreciationLine(models.Model):
     def get_in_account_move_line_vals(self):
         self.ensure_one()
         credit_line_vals = {
-            "account_id": self.asset_id.category_id.gain_account_id.id,
-            "credit": 0.0,
-            "debit": self.amount,
-            "currency_id": self.currency_id.id,
-            "name": " - ".join((self.asset_id.make_name(), self.name)),
+            'account_id': self.asset_id.category_id.gain_account_id.id,
+            'credit': self.amount,
+            'debit': 0.0,
+            'currency_id': self.currency_id.id,
+            'name': " - ".join((self.asset_id.make_name(), self.name)),
         }
+
         debit_line_vals = {
-            "account_id": self.asset_id.category_id.asset_account_id.id,
-            "credit": self.amount,
-            "debit": 0.0,
-            "currency_id": self.currency_id.id,
-            "name": " - ".join((self.asset_id.make_name(), self.name)),
+            'account_id': self.asset_id.category_id.asset_account_id.id,
+            'credit': 0.0,
+            'debit': self.amount,
+            'currency_id': self.currency_id.id,
+            'name': " - ".join((self.asset_id.make_name(), self.name)),
         }
         return [credit_line_vals, debit_line_vals]
 
