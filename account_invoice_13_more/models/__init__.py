@@ -3,4 +3,5 @@
 # Copyright 2020-22 powERP enterprise network <https://www.powerp.it>
 # Copyright 2020-22 Didotech s.r.l. <https://www.didotech.com>
 #
+from . import account_invoice
 from . import account_move

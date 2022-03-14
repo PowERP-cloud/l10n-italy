@@ -47,14 +47,13 @@ class AccountMove(models.Model):
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # ORM METHODS OVERRIDE - begin
 
-    @api.model
-    def create(self, values):
-        # Apply modifications inside DB transaction
-        new_move = super().create(values)
-
-        # Return the result of the write command
-        return new_move
-
+    # @api.model
+    # def create(self, values):
+    #     # Apply modifications inside DB transaction
+    #     new_move = super().create(values)
+    #
+    #     # Return the result of the write command
+    #     return new_move
     # end create
 
     @api.multi
@@ -85,7 +84,7 @@ class AccountMove(models.Model):
             # Rewrite credit and debit lines only if:
             #   - check_move_validity is enabled (aka avoid getting in the way
             #     when adding lines manually)
-            #   - infinite recursion guard variable (writing_c_d_m_l) is not True
+            #   - infinite recursion guard variable (writing_c_d_m_l) is False
             self.write_credit_debit_move_lines()
         # end if
 
@@ -311,8 +310,9 @@ class AccountMove(models.Model):
     def _gen_duedates(self):
         '''
         Compute the duedates.
-        Note: this method only returns a list of modifications to be performed to the duedates, it does NOT:
-            - call write() or update() methods to store the generated modifications
+        Note: this method only returns a list of modifications to be performed
+              to the duedates, it does NOT:
+            - call write() or update() to store the generated modifications
             - modify the lines of the move object
         '''
         # Ensure duedate_manager is configured
@@ -375,12 +375,20 @@ class AccountMove(models.Model):
             # Extract credit and debit lines
             lines_cd = list()
             lines_other = list()
+            rate = 1
+            round_curr = self.company_id.currency_id.round
 
             for line in self.line_ids:
-                line._compute_line_type()
+                if not line.line_type:
+                    line._compute_line_type()
                 line_type = line.line_type
-                if line_type in ('credit', 'debit'):
+                # TODO> 'debit' / 'credit' will be removed early
+                if line_type in ('credit', 'debit', 'receivable', 'payable'):
                     lines_cd.append(line)
+                    if line['debit']:
+                        rate = abs(line['amount_currency']) / line['debit']
+                    elif line['credit']:
+                        rate = abs(line['amount_currency']) / line['credit']
                 else:
                     lines_other.append(line)
                 # end if
@@ -388,14 +396,15 @@ class AccountMove(models.Model):
 
             # Build the move line template dictionary
             move_line_template = lines_cd[0].copy_data()[0]
-            # remove 'move_id' because it is automatically set by the update method
+            # remove 'move_id' because it is set by the update method
             del move_line_template['move_id']
 
             # List of modifications to move lines one2many field
             move_lines_mods = list()
 
             # Add the new move lines
-            for duedate_line in self.duedate_line_ids:
+            residual = self.amount
+            for ii, duedate_line in enumerate(self.duedate_line_ids):
 
                 has_duedate = (duedate_line.due_date and True) or False
                 has_amount = (duedate_line.due_amount and True) or False
@@ -409,12 +418,24 @@ class AccountMove(models.Model):
                     # Set the date_maturity field
                     new_data['date_maturity'] = duedate_line.due_date
 
-                    # Set the amount
-                    if new_data['credit'] > 0:
-                        new_data['credit'] = duedate_line.due_amount
+                    if self.type in ('in_refund', 'out_invoice'):
+                        new_data['amount_currency'] = duedate_line.due_amount
                     else:
-                        new_data['debit'] = duedate_line.due_amount
-                    # end if
+                        new_data['amount_currency'] = -duedate_line.due_amount
+                    if (ii + 1) == len(self.duedate_line_ids):
+                        if new_data['credit']:
+                            new_data['credit'] = round_curr(residual)
+                        elif new_data['debit']:
+                            new_data['debit'] = round_curr(residual)
+                    else:
+                        if new_data['credit']:
+                            new_data['credit'] = round_curr(
+                                duedate_line.due_amount / rate)
+                            residual -= new_data['credit']
+                        elif new_data['debit']:
+                            new_data['debit'] = round_curr(
+                                duedate_line.due_amount / rate)
+                            residual -= new_data['debit']
 
                     # Set payment method
                     new_data[
@@ -424,7 +445,7 @@ class AccountMove(models.Model):
                     move_lines_mods.append((0, False, new_data))
 
                 else:
-                    # Duedate lines without duedate or without amount are ignored
+                    # Duedate lines without due date or w/o amount are ignored
                     pass
             # end for
 

@@ -215,6 +215,29 @@ ChangeLog History / Cronologia modifiche
 
 * [FIX] Gestione registrazioni contabili con conto di portafoglio
 
+<<<<<<< HEAD
+12.0.3.7.21 (2021-12-28)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato default per importo accreditato
+
+12.0.3.7.20 (2021-12-17)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito conti bancari nelle scadenze
+
+12.0.3.7.19 (2021-12-13)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito iban non impostato
+
+12.0.3.7.18 (2021-12-10)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Corretto formattazione conti
+
+=======
+>>>>>>> 12.0
 
 
 |

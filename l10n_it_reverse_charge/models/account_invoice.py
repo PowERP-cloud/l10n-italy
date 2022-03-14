@@ -11,7 +11,7 @@
 from odoo import api, fields, models, registry
 from odoo.exceptions import Warning as UserError, RedirectWarning
 from odoo.tools.translate import _
-import odoo.addons.decimal_precision as dp
+# import odoo.addons.decimal_precision as dp
 from odoo.tools import float_compare
 
 
@@ -26,7 +26,6 @@ class AccountInvoiceLine(models.Model):
             else:
                 line.line_rc_type = False
             # end if
-
         # end for
 
     # end compute_rc_type
@@ -58,26 +57,15 @@ class AccountInvoiceLine(models.Model):
             'local',
             'self',
         ]:
-
             for tax in self.invoice_line_tax_ids:
-                if invoice_rc_type == 'local':
-                    if (
-                        tax.kind_id.code
-                        and tax.kind_id.code.startswith('N3')
-                        and tax.kind_id.code != 'N3.5'
-                    ):
-                        rc_mismatch = True
-                elif invoice_rc_type == 'self':
-                    if tax.kind_id.code and tax.kind_id.code.startswith('N6'):
-                        rc_mismatch = True
-                # end if
-                if rc_mismatch:
+                if tax.rc_type != invoice_rc_type:
+                    rc_mismatch = True
                     raise UserError(
-                        'Natura esenzione errata per la tassa impostata.'
+                        _('Tipo RC %s di codice IVA %s '
+                          'non valida per reverse charge.' % (
+                            tax.rc_type, tax.description)
+                          )
                     )
-            # end for
-        # end if
-
         if not res:
             self._set_rc_flag(self.invoice_id)
         # end if
@@ -99,9 +87,9 @@ class AccountInvoice(models.Model):
     @api.depends('invoice_line_ids')
     def _compute_amount_rc(self):
         for inv in self:
-            inv.amount_rc = inv.compute_rc_amount_tax()
+            (inv.amount_rc_company_currency,
+             inv.amount_rc) = inv.compute_rc_amount_tax()
         # end for
-
     # end _compute_amount_rc
 
     @api.depends('fiscal_position_id')
@@ -109,7 +97,6 @@ class AccountInvoice(models.Model):
         for inv in self:
             inv.rc_type = inv.fiscal_position_id.rc_type
         # end for
-
     # end _compute_rc_type
 
     @api.depends('amount_total', 'amount_rc')
@@ -119,7 +106,6 @@ class AccountInvoice(models.Model):
             if inv.fiscal_position_id.rc_type:
                 inv.amount_net_pay = inv.amount_total - inv.amount_rc
         # end for
-
     # end _compute_net_pay
 
     rc_self_invoice_id = fields.Many2one(
@@ -140,20 +126,26 @@ class AccountInvoice(models.Model):
         copy=False,
         readonly=True,
     )
-
-    amount_rc = fields.Float(
-        string='Iva RC',
-        digits=dp.get_precision('Account'),
+    # Invoice currency RC amount
+    amount_rc = fields.Monetary(
+        string='RC Tax',
+        currency_field='currency_id',
         store=True,
         readonly=True,
         compute='_compute_amount_rc',
     )
-
+    # Company currency RC amount
+    amount_rc_company_currency = fields.Monetary(
+        string='RC Tax in Company Currency',
+        currency_field='company_currency_id',
+        store=True,
+        readonly=True,
+        compute='_compute_amount_rc',
+    )
     rc_type = fields.Char(
         string='RC Type',
         compute='_compute_rc_type',
     )
-
     # show_reload_tax = fields.Boolean(readonly=True, default=False, copy=False,)
 
     @api.model
@@ -177,7 +169,8 @@ class AccountInvoice(models.Model):
 
             for inv in self:
                 if inv.rc_type:
-                    inv.amount_rc = inv.compute_rc_amount_tax()
+                    (inv.amount_rc_company_currency,
+                     inv.amount_rc) = inv.compute_rc_amount_tax()
             # end for
         # end if
         return result
@@ -209,11 +202,7 @@ class AccountInvoice(models.Model):
         for invoice in self:
             if invoice.state == 'draft':
                 res = invoice.compute_taxes()
-                # invoice.duedate_manager_id.write_duedate_lines()
-                # invoice.show_reload_tax = False
         return res
-        # edn for
-
     # end taxes_reload
 
     # tenere
@@ -222,14 +211,12 @@ class AccountInvoice(models.Model):
         for inv in self:
             if inv.rc_type:
                 inv.amount_total = inv.amount_untaxed + inv.amount_tax
-                if inv.rc_type == 'self' or inv.rc_type == 'local':
+                if inv.rc_type in ('self', 'local'):
                     inv.amount_tax -= inv.amount_rc
                 # end if
             # end if
-
     # end _compute_amount
 
-    # tenere
     def rc_inv_line_vals(self, line):
         return {
             'product_id': line.product_id.id,
@@ -240,14 +227,33 @@ class AccountInvoice(models.Model):
             'discount': line.discount,
         }
 
-    # tenere
     def rc_inv_vals(self, partner, account, journal_id, lines, currency):
-        if self.type == 'in_invoice':
-            type = 'out_invoice'
-        else:
-            type = 'out_refund'
+        inv_vals = {
+            'partner_id': partner.id,
+            'account_id': account.id,
+            'journal_id': journal_id.id,
+            'type': {
+                # 'in_invoice': 'out_invoice',
+                'in_refund': 'out_refund',
+            }.get(self.type, 'out_invoice'),
+            'date_due': self.date,
+            'origin': self.number,
+            'rc_purchase_invoice_id': self.id,
+            'name': _('Reverse charge self invoice'),
+            'currency_id': currency.id,
+            'fiscal_position_id': False,
+            'payment_term_id': False,
+            'invoice_line_ids': lines,
+        }
+        for field in ('date',
+                      'date_apply_balance',
+                      'date_apply_vat',
+                      'date_effective',
+                      'date_invoice'):
+            if hasattr(self, field):
+                inv_vals[field] = getattr(self, field)
 
-        comment = _(
+        inv_vals['comment'] = _(
             "Reverse charge self invoice.\n"
             "Supplier: %s\n"
             "Reference: %s\n"
@@ -259,22 +265,7 @@ class AccountInvoice(models.Model):
             self.date,
             self.number,
         )
-        return {
-            'partner_id': partner.id,
-            'type': type,
-            'account_id': account.id,
-            'journal_id': journal_id.id,
-            'invoice_line_ids': lines,
-            'date_invoice': self.date,
-            'date': self.date,
-            'origin': self.number,
-            'rc_purchase_invoice_id': self.id,
-            'name': 'Reverse charge self invoice',
-            'currency_id': currency.id,
-            'fiscal_position_id': False,
-            'payment_term_id': False,
-            'comment': comment,
-        }
+        return inv_vals
 
     def get_inv_line_to_reconcile(self):
         for inv_line in self.move_id.line_ids:
@@ -299,8 +290,8 @@ class AccountInvoice(models.Model):
             'date': self.date,
         }
 
-    # tenere
     def compute_rc_amount_tax(self):
+        """Compute RC amount: return company and invoice currency amounts"""
         rc_amount_tax = 0.0
         round_curr = self.currency_id.round
         rc_lines = self.invoice_line_ids.filtered(lambda l: l.rc)
@@ -318,55 +309,70 @@ class AccountInvoice(models.Model):
             rc_amount_tax += sum([tax['amount'] for tax in taxes])
 
         # convert the amount to main company currency, as
-        # compute_rc_amount_tax is used for debit/credit fields
+        # computeamount_rc_tax_company_currency is used for debit/credit fields
         invoice_currency = self.currency_id.with_context(
             date=self.date_invoice
         )
         main_currency = self.company_currency_id.with_context(
             date=self.date_invoice
         )
+        amount_rc_tax_company_currency = rc_amount_tax
         if invoice_currency != main_currency:
             round_curr = main_currency.round
-            rc_amount_tax = invoice_currency.compute(
+            amount_rc_tax_company_currency = invoice_currency.compute(
                 rc_amount_tax, main_currency
             )
-
-        return round_curr(rc_amount_tax)
+        return (main_currency.round(amount_rc_tax_company_currency),
+                round_curr(rc_amount_tax))
 
     def rc_credit_line_vals(self, journal):
         credit = debit = 0.0
-        amount_rc_tax = self.compute_rc_amount_tax()
+        (amount_rc_tax_company_currency,
+         amount_rc_tax) = self.compute_rc_amount_tax()
 
         if self.type == 'in_invoice':
-            credit = amount_rc_tax
+            credit = amount_rc_tax_company_currency
         else:
-            debit = amount_rc_tax
+            debit = amount_rc_tax_company_currency
+        if self.type in ('out_invoice', 'in_invoice'):
+            amount_currency = amount_rc_tax
+        else:
+            amount_currency = -amount_rc_tax
 
         return {
             'name': self.number,
             'credit': credit,
             'debit': debit,
+            'amount_currency': amount_currency,
             'account_id': journal.default_credit_account_id.id,
             'company_id': self.company_id.id,
         }
 
     def rc_debit_line_vals(self, amount=None):
         credit = debit = 0.0
+        (amount_rc_tax_company_currency,
+         amount_rc_tax) = self.compute_rc_amount_tax()
 
         if self.type == 'in_invoice':
             if amount:
                 debit = amount
             else:
-                debit = self.compute_rc_amount_tax()
+                debit = amount_rc_tax_company_currency
         else:
             if amount:
                 credit = amount
             else:
-                credit = self.compute_rc_amount_tax()
+                credit = amount_rc_tax_company_currency
+        if self.type in ('out_invoice', 'in_invoice'):
+            amount_currency = amount_rc_tax
+        else:
+            amount_currency = -amount_rc_tax
+
         return {
             'name': self.number,
             'debit': debit,
             'credit': credit,
+            'amount_currency': amount_currency,
             'account_id': self.get_inv_line_to_reconcile().account_id.id,
             'partner_id': self.partner_id.id,
             'company_id': self.company_id.id,
@@ -410,59 +416,6 @@ class AccountInvoice(models.Model):
             'company_id': self.company_id.id,
         }
 
-    # def reconcile_supplier_invoice(self):
-    #     rc_type = self.fiscal_position_id.rc_type_id
-    #
-    #     move_model = self.env['account.move']
-    #     move_line_model = self.env['account.move.line']
-    #
-    #     rc_payment_data = self.rc_payment_vals(rc_type)
-    #     rc_invoice = self.rc_self_invoice_id
-    #     payment_credit_line_data = self.rc_payment_credit_line_vals(
-    #         rc_invoice)
-    #     payment_debit_line_data = self.rc_debit_line_vals(
-    #         self.amount_total)
-    #     # payment_credit_line_data['credit'])
-    #     rc_payment_data['line_ids'] = [
-    #         (0, 0, payment_debit_line_data),
-    #         (0, 0, payment_credit_line_data),
-    #     ]
-    #     rc_payment = move_model.create(rc_payment_data)
-    #     for move_line in rc_payment.line_ids:
-    #         if move_line.debit:
-    #             payment_debit_line = move_line
-    #         elif move_line.credit:
-    #             payment_credit_line = move_line
-    #     rc_payment.post()
-    #
-    #     lines_to_rec = move_line_model.browse([
-    #         self.get_inv_line_to_reconcile().id,
-    #         payment_debit_line.id
-    #     ])
-    #     lines_to_rec.reconcile()
-    #
-    #     rc_lines_to_rec = move_line_model.browse([
-    #         self.get_rc_inv_line_to_reconcile(rc_invoice).id,
-    #         payment_credit_line.id
-    #     ])
-    #     rc_lines_to_rec.reconcile()
-
-    # def prepare_reconcile_supplier_invoice(self):
-    #     rc_type = self.fiscal_position_id.rc_type_id
-    #     move_model = self.env['account.move']
-    #     rc_payment_data = self.rc_payment_vals(rc_type)
-    #     rc_payment = move_model.create(rc_payment_data)
-    #
-    #     payment_credit_line_data = self.rc_credit_line_vals(
-    #         rc_type.payment_journal_id)
-    #
-    #     payment_debit_line_data = self.rc_debit_line_vals()
-    #     rc_payment.line_ids = [
-    #         (0, 0, payment_debit_line_data),
-    #         (0, 0, payment_credit_line_data),
-    #     ]
-    #     return rc_payment
-
     def partially_reconcile_supplier_invoice(self, rc_payment):
         move_line_model = self.env['account.move.line']
         payment_debit_line = None
@@ -477,29 +430,7 @@ class AccountInvoice(models.Model):
         )
         inv_lines_to_rec.reconcile()
 
-    # def reconcile_rc_invoice(self, rc_payment):
-    #     rc_type = self.fiscal_position_id.rc_type_id
-    #     move_line_model = self.env['account.move.line']
-    #     rc_invoice = self.rc_self_invoice_id
-    #     rc_payment_credit_line_data = self.rc_payment_credit_line_vals(
-    #         rc_invoice)
-    #     rc_payment_debit_line_data = self.rc_payment_debit_line_vals(
-    #         rc_invoice, rc_type.payment_journal_id)
     #
-    #     rc_payment.line_ids = [
-    #         (0, 0, rc_payment_debit_line_data),
-    #         (0, 0, rc_payment_credit_line_data),
-    #     ]
-    #     inv_line_to_reconcile = self.get_rc_inv_line_to_reconcile(rc_invoice)
-    #     for move_line in rc_payment.line_ids:
-    #         if move_line.account_id.id == inv_line_to_reconcile.account_id.id:
-    #             rc_payment_line_to_reconcile = move_line
-    #
-    #     rc_lines_to_rec = move_line_model.browse(
-    #         [inv_line_to_reconcile.id,
-    #             rc_payment_line_to_reconcile.id])
-    #     rc_lines_to_rec.reconcile()
-
     # richiamato da l10n_it_fatturapa_out_rc
     #
     def generate_self_invoice(self):
@@ -508,7 +439,6 @@ class AccountInvoice(models.Model):
             self.fiscal_position_id.rc_type
             and self.fiscal_position_id.rc_type == 'self'
         ):
-
             if (
                 self.fiscal_position_id.self_journal_id
                 and self.fiscal_position_id.self_journal_id.id
@@ -578,34 +508,6 @@ class AccountInvoice(models.Model):
                     rc_invoice_lines,
                     rc_currency,
                 )
-
-                # no copy values
-                inv_vals['date'] = self.date
-
-                #
-                # custom fields
-                #
-
-                if hasattr(self, 'date_apply_balance'):
-                    inv_vals['date_apply_balance'] = self.date_apply_balance
-                # end if
-
-                if hasattr(self, 'date_apply_vat'):
-                    inv_vals['date_apply_vat'] = self.date_apply_vat
-                # end if
-
-                if hasattr(self, 'date_effective'):
-                    inv_vals['date_effective'] = self.date_effective
-                # end if
-
-                inv_vals['date_due'] = self.date
-                inv_vals['date_invoice'] = self.date
-                inv_vals['fiscal_position'] = None
-                if self.type == 'in_refund':
-                    inv_vals['type'] = 'out_refund'
-                else:
-                    inv_vals['type'] = 'out_invoice'
-                # end if
 
                 if self.rc_self_invoice_id:
                     # this is needed when user takes back to draft supplier
@@ -682,54 +584,6 @@ class AccountInvoice(models.Model):
 
         # end if
 
-    # non tenere
-    # def generate_supplier_self_invoice(self):
-    #     if self.fiscal_position_id.rc_type and \
-    #         self.fiscal_position_id.rc_type == 'self' and \
-    #         self.fiscal_position_id.partner_type == 'supplier':
-    #
-    #         rc_partner = self.partner_id
-    #         rc_currency = self.currency_id
-    #         rc_account = rc_partner.property_account_receivable_id
-    #
-    #         if not self.rc_self_purchase_invoice_id:
-    #             supplier_invoice = self.copy()
-    #         else:
-    #             supplier_invoice_vals = self.copy_data()
-    #             supplier_invoice = self.rc_self_purchase_invoice_id
-    #             supplier_invoice.invoice_line_ids.unlink()
-    #             supplier_invoice.write(supplier_invoice_vals[0])
-    #
-    #         supplier_invoice.partner_bank_id = None
-    #
-    #         # because this field has copy=False
-    #         supplier_invoice.date = self.date
-    #         supplier_invoice.date_invoice = self.date
-    #         supplier_invoice.date_due = self.date
-    #         supplier_invoice.partner_id = rc_partner.id
-    #         # supplier_invoice.journal_id = rc_type.supplier_journal_id.id
-    #         # for inv_line in supplier_invoice.invoice_line_ids:
-    #         #     inv_line.invoice_line_tax_ids = [
-    #         #         (6, 0, [rc_type.tax_ids[0].purchase_tax_id.id])]
-    #         #     inv_line.account_id = rc_type.transitory_account_id.id
-    #         self.rc_self_purchase_invoice_id = supplier_invoice.id
-    #
-    #         # temporary disabling self invoice automations
-    #         supplier_invoice.fiscal_position_id = None
-    #         supplier_invoice.compute_taxes()
-    #         supplier_invoice.check_total = supplier_invoice.amount_total
-    #         supplier_invoice.action_invoice_open()
-    #         supplier_invoice.fiscal_position_id = self.fiscal_position_id.id
-
-    # @api.multi
-    # def compute_taxes(self):
-    #     res = super().compute_taxes()
-    #     for inv in self:
-    #         inv.amount_rc = inv.compute_rc_amount_tax()
-    #     # end for
-    #     return res
-    # # end compute_taxes
-
     @api.multi
     def invoice_validate(self):
         """Invoice validation is called to validate sale self-invoice"""
@@ -800,7 +654,7 @@ class AccountInvoice(models.Model):
     def action_move_create(self):
         res = super(AccountInvoice, self).action_move_create()
         # reverse charge vat for in.invoice / in.refund only
-        if self.type == 'out_invoice' or self.type == 'out_refund':
+        if self.type not in ('in_invoice', 'in_refund'):
             return res
         # end if
         for invoice in self:
@@ -822,26 +676,13 @@ class AccountInvoice(models.Model):
 
                 tax_with_sell = invoice._get_tax_sell()
                 if not tax_with_sell:
-                    # set invoice flag outside transaction
-                    # new_cr = registry(self.env.cr.dbname).cursor()
-                    # env2 = api.Environment(new_cr, self.env.uid, {})
-                    # inv = env2['account.invoice'].browse(invoice.id)
-                    # inv.sudo().update({
-                    #     'show_reload_tax': True
-                    # })
-                    # new_cr.close()
-
                     msg = (
                         "Per completare la registrazione contabile "
                         "occorrono le righe con le aliquote iva che al "
                         "momento non sono sono presenti.\n"
                         "Aggiornare le imposte e ricalcolarle."
                     )
-
                     raise UserError(msg)
-                    # action = self.env.ref('account.action_invoice_tree2')
-                    # raise RedirectWarning(msg, action.id,
-                    #                       'Ok')
 
                 # end if
                 tax_vat = tax_with_sell.tax_line_id
@@ -861,14 +702,14 @@ class AccountInvoice(models.Model):
                 if invoice.type == 'in_refund':
                     tax_duedate_rc = invoice.move_id.line_ids.filtered(
                         lambda x: x.account_id.id == invoice.account_id.id
-                        and x.debit == invoice.amount_rc
+                        and x.debit == invoice.amount_rc_company_currency
                         and x.partner_id.id == invoice.partner_id.id
                         and invoice.company_id.id == x.company_id.id
                     )
                 else:
                     tax_duedate_rc = invoice.move_id.line_ids.filtered(
                         lambda x: x.account_id.id == invoice.account_id.id
-                        and x.credit == invoice.amount_rc
+                        and x.credit == invoice.amount_rc_company_currency
                         and x.partner_id.id == invoice.partner_id.id
                         and invoice.company_id.id == x.company_id.id
                     )
@@ -963,9 +804,11 @@ class AccountInvoice(models.Model):
                         'date': invoice.date,
                         'debit': invoice.amount_rc,
                         'credit': 0,
-                        'payment_method': tax_duedate_rc.payment_method.id,
                         'move_id': invoice.move_id.id,
                     }
+                    if hasattr(line_model, 'payment_method'):
+                        supplier_vat_vals['payment_method'] = \
+                            tax_duedate_rc.payment_method.id
                     if invoice.type == 'in_refund':
                         supplier_vat_vals['debit'] = 0
                         supplier_vat_vals['credit'] = invoice.amount_rc
@@ -1039,13 +882,13 @@ class AccountInvoice(models.Model):
             res = self.move_id.line_ids.filtered(
                 lambda x: self.company_id.id == x.company_id.id
                 and x.line_type == 'tax'
-                and x.credit == self.amount_rc
+                and x.credit == self.amount_rc_company_currency
             )
         else:
             res = self.move_id.line_ids.filtered(
                 lambda x: self.company_id.id == x.company_id.id
                 and x.line_type == 'tax'
-                and x.debit == self.amount_rc
+                and x.debit == self.amount_rc_company_currency
             )
         # end if
 

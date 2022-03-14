@@ -1,7 +1,20 @@
-12.0.4.8.32 (2022-03-01)
+12.0.4.8.34 (2022-02-25)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+* [FIX] Currency invoces / Fatture in valuta
 * [REF] Campo ordine di pagamento
+
+12.0.4.8.33 (2022-02-16)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Refund cannot be validated / N.C. non può essere validata
+* [IMP] Regression test
+
+12.0.4.8.32 (2022-02-14)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Move down date_effective in view / Spostata data competeneza in tab
+* [FIX] Currency invoice cannot be validated / Fattura in valuta non può essere validata
 
 12.0.4.8.31 (2022-01-27)
 ~~~~~~~~~~~~~~~~~~~~~~~~

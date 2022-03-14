@@ -32,7 +32,7 @@ def post_init_hook(cr, registry):
                 'name': 'Agosto',
                 'date_start': date_start,
                 'date_end': date_end,
-                'type_id': dtype.id
+                'type_id': dtype.id,
             }
             date_range_model.create(vals)
 
@@ -44,7 +44,6 @@ def post_init_hook(cr, registry):
                 'name': 'Natale',
                 'date_start': date_start,
                 'date_end': date_end,
-                'type_id': dtype.id
+                'type_id': dtype.id,
             }
             date_range_model.create(vals)
-

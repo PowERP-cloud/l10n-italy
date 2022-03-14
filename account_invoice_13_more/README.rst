@@ -1,12 +1,12 @@
 
 ==========================================
-|icon| Account Invoice 13 more 12.0.3.3.15
+|icon| Account Invoice 13 more 12.0.3.3.16
 ==========================================
 
 
 **Invoice like Odoo 13+**
 
-.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/accounting/12.0/account_invoice_13_more/static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/l10n-italy/12.0/account_invoice_13_more/static/description/icon.png
 
 |Maturity| |Build Status| |license opl|
 
@@ -23,19 +23,22 @@ The account.move model has the some structure of Odoo 13.0 and more.
 This module simplify the backport from Odoo 13.0+.
 
 Common structure with Odoo 13.0+
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------------
 
 * account.move.invoice_date
-* account.move.type (must be renamed to move_type)
+* account.move.move_type
+* account.move.type (will be remove early)
 * account.move.fiscal_position_id
 * account.move.payment_term_id
 * account.move.partner_bank_id
 
 Difference from Odoo 13.0+
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------
 
 * Draft and cancelled invoice has no account.move records
 * Events are still active on account.invoice model
+* Field move_type is compatible with Odoo 14+ not with Odoo 13.0
+
 
 |
 
@@ -44,19 +47,22 @@ Il modello account.move ha la stessa struttura di Odoo 13.0 e successive.
 Il modulo semplifica il backport da Odoo 13.0+
 
 Strutture comuni con Odoo 13.0+
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------
 
 * account.move.invoice_date
-* account.move.type (deve essere rinominato move_type)
+* account.move.move_type
+* account.move.move_type (sarà rimosso a breve)
 * account.move.fiscal_position_id
 * account.move.payment_term_id
 * account.move.partner_bank_id
 
 Differenze da Odoo 13.0+
-~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------
 
-* Draft and cancelled invoice has no account.move records
-* Events are still active on account.invoice model
+* Le fatture in bozza e cancellate non hanno registrazioni contabili
+* La gestione degli eventi è sul modello account.invoice
+* Il campo move_type è compatibile con Odoo 14+ non con Odoo 13.0
+
 
 |
 |
@@ -104,7 +110,7 @@ Installation / Installazione
     source $HOME/devel/activate_tools
     # *** End of tools installation or upgrade ***
     # Odoo repository installation; OCB repository must be installed
-    odoo_install_repository accounting -b 12.0 -O powerp -o $HOME/12.0
+    odoo_install_repository l10n-italy -b 12.0 -O powerp -o $HOME/12.0
     vem create $HOME/12.0/venv_odoo -O 12.0 -a "*" -DI -o $HOME/12.0
 
 From UI: go to:
@@ -135,7 +141,7 @@ Upgrade / Aggiornamento
     source $HOME/devel/activate_tools
     # *** End of tools installation or upgrade ***
     # Odoo repository upgrade
-    odoo_install_repository accounting -b 12.0 -o $HOME/12.0 -U
+    odoo_install_repository l10n-italy -b 12.0 -o $HOME/12.0 -U
     vem amend $HOME/12.0/venv_odoo -o $HOME/12.0
     # Adjust following statements as per your system
     sudo systemctl restart odoo
@@ -164,9 +170,18 @@ Get involved / Ci mettiamo in gioco
 
 Bug reports are welcome! You can use the issue tracker to report bugs,
 and/or submit pull requests on `GitHub Issues
-<https://github.com/PowERP-cloud/accounting/issues>`_.
+<https://github.com/PowERP-cloud/l10n-italy/issues>`_.
 
 In case of trouble, please check there if your issue has already been reported.
+
+|
+
+Known issues / Roadmap
+----------------------
+
+* Field with name "type" will be removed: it is replaced by "move_type" field
+* Add onchange control to avoid entry type with VAT registries and vice-versa
+
 
 Proposals for enhancement
 -------------------------
@@ -178,6 +193,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.3.3.16 (2022-03-01)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Aggiornata vista con valori corretti del campo move_type
 
 12.0.3.3.15 (2022-01-20)
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -192,7 +212,7 @@ ChangeLog History / Cronologia modifiche
 12.0.3.3.13 (2021-11-24)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-* [IMP] Aggiornato campi company bank e counterparty bank 
+* [IMP] Aggiornato campi company bank e counterparty bank
 
 12.0.3.3.12 (2021-10-20)
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -205,15 +225,6 @@ ChangeLog History / Cronologia modifiche
 
 * [IMP] Aggiunto campo partner_bank_id ad account.move
 
-12.0.2.3.10 (2021-02-11)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Esposta banca fattura nel dettaglio registrazione
-
-12.0.2.3.9 (2021-02-04)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Inserito campo banca fattura
 
 
 |
@@ -283,15 +294,15 @@ I soci fondatori sono:
 
 |
 
-This module is part of accounting project.
+This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-01-22
+Last Update / Ultimo aggiornamento: 2022-03-01
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
     :alt: 
-.. |Build Status| image:: https://travis-ci.org/PowERP-cloud/accounting.svg?branch=12.0
-    :target: https://travis-ci.com/PowERP-cloud/accounting
+.. |Build Status| image:: https://travis-ci.org/PowERP-cloud/l10n-italy.svg?branch=12.0
+    :target: https://travis-ci.com/PowERP-cloud/l10n-italy
     :alt: github.com
 .. |license gpl| image:: https://img.shields.io/badge/licence-LGPL--3-7379c3.svg
     :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
@@ -299,11 +310,11 @@ Last Update / Ultimo aggiornamento: 2022-01-22
 .. |license opl| image:: https://img.shields.io/badge/licence-OPL-7379c3.svg
     :target: https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html
     :alt: License: OPL
-.. |Coverage Status| image:: https://coveralls.io/repos/github/PowERP-cloud/accounting/badge.svg?branch=12.0
-    :target: https://coveralls.io/github/PowERP-cloud/accounting?branch=12.0
+.. |Coverage Status| image:: https://coveralls.io/repos/github/PowERP-cloud/l10n-italy/badge.svg?branch=12.0
+    :target: https://coveralls.io/github/PowERP-cloud/l10n-italy?branch=12.0
     :alt: Coverage
-.. |Codecov Status| image:: https://codecov.io/gh/PowERP-cloud/accounting/branch/12.0/graph/badge.svg
-    :target: https://codecov.io/gh/PowERP-cloud/accounting/branch/12.0
+.. |Codecov Status| image:: https://codecov.io/gh/PowERP-cloud/l10n-italy/branch/12.0/graph/badge.svg
+    :target: https://codecov.io/gh/PowERP-cloud/l10n-italy/branch/12.0
     :alt: Codecov
 .. |Tech Doc| image:: https://www.zeroincombenze.it/wp-content/uploads/ci-ct/prd/button-docs-12.svg
     :target: https://wiki.zeroincombenze.org/en/Odoo/12.0/dev
@@ -314,8 +325,8 @@ Last Update / Ultimo aggiornamento: 2022-01-22
 .. |Try Me| image:: https://www.zeroincombenze.it/wp-content/uploads/ci-ct/prd/button-try-it-12.svg
     :target: https://erp12.zeroincombenze.it
     :alt: Try Me
-.. |OCA Codecov| image:: https://codecov.io/gh/OCA/accounting/branch/12.0/graph/badge.svg
-    :target: https://codecov.io/gh/OCA/accounting/branch/12.0
+.. |OCA Codecov| image:: https://codecov.io/gh/OCA/l10n-italy/branch/12.0/graph/badge.svg
+    :target: https://codecov.io/gh/OCA/l10n-italy/branch/12.0
     :alt: Codecov
 .. |Odoo Italia Associazione| image:: https://www.odoo-italia.org/images/Immagini/Odoo%20Italia%20-%20126x56.png
    :target: https://odoo-italia.org

@@ -1,3 +1,9 @@
+# Copyright 2021-22 powERP enterprise network <https://www.powerp.it>
+# Copyright 2021-22 Didotech s.r.l. <https://www.didotech.com>
+# Copyright 2021-22 SHS-AV s.r.l. <https://www.zeroincombenze.it>
+#
+#    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+#
 from odoo import models, fields
 
 
@@ -21,4 +27,3 @@ class AssetConfirmReasonLine(models.TransientModel):
     confirm_id = fields.Many2one('asset.generate.warning',
                                  string="Numero elenco")
     reason = fields.Char(string="Avviso", size=255, readonly=True)
-

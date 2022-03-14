@@ -1,12 +1,12 @@
-# Copyright 2021 powERP enterprise network <https://www.powerp.it>
-# Copyright 2021 SHS-AV s.r.l. <https://www.zeroincombenze.it>
-# Copyright 2021 Didotech s.r.l. <https://www.didotech.com>
+# Copyright 2021-22 powERP enterprise network <https://www.powerp.it>
+# Copyright 2021-22 SHS-AV s.r.l. <https://www.zeroincombenze.it>
+# Copyright 2021-22 Didotech s.r.l. <https://www.didotech.com>
 #
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 #
 {
     'name': 'ITA - Inversione contabile',
-    'version': '12.0.1.2.7_37',
+    'version': '12.0.1.2.7_39',
     'category': 'Localization/Italy',
     'summary': 'Inversione contabile',
     'author': 'powERP enterprise network and other partners',

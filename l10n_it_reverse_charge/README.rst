@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_37
+|icon| ITA - Inversione contabile 12.0.1.2.7_39
 ===============================================
 
 
@@ -381,6 +381,16 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_39 (2022-02-25)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Currency invoices / Fatture in valuta
+
+12.0.1.2.7_38 (2022-02-22)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Invalid tax nature check / Errato controllo natura codice IVA
+
 12.0.1.2.7_37 (2022-01-07)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -432,16 +442,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [FIX] Gestito bug nota di credito fornitore e auto fattura di tipo nota di credito
-
-12.0.1.2.7_28 (2021-09-14)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Risolto bug fattura fornitore con posizione fiscale RC self
-
-12.0.1.2.7_27 (2021-09-14)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Risolto bug fattura cliente con posizione fiscale RC
 
 
 
@@ -518,7 +518,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-01-07
+Last Update / Ultimo aggiornamento: 2022-02-27
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

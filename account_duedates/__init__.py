@@ -6,4 +6,5 @@
 
 
 from . import model
+from . import tests
 from .init_hook import post_init_hook

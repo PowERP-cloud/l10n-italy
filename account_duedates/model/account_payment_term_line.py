@@ -18,8 +18,8 @@ class AccountPaymentTermLine(models.Model):
         if self.option == 'day_after_invoice_date':
             next_date += relativedelta(days=self.days)
             if self.day_of_the_month > 0:
-                months_delta = (self.day_of_the_month < next_date.day) \
-                               and 1 or 0
+                months_delta = (
+                    self.day_of_the_month < next_date.day) and 1 or 0
                 next_date += relativedelta(day=self.day_of_the_month,
                                            months=months_delta)
         elif self.option == 'after_invoice_month':

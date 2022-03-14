@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.4.8.32
+|icon| Due dates 12.0.4.8.34
 ============================
 
 
@@ -155,10 +155,23 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
-12.0.4.8.32 (2022-03-01)
+12.0.4.8.34 (2022-02-25)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+* [FIX] Currency invoces / Fatture in valuta
 * [REF] Campo ordine di pagamento
+
+12.0.4.8.33 (2022-02-16)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Refund cannot be validated / N.C. non può essere validata
+* [IMP] Regression test
+
+12.0.4.8.32 (2022-02-14)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Move down date_effective in view / Spostata data competeneza in tab
+* [FIX] Currency invoice cannot be validated / Fattura in valuta non può essere validata
 
 12.0.4.8.31 (2022-01-27)
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -206,16 +219,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Impostato campo banca aziendale
-
-12.0.4.8.22 (2021-10-28)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Impostato in elenco scadenze in stampa fattura il metodo di pagamento
-
-12.0.4.8.21 (2021-10-05)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Impostato  elenco scadenze in stampa fattura qualora siano più di una
 
 
 
