@@ -198,45 +198,40 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
             lines = list()
             # mapping  warnings
             # default
-            lines.append(
-                (0, 0, {"reason": "Attenzione: l'operazione è irreversibile!"})
-            )
+            lines.append((0, 0, {
+                'reason': 'ATTENZIONE: l\'operazione è irreversibile!'}))
 
-            year = datetime.date.today().year
+            current_year = datetime.date.today().year
+            year = self.date_dep.year
             end_year = datetime.date(year, 12, 31)
+            current_date_str = self.date_dep.strftime('%d-%m-%Y')
+            end_year_str = end_year.strftime('%d-%m-%Y')
 
             # check date
             if self.date_dep < end_year:
-                lines.append(
-                    (
-                        0,
-                        0,
-                        {
-                            "reason": "Attenzione: la data inserita per l'ammortamento"
-                            " è fuori esercizio (inferiore a quella "
-                            "dell'anno in corso)."
-                        },
-                    )
-                )
+                lines.append((0, 0, {
+                    'reason': "ATTENZIONE: la data inserita per "
+                              "l'ammortamento {curr}"
+                              " è fuori esercizio (inferiore a quella usuale "
+                              "per l'anno indicato {endy} ).".format(
+                                curr=current_date_str, endy=end_year_str)
+                }))
 
             if self.date_dep > end_year:
-                lines.append(
-                    (
-                        0,
-                        0,
-                        {
-                            "reason": "Attenzione: la data inserita per l'ammortamento"
-                            " è fuori esercizio (superiore a quella "
-                            "dell'anno in corso)."
-                        },
-                    )
-                )
+                lines.append((0, 0, {
+                    'reason': 'ATTENZIONE: la data inserita per l\'ammortamento'
+                              ' {curr} è fuori esercizio (superiore a quella '
+                              'usuale per l\'anno indicato {endy}).'.format(
+                                curr=current_date_str, endy=end_year_str)}))
 
-            wz_id = self.env["asset.generate.warning"].create(
-                {
-                    "wizard_id": wizard.id,
-                    "reason_lines": lines,
-                }
+            wz_id = self.env['asset.generate.warning'].create({
+                'wizard_id': wizard.id,
+                'reason_lines': lines,
+            })
+
+            model = 'assets_management'
+            wiz_view = self.env.ref(
+                model + '.asset_generate_warning'
             )
 
             model = "assets_management"

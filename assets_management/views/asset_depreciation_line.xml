@@ -104,17 +104,15 @@
                     <group name="info" string="General Info">
                         <group>
                             <field name="asset_id" />
-                            <field name="depreciation_id" />
-                            <field name="name" />
-                            <field name="date" />
-                            <field name="move_type" />
-                            <field name="final" readonly="1" />
-                            <field
-                                name="depreciation_line_type_id"
-                                attrs="{'invisible':[('move_type', 'not in', ('in', 'out'))]}"
-                                string="In/Out Amount Type"
-                            />
-                            <field name="depreciation_nr" />
+                            <field name="depreciation_id" string="Natura operazione"/>
+                            <field name="name"/>
+                            <field name="date"/>
+                            <field name="move_type"/>
+                            <field name="final" readonly="1"/>
+                            <field name="depreciation_line_type_id"
+                                   attrs="{'invisible':[('move_type', 'not in', ('in', 'out'))]}"
+                                   string="In/Out Amount Type"/>
+                            <field name="depreciation_nr"/>
                         </group>
                         <group>
                             <field name="amount" widget="monetary" />
