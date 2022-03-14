@@ -123,8 +123,9 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
             lines = dep.line_ids
 
             # not depreciated type
-            extra = lines.filtered(lambda line: line.move_type != 'depreciated'
-                                   and line.final is False)
+            extra = lines.filtered(
+                lambda line: line.move_type != "depreciated" and line.final is False
+            )
 
             # start
             year = self.date_dep.year
@@ -162,7 +163,7 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
 
             if extra and self.final:
                 for ln in extra:
-                    if ln.move_id and ln.move_id.state == 'draft':
+                    if ln.move_id and ln.move_id.state == "draft":
                         ln.move_id.post()
                         ln.final = True
                     # end if
@@ -208,61 +209,83 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
             lines = list()
             # mapping  warnings
             # default
-            lines.append((0, 0, {
-                'reason': 'ATTENZIONE: l\'operazione è irreversibile!'}))
+            lines.append(
+                (0, 0, {"reason": "ATTENZIONE: l'operazione è irreversibile!"})
+            )
 
-            current_year = datetime.date.today().year
+            datetime.date.today().year
             year = self.date_dep.year
             end_year = datetime.date(year, 12, 31)
-            current_date_str = self.date_dep.strftime('%d-%m-%Y')
-            end_year_str = end_year.strftime('%d-%m-%Y')
+            current_date_str = self.date_dep.strftime("%d-%m-%Y")
+            end_year_str = end_year.strftime("%d-%m-%Y")
 
             # check date
             if self.date_dep < end_year:
-                lines.append((0, 0, {
-                    'reason': "ATTENZIONE: la data inserita per "
-                              "l'ammortamento {curr}"
-                              " è fuori esercizio (inferiore a quella usuale "
-                              "per l'anno indicato {endy} ).".format(
-                                curr=current_date_str, endy=end_year_str)
-                }))
+                lines.append(
+                    (
+                        0,
+                        0,
+                        {
+                            "reason": "ATTENZIONE: la data inserita per "
+                            "l'ammortamento {curr}"
+                            " è fuori esercizio (inferiore a quella usuale "
+                            "per l'anno indicato {endy} ).".format(
+                                curr=current_date_str, endy=end_year_str
+                            )
+                        },
+                    )
+                )
 
             if self.date_dep > end_year:
-                lines.append((0, 0, {
-                    'reason': 'ATTENZIONE: la data inserita per l\'ammortamento'
-                              ' {curr} è fuori esercizio (superiore a quella '
-                              'usuale per l\'anno indicato {endy}).'.format(
-                                curr=current_date_str, endy=end_year_str)}))
+                lines.append(
+                    (
+                        0,
+                        0,
+                        {
+                            "reason": "ATTENZIONE: la data inserita per l'ammortamento"
+                            " {curr} è fuori esercizio (superiore a quella "
+                            "usuale per l'anno indicato {endy}).".format(
+                                curr=current_date_str, endy=end_year_str
+                            )
+                        },
+                    )
+                )
 
             # get assets
-            deps = self.get_depreciations().with_context(dep_date=self.date_dep,
-                                                         final=self.final)
+            deps = self.get_depreciations().with_context(
+                dep_date=self.date_dep, final=self.final
+            )
             for dep in deps:
-                extra = dep.line_ids.filtered(lambda l:
-                                              l.move_type != 'depreciated'
-                                              and l.final is False)
+                extra = dep.line_ids.filtered(
+                    lambda l: l.move_type != "depreciated" and l.final is False
+                )
                 if extra:
                     for ln in extra:
                         tipo = ln.depreciation_line_type_id.display_name
                         asset = ln.depreciation_id.display_name
-                        lines.append((0, 0, {
-                            'reason': 'ATTENZIONE: il movimento "{movimento}" '
-                                      'di tipo {tipo} per il bene "{asset}" '
-                                      'risulta non consolidato'.format(
-                                       movimento=ln.name,
-                                       asset=asset,
-                                       tipo=tipo)
-                        }))
+                        lines.append(
+                            (
+                                0,
+                                0,
+                                {
+                                    "reason": 'ATTENZIONE: il movimento "{movimento}" '
+                                    'di tipo {tipo} per il bene "{asset}" '
+                                    "risulta non consolidato".format(
+                                        movimento=ln.name, asset=asset, tipo=tipo
+                                    )
+                                },
+                            )
+                        )
 
-            wz_id = self.env['asset.generate.warning'].create({
-                'wizard_id': wizard.id,
-                'reason_lines': lines,
-            })
-
-            model = 'assets_management'
-            wiz_view = self.env.ref(
-                model + '.asset_generate_warning'
+            wz_id = self.env["asset.generate.warning"].create(
+                {
+                    "wizard_id": wizard.id,
+                    "reason_lines": lines,
+                }
             )
+
+            model = "assets_management"
+            wiz_view = self.env.ref(model + ".asset_generate_warning")
 
             model = "assets_management"
             wiz_view = self.env.ref(model + ".asset_generate_warning")

@@ -67,15 +67,11 @@ class AssetDepreciationMode(models.Model):
                     "linked to categories."
                 )
             )
-<<<<<<< HEAD
-        if self.env["asset.depreciation"].sudo().search([("mode_id", "in", self.ids)]):
-=======
         if (
             self.env['asset.depreciation']
             .sudo()
             .search([('mode_id', 'in', self.ids)])
         ):
->>>>>>> [FIX] Flake8 errors
             raise UserError(
                 _(
                     "Cannot delete depreciation modes while they're still "

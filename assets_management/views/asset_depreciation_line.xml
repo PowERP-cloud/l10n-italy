@@ -103,46 +103,53 @@
                 <sheet>
                     <group name="info" string="General Info">
                         <group>
-                            <field name="asset_id"
-                                   attrs="{'readonly': [('final', '=', True)]}"
+                            <field
+                                name="asset_id"
+                                attrs="{'readonly': [('final', '=', True)]}"
                             />
-                            <field name="depreciation_id" string="Natura operazione"
-                                   attrs="{'readonly': [('final', '=', True)]}"
+                            <field
+                                name="depreciation_id"
+                                string="Natura operazione"
+                                attrs="{'readonly': [('final', '=', True)]}"
                             />
-                            <field name="name"
-                                   attrs="{'readonly': [('final', '=', True)]}"
+                            <field
+                                name="name"
+                                attrs="{'readonly': [('final', '=', True)]}"
                             />
-                            <field name="date"
-                                   attrs="{'readonly': [('final', '=', True)]}"
+                            <field
+                                name="date"
+                                attrs="{'readonly': [('final', '=', True)]}"
                             />
-                            <field name="move_type"
-                                   attrs="{'readonly': [('final', '=', True)]}"
+                            <field
+                                name="move_type"
+                                attrs="{'readonly': [('final', '=', True)]}"
                             />
-                            <field name="final"
-                                   readonly="1"
+                            <field name="final" readonly="1" />
+                            <field
+                                name="depreciation_line_type_id"
+                                attrs="{'invisible':[('move_type', 'not in', ('in', 'out'))]}"
+                                string="In/Out Amount Type"
                             />
-                            <field name="depreciation_line_type_id"
-                                   attrs="{'invisible':[('move_type', 'not in', ('in', 'out'))]}"
-                                   string="In/Out Amount Type"/>
-                            <field name="depreciation_nr"
-                                   attrs="{'readonly': [('final', '=', True)]}"
+                            <field
+                                name="depreciation_nr"
+                                attrs="{'readonly': [('final', '=', True)]}"
                             />
                         </group>
                         <group>
 
-                            <field name="amount" widget="monetary"
-                                   attrs="{'readonly': [('final', '=', True)]}"
+                            <field
+                                name="amount"
+                                widget="monetary"
+                                attrs="{'readonly': [('final', '=', True)]}"
                             />
-                            <field name="balance" widget="monetary"/>
-                            <field name="move_id"
-                                   attrs="{'readonly': [('final', '=', True)]}"
+                            <field name="balance" widget="monetary" />
+                            <field
+                                name="move_id"
+                                attrs="{'readonly': [('final', '=', True)]}"
                             />
-                            <field name="requires_account_move"
-                                   invisible="1"/>
-                            <field name="currency_id"
-                                   invisible="1"/>
-                            <field name="company_id"
-                                   invisible="1"/>
+                            <field name="requires_account_move" invisible="1" />
+                            <field name="currency_id" invisible="1" />
+                            <field name="company_id" invisible="1" />
                         </group>
                     </group>
                     <group name="accounting_info" string="Accounting Info">

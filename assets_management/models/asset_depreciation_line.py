@@ -16,7 +16,7 @@ class AssetDepreciationLine(models.Model):
     )
 
     asset_accounting_info_ids = fields.One2many(
-        'asset.accounting.info', 'dep_line_id', string="Accounting Info"
+        "asset.accounting.info", "dep_line_id", string="Accounting Info"
     )
 
     asset_id = fields.Many2one(
@@ -64,7 +64,7 @@ class AssetDepreciationLine(models.Model):
     )
 
     depreciation_line_type_id = fields.Many2one(
-        'asset.depreciation.line.type', string="Depreciation Type"
+        "asset.depreciation.line.type", string="Depreciation Type"
     )
 
     depreciation_nr = fields.Integer(
@@ -85,16 +85,16 @@ class AssetDepreciationLine(models.Model):
         string="Force Dep. Num",
     )
 
-    move_id = fields.Many2one('account.move', string="Move")
+    move_id = fields.Many2one("account.move", string="Move")
 
     move_type = fields.Selection(
         [
-            ('depreciated', 'Depreciation'),
-            ('historical', 'Historical'),
-            ('in', 'In'),
-            ('out', 'Out'),
-            ('loss', 'Capital Loss'),
-            ('gain', 'Capital Gain'),
+            ("depreciated", "Depreciation"),
+            ("historical", "Historical"),
+            ("in", "In"),
+            ("out", "Out"),
+            ("loss", "Capital Loss"),
+            ("gain", "Capital Gain"),
         ],
         string="Type",
         required=True,
@@ -116,8 +116,8 @@ class AssetDepreciationLine(models.Model):
     )
 
     requires_depreciation_nr = fields.Boolean(
-        compute='_compute_requires_depreciation_nr',
-        search='_search_requires_depreciation_nr_lines',
+        compute="_compute_requires_depreciation_nr",
+        search="_search_requires_depreciation_nr_lines",
         string="Requires Dep Num",
     )
 
@@ -139,14 +139,11 @@ class AssetDepreciationLine(models.Model):
     @api.model
     def create(self, vals):
         if (
-            self._context.get('depreciated_by_line')
-            and vals['move_type'] == 'depreciated'
+            self._context.get("depreciated_by_line")
+            and vals["move_type"] == "depreciated"
         ):
             raise ValidationError(
-                _(
-                    "L'ammortamento non è consentito "
-                    "da questa interfaccia.\n"
-                )
+                _("L'ammortamento non è consentito " "da questa interfaccia.\n")
             )
 
         line = super().create(vals)
@@ -227,7 +224,7 @@ class AssetDepreciationLine(models.Model):
     @api.depends("amount", "move_type")
     def _compute_balance(self):
         for line in self:
-            if line.move_type in ['out', 'depreciated', 'historical', 'loss']:
+            if line.move_type in ["out", "depreciated", "historical", "loss"]:
                 line.balance = -line.amount
             else:
                 line.balance = line.amount
@@ -239,7 +236,7 @@ class AssetDepreciationLine(models.Model):
 
     @api.multi
     def _search_requires_depreciation_nr_lines(self, operator, value):
-        if operator not in ('=', '!='):
+        if operator not in ("=", "!="):
             raise ValidationError(_("Invalid search operator!"))
 
         if (operator == "=" and value) or (operator == "!=" and not value):
@@ -260,8 +257,8 @@ class AssetDepreciationLine(models.Model):
             ids.append(dep.id)
         # end for
         # if ids:
-        res['domain'] = {
-            'depreciation_id': [('id', '=', ids)],
+        res["domain"] = {
+            "depreciation_id": [("id", "=", ids)],
         }
         # end if
         return res
@@ -281,7 +278,7 @@ class AssetDepreciationLine(models.Model):
 
     def get_depreciation_nr_dict(self):
         """Returns dict {line: new number}"""
-        dep = self.mapped('depreciation_id')
+        dep = self.mapped("depreciation_id")
         dep.ensure_one()
         lines = dep.line_ids.filtered("requires_depreciation_nr").sorted()
         if not lines:
@@ -325,7 +322,7 @@ class AssetDepreciationLine(models.Model):
 
     def need_normalize_depreciation_nr(self):
         """Check if numbers need to be normalized"""
-        dep = self.mapped('depreciation_id')
+        dep = self.mapped("depreciation_id")
         dep.ensure_one()
 
         if dep.force_all_dep_nr:
@@ -452,26 +449,18 @@ class AssetDepreciationLine(models.Model):
         if not self.partial_dismissal:
 
             if self.depreciation_id.mode_id.indirect_depreciation:
-                credit_account_id = (
-                    self.asset_id.category_id.fund_account_id.id
-                )
+                credit_account_id = self.asset_id.category_id.fund_account_id.id
             else:
-                credit_account_id = (
-                    self.asset_id.category_id.asset_account_id.id
-                )
+                credit_account_id = self.asset_id.category_id.asset_account_id.id
 
-            debit_account_id = (
-                self.asset_id.category_id.depreciation_account_id.id
-            )
+            debit_account_id = self.asset_id.category_id.depreciation_account_id.id
 
         # Asset partial dismissal
         else:
             if self.depreciation_id.mode_id.indirect_depreciation:
                 debit_account_id = self.asset_id.category_id.fund_account_id.id
             else:
-                debit_account_id = (
-                    self.asset_id.category_id.asset_account_id.id
-                )
+                debit_account_id = self.asset_id.category_id.asset_account_id.id
 
             credit_account_id = self.asset_id.category_id.asset_account_id.id
 
@@ -512,28 +501,25 @@ class AssetDepreciationLine(models.Model):
 
     def get_historical_account_move_line_vals(self):
         raise NotImplementedError(
-            _(
-                "Cannot create account move lines for lines of type"
-                " `Historical`"
-            )
+            _("Cannot create account move lines for lines of type" " `Historical`")
         )
 
     def get_in_account_move_line_vals(self):
         self.ensure_one()
         credit_line_vals = {
-            'account_id': self.asset_id.category_id.gain_account_id.id,
-            'credit': self.amount,
-            'debit': 0.0,
-            'currency_id': self.currency_id.id,
-            'name': " - ".join((self.asset_id.make_name(), self.name)),
+            "account_id": self.asset_id.category_id.gain_account_id.id,
+            "credit": self.amount,
+            "debit": 0.0,
+            "currency_id": self.currency_id.id,
+            "name": " - ".join((self.asset_id.make_name(), self.name)),
         }
 
         debit_line_vals = {
-            'account_id': self.asset_id.category_id.asset_account_id.id,
-            'credit': 0.0,
-            'debit': self.amount,
-            'currency_id': self.currency_id.id,
-            'name': " - ".join((self.asset_id.make_name(), self.name)),
+            "account_id": self.asset_id.category_id.asset_account_id.id,
+            "credit": 0.0,
+            "debit": self.amount,
+            "currency_id": self.currency_id.id,
+            "name": " - ".join((self.asset_id.make_name(), self.name)),
         }
         return [credit_line_vals, debit_line_vals]
 
