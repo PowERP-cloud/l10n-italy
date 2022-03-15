@@ -153,7 +153,6 @@ class WizardAccountMoveManageAsset(models.TransientModel):
                 self.move_type = "general"
                 self.management_type = "update"
 
-    @api.multi
     def link_asset(self):
         self.ensure_one()
         self.check_pre_link_asset()

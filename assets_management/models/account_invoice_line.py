@@ -36,7 +36,6 @@ class AccountInvoiceLine(models.Model):
                     ).format(inv_line.name_get()[0][-1])
                 )
 
-    @api.multi
     @api.depends(
         "asset_accounting_info_ids",
         "asset_accounting_info_ids.asset_id",

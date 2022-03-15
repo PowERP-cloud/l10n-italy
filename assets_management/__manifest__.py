@@ -4,7 +4,7 @@
 
 {
     "name": "ITA - Gestione Cespiti",
-    "version": "14.0.1.0.0",
+    "version": "14.0.1.0.1",
     "category": "Localization/Italy",
     "summary": "Gestione Cespiti",
     "author": "Openforce, Odoo Community Association (OCA)",
@@ -12,7 +12,7 @@
     "license": "AGPL-3",
     "depends": [
         "account",
-        "account_cancel",
+        # "account_cancel",
         "account_financial_report",
         "account_fiscal_year",
         "mail",

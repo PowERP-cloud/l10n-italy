@@ -42,7 +42,6 @@ class AccountInvoice(models.Model):
                     ).format(inv.name_get()[0][-1])
                 )
 
-    @api.multi
     def action_invoice_cancel(self):
         res = super().action_invoice_cancel()
         if self:
@@ -55,7 +54,6 @@ class AccountInvoice(models.Model):
             dep_lines.filtered(lambda l: not l.asset_accounting_info_ids).unlink()
         return res
 
-    @api.multi
     @api.depends(
         "asset_accounting_info_ids",
         "asset_accounting_info_ids.asset_id",
@@ -75,7 +73,6 @@ class AccountInvoice(models.Model):
                 }
             )
 
-    @api.multi
     def _compute_hide_link_asset_button(self):
         valid_account_ids = self.get_valid_accounts()
         if not valid_account_ids:
@@ -89,7 +86,6 @@ class AccountInvoice(models.Model):
                     ]
                 ) or inv.state in ("draft", "cancel")
 
-    @api.multi
     def open_wizard_manage_asset(self):
         self.ensure_one()
         lines = self.invoice_line_ids.filtered(

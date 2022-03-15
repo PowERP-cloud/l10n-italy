@@ -42,7 +42,6 @@ class AccountMove(models.Model):
                     ).format(move.name_get()[0][-1])
                 )
 
-    @api.multi
     def button_cancel(self):
         res = super().button_cancel()
         if self:
@@ -55,7 +54,6 @@ class AccountMove(models.Model):
             dep_lines.filtered(lambda l: not l.asset_accounting_info_ids).unlink()
         return res
 
-    @api.multi
     @api.depends(
         "asset_accounting_info_ids",
         "asset_accounting_info_ids.asset_id",
@@ -75,7 +73,6 @@ class AccountMove(models.Model):
                 }
             )
 
-    @api.multi
     def _compute_hide_link_asset_button(self):
         valid_account_ids = self.get_valid_accounts()
         if not valid_account_ids:
@@ -92,7 +89,6 @@ class AccountMove(models.Model):
                     or move.state != "posted"
                 )
 
-    @api.multi
     def open_wizard_manage_asset(self):
         self.ensure_one()
         lines = self.line_ids.filtered(lambda l: not l.asset_accounting_info_ids)

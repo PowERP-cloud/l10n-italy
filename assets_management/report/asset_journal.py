@@ -6,10 +6,10 @@ from collections import OrderedDict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools.pycompat import string_types
+# from odoo.tools.pycompat import string_types
 from odoo.tools.safe_eval import safe_eval
 
-from odoo.addons.mail.models.mail_template import format_amount
+from odoo.tools.misc import format_amount
 
 
 def format_date(rec, field_name, fmt):
@@ -87,7 +87,6 @@ class Report(models.TransientModel):
     #                          #
     ############################
 
-    @api.multi
     def print_report(self, report_type=None):
         """
         This method is called from the JS widget buttons 'Print'
@@ -120,14 +119,13 @@ class Report(models.TransientModel):
         report = self.env.ref(xml_id)
         return report.report_action(self)
 
-    @api.multi
     def view_report(self):
         """ Launches view for HTML report """
         self.ensure_one()
         xmlid = "assets_management.act_client_asset_journal_report"
         [act] = self.env.ref(xmlid).read()
         ctx = act.get("context", {})
-        if isinstance(ctx, string_types):
+        if isinstance(ctx, str):
             ctx = safe_eval(ctx)
         # Call update twice to force 'active_id(s)' values to be overridden
         ctx.update(dict(self._context))

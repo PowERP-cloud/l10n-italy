@@ -9,7 +9,6 @@ from odoo.exceptions import UserError
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
-    @api.multi
     def unlink(self):
         if (
             self.env["asset.category"]

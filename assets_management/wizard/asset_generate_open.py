@@ -65,7 +65,6 @@ class WizardAssetsGenerateOpen(models.TransientModel):
         readonly=True,
     )
 
-    @api.multi
     def do_generate(self):
         self.ensure_one()
         asset = self.get_asset()
