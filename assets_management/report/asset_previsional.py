@@ -36,7 +36,7 @@ class Report(models.TransientModel):
     """
 
     _name = "report_asset_previsional"
-    _inherit = "account_financial_report_abstract"
+    _inherit = "report.account_financial_report.abstract_report"
 
     # Data fields
     asset_ids = fields.Many2many(
@@ -130,7 +130,7 @@ class Report(models.TransientModel):
         xmlid = "assets_management.act_client_asset_previsional_report"
         [act] = self.env.ref(xmlid).read()
         ctx = act.get("context", {})
-        if isinstance(ctx, string_types):
+        if isinstance(ctx, str):
             ctx = safe_eval(ctx)
         # Call update twice to force 'active_id(s)' values to be overridden
         ctx.update(dict(self._context))
@@ -340,7 +340,7 @@ class Report(models.TransientModel):
 
 class ReportCategory(models.TransientModel):
     _name = "report_asset_previsional_category"
-    _inherit = "account_financial_report_abstract"
+    _inherit = "report.account_financial_report.abstract_report"
 
     # Data fields
     category_id = fields.Many2one("asset.category", ondelete="cascade", required=True)
@@ -432,7 +432,7 @@ class ReportCategory(models.TransientModel):
 
 class ReportAsset(models.TransientModel):
     _name = "report_asset_previsional_asset"
-    _inherit = "account_financial_report_abstract"
+    _inherit = "report.account_financial_report.abstract_report"
 
     # Data fields
     asset_id = fields.Many2one("asset.asset", ondelete="cascade", required=True)
@@ -522,22 +522,23 @@ class ReportAsset(models.TransientModel):
 
         if asset.supplier_ref:
             purchase_vals["partner_ref"] = asset.supplier_ref
-        elif asset.purchase_invoice_id.reference:
-            purchase_vals["partner_ref"] = asset.purchase_invoice_id.reference
+        # elif asset.purchase_invoice_id.reference:
+        #     purchase_vals["partner_ref"] = asset.purchase_invoice_id.reference
         elif asset.purchase_move_id.ref:
             purchase_vals["partner_ref"] = asset.purchase_move_id.ref
         else:
             purchase_vals["partner_ref"] = "/"
 
-        if asset.purchase_invoice_id:
-            purchase_vals.update(
-                {
-                    "document_nr": asset.purchase_invoice_id.number or "/",
-                    "res_id": asset.purchase_invoice_id.id,
-                    "res_model": "account.invoice",
-                }
-            )
-        elif asset.purchase_move_id:
+        # if asset.purchase_invoice_id:
+        #     purchase_vals.update(
+        #         {
+        #             "document_nr": asset.purchase_invoice_id.number or "/",
+        #             "res_id": asset.purchase_invoice_id.id,
+        #             "res_model": "account.invoice",
+        #         }
+        #     )
+        # el
+        if asset.purchase_move_id:
             purchase_vals.update(
                 {
                     "document_nr": asset.purchase_move_id.name or "/",
@@ -567,15 +568,16 @@ class ReportAsset(models.TransientModel):
             "partner_vat": asset.customer_id.vat or "/",
         }
 
-        if asset.sale_invoice_id:
-            sale_vals.update(
-                {
-                    "document_nr": asset.sale_invoice_id.number or "/",
-                    "res_id": asset.sale_invoice_id.id,
-                    "res_model": "account.invoice",
-                }
-            )
-        elif asset.sale_move_id:
+        # if asset.sale_invoice_id:
+        #     sale_vals.update(
+        #         {
+        #             "document_nr": asset.sale_invoice_id.number or "/",
+        #             "res_id": asset.sale_invoice_id.id,
+        #             "res_model": "account.invoice",
+        #         }
+        #     )
+        # el
+        if asset.sale_move_id:
             sale_vals.update(
                 {
                     "document_nr": asset.sale_move_id.name or "/",
@@ -596,7 +598,7 @@ class ReportAsset(models.TransientModel):
 
 class ReportDepreciation(models.TransientModel):
     _name = "report_asset_previsional_depreciation"
-    _inherit = "account_financial_report_abstract"
+    _inherit = "report.account_financial_report.abstract_report"
     _order = "type_name asc"
 
     # Data fields
@@ -656,7 +658,7 @@ class ReportDepreciation(models.TransientModel):
 
 class ReportDepreciationLineByYear(models.TransientModel):
     _name = "report_asset_previsional_depreciation_line_year"
-    _inherit = "account_financial_report_abstract"
+    _inherit = "report.account_financial_report.abstract_report"
     _order = "sequence asc"
 
     # Data fields
@@ -911,7 +913,7 @@ class ReportDepreciationLineByYear(models.TransientModel):
 
 class ReportAccountingDoc(models.TransientModel):
     _name = "report_asset_previsional_accounting_doc"
-    _inherit = "account_financial_report_abstract"
+    _inherit = "report.account_financial_report.abstract_report"
     _order = "sequence asc"
 
     # Report structure fields

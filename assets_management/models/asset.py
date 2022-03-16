@@ -89,7 +89,7 @@ class Asset(models.Model):
         track_visibility="onchange",
     )
 
-    purchase_invoice_id = fields.Many2one("account.invoice", string="Purchase Invoice")
+    # purchase_invoice_id = fields.Many2one("account.invoice", string="Purchase Invoice")
 
     purchase_move_id = fields.Many2one("account.move", string="Purchase Move")
 
@@ -99,7 +99,7 @@ class Asset(models.Model):
 
     sale_date = fields.Date(string="Sale Date")
 
-    sale_invoice_id = fields.Many2one("account.invoice", string="Sale Invoice")
+    # sale_invoice_id = fields.Many2one("account.invoice", string="Sale Invoice")
 
     sale_move_id = fields.Many2one("account.move", string="Sale Move")
 

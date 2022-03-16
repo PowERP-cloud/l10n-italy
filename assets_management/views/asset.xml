@@ -60,7 +60,7 @@
                         type="object"
                         attrs="{'invisible': ['|', ('is_open', '=', True),
                             '|', ('state', '!=', 'non_depreciated'),
-                            ('purchase_invoice_id', '!=', False)]}"
+                            ('purchase_move_id', '!=', False)]}"
                     />
                     <button
                         name="launch_wizard_generate_depreciations"
@@ -110,10 +110,10 @@
                     </group>
                     <group name="sale_purchase_info">
                         <group name="purchase_info" string="Purchase Info">
-                            <field
-                                name="purchase_invoice_id"
-                                attrs="{'invisible': [('purchase_invoice_id', '=', False)], 'readonly': [('purchase_invoice_id', '!=', False)]}"
-                            />
+<!--                            <field-->
+<!--                                name="purchase_invoice_id"-->
+<!--                                attrs="{'invisible': [('purchase_invoice_id', '=', False)], 'readonly': [('purchase_invoice_id', '!=', False)]}"-->
+<!--                            />-->
                             <field
                                 name="purchase_move_id"
                                 attrs="{'invisible': [('purchase_move_id', '=', False)], 'readonly': [('purchase_move_id', '!=', False)]}"
@@ -124,10 +124,10 @@
                             <field name="supplier_ref" />
                         </group>
                         <group name="purchase_info" string="Sale Info">
-                            <field
-                                name="sale_invoice_id"
-                                attrs="{'invisible': [('sale_invoice_id', '=', False)], 'readonly': [('sale_invoice_id', '!=', False)]}"
-                            />
+<!--                            <field-->
+<!--                                name="sale_invoice_id"-->
+<!--                                attrs="{'invisible': [('sale_invoice_id', '=', False)], 'readonly': [('sale_invoice_id', '!=', False)]}"-->
+<!--                            />-->
                             <field
                                 name="sale_move_id"
                                 attrs="{'invisible': [('sale_move_id', '=', False)], 'readonly': [('sale_move_id', '!=', False)]}"
@@ -180,8 +180,8 @@
                                     <field name="asset_id" />
                                     <field name="dep_line_id" />
                                     <field name="relation_type" />
-                                    <field name="invoice_id" />
-                                    <field name="invoice_line_id" />
+<!--                                    <field name="invoice_id" />-->
+<!--                                    <field name="invoice_line_id" />-->
                                     <field name="move_id" />
                                     <field name="move_line_id" />
                                     <button
