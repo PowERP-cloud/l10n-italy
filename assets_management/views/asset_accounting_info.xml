@@ -96,10 +96,7 @@
 <!--                                domain="[('invoice_id', '=', invoice_id)]"-->
 <!--                                attrs="{'invisible': [('invoice_id', '=', False)]}"-->
 <!--                            />-->
-                            <field
-                                name="move_id"
-                                options="{'no_create_edit': 1}"
-                            />
+                            <field name="move_id" options="{'no_create_edit': 1}" />
                             <field
                                 name="move_line_id"
                                 options="{'no_create_edit': 1}"
