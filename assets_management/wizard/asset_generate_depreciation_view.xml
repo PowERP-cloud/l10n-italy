@@ -83,7 +83,8 @@
         name="Generate Depreciations"
         parent="menu_asset_management"
         action="action_wizard_asset_generate_depreciation"
-        sequence="20"
+        groups="group_asset_user"
+        sequence="30"
     />
 
 </odoo>

@@ -39,6 +39,7 @@
         <field name="view_mode">form</field>
         <field name="view_id" ref="wizard_asset_generate_open_form_view" />
         <field name="target">new</field>
+        <field name="groups_id" eval="[(4, ref('assets_management.group_asset_user'))]"/>
     </record>
 
 </odoo>
