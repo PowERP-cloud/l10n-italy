@@ -122,7 +122,6 @@ class AssetCategory(models.Model):
         string="Depreciation Types",
     )
 
-    @api.multi
     def copy(self, default=None):
         default = dict(default or [])
         default.update(
@@ -136,7 +135,6 @@ class AssetCategory(models.Model):
         )
         return super().copy(default)
 
-    @api.multi
     def unlink(self):
         if self.env["asset.asset"].sudo().search([("category_id", "in", self.ids)]):
             raise UserError(

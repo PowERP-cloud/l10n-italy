@@ -89,7 +89,6 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
 
     has_asset_ids = fields.Boolean(string="Has asset ids", compute="_compute_asset_ids")
 
-    @api.multi
     def do_generate(self):
         """
         Launches the generation of new depreciation lines for the retrieved
@@ -200,7 +199,6 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
             domain += [("company_id", "=", self.company_id.id)]
         return domain
 
-    @api.multi
     def do_warning(self):
         self.ensure_one()
         wizard = self

@@ -160,7 +160,6 @@ class WizardInvoiceManageAsset(models.TransientModel):
                 lambda l: not l.asset_accounting_info_ids
             )
 
-    @api.multi
     def link_asset(self):
         self.ensure_one()
         self.check_pre_link_asset()

@@ -6,10 +6,10 @@ from collections import OrderedDict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools.pycompat import string_types
-from odoo.tools.safe_eval import safe_eval
+from odoo.tools.misc import format_amount
 
-from odoo.addons.mail.models.mail_template import format_amount
+# from odoo.tools.pycompat import string_types
+from odoo.tools.safe_eval import safe_eval
 
 
 def format_date(rec, field_name, fmt):
@@ -35,7 +35,7 @@ class Report(models.TransientModel):
     """
 
     _name = "report_asset_journal"
-    _inherit = "account_financial_report_abstract"
+    _inherit = "report.account_financial_report.abstract_report"
 
     # Data fields
     asset_ids = fields.Many2many(
@@ -87,7 +87,6 @@ class Report(models.TransientModel):
     #                          #
     ############################
 
-    @api.multi
     def print_report(self, report_type=None):
         """
         This method is called from the JS widget buttons 'Print'
@@ -120,14 +119,13 @@ class Report(models.TransientModel):
         report = self.env.ref(xml_id)
         return report.report_action(self)
 
-    @api.multi
     def view_report(self):
         """ Launches view for HTML report """
         self.ensure_one()
         xmlid = "assets_management.act_client_asset_journal_report"
         [act] = self.env.ref(xmlid).read()
         ctx = act.get("context", {})
-        if isinstance(ctx, string_types):
+        if isinstance(ctx, str):
             ctx = safe_eval(ctx)
         # Call update twice to force 'active_id(s)' values to be overridden
         ctx.update(dict(self._context))
@@ -310,7 +308,7 @@ class Report(models.TransientModel):
 
 class ReportCategory(models.TransientModel):
     _name = "report_asset_journal_category"
-    _inherit = "account_financial_report_abstract"
+    _inherit = "report.account_financial_report.abstract_report"
 
     # Data fields
     category_id = fields.Many2one("asset.category", ondelete="cascade", required=True)
@@ -402,7 +400,7 @@ class ReportCategory(models.TransientModel):
 
 class ReportAsset(models.TransientModel):
     _name = "report_asset_journal_asset"
-    _inherit = "account_financial_report_abstract"
+    _inherit = "report.account_financial_report.abstract_report"
 
     # Data fields
     asset_id = fields.Many2one("asset.asset", ondelete="cascade", required=True)
@@ -492,22 +490,23 @@ class ReportAsset(models.TransientModel):
 
         if asset.supplier_ref:
             purchase_vals["partner_ref"] = asset.supplier_ref
-        elif asset.purchase_invoice_id.reference:
-            purchase_vals["partner_ref"] = asset.purchase_invoice_id.reference
+        # elif asset.purchase_invoice_id.reference:
+        #     purchase_vals["partner_ref"] = asset.purchase_invoice_id.reference
         elif asset.purchase_move_id.ref:
             purchase_vals["partner_ref"] = asset.purchase_move_id.ref
         else:
             purchase_vals["partner_ref"] = "/"
 
-        if asset.purchase_invoice_id:
-            purchase_vals.update(
-                {
-                    "document_nr": asset.purchase_invoice_id.number or "/",
-                    "res_id": asset.purchase_invoice_id.id,
-                    "res_model": "account.invoice",
-                }
-            )
-        elif asset.purchase_move_id:
+        # if asset.purchase_invoice_id:
+        #     purchase_vals.update(
+        #         {
+        #             "document_nr": asset.purchase_invoice_id.number or "/",
+        #             "res_id": asset.purchase_invoice_id.id,
+        #             "res_model": "account.invoice",
+        #         }
+        #     )
+        # el
+        if asset.purchase_move_id:
             purchase_vals.update(
                 {
                     "document_nr": asset.purchase_move_id.name or "/",
@@ -537,15 +536,16 @@ class ReportAsset(models.TransientModel):
             "partner_vat": asset.customer_id.vat or "/",
         }
 
-        if asset.sale_invoice_id:
-            sale_vals.update(
-                {
-                    "document_nr": asset.sale_invoice_id.number or "/",
-                    "res_id": asset.sale_invoice_id.id,
-                    "res_model": "account.invoice",
-                }
-            )
-        elif asset.sale_move_id:
+        # if asset.sale_invoice_id:
+        #     sale_vals.update(
+        #         {
+        #             "document_nr": asset.sale_invoice_id.number or "/",
+        #             "res_id": asset.sale_invoice_id.id,
+        #             "res_model": "account.invoice",
+        #         }
+        #     )
+        # el
+        if asset.sale_move_id:
             sale_vals.update(
                 {
                     "document_nr": asset.sale_move_id.name or "/",
@@ -566,7 +566,7 @@ class ReportAsset(models.TransientModel):
 
 class ReportDepreciation(models.TransientModel):
     _name = "report_asset_journal_depreciation"
-    _inherit = "account_financial_report_abstract"
+    _inherit = "report.account_financial_report.abstract_report"
     _order = "type_name asc"
 
     # Data fields
@@ -626,7 +626,7 @@ class ReportDepreciation(models.TransientModel):
 
 class ReportDepreciationLineByYear(models.TransientModel):
     _name = "report_asset_journal_depreciation_line_year"
-    _inherit = "account_financial_report_abstract"
+    _inherit = "report.account_financial_report.abstract_report"
     _order = "sequence asc"
 
     # Data fields
@@ -872,7 +872,7 @@ class ReportDepreciationLineByYear(models.TransientModel):
 
 class ReportAccountingDoc(models.TransientModel):
     _name = "report_asset_journal_accounting_doc"
-    _inherit = "account_financial_report_abstract"
+    _inherit = "report.account_financial_report.abstract_report"
     _order = "sequence asc"
 
     # Report structure fields
@@ -893,7 +893,7 @@ class ReportAccountingDoc(models.TransientModel):
 
 class ReportTotals(models.TransientModel):
     _name = "report_asset_journal_totals"
-    _inherit = "account_financial_report_abstract"
+    _inherit = "report.account_financial_report.abstract_report"
     _total_fnames = [
         "amount_depreciable_updated",
         "amount_depreciated",
