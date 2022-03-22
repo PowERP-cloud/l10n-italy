@@ -1,7 +1,5 @@
 # Copyright 2021 powERP enterprise network <https://www.powerp.it>
 #
-# License OPL-1 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
-#
 from datetime import timedelta
 from odoo import models, fields, api
 from odoo.exceptions import UserError
@@ -47,7 +45,7 @@ class AccountInvoice(models.Model):
             if self.type in ['out_invoice', 'out_refund']:
                 if self.date_apply_vat != self.date:
                     warnings = '\nLa data di applicazione iva è diversa ' \
-                                'dalla data di registrazione'
+                               'dalla data di registrazione'
                 # end if
             # end if
 
@@ -87,17 +85,13 @@ class AccountInvoice(models.Model):
     def create(self, vals):
         if 'date_apply_vat' in vals and not vals['date_apply_vat']:
             vals['date_apply_vat'] = vals['date']
-        # TODO> to remove early
-        if 'type' in vals:
-            vals['move_type'] = vals['type']
+        # end if
         return super().create(vals)
 
     @api.multi
     def write(self, vals):
         if 'date_apply_vat' in vals and not vals['date_apply_vat']:
             vals['date_apply_vat'] = self.date
-        # TODO> to remove early
-        if 'type' in vals:
-            vals['move_type'] = vals['type']
+        # end if
         res = super().write(vals)
         return res

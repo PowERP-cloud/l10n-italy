@@ -28,4 +28,3 @@ def migrate(cr, version):
     _update_account_move(cr)
 
     _logger.info("Migration executed successfully. Exiting...")
-

@@ -1,13 +1,7 @@
 12.0.4.8.34 (2022-02-25)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-* [MOD] Nella visualizzazione tabella pagamenti e scadenze è stata eliminata colonna "IBAN" e abilitato a capo automatico nel nome delle banche
-
-12.0.4.8.34 (2022-02-25)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
 * [FIX] Currency invoces / Fatture in valuta
-* [REF] Campo ordine di pagamento
 
 12.0.4.8.33 (2022-02-16)
 ~~~~~~~~~~~~~~~~~~~~~~~~

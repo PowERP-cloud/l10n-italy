@@ -245,9 +245,6 @@ class AccountInvoice(models.Model):
             [('code', '=', 'tax')]
         )
 
-        inv_currency_amount = sum(
-            [x.due_amount for x in self.duedate_manager_id.duedate_line_ids]
-        )
         if self.type in ('out_refund', 'in_invoice'):
             inv_company_amount = sum(
                 [(x[2]['credit'] - x[2]['debit']) for x in head_lines]
@@ -256,7 +253,12 @@ class AccountInvoice(models.Model):
             inv_company_amount = sum(
                 [(x[2]['debit'] - x[2]['credit']) for x in head_lines]
             )
-        rate = inv_currency_amount / inv_company_amount
+        invoice_currency = self.currency_id.with_context(
+            date=self.date_invoice
+        )
+        main_currency = self.company_currency_id.with_context(
+            date=self.date_invoice
+        )
         round_curr = self.company_id.currency_id.round
         inv_company_amount = round_curr(inv_company_amount)
 
@@ -276,7 +278,13 @@ class AccountInvoice(models.Model):
             if (ii + 1) == len(self.duedate_manager_id.duedate_line_ids):
                 company_due_amount = round_curr(residual)
             else:
-                company_due_amount = round_curr(duedate.due_amount / rate)
+                if invoice_currency != main_currency:
+                    company_due_amount = invoice_currency.compute(
+                        duedate.due_amount, main_currency
+                    )
+                else:
+                    company_due_amount = duedate.due_amount
+
             new_line_dict['currency_id'] = self.currency_id.id
             if self.type in ('in_refund', 'out_invoice'):
                 new_line_dict['amount_currency'] = duedate.due_amount
@@ -286,8 +294,6 @@ class AccountInvoice(models.Model):
                 new_line_dict['credit'] = company_due_amount
             elif new_line_dict['debit']:
                 new_line_dict['debit'] = company_due_amount
-            # else:
-            #     pass
             residual -= company_due_amount
 
             # Update - payment method

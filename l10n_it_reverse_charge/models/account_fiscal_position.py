@@ -3,7 +3,7 @@
 # Copyright 2017 Lorenzo Battistini - Agile Business Group
 # Copyright 2017 Marco Calcagni - Dinamiche Aziendali srl
 # Copyright 2021 Antonio M. Vigliotti - SHS-Av srl
-# Copyright 2021 powERP enterprise network <https://www.powerp.it>
+# Copyright 2021 powERP enterprise network <https://www.librerp.it>
 #
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 #
@@ -46,5 +46,3 @@ class AccountFiscalPosition(models.Model):
         'fiscal.document.type',
         string="Self Invoice Fiscal Document Type",
         )
-
-
