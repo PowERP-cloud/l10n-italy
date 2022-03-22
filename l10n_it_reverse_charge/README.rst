@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_39
+|icon| ITA - Inversione contabile 12.0.1.2.7_41
 ===============================================
 
 
@@ -381,6 +381,16 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_41 (2022-03-18)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Self invoice wrong date / Data registrazione errata in autofattura
+
+12.0.1.2.7_40 (2022-03-15)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] More currency invoices / Fatture in valuta (più copertura)
+
 12.0.1.2.7_39 (2022-02-25)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -433,16 +443,6 @@ ChangeLog History / Cronologia modifiche
 [FIX] Gestito filtro su registro per autofattura
 [FIX] Gestito bug tasse multiple
 
-12.0.1.2.7_29 (2021-09-24)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Gestito bug tasse multiple su movimento contabile
-
-12.0.1.2.7_28 (2021-09-14)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Gestito bug nota di credito fornitore e auto fattura di tipo nota di credito
-
 
 
 |
@@ -466,7 +466,7 @@ Authors / Autori
 * `Odoo Community Association (OCA) <https://odoo-community.org>`__
 * `SHS-AV s.r.l. <https://www.zeroincombenze.it/>`__
 * `Didotech s.r.l. <https://www.didotech.com>`__
-* `powERP <https://www.powerp.it>`__
+* `LibrERP <https://www.librerp.it>`__
 
 
 Contributors / Collaboratori
@@ -518,7 +518,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-02-27
+Last Update / Ultimo aggiornamento: 2022-03-22
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

@@ -163,9 +163,6 @@ class DueDateManager(models.Model):
             invoice_date = self.invoice_id.date_invoice
         elif self.move_id:
             invoice_date = self.move_id.date_invoice
-
-        else:
-            assert False
         # end if
 
         # Sorted list of dates (least date -> least index)
@@ -214,8 +211,6 @@ class DueDateManager(models.Model):
         elif self.move_id:
             precision = self.move_id.currency_id.decimal_places
             amount_total = self.move_id.amount
-        else:
-            assert False
         # end if
 
         # Get the list of the other due_dates, ordered by due_date ascending
@@ -432,8 +427,6 @@ class DueDateManager(models.Model):
                 payment_method = due_date[2]['credit']
             elif param_cm['doc_type'] in ('in_invoice', 'out_refund'):
                 payment_method = due_date[2]['debit']
-            else:
-                assert False, param_cm['type_error_msg']
             # end if
             if add_tax:
                 due_amount = due_date[1] + tax

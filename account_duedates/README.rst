@@ -159,7 +159,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Currency invoces / Fatture in valuta
-* [REF] Campo ordine di pagamento
 
 12.0.4.8.33 (2022-02-16)
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -249,8 +248,6 @@ Contributors / Collaboratori
 ----------------------------
 
 * Antonio Maria Vigliotti <antoniomaria.vigliotti@gmail.com>
-* Marco Tosato <marco.tosato@didotech.com>
-* Fabio Giovannelli <fabio.giovannelli@didotech.com>
 
 
 Maintainer / Manutenzione
@@ -291,7 +288,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-03-01
+Last Update / Ultimo aggiornamento: 2022-03-21
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

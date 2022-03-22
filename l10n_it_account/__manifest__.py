@@ -3,12 +3,16 @@
 # Copyright 2015 Link It Spa (<http://www.linkgroup.it/>)
 # Copyright 2018 Sergio Zanchetta (Associazione PNLUG - Gruppo Odoo)
 # Copyright 2018 Lorenzo Battistini <https://github.com/eLBati>
+# Copyright 2021-22 LibrERP enterprise network <https://www.librerp.it>
+# Copyright 2021-22 SHS-AV s.r.l. <https://www.zeroincombenze.it>
+# Copyright 2021-22 Didotech s.r.l. <https://www.didotech.com>
+#
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
     'name': 'ITA - Contabilità base',
     'summary': 'Modulo base usato come dipendenza di altri moduli contabili',
-    'version': '12.0.1.4.5_1',
+    'version': '12.0.1.4.5_2',
     'category': 'Hidden',
     'author': "Agile Business Group, Abstract, "
               "Odoo Community Association (OCA)",
