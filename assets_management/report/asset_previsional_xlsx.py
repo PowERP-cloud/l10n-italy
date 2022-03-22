@@ -15,46 +15,46 @@ class AssetJournalXslx(models.AbstractModel):
         """ Adds new attributes """
         super().__init__(pool, cr)
 
-        # Add report objects
-        self.workbook = None
-        self.data = None
-        self.report = None
-
-        # These `_data`s here are made as dict of dicts, the key being the
-        # column number to be printed into, the second one the field datas for
-        # the print itself
-        self.category_data = None
-        self.asset_data = None
-        self.asset_accounting_doc_data = None
-        self.depreciation_data = None
-        self.depreciation_line_year_data = None
-        self.depreciation_line_amount_detail_data = None
-        self.totals_data = None
-
-        # 1- Category formats
-        self.format_category_name = None
-
-        # 2- Asset formats (purchase and sale docs will use the same format)
-        self.format_asset_header = None
-        self.format_asset_value = None
-
-        # 3- Depreciations formats
-        self.format_depreciation_header = None
-        self.format_depreciation_value = None
-
-        # 4- Depreciation yearly and amount details formats
-        self.format_depreciation_year_line_header = None
-        self.format_depreciation_year_line_value_center = None
-        self.format_depreciation_year_line_value_right = None
-
-        # 5- Report title
-        self.format_title = None
+        # # Add report objects
+        # self.workbook = None
+        # self.data = None
+        # self.report = None
+        #
+        # # These `_data`s here are made as dict of dicts, the key being the
+        # # column number to be printed into, the second one the field datas for
+        # # the print itself
+        # self.category_data = None
+        # self.asset_data = None
+        # self.asset_accounting_doc_data = None
+        # self.depreciation_data = None
+        # self.depreciation_line_year_data = None
+        # self.depreciation_line_amount_detail_data = None
+        # self.totals_data = None
+        #
+        # # 1- Category formats
+        # self.format_category_name = None
+        #
+        # # 2- Asset formats (purchase and sale docs will use the same format)
+        # self.format_asset_header = None
+        # self.format_asset_value = None
+        #
+        # # 3- Depreciations formats
+        # self.format_depreciation_header = None
+        # self.format_depreciation_value = None
+        #
+        # # 4- Depreciation yearly and amount details formats
+        # self.format_depreciation_year_line_header = None
+        # self.format_depreciation_year_line_value_center = None
+        # self.format_depreciation_year_line_value_right = None
+        #
+        # # 5- Report title
+        # self.format_title = None
 
     def generate_xlsx_report(self, workbook, data, objects):
         """ Set wb, data and report attributes """
-        self.workbook = workbook
-        self.data = data
-        self.report = objects
+        # self.workbook = workbook
+        # self.data = data
+        # self.report = objects
         self.set_formats()
         self.set_report_data()
         super().generate_xlsx_report(workbook, data, objects)

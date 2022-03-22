@@ -47,7 +47,7 @@
                     <button
                         name="button_export_asset_journal_html"
                         string="View Journal Report"
-                        class="btn-primary"
+                        class="btn-primary o_report_print"
                         type="object"
                     />
                     <button

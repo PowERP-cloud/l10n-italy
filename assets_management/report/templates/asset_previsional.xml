@@ -3,7 +3,6 @@
 
     <template id="template_asset_previsional_report">
         <div class="o_account_financial_reports_page">
-            <t t-call="account_financial_report.report_buttons" />
             <t t-call="assets_management.template_asset_previsional_base" />
         </div>
     </template>

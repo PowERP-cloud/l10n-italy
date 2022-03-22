@@ -10,7 +10,6 @@ from odoo.tools.float_utils import float_is_zero
 from odoo.tools.misc import format_amount
 
 # from odoo.tools.pycompat import string_types
-from odoo.tools.safe_eval import safe_eval
 
 
 def format_date(rec, field_name, fmt):
@@ -104,7 +103,7 @@ class Report(models.TransientModel):
         if report_type in ("qweb-pdf", "xlsx"):
             res = self.do_print(report_type)
         elif report_type == "qweb-html":
-            res = self.view_report()
+            res = self.do_print(report_type)
         elif report_type:
             raise ValidationError(
                 _("No report has been defined for type `{}`.").format(report_type)
@@ -119,24 +118,12 @@ class Report(models.TransientModel):
         self.ensure_one()
         if report_type == "qweb-pdf":
             xml_id = "assets_management.report_asset_previsional_pdf"
+        elif report_type == "qweb-html":
+            xml_id = "assets_management.report_asset_previsional_html"
         else:
             xml_id = "assets_management.report_asset_previsional_xlsx"
         report = self.env.ref(xml_id)
         return report.report_action(self)
-
-    def view_report(self):
-        """ Launches view for HTML report """
-        self.ensure_one()
-        xmlid = "assets_management.act_client_asset_previsional_report"
-        [act] = self.env.ref(xmlid).read()
-        ctx = act.get("context", {})
-        if isinstance(ctx, str):
-            ctx = safe_eval(ctx)
-        # Call update twice to force 'active_id(s)' values to be overridden
-        ctx.update(dict(self._context))
-        ctx.update(active_id=self.id, active_ids=self.ids)
-        act["context"] = ctx
-        return act
 
     @api.model
     def get_html(self, given_context=None):
@@ -934,7 +921,7 @@ class ReportAccountingDoc(models.TransientModel):
 
 class ReportTotals(models.TransientModel):
     _name = "report_asset_previsional_totals"
-    _inherit = "account_financial_report_abstract"
+    _inherit = "report.account_financial_report.abstract_report"
     _total_fnames = [
         "amount_depreciable_updated",
         "amount_depreciated",
