@@ -26,6 +26,12 @@ class AccountTax(models.Model):
         string='Codice iva vendite',
         domain=[('type_tax_use', '=', 'sale')],
     )
+    rc_purchase_tax_id = fields.Many2one(
+        comodel_name='account.tax',
+        string='Cod.IVA acquisto collegato',
+        domain=[('type_tax_use', '=', 'purchase')],
+        readonly=True,
+    )
 
     @api.model
     def get_rc_type(self):
@@ -33,14 +39,31 @@ class AccountTax(models.Model):
         kind_N3 = self.kind_id and self.kind_id.code.startswith('N3')
         kind_N6 = self.kind_id and self.kind_id.code.startswith('N6')
 
-        if kind_N3 and self.kind_id.code != 'N3.5':
+        if self.rc_purchase_tax_id:
+            kind = ''
+        elif (self.type_tax_use == 'purchase' and
+                kind_N3 and self.kind_id.code != 'N3.5'):
             kind = 'self'
         elif kind_N6:
             kind = 'local'
         else:
             kind = ''
         # end if
-
         return kind
     # end get_rc_type
 
+    @api.model
+    def create(self, values):
+        tax = super().create(values)
+        if tax.rc_sale_tax_id:
+            tax.rc_sale_tax_id.rc_purchase_tax_id = tax.id
+        return tax
+    # end create
+
+    @api.multi
+    def write(self, values):
+        result = super().write(values)
+        for tax in self:
+            if tax.rc_sale_tax_id:
+                tax.rc_sale_tax_id.rc_purchase_tax_id = tax.id
+        return result

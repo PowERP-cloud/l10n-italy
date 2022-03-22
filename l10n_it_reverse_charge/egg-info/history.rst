@@ -1,3 +1,8 @@
+12.0.1.2.7_41 (2022-03-18)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Self invoice wrong date / Data registrazione errata in autofattura
+
 12.0.1.2.7_40 (2022-03-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

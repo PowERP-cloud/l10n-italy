@@ -3,13 +3,13 @@
 # Copyright 2017 Lorenzo Battistini - Agile Business Group
 # Copyright 2017 Marco Calcagni - Dinamiche Aziendali srl
 # Copyright 2021 Antonio M. Vigliotti - SHS-Av srl
-# Copyright 2021 powERP enterprise network <https://www.powerp.it>
+# Copyright 2021 LibrERP enterprise network <https://www.LibrERP.it>
 #
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 #
 
 from odoo import api, fields, models
-from odoo.exceptions import Warning as UserError, RedirectWarning
+from odoo.exceptions import Warning as UserError
 from odoo.tools.translate import _
 # import odoo.addons.decimal_precision as dp
 from odoo.tools import float_compare
@@ -48,7 +48,6 @@ class AccountInvoiceLine(models.Model):
     @api.onchange('invoice_line_tax_ids')
     def onchange_invoice_line_tax_id(self):
         res = dict()
-        rc_mismatch = False
         invoice_rc_type = self.invoice_id.fiscal_position_id.rc_type
         if self.invoice_id.type in [
             'in_invoice',
@@ -59,12 +58,10 @@ class AccountInvoiceLine(models.Model):
         ]:
             for tax in self.invoice_line_tax_ids:
                 if tax.rc_type != invoice_rc_type:
-                    rc_mismatch = True
                     raise UserError(
                         _('Tipo RC %s di codice IVA %s '
-                          'non valida per reverse charge.' % (
-                            tax.rc_type, tax.description)
-                          )
+                          'non valida per reverse charge.') %
+                        tax.rc_type, tax.description
                     )
         if not res:
             self._set_rc_flag(self.invoice_id)
@@ -100,7 +97,7 @@ class AccountInvoice(models.Model):
 
     @api.depends('amount_total', 'amount_rc')
     def _compute_net_pay(self):
-        res = super()._compute_net_pay()
+        super()._compute_net_pay()
         for inv in self:
             if inv.fiscal_position_id.rc_type:
                 inv.amount_net_pay = inv.amount_total - inv.amount_rc
@@ -234,7 +231,10 @@ class AccountInvoice(models.Model):
                 # 'in_invoice': 'out_invoice',
                 'in_refund': 'out_refund',
             }.get(self.type, 'out_invoice'),
-            'date_due': self.date,
+            'date_due': self.date_invoice,
+            # Warning! Do not change follow statement!
+            # In sale invoice, date is automatically set to date_invoice
+            'date_invoice': self.date,
             'origin': self.number,
             'rc_purchase_invoice_id': self.id,
             'name': _('Reverse charge self invoice'),
@@ -246,8 +246,7 @@ class AccountInvoice(models.Model):
         for field in ('date',
                       'date_apply_balance',
                       'date_apply_vat',
-                      'date_effective',
-                      'date_invoice'):
+                      'date_effective'):
             if hasattr(self, field):
                 inv_vals[field] = getattr(self, field)
 
@@ -883,9 +882,9 @@ class AccountInvoice(models.Model):
 
     def _get_line_with_rc_tax(self):
         return self.move_id.line_ids.filtered(
-            lambda x: self.company_id.id == x.company_id.id and
+            lambda x: (self.company_id.id == x.company_id.id and
                       x.line_type == 'tax' and
-                      x.tax_line_id.rc_type != False
+                       x.tax_line_id.rc_type)
         )
 
     # ------------------------------------------------------------------------#
