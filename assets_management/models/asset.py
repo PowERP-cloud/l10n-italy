@@ -55,7 +55,7 @@ class Asset(models.Model):
         default=get_default_company_id,
         required=True,
         string="Company",
-        track_visibility="onchange",
+        # track_visibility="onchange",
     )
 
     currency_id = fields.Many2one(
@@ -75,18 +75,18 @@ class Asset(models.Model):
     name = fields.Char(
         required=True,
         string="Name",
-        track_visibility="onchange",
+        # track_visibility="onchange",
     )
 
     purchase_amount = fields.Monetary(
         string="Purchase Value",
-        track_visibility="onchange",
+        # track_visibility="onchange",
     )
 
     purchase_date = fields.Date(
         default=fields.Date.today(),
         string="Purchase Date",
-        track_visibility="onchange",
+        # track_visibility="onchange",
     )
 
     # purchase_invoice_id = fields.Many2one("account.invoice", string="Purchase Invoice")

@@ -95,7 +95,7 @@ class WizardAssetsGenerateOpen(models.TransientModel):
         for v in [credit_line_vals, debit_line_vals]:
             vals["line_ids"].append((0, 0, v))
 
-        asset.move_id = am_obj.create(vals)
+        am_obj.create(vals)
 
         asset.is_open = True
 
