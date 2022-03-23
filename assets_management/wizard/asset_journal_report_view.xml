@@ -56,12 +56,12 @@
                         class="btn-primary"
                         type="object"
                     />
-                    <button
-                        name="button_export_asset_journal_xlsx"
-                        string="Export Journal Report"
-                        class="btn-primary"
-                        type="object"
-                    />
+<!--                    <button-->
+<!--                        name="button_export_asset_journal_xlsx"-->
+<!--                        string="Export Journal Report"-->
+<!--                        class="btn-primary"-->
+<!--                        type="object"-->
+<!--                    />-->
                     or
                     <button string="Cancel" class="btn-default" special="cancel" />
                 </footer>
