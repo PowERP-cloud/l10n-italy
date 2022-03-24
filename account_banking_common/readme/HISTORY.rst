@@ -1,3 +1,8 @@
+12.0.3.7.42 (2022-03-24)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito riconciliazioni nella registrazione degli insoluti
+
 12.0.3.7.41 (2022-03-11)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

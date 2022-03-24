@@ -222,6 +222,8 @@ class AccountMoveLine(models.Model):
                     }
                 )
             # end if
+        else:
+            new_reconcile_needed = True
         # end if
 
         # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
