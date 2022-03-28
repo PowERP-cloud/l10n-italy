@@ -57,13 +57,10 @@ class AccountRegisterPayment(models.TransientModel):
         default=0.0
     )
 
-    payment_difference_handling = fields.Selection(
-        [
-            ('open', 'Lasciare aperta'),
-            ('reconcile', 'Chiudere')
-        ], default='open',
-        string="Payment Difference Handling",
-        copy=False
+    payment_difference_open = fields.Boolean(
+        string="Lasciare aperto",
+        copy=False,
+        default=True,
     )
 
     def _get_bank_account(self):
@@ -81,7 +78,37 @@ class AccountRegisterPayment(models.TransientModel):
 
     @api.onchange('total_amount')
     def _onchange_total_amount(self):
-        pass
+        rebates = self._get_rebates_data()
+        if not rebates['rebate_delta']:
+            raise UserError(
+                'Delta abbuoni non impostato '
+                'in configurazione contabilità.'
+            )
+
+        wizard_amount = self.total_amount
+        total_amount = self._set_total_amount()
+
+        if wizard_amount > total_amount:
+            self.payment_difference = wizard_amount - total_amount
+        elif wizard_amount < total_amount:
+            self.payment_difference = total_amount - wizard_amount
+        else:
+            self.payment_difference = 0.0
+
+        if self.payment_difference >= rebates['rebate_delta']:
+            self.payment_difference_open = True
+        elif self.payment_difference < rebates['rebate_delta']:
+            self.payment_difference_open = False
+
+    @api.model
+    def _get_rebates_data(self):
+        rebates = {}
+        company = self.env['res.company'].browse(self.env.user.company_id.id)
+        rebates['rebate_active'] = company.rebate_active
+        rebates['rebate_passive'] = company.rebate_passive
+        rebates['rebate_delta'] = company.rebate_delta
+        return rebates
+    # end _get_rebates_data
 
     def register(self):
 
@@ -202,6 +229,13 @@ class AccountRegisterPayment(models.TransientModel):
 
         bank_line_account = None
 
+        # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        # Accounting rebate
+        company = self.env['res.company'].browse(self.env.user.company_id.id)
+        rebate_active = company.rebate_active
+        rebate_passive = company.rebate_passive
+        rebate_delta = company.rebate_delta
+
         to_reconcile = list()
 
         move_line_model_no_check = self.env['account.move.line'].with_context(
@@ -213,7 +247,11 @@ class AccountRegisterPayment(models.TransientModel):
 
         # Get account.line objects from web UI selection
         selected_lines_ids = self._context['active_ids']
-        in_lines_list = self.env['account.move.line'].browse(selected_lines_ids)
+        # ordered
+        in_lines_list = self.env['account.move.line'].search(
+            [('id', 'in', selected_lines_ids)],
+            order='date_maturity ASC',
+        )
 
         # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         # Validate the type of operation
@@ -263,9 +301,6 @@ class AccountRegisterPayment(models.TransientModel):
                 'minore dell\'importo delle fatture fornitore'
             )
         # end if
-
-        # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-        # Identify the account.account to be used for the bank line
 
         # Ensure the required default account is set in the bank registry
         if client_payment_reg_op:
@@ -325,12 +360,14 @@ class AccountRegisterPayment(models.TransientModel):
         # Create the registration
 
         # Payment registration move
+        # ok
         payment_reg_move = payment_reg_move_create()
+        # refactor
         payment_reg_move_add_lines()
+        # ok
         payment_reg_move_add_expenses()
+        # refactor
         payment_reg_move_confirm_and_reconcile()
 
-        # TODO: riga inserita per debug, rimuovere a sviluppo completato
-        print('Operation completed!!!!')
     # end register
 # end AccountRegisterPayment
