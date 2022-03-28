@@ -72,7 +72,8 @@ class AccountPaymentGenerate(models.TransientModel):
                     return default_domain
             elif payment_method.code == 'RB-o':
                 journal_ids = self.env['account.journal'].search(
-                    ['is_wallet', '=', False])
+                    [('is_wallet', '=', False)])
+
                 return [('id', 'in', tuple(journal_ids))]
 
         else:

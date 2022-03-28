@@ -1,14 +1,39 @@
-<<<<<<< HEAD
-12.0.3.7.35 (2022-03-04)
+12.0.3.7.42 (2022-03-24)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito riconciliazioni nella registrazione degli insoluti
+
+12.0.3.7.41 (2022-03-11)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostato ordinamento delle azioni nel rispettivo menù di pagamenti e scadenze
+
+12.0.3.7.40 (2022-03-11)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostato configurazione conti di abbuono e abbuono delta
+* [FIX] Esposto in tutti i registri il conto spese bancarie
+
+12.0.3.7.39 (2022-03-10)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito importi scadenze in insoluto standard
+
+12.0.3.7.38 (2022-03-09)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Inserita data accredito da wizard
+
+12.0.3.7.37 (2022-03-04)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Gestito controllo su distinte insolute
 
-12.0.3.7.34 (2022-03-03)
+12.0.3.7.36 (2022-03-03)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Gestito controllo su distinte riconciliate
-=======
+
 12.0.3.7.35 (2022-03-03)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -20,7 +45,6 @@
 
  * [IMP] Possibilità di scegliere sezionale e data registrazione contabile al momento della registrazione del pagamento
  * [FIX] Correzione nome modello
->>>>>>> 12.0
 
 12.0.3.7.33 (2022-03-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~

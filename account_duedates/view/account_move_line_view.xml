@@ -20,9 +20,11 @@
             <field name="invoice_id" position="after">
                 <field name="payment_order_name" />
                 <field name="incasso_effettuato" readonly="1"/>
+                <field name="pagamento_effettuato" readonly="1"/>
             </field>
 
             <xpath expr="//field[@name='quantity']" position="after">
+                <field name="amount_into_payment_line"/>
                 <field name="prorogation_ctr"/>
                 <field name="unpaid_ctr"/>
             </xpath>

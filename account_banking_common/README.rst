@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.35
+|icon| Account Banking Common 12.0.3.7.42
 =========================================
 
 
@@ -152,15 +152,53 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
-12.0.3.7.35 (2022-03-04)
+12.0.3.7.42 (2022-03-24)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito riconciliazioni nella registrazione degli insoluti
+
+12.0.3.7.41 (2022-03-11)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostato ordinamento delle azioni nel rispettivo menù di pagamenti e scadenze
+
+12.0.3.7.40 (2022-03-11)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Impostato configurazione conti di abbuono e abbuono delta
+* [FIX] Esposto in tutti i registri il conto spese bancarie
+
+12.0.3.7.39 (2022-03-10)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito importi scadenze in insoluto standard
+
+12.0.3.7.38 (2022-03-09)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Inserita data accredito da wizard
+
+12.0.3.7.37 (2022-03-04)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Gestito controllo su distinte insolute
 
-12.0.3.7.34 (2022-03-03)
+12.0.3.7.36 (2022-03-03)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Gestito controllo su distinte riconciliate
+
+12.0.3.7.35 (2022-03-03)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+ * [IMP] Gestione operazioni di registrazione pagamenti fornitori e compensazione tra fatture e note di credito nelle registrazioni
+ * [IMP] Gestione spese bancarie
+
+12.0.3.7.34 (2022-03-02)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+ * [IMP] Possibilità di scegliere sezionale e data registrazione contabile al momento della registrazione del pagamento
+ * [FIX] Correzione nome modello
 
 12.0.3.7.33 (2022-03-02)
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -180,64 +218,6 @@ ChangeLog History / Cronologia modifiche
 * [IMP] Gestito conto spese bancarie con verifica del registro
 * [IMP] Gestito il flag incasso_effettuato quando si riporta in bozza una distinta
 
-12.0.3.7.30 (2022-02-16)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Aggiornato controlli wizard conferma pagamenti
-
-12.0.3.7.29 (2022-02-04)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Impostato funzionalità registra pagamenti
-
-12.0.3.7.26 (2022-01-27)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Update dependencies
-
-12.0.3.7.25 (2022-01-18)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Refactoring impostazione conti trasferiti nel registro
-
-12.0.3.7.24 (2022-01-14)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestione visibiltà pulsante accredito
-
-12.0.3.7.23 (2022-01-14)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestione viste conto di portafoglio
-
-12.0.3.7.22 (2022-01-14)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestione registrazioni contabili con conto di portafoglio
-
-<<<<<<< HEAD
-12.0.3.7.21 (2021-12-28)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Impostato default per importo accreditato
-
-12.0.3.7.20 (2021-12-17)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito conti bancari nelle scadenze
-
-12.0.3.7.19 (2021-12-13)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito iban non impostato
-
-12.0.3.7.18 (2021-12-10)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Corretto formattazione conti
-
-=======
->>>>>>> 12.0
 
 
 |
@@ -309,7 +289,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-03-04
+Last Update / Ultimo aggiornamento: 2022-03-24
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

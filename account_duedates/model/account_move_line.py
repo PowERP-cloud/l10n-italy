@@ -14,6 +14,16 @@ _logger = logging.getLogger(__name__)
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
+    @api.depends('payment_order_lines')
+    def _compute_amount_payment_line(self):
+        for record in self:
+            if record.payment_order_lines and len(record.payment_order_lines) > 0:
+                order_line = record.payment_order_lines[
+                    len(record.payment_order_lines) - 1]
+                record.amount_into_payment_line = order_line.amount_currency
+            else:
+                record.amount_into_payment_line = False
+
     @api.model
     def set_default_company_bank(self):
         if (
@@ -110,6 +120,15 @@ class AccountMoveLine(models.Model):
         comodel_name='res.partner.bank',
         default=set_default_company_bank,
         copy=True,
+    )
+
+    pagamento_effettuato = fields.Boolean(
+        string='Pagamento effettuato', default=False
+    )
+
+    amount_into_payment_line = fields.Float(
+        string='Importo in distinta',
+        compute=_compute_amount_payment_line
     )
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -10,6 +10,7 @@
                 <group colspan="4" string="Conti di default" >
                     <field name="default_credit_account_id" />
                     <field name="default_debit_account_id" />
+                    <field name="default_bank_expenses_account"/>
                 </group>
                 <group colspan="4" string="Conti di portafoglio" >
                     <group colspan="4">
@@ -41,7 +42,6 @@
                             <field name="sezionale"/>
                             <field name="portafoglio_sbf"/>
                             <field name="effetti_allo_sconto"/>
-                            <field name="default_bank_expenses_account"/>
                         </group>
                         <group>
                             <field name="limite_effetti_sbf"/>
