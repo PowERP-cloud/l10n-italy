@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_39
+|icon| ITA - Inversione contabile 12.0.1.2.7_40
 ===============================================
 
 
@@ -381,6 +381,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_40 (2022-03-15)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] More currency invoices / Fatture in valuta (più copertura)
+
 12.0.1.2.7_39 (2022-02-25)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -437,11 +442,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [FIX] Gestito bug tasse multiple su movimento contabile
-
-12.0.1.2.7_28 (2021-09-14)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Gestito bug nota di credito fornitore e auto fattura di tipo nota di credito
 
 
 
@@ -518,7 +518,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-02-27
+Last Update / Ultimo aggiornamento: 2022-03-16
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

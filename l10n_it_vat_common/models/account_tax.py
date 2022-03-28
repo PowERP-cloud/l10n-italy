@@ -1,4 +1,3 @@
-# License OPL-1 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
 import logging
 from odoo import models
 
@@ -113,7 +112,8 @@ class AccountTax(models.Model):
                 (total_base,
                  total_tax,
                  deductible,
-                 undeductible) = map(sum,
+                 undeductible) = map(
+                    sum,
                     zip((total_base, total_tax, deductible, undeductible)),
                     compute_total_child(child, domain, registry_type)
                 )
@@ -154,4 +154,3 @@ class AccountTax(models.Model):
         # end if
         return against_tax
     # end is_deductible
-
