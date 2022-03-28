@@ -19,6 +19,10 @@
                 </group>
 
                 <group>
+                    <field name="note"/>
+                </group>
+
+                <group>
                     <field name="total_amount"/>
                 </group>
 
