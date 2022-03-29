@@ -27,7 +27,8 @@
                 </group>
 
                 <group attrs="{'invisible': [('payment_difference', '=', 0.0)]}">
-                    <field name="payment_difference" readonly="1" />
+                    <field name="payment_difference" invisible="1" />
+                    <field name="payment_difference_show" readonly="1" />
                     <field name="payment_difference_open" />
                 </group>
 

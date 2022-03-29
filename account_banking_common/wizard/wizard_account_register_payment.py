@@ -57,6 +57,11 @@ class AccountRegisterPayment(models.TransientModel):
         default=0.0
     )
 
+    payment_difference_show = fields.Float(
+        string='Differenza di pagamento',
+        default=0.0
+    )
+
     payment_difference_open = fields.Boolean(
         string="Lasciare aperto",
         copy=False,
@@ -89,9 +94,13 @@ class AccountRegisterPayment(models.TransientModel):
         total_amount = self._set_total_amount()
 
         if wizard_amount > total_amount:
-            self.payment_difference = wizard_amount - total_amount
+            total = wizard_amount - total_amount
+            self.payment_difference = total
+            self.payment_difference_show = -total
         elif wizard_amount < total_amount:
-            self.payment_difference = total_amount - wizard_amount
+            total = total_amount - wizard_amount
+            self.payment_difference = total
+            self.payment_difference_show = total
         else:
             self.payment_difference = 0.0
 
