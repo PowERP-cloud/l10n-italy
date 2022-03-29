@@ -95,6 +95,12 @@ class AccountRegisterPayment(models.TransientModel):
 
         if wizard_amount > total_amount:
             total = wizard_amount - total_amount
+            if total > rebates['rebate_delta']:
+                raise UserError(
+                    'La differenza tra il totale e l\'importo impostato '
+                    ' supera la cifra indicata in configurazione contabilità.'
+                )
+
             self.payment_difference = total
             self.payment_difference_show = -total
         elif wizard_amount < total_amount:
