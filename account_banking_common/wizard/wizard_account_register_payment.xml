@@ -18,6 +18,20 @@
                     <field name="expenses_amount" attrs="{'invisible': [('expenses_account', '=', False)]}"/>
                 </group>
 
+                <group>
+                    <field name="note"/>
+                </group>
+
+                <group>
+                    <field name="total_amount"/>
+                </group>
+
+                <group attrs="{'invisible': [('payment_difference', '=', 0.0)]}">
+                    <field name="payment_difference" invisible="1" />
+                    <field name="payment_difference_show" readonly="1" />
+                    <field name="payment_difference_open" />
+                </group>
+
                 <footer>
                     <button type="object" name="register" string="Conferma" class="oe_highlight"/>
                     <button special="cancel" string="Cancel" class="oe_link"/>
