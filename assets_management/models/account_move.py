@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class AccountMove(models.Model):
@@ -96,13 +96,17 @@ class AccountMove(models.Model):
             raise ValidationError(_("Every line is already linked to an asset."))
 
         asset_account_lines = lines.filtered(
-            lambda x: x.account_id.user_type_id.id == self.env.ref(
-                'account.data_account_type_fixed_assets').id)
+            lambda x: x.account_id.user_type_id.id
+            == self.env.ref("account.data_account_type_fixed_assets").id
+        )
 
         if not asset_account_lines:
-            raise UserError(_(
-                'Attenzione!\nNon sono disponibili righe '
-                'con conto relativo a beni'))
+            raise UserError(
+                _(
+                    "Attenzione!\nNon sono disponibili righe "
+                    "con conto relativo a beni"
+                )
+            )
 
         xmlid = "assets_management.action_wizard_account_move_manage_asset"
         act = self.env.ref(xmlid).read()[0]
@@ -115,7 +119,7 @@ class AccountMove(models.Model):
                 "default_move_line_ids": [(6, False, asset_account_lines.ids)],
                 "default_purchase_date": self.date or fields.Date.today(),
                 "move_ids": self.ids,
-                "default_move_type": 'entry',
+                "default_move_type": "entry",
             }
         )
         act.update({"context": ctx})

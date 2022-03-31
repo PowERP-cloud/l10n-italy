@@ -139,10 +139,11 @@ class WizardAccountMoveManageAsset(models.TransientModel):
 
             self.is_move_state_ok = all([m.state == "posted" for m in moves])
             fixed_assets_ref_id = self.env.ref(
-                    'account.data_account_type_fixed_assets').id
+                "account.data_account_type_fixed_assets"
+            ).id
             self.move_line_ids = moves.mapped("line_ids").filtered(
-                lambda line: not line.asset_accounting_info_ids and (
-                    line.account_id.user_type_id.id == fixed_assets_ref_id)
+                lambda line: not line.asset_accounting_info_ids
+                and (line.account_id.user_type_id.id == fixed_assets_ref_id)
             )
             if "purchase" in move_types and "sale" in move_types:
                 self.move_type = "wrong"
@@ -700,5 +701,4 @@ class WizardAccountMoveManageAsset(models.TransientModel):
 
     @api.model
     def get_account_fixed_asset_id(self):
-        return self.env.ref('account.data_account_type_fixed_assets').id
-
+        return self.env.ref("account.data_account_type_fixed_assets").id

@@ -24,9 +24,7 @@ class AccountMoveLine(models.Model):
         string="Depreciation Lines",
     )
 
-    user_type_id = fields.Many2one(
-        related="account_id.user_type_id"
-    )
+    user_type_id = fields.Many2one(related="account_id.user_type_id")
 
     @api.constrains("company_id")
     def check_company(self):
