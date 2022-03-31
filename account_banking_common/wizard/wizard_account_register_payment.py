@@ -236,6 +236,31 @@ class AccountRegisterPayment(models.TransientModel):
             # end if
         # end payment_reg_move_confirm_and_reconcile
 
+        def payment_handle_difference():
+            if self.payment_difference:
+                calculated_total = self._set_total_amount()
+                if self.total_amount > calculated_total:
+                    rebate_vals = {
+                        'move_id': payment_reg_move.id,
+                        'debit': 0,
+                        'credit': self.payment_difference,
+                        'account_id': self.rebate_active.id,
+                    }
+
+                elif self.total_amount < calculated_total and (
+                    self.payment_difference_open is False):
+                    # open or close
+                    rebate_vals = {
+                        'move_id': payment_reg_move.id,
+                        'debit': self.payment_difference,
+                        'credit': 0,
+                        'account_id': self.rebate_passive.id,
+                    }
+                # end if
+                if rebate_vals:
+                    move_line_model_no_check.create(rebate_vals)
+            # end if
+
         # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         # Initial variables
 
@@ -377,11 +402,15 @@ class AccountRegisterPayment(models.TransientModel):
         # Payment registration move
         # ok
         payment_reg_move = payment_reg_move_create()
-        # refactor
+
+        # adding lines
         payment_reg_move_add_lines()
-        # ok
+        # adding extra lines according to total
+        payment_handle_difference()
+        # add bank expenses
         payment_reg_move_add_expenses()
-        # refactor
+
+        # ??
         payment_reg_move_confirm_and_reconcile()
 
     # end register
