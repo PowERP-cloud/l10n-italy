@@ -138,8 +138,11 @@ class WizardAccountMoveManageAsset(models.TransientModel):
             move_types = set(moves.mapped("journal_id.type"))
 
             self.is_move_state_ok = all([m.state == "posted" for m in moves])
+            fixed_assets_ref_id = self.env.ref(
+                    'account.data_account_type_fixed_assets').id
             self.move_line_ids = moves.mapped("line_ids").filtered(
-                lambda line: not line.asset_accounting_info_ids
+                lambda line: not line.asset_accounting_info_ids and (
+                    line.account_id.user_type_id.id == fixed_assets_ref_id)
             )
             if "purchase" in move_types and "sale" in move_types:
                 self.move_type = "wrong"
@@ -400,6 +403,7 @@ class WizardAccountMoveManageAsset(models.TransientModel):
             "sale_date": move.date,
             "sale_move_id": move.id,
             "sold": True,
+            "asset_id": asset.id,
         }
         for dep in asset.depreciation_ids:
             residual = dep.amount_residual
@@ -422,6 +426,7 @@ class WizardAccountMoveManageAsset(models.TransientModel):
                 "date": dismiss_date,
                 "move_type": "out",
                 "name": _("From move(s) ") + move_nums,
+                "asset_id": asset.id,
             }
             dep_vals["line_ids"].append((0, 0, dep_line_vals))
 
@@ -445,6 +450,7 @@ class WizardAccountMoveManageAsset(models.TransientModel):
                     "date": dismiss_date,
                     "move_type": move_type,
                     "name": _("From move(s) ") + move_nums,
+                    "asset_id": asset.id,
                 }
                 dep_vals["line_ids"].append((0, 0, dep_balance_vals))
 
@@ -515,6 +521,7 @@ class WizardAccountMoveManageAsset(models.TransientModel):
                 "move_type": "out",
                 "name": name,
                 "partial_dismissal": True,
+                "asset_id": asset.id,
             }
             dep_line_vals = {
                 "asset_accounting_info_ids": [
@@ -533,6 +540,7 @@ class WizardAccountMoveManageAsset(models.TransientModel):
                 "move_type": "depreciated",
                 "name": name,
                 "partial_dismissal": True,
+                "asset_id": asset.id,
             }
 
             dep_vals = {"line_ids": [(0, 0, out_line_vals), (0, 0, dep_line_vals)]}
@@ -556,6 +564,7 @@ class WizardAccountMoveManageAsset(models.TransientModel):
                     "move_type": "gain" if balance > 0 else "loss",
                     "name": name,
                     "partial_dismissal": True,
+                    "asset_id": asset.id,
                 }
                 dep_vals["line_ids"].append((0, 0, loss_gain_vals))
 
@@ -652,6 +661,7 @@ class WizardAccountMoveManageAsset(models.TransientModel):
                     "date": move.date,
                     "move_type": move_type,
                     "name": _("From move(s) ") + move_num,
+                    "asset_id": asset.id,
                 }
                 dep_vals["line_ids"].append((0, 0, dep_line_vals))
 
@@ -687,3 +697,8 @@ class WizardAccountMoveManageAsset(models.TransientModel):
         self.check_pre_update_asset()
         self.asset_id.write(self.get_update_asset_vals())
         return self.asset_id
+
+    @api.model
+    def get_account_fixed_asset_id(self):
+        return self.env.ref('account.data_account_type_fixed_assets').id
+
