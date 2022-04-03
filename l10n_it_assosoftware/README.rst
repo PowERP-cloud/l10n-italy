@@ -1,12 +1,12 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_40
+|icon| ITA - Codici IVA Assosoftware 12.0.1.0.0
 ===============================================
 
 
-**Inversione contabile**
+**Aggiunge la tabella dei codici IVA assosoftware per future scambio dati con fattura elettronica**
 
-.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/l10n-italy/12.0/l10n_it_reverse_charge/static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/l10n-italy/12.0/l10n_it_assosoftware/static/description/icon.png
 
 |Maturity| |Build Status| |license opl|
 
@@ -18,99 +18,18 @@
 Overview / Panoramica
 =====================
 
-|en| Module to handle reverse charge IVA in vendor bills.
+|en| **Italiano**
 
-The module allows you to automate the accounting entries derived from invoices of intra-EU and extra-EU suppliers through the VAT reverse charge.
-Furthermore, the vendor bill cancellation and reopening procedure is automated.
+Aggiunge la tabella dei codici IVA assosoftware per future scambio dati con fattura elettronica
 
-It is also possible to use the "additional vendor self billing" mode.
-This mode is typically used for non-EU suppliers to show, in the purchases VAT journal, a vendor bill addressed to your own company (self-bill).
-The self-bill will then be completely reconciled with the self-invoice, which is also addressed to your own company.
+**English**
 
-
-|
-
-|it| Inversione contabile
-
-Modulo per gestire l'inversione contabile (reverse charge) nelle fatture fornitore.
-
-Il modulo permette di automatizzare le registrazioni contabili derivate dalle fatture fornitori intra UE ed extra UE mediante l'inversione contabile IVA.
-Inoltre è automatizzata la procedura di annullamento e riapertura della fattura fornitore.
-
-È inoltre possibile utilizzare la modalità "con autofattura fornitore aggiuntiva".
-Questa modalità è usata tipicamente per i fornitori extra UE per mostrare, nel registro IVA acquisti, una fattura intestata alla propria azienda (autofattura passiva).
-L'autofattura passiva verrà poi totalmente riconciliata con l'autofattura attiva, anch'essa intestata alla propria azienda.
-
+Assosoftware tax codes
 
 
 |
 
-Usage / Utilizzo
-----------------
-
-Creare l'imposta **22% intra UE** - Vendite:
-
-.. figure:: https://raw.githubusercontent.com/OCA/l10n-italy/12.0/l10n_it_reverse_charge/static/description/tax_22_v_i_ue.png
-   :alt: 22% intra UE - Vendite
-   :width: 600 px
-
-Creare l'imposta **22% intra UE** - Acquisti:
-
-.. figure:: https://raw.githubusercontent.com/OCA/l10n-italy/12.0/l10n_it_reverse_charge/static/description/tax_22_a_i_ue.png
-  :alt: 22% intra UE - Acquisti
-  :width: 600 px
-
-Creare l'imposta **22% extra UE** - Vendite:
-
-.. figure:: https://raw.githubusercontent.com/OCA/l10n-italy/12.0/l10n_it_reverse_charge/static/description/tax_22_v_e_ue.png
-   :alt: 22% extra UE - Vendite
-   :width: 600 px
-
-Creare l'imposta **22% extra UE** - Acquisti:
-
-.. figure:: https://raw.githubusercontent.com/OCA/l10n-italy/12.0/l10n_it_reverse_charge/static/description/tax_22_a_e_ue.png
-  :alt: 22% extra UE - Acquisti
-  :width: 600 px
-
-Creare il conto 'Transitorio autofatturazione':
-
-.. figure:: https://raw.githubusercontent.com/OCA/l10n-italy/12.0/l10n_it_reverse_charge/static/description/temp_account_auto_inv.png
-  :alt: conto transitorio Autofattura
-  :width: 600 px
-
-Il 'Registro pagamento autofattura' deve essere configurato con il conto 'Transitorio autofatturazione' appena creato:
-
-.. figure:: https://raw.githubusercontent.com/OCA/l10n-italy/12.0/l10n_it_reverse_charge/static/description/registro_riconciliazione.png
-  :alt: Registro pagamento autofattura
-  :width: 600 px
-
-Modificare il tipo inversione contabile **Intra-UE (autofattura)**:
-
-.. figure:: https://raw.githubusercontent.com/OCA/l10n-italy/12.0/l10n_it_reverse_charge/static/description/rc_selfinvoice.png
-  :alt: inversione contabile con Autofattura
-  :width: 600 px
-
-Il registro autofattura deve essere di tipo 'Vendita'.
-
-Modificare il tipo inversione contabile **Extra-UE (autofattura)**:
-
-.. figure:: https://raw.githubusercontent.com/OCA/l10n-italy/12.0/l10n_it_reverse_charge/static/description/rc_selfinvoice_extra.png
-  :alt: inversione contabile con Autofattura
-  :width: 600 px
-
-Il 'Registro autofattura passiva' deve essere di tipo 'Acquisto'.
-
-
-Nella posizione fiscale, impostare il tipo inversione contabile:
-
-.. figure:: https://raw.githubusercontent.com/OCA/l10n-italy/12.0/l10n_it_reverse_charge/static/description/fiscal_pos_intra.png
-  :alt: Impostazione posizioni fiscali Intra CEE
-  :width: 600 px
-
-.. figure:: https://raw.githubusercontent.com/OCA/l10n-italy/12.0/l10n_it_reverse_charge/static/description/fiscal_pos_extra.png
-  :alt: Impostazione posizioni fiscali Extra CEE
-  :width: 600 px
-
+|it| N/D
 
 |
 
@@ -176,144 +95,9 @@ Installation / Installazione
 
 From UI: go to:
 
-* |menu| Setting > Activate Developer mode
+* |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
-* |menu| Setting > Apps |right_do| Select **l10n_it_reverse_charge** > Install
-
-
-|
-
-Configuration / Configurazione
-------------------------------
-
-**Italiano**
-
-Creare l'imposta **22% intra UE** - Vendite:
-
-.. figure:: ../static/description/tax_22_v_i_ue.png
-   :alt: 22% intra UE - Vendite
-   :width: 600 px
-
-Creare l'imposta **22% intra UE** - Acquisti:
-
-.. figure:: ../static/description/tax_22_a_i_ue.png
-  :alt: 22% intra UE - Acquisti
-  :width: 600 px
-
-Creare l'imposta **22% extra UE** - Vendite:
-
-.. figure:: ../static/description/tax_22_v_e_ue.png
-   :alt: 22% extra UE - Vendite
-   :width: 600 px
-
-Creare l'imposta **22% extra UE** - Acquisti:
-
-.. figure:: ../static/description/tax_22_a_e_ue.png
-  :alt: 22% extra UE - Acquisti
-  :width: 600 px
-
-Creare il conto 'Transitorio autofatturazione':
-
-.. figure:: ../static/description/temp_account_auto_inv.png
-  :alt: conto transitorio Autofattura
-  :width: 600 px
-
-Il 'Registro pagamento autofattura' deve essere configurato con il conto 'Transitorio autofatturazione' appena creato:
-
-.. figure:: ../static/description/registro_riconciliazione.png
-  :alt: Registro pagamento autofattura
-  :width: 600 px
-
-Modificare il tipo inversione contabile **Intra-UE (autofattura)**:
-
-.. figure:: ../static/description/rc_selfinvoice.png
-  :alt: inversione contabile con Autofattura
-  :width: 600 px
-
-Il registro autofattura deve essere di tipo 'Vendita'.
-
-Modificare il tipo inversione contabile **Extra-UE (autofattura)**:
-
-.. figure:: ../static/description/rc_selfinvoice_extra.png
-  :alt: inversione contabile con Autofattura
-  :width: 600 px
-
-Il 'Registro autofattura passiva' deve essere di tipo 'Acquisto'.
-
-
-Nella posizione fiscale, impostare il tipo inversione contabile:
-
-.. figure:: ../static/description/fiscal_pos_intra.png
-  :alt: Impostazione posizioni fiscali Intra CEE
-  :width: 600 px
-
-.. figure:: ../static/description/fiscal_pos_extra.png
-  :alt: Impostazione posizioni fiscali Extra CEE
-  :width: 600 px
-
-**English**
-
-Create the tax **22% intra EU** - Sale:
-
-.. figure:: ../static/description/tax_22_v_i_ue.png
-   :alt: 22% intra UE - Sale
-   :width: 600 px
-
-Create the tax **22% intra EU** - Purchase:
-
-.. figure:: ../static/description/tax_22_a_i_ue.png
-  :alt: 22% intra UE - Purchase
-  :width: 600 px
-
-Create the tax **22% extra EU** - Sale:
-
-.. figure:: ../static/description/tax_22_v_e_ue.png
-   :alt: 22% extra UE - Sale
-   :width: 600 px
-
-Create the tax **22% extra EU** - Purchase:
-
-.. figure:: ../static/description/tax_22_a_e_ue.png
-  :alt: 22% extra UE - Purchase
-  :width: 600 px
-
-Create the account 'Self Invoice Transitory' as follows:
-
-.. figure:: ../static/description/temp_account_auto_inv.png
-  :alt: Self Invoice Transitory Account
-  :width: 600 px
-
-The 'Self Invoice Payment' Journal has to be configured with the just created 'Self Invoice Transitory' account:
-
-.. figure:: ../static/description/registro_riconciliazione.png
-  :alt: Registro pagamento autofattura
-  :width: 600 px
-
-Edit the reverse charge type **Intra-EU (self-invoice)**:
-
-.. figure:: ../static/description/rc_selfinvoice.png
-  :alt: reverse charge with Self Invoice
-  :width: 600 px
-
-The Self Invoice journal has to be of type 'Sale'.
-
-Edit the reverse charge type **Extra-EU (self-invoice)** :
-
-.. figure:: ../static/description/rc_selfinvoice_extra.png
-  :alt: reverse charge with Self Invoice
-  :width: 600 px
-
-The 'Supplier Self Invoice Journal' has to be of type 'Purchase'.
-
-In the fiscal position, set the reverse charge type:
-
-.. figure:: ../static/description/fiscal_pos_intra.png
-  :alt: Impostazione posizioni fiscali Intra CEE
-  :width: 600 px
-
-.. figure:: ../static/description/fiscal_pos_extra.png
-  :alt: Impostazione posizioni fiscali Extra CEE
-  :width: 600 px
+* |menu| Setting > Apps |right_do| Select **l10n_it_assosoftware** > Install
 
 
 |
@@ -378,78 +162,6 @@ If you have a proposal to change this module, you may want to send an email to <
 An Enhancement Proposal may be submitted if your idea gains ground.
 
 
-ChangeLog History / Cronologia modifiche
-----------------------------------------
-
-12.0.1.2.7_41 (2022-03-18)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Self invoice wrong date / Data registrazione errata in autofattura
-
-12.0.1.2.7_40 (2022-03-15)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] More currency invoices / Fatture in valuta (più copertura)
-
-12.0.1.2.7_39 (2022-02-25)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Currency invoices / Fatture in valuta
-
-12.0.1.2.7_38 (2022-02-22)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Invalid tax nature check / Errato controllo natura codice IVA
-
-12.0.1.2.7_37 (2022-01-07)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Impostato tipo documento per l'autofattura da posizione fiscale
-
-12.0.1.2.7_36 (2021-12-30)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Fix BUG 601 / 602
-
-12.0.1.2.7_35 (2021-12-17)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Inserito avviso per conto iva vendite
-
-12.0.1.2.7_34 (2021-12-16)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Fix autofattura
-
-12.0.1.2.7_33 (2021-12-14)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Fix autofattura
-
-12.0.1.2.7_32 (2021-12-09)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Gestione codici iva rc servizi e prodotti
-
-12.0.1.2.7_31 (2021-10-04)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Gestito visualizzazione totale tassa nella fattura
-[FIX] Gestito bug riconciliazione su autofattura
-
-12.0.1.2.7_30 (2021-09-29)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Gestito filtro su registro per autofattura
-[FIX] Gestito bug tasse multiple
-
-12.0.1.2.7_29 (2021-09-24)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Gestito bug tasse multiple su movimento contabile
-
-
-
 |
 |
 
@@ -468,21 +180,13 @@ Odoo is a trademark of `Odoo S.A. <https://www.odoo.com/>`__ (formerly OpenERP)
 Authors / Autori
 ----------------
 
-* `Odoo Community Association (OCA) <https://odoo-community.org>`__
 * `SHS-AV s.r.l. <https://www.zeroincombenze.it/>`__
-* `Didotech s.r.l. <https://www.didotech.com>`__
-* `LibrERP <https://www.librerp.it>`__
 
 
 Contributors / Collaboratori
 ----------------------------
 
-* Davide Corio
-* Alex Comba <alex.comba@agilebg.com>
-* Lorenzo Battistini <lorenzo.battistini@agilebg.com
 * Antonio Maria Vigliotti <antoniomaria.vigliotti@gmail.com>
-* Marco Tosato <marco.tosato@didotech.com>
-* Fabio Giovannelli <fabio.giovannelli@didotech.com>
 
 
 Maintainer / Manutenzione
@@ -523,11 +227,11 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-03-16
+Last Update / Ultimo aggiornamento: 2022-03-22
 
-.. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
+.. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status
-    :alt:
+    :alt: 
 .. |Build Status| image:: https://travis-ci.org/PowERP-cloud/l10n-italy.svg?branch=12.0
     :target: https://travis-ci.com/PowERP-cloud/l10n-italy
     :alt: github.com
@@ -583,3 +287,4 @@ Last Update / Ultimo aggiornamento: 2022-03-16
    :target: https://github.com/zeroincombenze/grymb/blob/master/certificates/ade/scope/fatturapa.md
 .. |chat_with_us| image:: https://www.shs-av.com/wp-content/chat_with_us.gif
    :target: https://t.me/Assitenza_clienti_powERP
+
