@@ -321,7 +321,7 @@ class AccountInvoice(models.Model):
         return (main_currency.round(amount_rc_tax_company_currency),
                 round_curr(rc_amount_tax))
 
-    def template_rc_line(self, side, account_id=None, amount=None,
+    def template_rc_line(self, side, account_id=None, partner_id=None, amount=None,
                          amount_company_currency=None):
         """Load dictionary for rc line
         Args:
@@ -345,7 +345,7 @@ class AccountInvoice(models.Model):
             side: amount_rc_tax_company_currency,
             opposite_side: 0.0,
             'company_id': self.company_id.id,
-            'partner_id': self.partner_id.id,
+            'partner_id': partner_id or self.partner_id.id,
             'name': self.number,
             'date': self.date,
         }
@@ -648,55 +648,55 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def action_move_create(self):
-        """Add some ine to account move to manage reverse-charge entry
+        """Add some lines to account move to manage reverse-charge entry
         We consider 2 types of reverse-charge:
         - local: invoice from domestic supplier
-        - self: invoice from foerign supplier
+        - self: invoice from foreign supplier
         *local*
         Total invoice amount includes tax amount but tax amount must be
         reconciled with an invoice line;
         we create 2 new lines with RC tax amount
-        +-----------+--------+--------+-----------------------------------+
+        +-----------+--------+--------+-------------------------------------+
         | Account   | Debit  | Credit | Notes                             |
-        +-----------+--------+--------+-----------------------------------+
+        +-----------+--------+--------+-------------------------------------+
         | supplier  |        |    100 | By Odoo account module            |
         | expense   |    100 |        | By Odoo account module (tax code) |
         | tax       |     22 |        | By Odoo account module (is tax)   |
-        +-----------+--------+--------+-----------------------------------+
+        +-----------+--------+--------+-------------------------------------+
         | supplier  |        |     22 | Separated by duedate module (*)   |
-        +-----------+--------+--------+-----------------------------------+
+        +-----------+--------+--------+-------------------------------------+
         | supplier! |     22 |        | Reconcile with (*) (is tax)       |
         | sale tax  |        |     22 | is tax code                       |
-        +-----------+--------+--------+-----------------------------------+
+        +-----------+--------+--------+-------------------------------------+
 
         *self*
         Total invoice is without amount but ww had to add and refund tax amount
-        +-----------+--------+--------+-----------------------------------+
+        +-----------+--------+--------+-------------------------------------+
         | Account   | Debit  | Credit | Notes                             |
-        +-----------+--------+--------+-----------------------------------+
+        +-----------+--------+--------+-------------------------------------+
         | supplier  |        |    100 | By Odoo account module            |
         | expense   |    100 |        | By Odoo account module (tax code) |
         | tax       |     22 |        | By Odoo account module (is tax)   |
-        +-----------+--------+--------+-----------------------------------+
+        +-----------+--------+--------+-------------------------------------+
         | supplier  |        |     22 | Separated by duedate module (*)   |
-        +-----------+--------+--------+-----------------------------------+
+        +-----------+--------+--------+-------------------------------------+
         | supplier  |     22 |        | Reconcile with (*)                |
-        | customer  |        |     22 | is tax code                       |
-        +-----------+--------+--------+-----------------------------------+
+        | customer  |        |     22 | is tax code: partner may be company |
+        +-----------+--------+--------+-------------------------------------+
 
         *self-x* (no yet implemented)
         Total invoice is without amount but ww had to add and refund tax amount
-        +-----------+--------+--------+-----------------------------------+
+        +-----------+--------+--------+-------------------------------------+
         | Account   | Debit  | Credit | Notes                             |
-        +-----------+--------+--------+-----------------------------------+
+        +-----------+--------+--------+-------------------------------------+
         | supplier  |        |    100 | By Odoo account module            |
         | expense   |    100 |        | By Odoo account module (tax code) |
-        +-----------+--------+--------+-----------------------------------+
+        +-----------+--------+--------+-------------------------------------+
         | supplier  |        |     22 | (*)                               |
         | tax       |     22 |        |                                   |
         | supplier  |     22 |        | Reconcile with (*)                |
-        | customer  |        |     22 | is tax code                       |
-        +-----------+--------+--------+-----------------------------------+
+        | customer  |        |     22 | is tax code: partner may be company |
+        +-----------+--------+--------+-------------------------------------+
         """
         res = super(AccountInvoice, self).action_move_create()
         for invoice in self:
@@ -802,6 +802,7 @@ class AccountInvoice(models.Model):
                 tax_rc_sale_vals = self.template_rc_line(
                     'debit' if invoice.type == 'in_refund' else 'credit',
                     account_id=self_partner.property_account_receivable_id.id,
+                    partner_id=self_partner.id,
                     amount=invoice.amount_rc,
                     amount_company_currency=amount_rc_company_currency
                 )
