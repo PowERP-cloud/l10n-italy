@@ -20,7 +20,6 @@ class AccountTax(models.Model):
         string='Tipo reverse charge',
         default=_default_rc_type,
     )
-
     rc_sale_tax_id = fields.Many2one(
         comodel_name='account.tax',
         string='Codice iva vendite',

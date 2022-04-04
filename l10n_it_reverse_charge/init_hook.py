@@ -26,7 +26,7 @@ def pre_init_hook(cr):
         if (
             installed_module
             and installed_module.maintainer.lower()
-            != 'powerp enterprise network'
+            != 'librerp enterprise network'
         ):
             raise UserError(
                 'Questo modulo non è installabile poichè è '

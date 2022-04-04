@@ -46,4 +46,3 @@ class AccountFiscalPosition(models.Model):
         'fiscal.document.type',
         string="Self Invoice Fiscal Document Type",
         )
-

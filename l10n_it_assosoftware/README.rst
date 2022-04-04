@@ -1,12 +1,12 @@
 
-=========================================================
-|icon| ITA - Fattura elettronica - Emissione 12.0.2.2.5_7
-=========================================================
+===============================================
+|icon| ITA - Codici IVA Assosoftware 12.0.1.0.0
+===============================================
 
 
-**Emissione fatture elettroniche**
+**Aggiunge la tabella dei codici IVA assosoftware per future scambio dati con fattura elettronica**
 
-.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/l10n-italy/12.0/l10n_it_fatturapa_out/static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/l10n-italy/12.0/l10n_it_assosoftware/static/description/icon.png
 
 |Maturity| |Build Status| |license opl|
 
@@ -18,50 +18,18 @@
 Overview / Panoramica
 =====================
 
-|en| **English**
+|en| **Italiano**
 
-This module allows you to generate the Electronic Invoice XML files version 1.2
-
-http://www.fatturapa.gov.it/export/fatturazione/en/normativa/f-2.htm
-
-to be sent to the Exchange System (ES).
-
-http://www.fatturapa.gov.it/export/fatturazione/en/sdi.htm
-
-
-|
-
-|it| **Italiano**
-
-Questo modulo consente di generare i file XML della fattura elettronica versione 1.2
-
-http://www.fatturapa.gov.it/export/fatturazione/it/normativa/f-2.htm
-
-da inviare al Sistema di Interscambio (SdI).
-
-http://www.fatturapa.gov.it/export/fatturazione/it/sdi.htm
-
-
-
-|
-
-Usage / Utilizzo
-----------------
-
-**Italiano**
-
- * Compilare la fattura con i dati necessari per l'esportazione: per esempio, nella scheda "Allegati fattura elettronica"
- * Selezionare 1 o N fatture ed eseguire la procedura guidata "Esporta fattura elettronica"
- * Per le fatture estere, è possibile inviarle a soli fini fiscali inserendo il codice identificativo XXXXXXX (7 volte X) ed avendo cura di indicare il paese del partner.
-   Le fatture vanno comunque spedite al cliente, ma si evita la predisposizione dell'esterometro.
+Aggiunge la tabella dei codici IVA assosoftware per future scambio dati con fattura elettronica
 
 **English**
 
- * Fill invoice data you need to export: For instance, in 'Electronic Invoice Attachments' TAB
- * Select 1 or N invoices and run 'Export Electronic Invoice' wizard
- * For foreign invoices, it is possible to send them only for tax purposes with code XXXXXXX (7 times X) and assuring to set the country of the partner.
-   Invoices must be sent anyway to the customer, but in this way it is not needed to prepare esterometro.
+Assosoftware tax codes
 
+
+|
+
+|it| N/D
 
 |
 
@@ -129,27 +97,7 @@ From UI: go to:
 
 * |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
-* |menu| Setting > Apps |right_do| Select **l10n_it_fatturapa_out** > Install
-
-
-|
-
-Configuration / Configurazione
-------------------------------
-
-**Italiano**
-
-Consultare il file README di l10n_it_fatturapa.
-
-É possibile esportare le fatture cliente con le righe articolo con un CodiceTipo diverso dallo standard 'ODOO' creando un parametro 'fatturapa.codicetipo.odoo' (in Configurazione > Funzioni tecniche > Parametri > Parametri di sistema) con il codice voluto (tipicamente su richiesta del cliente).
-Non è possibile impostare un diverso CodiceTipo per cliente, al momento.
-
-**English**
-
-See l10n_it_fatturapa README file.
-
-It is possible to export invoices with rows with a different CodiceTipo from the default 'ODOO' by creating a parameter 'fatturapa.codicetipo.odoo' (in Settings > Technical > Parameters > System Parameters) with the desired code (tipically on customer's request).
-It is not possible to set a different CodiceTipo by customer, until now.
+* |menu| Setting > Apps |right_do| Select **l10n_it_assosoftware** > Install
 
 
 |
@@ -214,26 +162,6 @@ If you have a proposal to change this module, you may want to send an email to <
 An Enhancement Proposal may be submitted if your idea gains ground.
 
 
-ChangeLog History / Cronologia modifiche
-----------------------------------------
-
-12.0.2.2.5_7 (2022-04-01)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Due date of refund / Importo scadenza nota di accredito
-
-12.0.2.2.5_3 (2021-09-15)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[IMP] Utilizzo del campo account.invoice.bank_4_xml se presente per l'inserimento dell'IBAN nell'XML della fattura
-
-12.0.2.2.5_2 (2021-08-31)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Corretto calcolo totale con split payment
-
-
-
 |
 |
 
@@ -252,21 +180,13 @@ Odoo is a trademark of `Odoo S.A. <https://www.odoo.com/>`__ (formerly OpenERP)
 Authors / Autori
 ----------------
 
-* `Odoo Community Association (OCA) <https://odoo-community.org>`__
 * `SHS-AV s.r.l. <https://www.zeroincombenze.it/>`__
-* `Didotech s.r.l. <https://www.didotech.com>`__
-* `powERP <https://www.powerp.it>`__
 
 
 Contributors / Collaboratori
 ----------------------------
 
-* Davide Corio
-* Alex Comba <alex.comba@agilebg.com>
-* Lorenzo Battistini <lorenzo.battistini@agilebg.com
 * Antonio Maria Vigliotti <antoniomaria.vigliotti@gmail.com>
-* Marco Tosato <marco.tosato@didotech.com>
-* Fabio Giovannelli <fabio.giovannelli@didotech.com>
 
 
 Maintainer / Manutenzione
@@ -307,9 +227,9 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-04-04
+Last Update / Ultimo aggiornamento: 2022-03-22
 
-.. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
+.. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status
     :alt: 
 .. |Build Status| image:: https://travis-ci.org/PowERP-cloud/l10n-italy.svg?branch=12.0
