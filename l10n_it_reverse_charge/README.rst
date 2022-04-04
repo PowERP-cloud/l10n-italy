@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_41
+|icon| ITA - Inversione contabile 12.0.1.2.7_42
 ===============================================
 
 
@@ -176,7 +176,7 @@ Installation / Installazione
 
 From UI: go to:
 
-* |menu| Setting > Activate Developer mode
+* |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
 * |menu| Setting > Apps |right_do| Select **l10n_it_reverse_charge** > Install
 
@@ -381,6 +381,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_42 (2022-04-01)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Wrong customer partner / Errato partner cliente
+
 12.0.1.2.7_41 (2022-03-18)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -436,17 +441,6 @@ ChangeLog History / Cronologia modifiche
 
 [FIX] Gestito visualizzazione totale tassa nella fattura
 [FIX] Gestito bug riconciliazione su autofattura
-
-12.0.1.2.7_30 (2021-09-29)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Gestito filtro su registro per autofattura
-[FIX] Gestito bug tasse multiple
-
-12.0.1.2.7_29 (2021-09-24)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Gestito bug tasse multiple su movimento contabile
 
 
 
@@ -523,11 +517,11 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-03-16
+Last Update / Ultimo aggiornamento: 2022-04-04
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
-    :alt:
+    :alt: 
 .. |Build Status| image:: https://travis-ci.org/PowERP-cloud/l10n-italy.svg?branch=12.0
     :target: https://travis-ci.com/PowERP-cloud/l10n-italy
     :alt: github.com
@@ -583,3 +577,4 @@ Last Update / Ultimo aggiornamento: 2022-03-16
    :target: https://github.com/zeroincombenze/grymb/blob/master/certificates/ade/scope/fatturapa.md
 .. |chat_with_us| image:: https://www.shs-av.com/wp-content/chat_with_us.gif
    :target: https://t.me/Assitenza_clienti_powERP
+
