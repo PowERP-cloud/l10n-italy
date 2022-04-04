@@ -176,7 +176,7 @@ Installation / Installazione
 
 From UI: go to:
 
-* |menu| Setting > Activate Developer mode 
+* |menu| Setting > Activate Developer mode
 * |menu| Apps > Update Apps List
 * |menu| Setting > Apps |right_do| Select **l10n_it_reverse_charge** > Install
 
@@ -443,6 +443,11 @@ ChangeLog History / Cronologia modifiche
 [FIX] Gestito filtro su registro per autofattura
 [FIX] Gestito bug tasse multiple
 
+12.0.1.2.7_29 (2021-09-24)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Gestito bug tasse multiple su movimento contabile
+
 
 
 |
@@ -522,7 +527,7 @@ Last Update / Ultimo aggiornamento: 2022-03-22
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
-    :alt: 
+    :alt:
 .. |Build Status| image:: https://travis-ci.org/PowERP-cloud/l10n-italy.svg?branch=12.0
     :target: https://travis-ci.com/PowERP-cloud/l10n-italy
     :alt: github.com
@@ -578,4 +583,3 @@ Last Update / Ultimo aggiornamento: 2022-03-22
    :target: https://github.com/zeroincombenze/grymb/blob/master/certificates/ade/scope/fatturapa.md
 .. |chat_with_us| image:: https://www.shs-av.com/wp-content/chat_with_us.gif
    :target: https://t.me/Assitenza_clienti_powERP
-

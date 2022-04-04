@@ -6,7 +6,7 @@
 #
 {
     'name': 'ITA - Inversione contabile',
-    'version': '12.0.1.2.7_41',
+    'version': '12.0.1.2.7_42',
     'category': 'Localization/Italy',
     'summary': 'Inversione contabile',
     'author': 'LibrERP enterprise network and other partners',
