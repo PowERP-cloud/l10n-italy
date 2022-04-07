@@ -24,7 +24,7 @@ class AccountRegisterPayment(models.TransientModel):
         )
         for line in lines:
             amount += line.balance
-        return amount
+        return abs(amount)
 
     journal_id = fields.Many2one(
         comodel_name='account.journal',
@@ -149,53 +149,141 @@ class AccountRegisterPayment(models.TransientModel):
                 'state': 'draft',
             })
 
-            created_move = self.env['account.move'].create(payment_reg_move_vals)
+            created_move = self.env['account.move'].create(
+                payment_reg_move_vals)
 
             return created_move
         # end create_payment_reg_move
 
         def payment_reg_move_add_lines():
 
+            bank_amount = 0.0
+            left = self.total_amount
+            calculated_total = self._set_total_amount()
+
             # For each input line add one line to the new account.move
-            for in_line in in_lines_list:
+            if self.total_amount == calculated_total or (
+                self.total_amount > calculated_total
+            ):
+                for line in in_lines_list:
+                    # Create the new line with credit and debit swapped relative to the in_line
+                    # NOTE: Odoo ensures each account.move.line has a credit value != 0 OR a debit value !=0
+                    #       (that is: Odoo forbids account-move.lines with both credit and debit != 0)
+                    new_line = move_line_model_no_check.create({
+                        'move_id': payment_reg_move.id,
+                        'account_id': line.account_id.id,
+                        'partner_id': line.partner_id.id,
+                        'credit': line.debit,
+                        'debit': line.credit,
+                        'name': self.note
+                    })
+                    to_reconcile.append(line | new_line)
+                # end for
+            else:
+                # user has changed the total
+                for line in in_lines_list:
+                    # check amount and balance line
 
-                # Create the new line with credit and debit swapped relative to the in_line
-                # NOTE: Odoo ensures each account.move.line has a credit value != 0 OR a debit value !=0
-                #       (that is: Odoo forbids account-move.lines with both credit and debit != 0)
-                new_line = move_line_model_no_check.create({
-                    'move_id': payment_reg_move.id,
-                    'account_id': in_line.account_id.id,
-                    'partner_id': in_line.partner_id.id,
-                    'credit': in_line.debit,
-                    'debit': in_line.credit,
-                })
+                    if client_payment_reg_op:
+                        amount = line.debit - line.credit
+                    elif supplier_payment_reg_op:
+                        amount = line.credit - line.debit
+                    # handle amount
+                    if left >= amount:
+                        new_line = move_line_model_no_check.create({
+                            'move_id': payment_reg_move.id,
+                            'account_id': line.account_id.id,
+                            'partner_id': line.partner_id.id,
+                            'credit': line.debit,
+                            'debit': line.credit,
+                            'name': self.note
+                        })
+                    else:
+                        if self.payment_difference_open is True:
+                            new_line = move_line_model_no_check.create({
+                                'move_id': payment_reg_move.id,
+                                'account_id': line.account_id.id,
+                                'partner_id': line.partner_id.id,
+                                'credit': left if line.debit else 0.0,
+                                'debit': left if line.credit else 0.0,
+                                'name': self.note
+                            })
+                        else:
+                            new_line = move_line_model_no_check.create({
+                                'move_id': payment_reg_move.id,
+                                'account_id': line.account_id.id,
+                                'partner_id': line.partner_id.id,
+                                'credit': line.debit,
+                                'debit': line.credit,
+                                'name': self.note
+                            })
 
-                # Reconciliation pair. The actual reconciliation will be performed
-                # AFTER the confirmation (post() method call) of the new move.
-                to_reconcile.append(in_line | new_line)
-            # end for
+                            if self.total_amount < calculated_total and (
+                                self.payment_difference_open is False):
+                                # open or close
+                                rebate_vals = {
+                                    'move_id': payment_reg_move.id,
+                                    'debit': amount - left,
+                                    'credit': 0,
+                                    'account_id': rebate_passive.id,
+                                    'name': self.note,
+                                }
+                                move_line_model_no_check.create(rebate_vals)
+                            # end if
+
+                    left -= amount
+
+                    # Reconciliation pair. The actual reconciliation will be performed
+                    # AFTER the confirmation (post() method call) of the new move.
+                    to_reconcile.append(line | new_line)
+
+                    if left <= 0:
+                        break
+                # end for
+
+            if self.payment_difference:
+                bank_amount = self.total_amount
+                if self.total_amount > calculated_total:
+                    rebate_vals = {
+                        'move_id': payment_reg_move.id,
+                        'debit': 0,
+                        'credit': self.payment_difference,
+                        'account_id': rebate_active.id,
+                        'name': self.note,
+                    }
+                    move_line_model_no_check.create(rebate_vals)
+                # end if
+            else:
+                if client_payment_reg_op:
+                    bank_amount = in_debit_total - in_credit_total
+                elif supplier_payment_reg_op:
+                    bank_amount = in_credit_total - in_debit_total
+                # end if
+            # end if
 
             if client_payment_reg_op:
 
-                bank_debit = in_debit_total - in_credit_total
+                # bank_debit = in_debit_total - in_credit_total
 
                 # Create the bank line
                 bank_line = move_line_model_no_check.create({
                     'move_id': payment_reg_move.id,
                     'account_id': bank_line_account.id,
                     'credit': 0,
-                    'debit': bank_debit,
+                    'debit': bank_amount,
+                    'name': self.note,
                 })
             elif supplier_payment_reg_op:
 
-                bank_credit = in_credit_total - in_debit_total
+                # bank_credit = in_credit_total - in_debit_total
 
                 # Create the bank line
                 bank_line = move_line_model_no_check.create({
                     'move_id': payment_reg_move.id,
                     'account_id': bank_line_account.id,
-                    'credit': bank_credit,
+                    'credit': bank_amount,
                     'debit': 0,
+                    'name': self.note,
                 })
             else:
 
@@ -238,13 +326,14 @@ class AccountRegisterPayment(models.TransientModel):
 
         def payment_handle_difference():
             if self.payment_difference:
+                rebate_vals = dict()
                 calculated_total = self._set_total_amount()
                 if self.total_amount > calculated_total:
                     rebate_vals = {
                         'move_id': payment_reg_move.id,
                         'debit': 0,
                         'credit': self.payment_difference,
-                        'account_id': self.rebate_active.id,
+                        'account_id': rebate_active.id,
                     }
 
                 elif self.total_amount < calculated_total and (
@@ -254,7 +343,7 @@ class AccountRegisterPayment(models.TransientModel):
                         'move_id': payment_reg_move.id,
                         'debit': self.payment_difference,
                         'credit': 0,
-                        'account_id': self.rebate_passive.id,
+                        'account_id': rebate_passive.id,
                     }
                 # end if
                 if rebate_vals:
@@ -405,12 +494,13 @@ class AccountRegisterPayment(models.TransientModel):
 
         # adding lines
         payment_reg_move_add_lines()
+
         # adding extra lines according to total
-        payment_handle_difference()
+        # payment_handle_difference()
+
         # add bank expenses
         payment_reg_move_add_expenses()
 
-        # ??
         payment_reg_move_confirm_and_reconcile()
 
     # end register
