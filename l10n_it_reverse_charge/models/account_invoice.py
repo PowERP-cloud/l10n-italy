@@ -57,6 +57,12 @@ class AccountInvoiceLine(models.Model):
             'self',
         ]:
             for tax in self.invoice_line_tax_ids:
+                if not tax.rc_type:
+                    raise UserError(
+                        _('Tipo RC non impostato per il codice IVA %s.') %
+                        tax.description
+                    )
+
                 if tax.rc_type != invoice_rc_type:
                     raise UserError(
                         _('Tipo RC %s di codice IVA %s '
