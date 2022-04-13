@@ -2,6 +2,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [REF] Effettuato refactoring della registrazione del pagamento delle scadenze
+* [FIX] Gestito riconciliazioni nella registrazione degli insoluti
 
 12.0.3.7.41 (2022-03-11)
 ~~~~~~~~~~~~~~~~~~~~~~~~

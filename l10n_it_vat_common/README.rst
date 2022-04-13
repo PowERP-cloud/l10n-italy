@@ -1,5 +1,7 @@
-|icon| ITA - Componenti IVA 12.0.1.0.3
 
+======================================
+|icon| ITA - Componenti IVA 12.0.1.0.3
+======================================
 
 
 **Vat methods enhanced**
@@ -88,7 +90,7 @@ Installation / Installazione
 
 From UI: go to:
 
-* |menu| Setting > Activate Developer mode
+* |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
 * |menu| Setting > Apps |right_do| Select **l10n_it_vat_common** > Install
 
@@ -250,11 +252,11 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-12-16
+Last Update / Ultimo aggiornamento: 2022-03-21
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
-    :alt:
+    :alt: 
 .. |Build Status| image:: https://travis-ci.org/PowERP-cloud/l10n-italy.svg?branch=12.0
     :target: https://travis-ci.com/PowERP-cloud/l10n-italy
     :alt: github.com

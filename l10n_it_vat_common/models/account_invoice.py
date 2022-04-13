@@ -45,7 +45,7 @@ class AccountInvoice(models.Model):
             if self.type in ['out_invoice', 'out_refund']:
                 if self.date_apply_vat != self.date:
                     warnings = '\nLa data di applicazione iva è diversa ' \
-                                'dalla data di registrazione'
+                               'dalla data di registrazione'
                 # end if
             # end if
 
