@@ -592,7 +592,7 @@ class AccountInvoiceIntrastat(models.Model):
             ('purchase_s3', "Purchases section 3"),
             ('purchase_s4', "Purchases section 4")],
         string="Statement Section",
-        compute='_get_statement_section')
+        compute='_compute_statement_section')
 
     amount_euro = fields.Float(
         string="Amount in Euro",

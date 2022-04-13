@@ -156,6 +156,7 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [REF] Effettuato refactoring della registrazione del pagamento delle scadenze
+* [FIX] Gestito riconciliazioni nella registrazione degli insoluti
 
 12.0.3.7.41 (2022-03-11)
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -289,7 +290,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-04-07
+Last Update / Ultimo aggiornamento: 2022-04-13
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

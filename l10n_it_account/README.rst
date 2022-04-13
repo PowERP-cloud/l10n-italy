@@ -1,6 +1,6 @@
 
 ==========================================
-|icon| ITA - Contabilità base 12.0.1.4.5_1
+|icon| ITA - Contabilità base 12.0.1.4.5_2
 ==========================================
 
 
@@ -131,7 +131,7 @@ Support / Supporto
 
 This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
 
-Developer companies are / I soci sviluppatoro sono:
+Developer companies are / I soci sviluppatori sono:
 
 * `Didotech s.r.l. <http://www.didotech.com>`__
 * `SHS-AV s.r.l. <https://www.shs-av.com/>`__
@@ -159,6 +159,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.1.4.5_2 (2022-03-21)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Purchase invoice keep date on action_draft / La fattura fornitore mantiene la data di regsitrazione in bozza
 
 12.0.1.4.5_1 (2021-06-21)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -190,9 +195,10 @@ Odoo is a trademark of `Odoo S.A. <https://www.odoo.com/>`__ (formerly OpenERP)
 Authors / Autori
 ----------------
 
-* `powERP <https://www.powerp.it>`__
+* `powERP <https://www.librerp.it>`__
 * `SHS-AV s.r.l. <https://www.zeroincombenze.it>`__
 * `Didotech srl <https://www.didotech.com>`__
+* `LibrERP <https://www.librerp.it>`__
 
 
 Contributors / Collaboratori
@@ -207,12 +213,10 @@ Maintainer / Manutenzione
 -------------------------
 
 
-This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
-
-Developer companies are / I soci sviluppatoro sono:
-
-* `Didotech s.r.l. <http://www.didotech.com>`__
-* `SHS-AV s.r.l. <https://www.shs-av.com/>`__
+This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese Powerp <http://www.powerp.it/>
+Developer companies are / I soci sviluppatori sono:
+* Didotech s.r.l. <http://www.didotech.com>
+* SHS-AV s.r.l. <https://www.shs-av.com/>
 
 
 |
@@ -243,7 +247,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2021-06-21
+Last Update / Ultimo aggiornamento: 2022-03-21
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status
@@ -302,5 +306,5 @@ Last Update / Ultimo aggiornamento: 2021-06-21
 .. |FatturaPA| image:: https://raw.githubusercontent.com/zeroincombenze/grymb/master/certificates/ade/icons/fatturapa.png
    :target: https://github.com/zeroincombenze/grymb/blob/master/certificates/ade/scope/fatturapa.md
 .. |chat_with_us| image:: https://www.shs-av.com/wp-content/chat_with_us.gif
-   :target: https://t.me/axitec_helpdesk
+   :target: https://t.me/Assitenza_clienti_powERP
 

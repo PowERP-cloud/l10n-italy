@@ -174,15 +174,6 @@ and/or submit pull requests on `GitHub Issues
 
 In case of trouble, please check there if your issue has already been reported.
 
-|
-
-Known issues / Roadmap
-----------------------
-
-* Field with name "type" will be removed: it is replaced by "move_type" field
-* Add onchange control to avoid entry type with VAT registries and vice-versa
-
-
 Proposals for enhancement
 -------------------------
 
@@ -296,7 +287,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-03-01
+Last Update / Ultimo aggiornamento: 2022-03-21
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
