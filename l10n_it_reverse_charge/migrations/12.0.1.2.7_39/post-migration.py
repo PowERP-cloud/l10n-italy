@@ -4,8 +4,10 @@
 #
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 #
-from odoo import api, SUPERUSER_ID
 import logging
+
+from odoo import SUPERUSER_ID, api
+
 _logger = logging.getLogger(__name__)
 
 
@@ -20,7 +22,7 @@ def set_rc_purchase_tax(cr):
     """
     with api.Environment.manage():
         env = api.Environment(cr, SUPERUSER_ID, {})
-        tax_model = env['account.tax']
+        tax_model = env["account.tax"]
         for tax in tax_model.search([]):
             if tax.rc_sale_tax_id:
                 tax.rc_sale_tax_id.rc_purchase_tax_id = tax.id

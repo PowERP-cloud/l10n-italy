@@ -5,15 +5,17 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 #
 
-from odoo import models, fields
+from odoo import fields, models
 
 
 class AccountJournal(models.Model):
-    _inherit = 'account.journal'
+    _inherit = "account.journal"
 
     rev_charge = fields.Boolean(
         "Reverse Charge journal",
         default=False,
-        help=("Set to True if this journal "
-              "is used to store reverse-charge self-invoices")
+        help=(
+            "Set to True if this journal "
+            "is used to store reverse-charge self-invoices"
+        ),
     )

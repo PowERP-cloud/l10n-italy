@@ -5,23 +5,24 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 #
 import logging
-from odoo import api, fields, models
+
 import odoo.addons.decimal_precision as dp
+from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = "account.move"
 
     amount_rc = fields.Float(
-        string='Iva RC',
-        digits=dp.get_precision('Account'),
+        string="Iva RC",
+        digits=dp.get_precision("Account"),
         readonly=True,
     )
 
     @api.multi
-    @api.depends('line_ids.partner_id')
+    @api.depends("line_ids.partner_id")
     def _compute_partner_id(self):
         """
         Override because of account move with lines which have
@@ -30,18 +31,18 @@ class AccountMove(models.Model):
         super()._compute_partner_id()
         for move in self:
             if move.line_ids:
-                lines = move.line_ids.filtered(lambda mv: mv.line_type == 'lp')
+                lines = move.line_ids.filtered(lambda mv: mv.line_type == "lp")
                 if lines:
                     invoice_id = lines[0].invoice_id
                     # partner_id = lines[0].partner_id
                     if (
                         invoice_id.fiscal_position_id
                         and invoice_id.fiscal_position_id.rc_type
-                        and invoice_id.fiscal_position_id.rc_type == 'self'
+                        and invoice_id.fiscal_position_id.rc_type == "self"
                     ):
                         move.partner_id = invoice_id.partner_id.id
                         _logger.info(
-                            'move -> {mvid} parent_id > {pr}'.format(
+                            "move -> {mvid} parent_id > {pr}".format(
                                 mvid=move.id, pr=move.partner_id.id
                             )
                         )

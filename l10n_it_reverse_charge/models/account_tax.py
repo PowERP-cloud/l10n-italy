@@ -5,55 +5,58 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 #
 
-from odoo import models, fields, api
+from odoo import api, fields, models
 
 
 class AccountTax(models.Model):
-    _inherit = 'account.tax'
+    _inherit = "account.tax"
 
     @api.multi
     def _default_rc_type(self):
         return self.get_rc_type()
+
     # end _compute_rc
 
     rc_type = fields.Selection(
         selection=[
-            ('', 'No RC'),
-            ('local', 'RC locale'),
-            ('self', 'RC con autofattura'),
+            ("", "No RC"),
+            ("local", "RC locale"),
+            ("self", "RC con autofattura"),
         ],
-        string='Tipo reverse charge',
+        string="Tipo reverse charge",
         default=_default_rc_type,
     )
     rc_sale_tax_id = fields.Many2one(
-        comodel_name='account.tax',
-        string='Codice iva vendite',
-        domain=[('type_tax_use', '=', 'sale')],
+        comodel_name="account.tax",
+        string="Codice iva vendite",
+        domain=[("type_tax_use", "=", "sale")],
     )
     rc_purchase_tax_id = fields.Many2one(
-        comodel_name='account.tax',
-        string='Cod.IVA acquisto collegato',
-        domain=[('type_tax_use', '=', 'purchase')],
+        comodel_name="account.tax",
+        string="Cod.IVA acquisto collegato",
+        domain=[("type_tax_use", "=", "purchase")],
         readonly=True,
     )
 
     @api.model
     def get_rc_type(self):
 
-        kind_N3 = self.kind_id and self.kind_id.code.startswith('N3')
-        kind_N6 = self.kind_id and self.kind_id.code.startswith('N6')
+        kind_N3 = self.kind_id and self.kind_id.code.startswith("N3")
+        kind_N6 = self.kind_id and self.kind_id.code.startswith("N6")
 
         if self.rc_purchase_tax_id:
-            kind = ''
-        elif (self.type_tax_use == 'purchase' and
-                kind_N3 and self.kind_id.code != 'N3.5'):
-            kind = 'self'
+            kind = ""
+        elif (
+            self.type_tax_use == "purchase" and kind_N3 and self.kind_id.code != "N3.5"
+        ):
+            kind = "self"
         elif kind_N6:
-            kind = 'local'
+            kind = "local"
         else:
-            kind = ''
+            kind = ""
         # end if
         return kind
+
     # end get_rc_type
 
     @api.model
@@ -62,6 +65,7 @@ class AccountTax(models.Model):
         if tax.rc_sale_tax_id:
             tax.rc_sale_tax_id.rc_purchase_tax_id = tax.id
         return tax
+
     # end create
 
     @api.multi
