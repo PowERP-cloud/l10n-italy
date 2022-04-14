@@ -1,3 +1,8 @@
+12.0.1.2.7_44 (2022-04-13)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Set date & date_invoice of self-invoice = invoice / Date auto-fattura = fattura
+
 12.0.1.2.7_43 (2022-04-13)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
