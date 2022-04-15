@@ -3,7 +3,7 @@
 # License OPL-1 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
 #
 import logging
-from odoo import models, api, fields
+from odoo import models, api, fields, _
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -80,6 +80,22 @@ class AccountRegisterPayment(models.TransientModel):
                 break
         return bank_account
     # end _get_bank_account
+
+    @api.onchange('payment_difference_open')
+    def _onchange_payment_difference_open(self):
+        rebates = self._get_rebates_data()
+        if not rebates['rebate_delta']:
+            raise UserError(
+                'Delta abbuoni non impostato '
+                'in configurazione contabilità.'
+            )
+        if self.payment_difference and (
+            self.payment_difference_open is False and
+            self.payment_difference > rebates['rebate_delta']):
+            return {'warning': {
+                'title': _("Attenzione"),
+                'message': _('La differenza di importo è elevata.')
+            }}
 
     @api.onchange('total_amount')
     def _onchange_total_amount(self):
@@ -181,6 +197,8 @@ class AccountRegisterPayment(models.TransientModel):
                 # end for
             else:
                 # user has changed the total
+                rebates = self._get_rebates_data()
+
                 for line in in_lines_list:
                     # check amount and balance line
 
@@ -209,6 +227,12 @@ class AccountRegisterPayment(models.TransientModel):
                                 'name': self.note
                             })
                         else:
+                            if not rebates['rebate_passive']:
+                                raise UserError(
+                                    'Conto abbuoni passivi non impostato '
+                                    'in configurazione contabilità.'
+                                )
+
                             new_line = move_line_model_no_check.create({
                                 'move_id': payment_reg_move.id,
                                 'account_id': line.account_id.id,
@@ -244,6 +268,12 @@ class AccountRegisterPayment(models.TransientModel):
             if self.payment_difference:
                 bank_amount = self.total_amount
                 if self.total_amount > calculated_total:
+                    if not rebates['rebate_active']:
+                        raise UserError(
+                            'Conto abbuoni attivi non impostato '
+                            'in configurazione contabilità.'
+                        )
+
                     rebate_vals = {
                         'move_id': payment_reg_move.id,
                         'debit': 0,
@@ -323,32 +353,6 @@ class AccountRegisterPayment(models.TransientModel):
                 pair.reconcile()
             # end if
         # end payment_reg_move_confirm_and_reconcile
-
-        def payment_handle_difference():
-            if self.payment_difference:
-                rebate_vals = dict()
-                calculated_total = self._set_total_amount()
-                if self.total_amount > calculated_total:
-                    rebate_vals = {
-                        'move_id': payment_reg_move.id,
-                        'debit': 0,
-                        'credit': self.payment_difference,
-                        'account_id': rebate_active.id,
-                    }
-
-                elif self.total_amount < calculated_total and (
-                    self.payment_difference_open is False):
-                    # open or close
-                    rebate_vals = {
-                        'move_id': payment_reg_move.id,
-                        'debit': self.payment_difference,
-                        'credit': 0,
-                        'account_id': rebate_passive.id,
-                    }
-                # end if
-                if rebate_vals:
-                    move_line_model_no_check.create(rebate_vals)
-            # end if
 
         # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         # Initial variables
@@ -494,9 +498,6 @@ class AccountRegisterPayment(models.TransientModel):
 
         # adding lines
         payment_reg_move_add_lines()
-
-        # adding extra lines according to total
-        # payment_handle_difference()
 
         # add bank expenses
         payment_reg_move_add_expenses()
