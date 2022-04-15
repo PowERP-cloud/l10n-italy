@@ -1,3 +1,8 @@
+12.0.3.7.43 (2022-04-15)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato warning su differenza importo scadenze minore del delta impostato in configurazione
+
 12.0.3.7.42 (2022-04-07)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
