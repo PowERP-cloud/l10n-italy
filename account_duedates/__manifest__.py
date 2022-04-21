@@ -1,15 +1,15 @@
 #
 # Copyright 2020-22 SHS-AV s.r.l. <https://www.zeroincombenze.it>
-# Copyright 2020-22 powERP enterprise network <https://www.powerp.it>
+# Copyright 2020-22 librERP enterprise network <https://www.librerp.it>
 # Copyright 2020-22 Didotech s.r.l. <https://www.didotech.com>
 #
 {
     'name': 'Due dates',
-    'version': '12.0.4.8.36',
+    'version': '12.0.4.8.37',
     'category': 'Accounting',
     'summary': 'Enhanced due dates management',
-    'author': 'powERP enterprise network and other partners',
-    'website': 'https://www.powerp.it',
+    'author': 'librERP enterprise network and other partners',
+    'website': 'https://www.librerp.it',
     'development_status': 'Beta',
     'license': 'AGPL-3',
     'depends': [
@@ -36,7 +36,7 @@
         'data/update_year_cron.xml',
         'data/date_range_type.xml',
     ],
-    'maintainer': 'powERP enterprise network',
+    'maintainer': 'librERP enterprise network',
     'installable': True,
     'post_init_hook': 'post_init_hook',
 }
