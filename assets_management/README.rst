@@ -1,6 +1,6 @@
 
 ===========================================
-|icon| ITA - Gestione Cespiti 12.0.1.0.0_19
+|icon| ITA - Gestione Cespiti 12.0.1.0.0_20
 ===========================================
 
 
@@ -31,7 +31,7 @@ Overview / Panoramica
 Usage / Utilizzo
 ----------------
 
-|en|
+*** english ***
 
 You can create and manage assets from accounting section of Odoo.
 
@@ -44,7 +44,7 @@ Assets Management -> Generate Depreciations, or by triggering the same wizard fr
 form view.
 
 
-|it|
+*** italiano ***
 
 È possibile creare e gestire cespiti dalla sezione contabilità di Odoo.
 
@@ -192,6 +192,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.0.0_20 (2022-03-18)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Fix errore salvataggio registrazione nel model asset
+
 12.0.1.0.0_19 (2021-12-22)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -248,11 +253,6 @@ ChangeLog History / Cronologia modifiche
 
 * [IMP] Impostata data ultimo ammortamento nell'elenco dei cespiti
 * [FIX] Spostato configurazione natura dei cespiti nella company
-
-12.0.1.0.0_8 (2021-11-02)
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Nascosto flag consolidato nel wizard se per singolo cespite
 
 
 
@@ -335,7 +335,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-02-10
+Last Update / Ultimo aggiornamento: 2022-03-18
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

@@ -1,3 +1,13 @@
+12.0.1.2.7_44 (2022-04-13)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Set date & date_invoice of self-invoice = invoice / Date auto-fattura = fattura
+
+12.0.1.2.7_43 (2022-04-13)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Set check on RC tax / Impostato check su tassa reverse charge
+
 12.0.1.2.7_42 (2022-04-01)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

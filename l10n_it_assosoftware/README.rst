@@ -1,12 +1,12 @@
 
-=========================================
-|icon| Account Banking Common 12.0.3.7.43
-=========================================
+===============================================
+|icon| ITA - Codici IVA Assosoftware 12.0.1.0.0
+===============================================
 
 
-**Common stuff for payment modules**
+**Aggiunge la tabella dei codici IVA assosoftware per future scambio dati con fattura elettronica**
 
-.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/l10n-italy/12.0/account_banking_common/static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/l10n-italy/12.0/l10n_it_assosoftware/static/description/icon.png
 
 |Maturity| |Build Status| |license opl|
 
@@ -18,18 +18,31 @@
 Overview / Panoramica
 =====================
 
-|en| This module adds some fields to account.journal and res.partner.bank to manage wallet account.
-A wallet account is a special bank account with financial amounts.
-Any bank acount may be linked to one ore more wallet accounts.
-With this module, user can declare the bank account hierarchy.
+|en| **Italiano**
+
+Aggiunge la tabella dei codici IVA assosoftware per future scambio dati con fattura elettronica
+
+**English**
+
+Assosoftware tax codes
+
 
 |
 
-|it| Questo modulo aggiunge i campi per la gestione dei conti di portafoglio.
-I conti di portafoglio sono conti bancari speciali usati per la gestione degli importi SBF.
-Ogni conto bancario puà essere collegato ad uno o più conti di portafoglio.
-Ad esempio, la Banca Alpha oltre al conto di liquidità con IBAN ufficiale puà fornire un conto di portafoglio per la presentazione RIBA ed uno per gli anticipi fatture.
-Grazie a questo modulo l'utente può dichiarare la gerarchia dei conti bancari.
+|it| N/D
+
+|
+
+OCA comparation / Confronto con OCA
+-----------------------------------
+
+
++-----------------------------------------------------------------+-------------------+----------------+--------------------------------+
+| Description / Descrizione                                       | Zeroincombenze    | OCA            | Notes / Note                   |
++-----------------------------------------------------------------+-------------------+----------------+--------------------------------+
+| Coverage / Copertura test                                       |  |Codecov Status| | |OCA Codecov|  |                                |
++-----------------------------------------------------------------+-------------------+----------------+--------------------------------+
+
 
 |
 |
@@ -84,7 +97,7 @@ From UI: go to:
 
 * |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
-* |menu| Setting > Apps |right_do| Select **account_banking_common** > Install
+* |menu| Setting > Apps |right_do| Select **l10n_it_assosoftware** > Install
 
 
 |
@@ -149,76 +162,6 @@ If you have a proposal to change this module, you may want to send an email to <
 An Enhancement Proposal may be submitted if your idea gains ground.
 
 
-ChangeLog History / Cronologia modifiche
-----------------------------------------
-
-12.0.3.7.43 (2022-04-15)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Impostato warning su differenza importo scadenze minore del delta impostato in configurazione
-
-12.0.3.7.42 (2022-04-07)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Effettuato refactoring della registrazione del pagamento delle scadenze
-* [FIX] Gestito riconciliazioni nella registrazione degli insoluti
-
-12.0.3.7.41 (2022-03-11)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Impostato ordinamento delle azioni nel rispettivo menù di pagamenti e scadenze
-
-12.0.3.7.40 (2022-03-11)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Impostato configurazione conti di abbuono e abbuono delta
-* [FIX] Esposto in tutti i registri il conto spese bancarie
-
-12.0.3.7.39 (2022-03-10)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito importi scadenze in insoluto standard
-
-12.0.3.7.38 (2022-03-09)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Inserita data accredito da wizard
-
-12.0.3.7.37 (2022-03-04)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito controllo su distinte insolute
-
-12.0.3.7.36 (2022-03-03)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito controllo su distinte riconciliate
-
-12.0.3.7.35 (2022-03-03)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
- * [IMP] Gestione operazioni di registrazione pagamenti fornitori e compensazione tra fatture e note di credito nelle registrazioni
- * [IMP] Gestione spese bancarie
-
-12.0.3.7.34 (2022-03-02)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
- * [IMP] Possibilità di scegliere sezionale e data registrazione contabile al momento della registrazione del pagamento
- * [FIX] Correzione nome modello
-
-12.0.3.7.33 (2022-03-02)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito annullamento distinta che ha scadenze con incasso effettuato
-
-12.0.3.7.32 (2022-03-01)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Refactoring ordine di pagamento in riga scadenza
-* [FIX] Corretto la gestione del portafoglio nella registrazione dell'insoluto
-
-
-
 |
 |
 
@@ -237,17 +180,13 @@ Odoo is a trademark of `Odoo S.A. <https://www.odoo.com/>`__ (formerly OpenERP)
 Authors / Autori
 ----------------
 
-* `powERP <https://www.powerp.it>`__
 * `SHS-AV s.r.l. <https://www.zeroincombenze.it/>`__
-* `Didotech s.r.l. <https://www.didotech.com>`__
 
 
 Contributors / Collaboratori
 ----------------------------
 
 * Antonio Maria Vigliotti <antoniomaria.vigliotti@gmail.com>
-* Marco Tosato <marco.tosato@didotech.com>
-* Fabio Giovannelli <fabio.giovannelli@didotech.com>
 
 
 Maintainer / Manutenzione
@@ -288,9 +227,9 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-04-15
+Last Update / Ultimo aggiornamento: 2022-03-22
 
-.. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
+.. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status
     :alt: 
 .. |Build Status| image:: https://travis-ci.org/PowERP-cloud/l10n-italy.svg?branch=12.0

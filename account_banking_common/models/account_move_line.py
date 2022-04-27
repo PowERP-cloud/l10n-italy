@@ -740,14 +740,16 @@ class AccountMoveLine(models.Model):
                     'sono state riconciliate:\n\n - '
                 )
 
-                msg += '\n - '.join(
-                    map(
-                        lambda x: x.invoice_id.number
-                                  + '    '
-                                  + str(x.date_maturity),
-                        recon_lines,
-                    )
-                )
+                for ln in recon_lines:
+                    if ln.invoice_id:
+                        msg += ln.invoice_id.number + ' '
+                    else:
+                        msg += ln.display_name + ' '
+
+                    if ln.date_maturity:
+                        msg += str(ln.date_maturity)
+                    msg += '\n - '
+
                 raise UserError(msg)
 
         # same company bank account
@@ -805,6 +807,34 @@ class AccountMoveLine(models.Model):
                 )
                 raise UserError(msg)
 
+        partner_lines = list()
+        partner_ids = list()
+        if len(lines) > 0:
+
+            for line in lines:
+                # Detect lines already reconciled
+                if line.partner_id and line.partner_id.id and (
+                    line.partner_id.id not in partner_ids):
+                    partner_ids.append(line.partner_id.id)
+                    partner_lines.append(line)
+                # end if
+            # end for
+            error_partner = len(partner_ids) > 1
+            if error_partner:
+                msg = (
+                    'ATTENZIONE!\nLe seguenti scadenze '
+                    'hanno partner diversi:\n\n - '
+                )
+
+                msg += '\n - '.join(
+                    map(
+                        lambda x: x.invoice_id.number
+                                  + '    '
+                                  + str(x.date_maturity),
+                        partner_lines,
+                    )
+                )
+                raise UserError(msg)
         # Open the wizard
         model = 'account_banking_common'
         wiz_view = self.env.ref(model + '.wizard_account_register_payment')

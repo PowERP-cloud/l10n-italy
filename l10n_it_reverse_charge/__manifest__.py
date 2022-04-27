@@ -6,7 +6,7 @@
 #
 {
     'name': 'ITA - Inversione contabile',
-    'version': '12.0.1.2.7_42',
+    'version': '12.0.1.2.7_44',
     'category': 'Localization/Italy',
     'summary': 'Inversione contabile',
     'author': 'LibrERP enterprise network and other partners',
@@ -25,6 +25,7 @@
         'views/account_invoice_view.xml',
         'views/account_fiscal_position_view.xml',
         'views/account_tax_view.xml',
+        'views/account_journal_view.xml',
     ],
     'maintainer': 'LibrERP enterprise network',
     'installable': True,

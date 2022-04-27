@@ -1,14 +1,14 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_41
+|icon| ITA - Inversione contabile 12.0.1.2.7_43
 ===============================================
 
 
 **Inversione contabile**
 
-.. |icon| image:: https://raw.githubusercontent.com/PowERP-cloud/l10n-italy/12.0/l10n_it_reverse_charge/static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/zeroincombenze/l10n-italy/12.0/l10n_it_reverse_charge/static/description/icon.png
 
-|Maturity| |Build Status| |license opl|
+|Maturity| |Build Status| |Codecov Status| |license gpl| |Try Me|
 
 
 .. contents::
@@ -171,12 +171,12 @@ Installation / Installazione
     source $HOME/devel/activate_tools
     # *** End of tools installation or upgrade ***
     # Odoo repository installation; OCB repository must be installed
-    odoo_install_repository l10n-italy -b 12.0 -O powerp -o $HOME/12.0
+    odoo_install_repository l10n-italy -b 12.0 -O zero -o $HOME/12.0
     vem create $HOME/12.0/venv_odoo -O 12.0 -a "*" -DI -o $HOME/12.0
 
 From UI: go to:
 
-* |menu| Setting > Activate Developer mode
+* |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
 * |menu| Setting > Apps |right_do| Select **l10n_it_reverse_charge** > Install
 
@@ -350,12 +350,7 @@ Support / Supporto
 ------------------
 
 
-This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese `Powerp <http://www.powerp.it/>`__
-
-Developer companies are / I soci sviluppatori sono:
-
-* `Didotech s.r.l. <http://www.didotech.com>`__
-* `SHS-AV s.r.l. <https://www.shs-av.com/>`__
+|Zeroincombenze| This module is maintained by the `SHS-AV s.r.l. <https://www.zeroincombenze.it/>`__
 
 
 |
@@ -366,7 +361,7 @@ Get involved / Ci mettiamo in gioco
 
 Bug reports are welcome! You can use the issue tracker to report bugs,
 and/or submit pull requests on `GitHub Issues
-<https://github.com/PowERP-cloud/l10n-italy/issues>`_.
+<https://github.com/zeroincombenze/l10n-italy/issues>`_.
 
 In case of trouble, please check there if your issue has already been reported.
 
@@ -374,12 +369,29 @@ Proposals for enhancement
 -------------------------
 
 
-If you have a proposal to change this module, you may want to send an email to <info@powerp.it> for initial feedback.
+|en| If you have a proposal to change this module, you may want to send an email to <cc@shs-av.com> for initial feedback.
 An Enhancement Proposal may be submitted if your idea gains ground.
+
+|it| Se hai proposte per migliorare questo modulo, puoi inviare una mail a <cc@shs-av.com> per un iniziale contatto.
 
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.1.2.7_44 (2022-04-13)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Set date & date_invoice of self-invoice = invoice / Date auto-fattura = fattura
+
+12.0.1.2.7_43 (2022-04-13)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Set check on RC tax / Impostato check su tassa reverse charge
+
+12.0.1.2.7_42 (2022-04-01)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[FIX] Wrong customer partner / Errato partner cliente
 
 12.0.1.2.7_41 (2022-03-18)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -426,28 +438,6 @@ ChangeLog History / Cronologia modifiche
 
 [FIX] Fix autofattura
 
-12.0.1.2.7_32 (2021-12-09)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Gestione codici iva rc servizi e prodotti
-
-12.0.1.2.7_31 (2021-10-04)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Gestito visualizzazione totale tassa nella fattura
-[FIX] Gestito bug riconciliazione su autofattura
-
-12.0.1.2.7_30 (2021-09-29)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Gestito filtro su registro per autofattura
-[FIX] Gestito bug tasse multiple
-
-12.0.1.2.7_29 (2021-09-24)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Gestito bug tasse multiple su movimento contabile
-
 
 
 |
@@ -489,10 +479,6 @@ Maintainer / Manutenzione
 -------------------------
 
 
-This module is maintained by the / Questo modulo è mantenuto dalla rete di imprese Powerp <http://www.powerp.it/>
-Developer companies are / I soci sviluppatori sono:
-* Didotech s.r.l. <http://www.didotech.com>
-* SHS-AV s.r.l. <https://www.shs-av.com/>
 
 
 |
@@ -500,19 +486,14 @@ Developer companies are / I soci sviluppatori sono:
 ----------------
 
 
-|en| **Powerp** is an Italian enterprises network, whose mission is to develop high-level addons designed for Italian enterprise companies.
+|en| **zeroincombenze®** is a trademark of `SHS-AV s.r.l. <https://www.shs-av.com/>`__
+which distributes and promotes ready-to-use **Odoo** on own cloud infrastructure.
+`Zeroincombenze® distribution of Odoo <https://wiki.zeroincombenze.org/en/Odoo>`__
+is mainly designed to cover Italian law and markeplace.
 
-`Powerp <http://www.powerp.it/>`__ code adds new enhanced features to Italian localization and it released under `LGPL <https://www.gnu.org/licenses/lgpl-3.0.html>`__ or `OPL <https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html>`__ licenses.
-
-|it| `Powerp <http://www.powerp.it/>`__ è una rete di imprese italiane, nata con la missione di sviluppare moduli per le PMI.
-
-Il codice di `Powerp <http://www.powerp.it/>`__ aggiunge caratteristiche evolute alla localizzazione italiana; il codice è rilasciato con licenze `LGPL <https://www.gnu.org/licenses/lgpl-3.0.html>`__ e `OPL <https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html>`__
-
-I soci fondatori sono:
-
-* `Didotech s.r.l. <http://www.didotech.com>`__
-* `SHS-AV s.r.l. <https://www.shs-av.com/>`__
-* `Xplain s.r.l. <http://x-plain.it//>`__
+|it| **zeroincombenze®** è un marchio registrato da `SHS-AV s.r.l. <https://www.shs-av.com/>`__
+che distribuisce e promuove **Odoo** pronto all'uso sulla propria infrastuttura.
+La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ è progettata per le esigenze del mercato italiano.
 
 
 
@@ -523,13 +504,13 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-03-22
+Last Update / Ultimo aggiornamento: 2022-04-13
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
-    :alt:
-.. |Build Status| image:: https://travis-ci.org/PowERP-cloud/l10n-italy.svg?branch=12.0
-    :target: https://travis-ci.com/PowERP-cloud/l10n-italy
+    :alt: 
+.. |Build Status| image:: https://travis-ci.org/zeroincombenze/l10n-italy.svg?branch=12.0
+    :target: https://travis-ci.com/zeroincombenze/l10n-italy
     :alt: github.com
 .. |license gpl| image:: https://img.shields.io/badge/licence-LGPL--3-7379c3.svg
     :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
@@ -537,11 +518,11 @@ Last Update / Ultimo aggiornamento: 2022-03-22
 .. |license opl| image:: https://img.shields.io/badge/licence-OPL-7379c3.svg
     :target: https://www.odoo.com/documentation/user/14.0/legal/licenses/licenses.html
     :alt: License: OPL
-.. |Coverage Status| image:: https://coveralls.io/repos/github/PowERP-cloud/l10n-italy/badge.svg?branch=12.0
-    :target: https://coveralls.io/github/PowERP-cloud/l10n-italy?branch=12.0
+.. |Coverage Status| image:: https://coveralls.io/repos/github/zeroincombenze/l10n-italy/badge.svg?branch=12.0
+    :target: https://coveralls.io/github/zeroincombenze/l10n-italy?branch=12.0
     :alt: Coverage
-.. |Codecov Status| image:: https://codecov.io/gh/PowERP-cloud/l10n-italy/branch/12.0/graph/badge.svg
-    :target: https://codecov.io/gh/PowERP-cloud/l10n-italy/branch/12.0
+.. |Codecov Status| image:: https://codecov.io/gh/zeroincombenze/l10n-italy/branch/12.0/graph/badge.svg
+    :target: https://codecov.io/gh/zeroincombenze/l10n-italy/branch/12.0
     :alt: Codecov
 .. |Tech Doc| image:: https://www.zeroincombenze.it/wp-content/uploads/ci-ct/prd/button-docs-12.svg
     :target: https://wiki.zeroincombenze.org/en/Odoo/12.0/dev
@@ -583,3 +564,4 @@ Last Update / Ultimo aggiornamento: 2022-03-22
    :target: https://github.com/zeroincombenze/grymb/blob/master/certificates/ade/scope/fatturapa.md
 .. |chat_with_us| image:: https://www.shs-av.com/wp-content/chat_with_us.gif
    :target: https://t.me/Assitenza_clienti_powERP
+

@@ -1,6 +1,12 @@
-12.0.3.7.42 (2022-03-24)
+12.0.3.7.43 (2022-04-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
+* [FIX] Impostato warning su differenza importo scadenze minore del delta impostato in configurazione
+
+12.0.3.7.42 (2022-04-07)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Effettuato refactoring della registrazione del pagamento delle scadenze
 * [FIX] Gestito riconciliazioni nella registrazione degli insoluti
 
 12.0.3.7.41 (2022-03-11)
