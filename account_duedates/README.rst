@@ -1,6 +1,6 @@
 
 ============================
-|icon| Due dates 12.0.4.8.36
+|icon| Due dates 12.0.4.8.37
 ============================
 
 
@@ -155,6 +155,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.4.8.37 (2022-04-21)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Division by zero
+
 12.0.4.8.36 (2022-03-09)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -213,11 +218,6 @@ ChangeLog History / Cronologia modifiche
 
 * [FIX] Aggiunto filtri "In distinta" e "Effetti incassati"
 
-12.0.4.8.25 (2021-12-02)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Reimpostato filtro "Non in distinta"
-
 
 
 |
@@ -238,7 +238,7 @@ Odoo is a trademark of `Odoo S.A. <https://www.odoo.com/>`__ (formerly OpenERP)
 Authors / Autori
 ----------------
 
-* `powERP <https://www.powerp.it>`__
+* `librERP <https://www.librerp.it>`__
 * `SHS-AV s.r.l. <https://www.zeroincombenze.it>`__
 * `Didotech srl <https://www.didotech.com>`__
 
@@ -287,7 +287,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-03-16
+Last Update / Ultimo aggiornamento: 2022-04-21
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

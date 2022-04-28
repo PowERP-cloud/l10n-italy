@@ -1,6 +1,6 @@
 #
 # Copyright 2020-22 SHS-AV s.r.l. <https://www.zeroincombenze.it>
-# Copyright 2020-22 powERP enterprise network <https://www.powerp.it>
+# Copyright 2020-22 librERP enterprise network <https://www.librerp.it>
 # Copyright 2020-22 Didotech s.r.l. <https://www.didotech.com>
 #
 
@@ -385,10 +385,11 @@ class AccountMove(models.Model):
                 # TODO> 'debit' / 'credit' will be removed early
                 if line_type in ('credit', 'debit', 'receivable', 'payable'):
                     lines_cd.append(line)
-                    if line['debit']:
-                        rate = abs(line['amount_currency']) / line['debit']
-                    elif line['credit']:
-                        rate = abs(line['amount_currency']) / line['credit']
+                    if line['amount_currency']:
+                        if line['debit']:
+                            rate = abs(line['amount_currency']) / line['debit']
+                        elif line['credit']:
+                            rate = abs(line['amount_currency']) / line['credit']
                 else:
                     lines_other.append(line)
                 # end if
