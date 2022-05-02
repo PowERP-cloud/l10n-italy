@@ -246,7 +246,7 @@ class AccountInvoice(models.Model):
             "date_due": self.date_invoice,
             # Warning! Do not change follow statement!
             # In sale invoice, date is automatically set to date_invoice
-            "date_invoice": self.date_invoice,
+            "date_invoice": self.date_invoice if journal_id.rev_charge else self.date,
             "origin": self.number,
             "rc_purchase_invoice_id": self.id,
             "name": _("Reverse charge self invoice"),
