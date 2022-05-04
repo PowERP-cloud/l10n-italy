@@ -1,7 +1,7 @@
 
-============================
-|icon| Due dates 12.0.4.8.37
-============================
+==============================
+|icon| Due dates 12.0.4.8.37_1
+==============================
 
 
 **Enhanced due dates management**
@@ -155,6 +155,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.4.8.37_1 (2022-05-04)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato campo fattura in sola lettura
+
 12.0.4.8.37 (2022-04-21)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -212,11 +217,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Gestito ricalcolo delle scadenze in create e write
-
-12.0.4.8.26 (2021-12-02)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Aggiunto filtri "In distinta" e "Effetti incassati"
 
 
 
@@ -287,7 +287,7 @@ I soci fondatori sono:
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-04-21
+Last Update / Ultimo aggiornamento: 2022-05-04
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
