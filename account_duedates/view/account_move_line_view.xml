@@ -17,6 +17,10 @@
                 </group>
             </xpath>
 
+            <field name="invoice_id" position="attributes">
+                <attribute name="attrs">{'readonly': True}</attribute>
+            </field>
+
             <field name="invoice_id" position="after">
                 <field name="payment_order_name" />
                 <field name="incasso_effettuato" readonly="1"/>
