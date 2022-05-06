@@ -910,9 +910,9 @@ class WizardExportFatturapa(models.TransientModel):
             context = {}
         invoice_obj = self.env['account.invoice']
         if partner.is_pa:
-            fatturapa = FatturaElettronica(versione='FPA12', SistemaEmittente=SOFTWARE_IN_USE)
+            fatturapa = FatturaElettronica(versione=FORMATO_TRASMISSIONE_PA, SistemaEmittente=SOFTWARE_IN_USE)
         else:
-            fatturapa = FatturaElettronica(versione='FPR12', SistemaEmittente=SOFTWARE_IN_USE)
+            fatturapa = FatturaElettronica(versione=FORMATO_TRASMISSIONE_PR, SistemaEmittente=SOFTWARE_IN_USE)
 
         try:
             self.with_context(context). \
