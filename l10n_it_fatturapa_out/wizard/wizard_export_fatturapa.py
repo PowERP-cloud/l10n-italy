@@ -173,7 +173,7 @@ class WizardExportFatturapa(models.TransientModel):
         return True
 
     def _setFormatoTrasmissione(self, partner, fatturapa):
-        if partner.is_pa:
+        if partner.is_pa or partner.parent_id and partner.parent_id.is_pa:
             fatturapa.FatturaElettronicaHeader.DatiTrasmissione.\
                 FormatoTrasmissione = FORMATO_TRASMISSIONE_PA
         else:
@@ -909,7 +909,7 @@ class WizardExportFatturapa(models.TransientModel):
         if context is None:
             context = {}
         invoice_obj = self.env['account.invoice']
-        if partner.is_pa:
+        if partner.is_pa or partner.parent_id and partner.parent_id.is_pa:
             fatturapa = FatturaElettronica(versione=FORMATO_TRASMISSIONE_PA, SistemaEmittente=SOFTWARE_IN_USE)
         else:
             fatturapa = FatturaElettronica(versione=FORMATO_TRASMISSIONE_PR, SistemaEmittente=SOFTWARE_IN_USE)
