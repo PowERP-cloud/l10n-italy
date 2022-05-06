@@ -29,7 +29,7 @@ creates all record declared by above data; lang is an optional parameter.
 
 Final notes:
 * Many2one value must be declared as external identifier
-* Written on 2022-02-17 07:07:23.621578 by mk_test_env 12.0.0.7.2
+* Written on 2022-04-05 19:01:32.178347 by mk_test_env 12.0.0.7.3
 """
 import logging
 from odoo.tests import common
@@ -120,7 +120,7 @@ TEST_ACCOUNT_TAX = {
         'amount': 22,
         'amount_type': 'percent',
         'type_tax_use': 'sale',
-        'price_include': True,
+        'price_include': False,
         'account_id': 'external.2601',
         'refund_account_id': 'external.2601',
     },
@@ -130,17 +130,17 @@ TEST_ACCOUNT_TAX = {
         'amount': 22,
         'amount_type': 'percent',
         'type_tax_use': 'purchase',
-        'price_include': True,
+        'price_include': False,
         'account_id': 'external.1601',
         'refund_account_id': 'external.1601',
     },
-    'z0bug.tax_2220': {
+    'external.2220': {
         'description': '2220',
         'name': 'IVA 22% detraibile 20%',
         'amount': 22,
         'amount_type': 'group',
         'type_tax_use': 'purchase',
-        'price_include': True,
+        'price_include': False,
     },
 }
 TEST_PRODUCT_TEMPLATE = {
@@ -155,11 +155,9 @@ TEST_PRODUCT_TEMPLATE = {
         'supplier_taxes_id': 'external.22a',
         'property_account_income_id': 'external.3112',
         'property_account_expense_id': 'external.4101',
-        'uom_id': 'product.product_uom_unit',
-        'uom_po_id': 'product.product_uom_unit',
+        'uom_id': 'uom.product_uom_unit',
+        'uom_po_id': 'uom.product_uom_unit',
         'weight': 0.1,
-        'intrastat_type': 'good',
-        'intrastat_code_id': 'z0bug.istat_84401020',
     },
     'z0bug.product_template_2': {
         'default_code': 'BB',
@@ -171,11 +169,9 @@ TEST_PRODUCT_TEMPLATE = {
         'supplier_taxes_id': 'external.22a',
         'property_account_income_id': 'external.3112',
         'property_account_expense_id': 'external.4101',
-        'uom_id': 'product.product_uom_unit',
-        'uom_po_id': 'product.product_uom_unit',
+        'uom_id': 'uom.product_uom_unit',
+        'uom_po_id': 'uom.product_uom_unit',
         'weight': 0.2,
-        'intrastat_type': 'good',
-        'intrastat_code_id': 'z0bug.istat_84401030',
     },
     'z0bug.product_template_4': {
         'default_code': 'DD',
@@ -187,11 +183,9 @@ TEST_PRODUCT_TEMPLATE = {
         'supplier_taxes_id': 'external.22a',
         'property_account_income_id': 'external.3112',
         'property_account_expense_id': 'external.4101',
-        'uom_id': 'product.product_uom_unit',
-        'uom_po_id': 'product.product_uom_unit',
+        'uom_id': 'uom.product_uom_unit',
+        'uom_po_id': 'uom.product_uom_unit',
         'weight': 0.24,
-        'intrastat_type': 'good',
-        'intrastat_code_id': 'z0bug.istat_84401010',
     },
     'z0bug.product_template_0': {
         'default_code': 'MISC',
@@ -203,10 +197,8 @@ TEST_PRODUCT_TEMPLATE = {
         'supplier_taxes_id': 'external.22a',
         'property_account_income_id': 'external.3112',
         'property_account_expense_id': 'external.4101',
-        'uom_id': 'product.product_uom_unit',
-        'uom_po_id': 'product.product_uom_unit',
-        'intrastat_type': 'exclude',
-        'intrastat_code_id': 'z0bug.istat_84401010',
+        'uom_id': 'uom.product_uom_unit',
+        'uom_po_id': 'uom.product_uom_unit',
     },
 }
 TEST_RES_BANK = {
@@ -245,8 +237,8 @@ TEST_RES_PARTNER = {
         'zip': '20080',
         'city': 'Ozzero',
         'state_id': 'base.state_it_mi',
-        'customer': True,
-        'supplier': True,
+        'customer': False,
+        'supplier': False,
         'is_company': True,
         'email': 'info@testcompany.org',
         'phone': '+39 025551234',
@@ -262,7 +254,7 @@ TEST_RES_PARTNER = {
         'zip': '10151',
         'city': 'Torino',
         'state_id': 'base.state_it_to',
-        'customer': True,
+        'customer': False,
         'supplier': True,
         'is_company': True,
         'email': 'commercial@eleven-caffe.it',
@@ -342,7 +334,7 @@ TEST_ACCOUNT_INVOICE_LINE = {
         'quantity': 1000,
         'account_id': 'external.4101',
         'price_unit': 0.42,
-        'invoice_line_tax_ids': 'z0bug.tax_2220',
+        'invoice_line_tax_ids': 'external.2220',
     },
     'z0bug.invoice_ZI_7_1': {
         'invoice_id': 'z0bug.invoice_ZI_7',
@@ -352,8 +344,8 @@ TEST_ACCOUNT_INVOICE_LINE = {
         'account_id': 'external.4101',
         'price_unit': 60,
         'invoice_line_tax_ids': 'external.22a',
-        'accrual_start_date': '2021-02-28',
-        'accrual_end_date': '2023-01-31',
+        'accrual_start_date': '2021-04-30',
+        'accrual_end_date': '2023-03-31',
     },
 }
 
@@ -363,7 +355,7 @@ TEST_ACCOUNT_INVOICE = {
         'partner_id': 'z0bug.res_partner_1',
         'origin': 'P1/2021/0001',
         'reference': 'P1/2021/0001',
-        'date_invoice': '2022-01-31',
+        'date_invoice': '2022-03-31',
         'type': 'out_invoice',
         'journal_id': 'external.INV',
         'fiscal_position_id': 'z0bug.fiscalpos_it',
@@ -377,7 +369,7 @@ TEST_ACCOUNT_INVOICE = {
         'partner_id': 'z0bug.res_partner_1',
         'origin': 'P1/2021/0001',
         'reference': 'P1/2021/0001',
-        'date_invoice': '2022-01-31',
+        'date_invoice': '2022-03-31',
         'type': 'out_refund',
         'journal_id': 'z0bug.jou_ncc',
         'fiscal_position_id': 'z0bug.fiscalpos_it',
@@ -389,9 +381,9 @@ TEST_ACCOUNT_INVOICE = {
         'partner_id': 'z0bug.res_partner_11',
         'origin': '21/TO/1234',
         'reference': '21/TO/1234',
-        'date_invoice': '2021-12-31',
-        'date': '2022-01-01',
-        'date_apply_vat': '2022-01-01',
+        'date_invoice': '2022-02-28',
+        'date': '2022-03-01',
+        'date_apply_vat': '2022-03-01',
         'type': 'in_invoice',
         'journal_id': 'external.BILL',
         'fiscal_position_id': 'z0bug.fiscalpos_it',
@@ -402,8 +394,8 @@ TEST_ACCOUNT_INVOICE = {
         'partner_id': 'z0bug.res_partner_11',
         'origin': '21/TO/1590',
         'reference': '21/TO/1590',
-        'date_invoice': '2022-01-10',
-        'date': '2022-01-20',
+        'date_invoice': '2022-03-10',
+        'date': '2022-03-20',
         'type': 'in_refund',
         'journal_id': 'z0bug.jou_ncf',
         'fiscal_position_id': 'z0bug.fiscalpos_it',
@@ -576,7 +568,11 @@ class TestAccountMove(common.TransactionCase):
 
     def model_create(self, model, values, xref=None):
         """Create a test record and set external ID to next tests"""
-        res = self.env[model].create(values)
+        if model.startswith('account.move'):
+            res = self.env[model].with_context(
+                check_move_validity=False).create(values)
+        else:
+            res = self.env[model].create(values)
         if xref and ' ' not in xref:
             self.add_xref(xref, model, res.id)
         return res
@@ -602,7 +598,10 @@ class TestAccountMove(common.TransactionCase):
                                 by=by,
                                 raise_if_not_found=False)
         if res:
-            res.write(values)
+            if model.startswith('account.move'):
+                res.with_context(check_move_validity=False).write(values)
+            else:
+                res.write(values)
             return res
         return self.model_create(model, values, xref=xref)
 
@@ -715,6 +714,7 @@ class TestAccountMove(common.TransactionCase):
         self.setup_records(lang='it_IT')
 
     def tearDown(self):
+        super().tearDown()
         if self.save_as_demo:
             self.env.cr.commit()               # pylint: disable=invalid-commit
 
