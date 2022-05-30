@@ -1,6 +1,6 @@
-codicefiscale
-unidecode
-pyxb==1.2.6
-pycryptodome
+codicefiscale==0.9
 pkcs7
+pycryptodome
 PyPDF2
+pyxb==1.2.6
+'unidecode>1.2.0'                                 # not found in any manifests
