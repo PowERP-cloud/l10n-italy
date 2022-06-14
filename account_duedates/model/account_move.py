@@ -372,6 +372,7 @@ class AccountMove(models.Model):
             return None
 
         else:
+            invoice_id = self.line_ids[0].invoice_id
             # Extract credit and debit lines
             lines_cd = list()
             lines_other = list()
@@ -442,6 +443,9 @@ class AccountMove(models.Model):
                     new_data[
                         'payment_method_id'
                     ] = duedate_line.payment_method_id.id
+
+                    if invoice_id:
+                        new_data['invoice_id'] = invoice_id.id
 
                     move_lines_mods.append((0, False, new_data))
 
