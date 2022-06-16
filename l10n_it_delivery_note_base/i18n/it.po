@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* l10n_it_delivery_note_base
+# * l10n_it_delivery_note_base
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo (12.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-15 08:40+0000\n"
-"PO-Revision-Date: 2021-02-19 14:45+0000\n"
-"Last-Translator: Angeli Cecilia <cecilia@ooops404.com>\n"
-"Language-Team: \n"
-"Language: it\n"
+"POT-Creation-Date: 2022-06-05 19:02+0000\n"
+"PO-Revision-Date: 2022-06-05 19:02+0000\n"
+"Last-Translator: Antonio M. Vigliotti <antoniomaria.vigliotti@gmail.com>\n"
+"Language-Team: Zeroincombenze (https://www.zeroincombenze.it)\n"
+"Language: it_IT\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3.2\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
 
 #. module: l10n_it_delivery_note_base
 #: model:ir.model.fields,field_description:l10n_it_delivery_note_base.field_stock_delivery_note_type__active
@@ -49,7 +49,7 @@ msgstr "Aspetto dei beni"
 #. module: l10n_it_delivery_note_base
 #: model:stock.picking.goods.appearance,name:l10n_it_delivery_note_base.goods_appearance_CAR
 msgid "Box"
-msgstr "Cartone"
+msgstr "Scatola"
 
 #. module: l10n_it_delivery_note_base
 #: model:stock.picking.goods.appearance,name:l10n_it_delivery_note_base.goods_appearance_CBA
@@ -59,7 +59,7 @@ msgstr "Cartone / Bancale"
 #. module: l10n_it_delivery_note_base
 #: model:stock.picking.goods.appearance,name:l10n_it_delivery_note_base.goods_appearance_SFU
 msgid "Bulk"
-msgstr "Sfusi"
+msgstr "Sfuso"
 
 #. module: l10n_it_delivery_note_base
 #: model:stock.picking.transport.condition,name:l10n_it_delivery_note_base.transport_condition_PA
@@ -160,11 +160,13 @@ msgstr "ID"
 #. module: l10n_it_delivery_note_base
 #: selection:stock.delivery.note.type,code:0
 #: model:stock.delivery.note.type,name:l10n_it_delivery_note_base.delivery_note_type_incoming_ddt
+#: selection:stock.delivery.note.type,code
 msgid "Incoming"
 msgstr "In arrivo"
 
 #. module: l10n_it_delivery_note_base
 #: selection:stock.delivery.note.type,code:0
+#: selection:stock.delivery.note.type,code
 msgid "Internal"
 msgstr "Interno"
 
@@ -241,21 +243,23 @@ msgstr "Metodo di trasporto"
 #. module: l10n_it_delivery_note_base
 #: model:ir.model.fields,field_description:l10n_it_delivery_note_base.field_stock_delivery_note_type__name
 msgid "Name"
-msgstr "Nome"
+msgstr "Descrizione"
 
 #. module: l10n_it_delivery_note_base
 #: model:ir.model.fields,help:l10n_it_delivery_note_base.field_stock_delivery_note_type__next_sequence_number
 msgid ""
-"Next number that will be used. This number can be incremented frequently so "
-"the displayed value might already be obsolete"
+"Next number that will be used. This number can be incremented frequently "
+"so the displayed value might already be obsolete"
 msgstr ""
-"Il numero che verrà usato come successivo. Il valore visualizzato potrebbe "
-"essere già obsoleto dato che può essere incrementato in modo frequente"
+"Il numero che verrà usato come successivo. Il valore visualizzato "
+"potrebbe essere già obsoleto dato che può essere incrementato in modo "
+"frequente"
 
 #. module: l10n_it_delivery_note_base
 #: selection:stock.picking.transport.condition,price_to_show:0
+#: selection:stock.picking.transport.condition,price_to_show
 msgid "None"
-msgstr "Nessuno"
+msgstr "Nessuna"
 
 #. module: l10n_it_delivery_note_base
 #: model:ir.model.fields,field_description:l10n_it_delivery_note_base.field_stock_delivery_note_type__sequence_id
@@ -265,6 +269,7 @@ msgstr "Numerazione"
 #. module: l10n_it_delivery_note_base
 #: selection:stock.delivery.note.type,code:0
 #: model:stock.delivery.note.type,name:l10n_it_delivery_note_base.delivery_note_type_ddt
+#: selection:stock.delivery.note.type,code
 msgid "Outgoing"
 msgstr "In uscita"
 
@@ -339,31 +344,37 @@ msgstr "Vedi le informazioni dei prodotti nelle linee del DdT"
 
 #. module: l10n_it_delivery_note_base
 #: sql_constraint:stock.picking.goods.appearance:0
+#: sql_constraint:stock.picking.goods.appearance
 msgid "This appearance of goods already exists!"
 msgstr "Questo aspetto dei beni esiste già!"
 
 #. module: l10n_it_delivery_note_base
 #: sql_constraint:stock.picking.transport.condition:0
+#: sql_constraint:stock.picking.transport.condition
 msgid "This condition of transport already exists!"
 msgstr "Questa condizione di trasporto esiste già!"
 
 #. module: l10n_it_delivery_note_base
 #: sql_constraint:stock.delivery.note.type:0
+#: sql_constraint:stock.delivery.note.type
 msgid "This delivery note type already exists!"
 msgstr "Questo tipo di DdT esiste già!"
 
 #. module: l10n_it_delivery_note_base
 #: sql_constraint:stock.picking.transport.method:0
+#: sql_constraint:stock.picking.transport.method
 msgid "This method of transport already exists!"
 msgstr "Questo metodo di trasporto esiste già!"
 
 #. module: l10n_it_delivery_note_base
 #: sql_constraint:stock.picking.transport.reason:0
+#: sql_constraint:stock.picking.transport.reason
 msgid "This reason of transport already exists!"
 msgstr "Questa causale di trasporto esiste già!"
 
 #. module: l10n_it_delivery_note_base
 #: selection:stock.picking.transport.condition,price_to_show:0
+#: selection:stock.picking.transport.condition,price_to_show
 msgid "Total price"
 msgstr "Prezzo totale"
 
@@ -374,5 +385,8 @@ msgstr "Tipo di operazione"
 
 #. module: l10n_it_delivery_note_base
 #: selection:stock.picking.transport.condition,price_to_show:0
+#: selection:stock.picking.transport.condition,price_to_show
 msgid "Unit price"
 msgstr "Prezzo unitario"
+
+

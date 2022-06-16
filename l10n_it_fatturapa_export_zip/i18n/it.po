@@ -1,28 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* l10n_it_fatturapa_export_zip
+# * l10n_it_fatturapa_export_zip
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo (12.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2020-01-07 11:13+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>\n"
-"Language-Team: none\n"
-"Language: it\n"
+"POT-Creation-Date: 2022-06-05 18:59+0000\n"
+"PO-Revision-Date: 2022-06-05 18:59+0000\n"
+"Last-Translator: Antonio M. Vigliotti <antoniomaria.vigliotti@gmail.com>\n"
+"Language-Team: Zeroincombenze (https://www.zeroincombenze.it)\n"
+"Language: it_IT\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.10\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
 
 #. module: l10n_it_fatturapa_export_zip
+#: code:addons/l10n_it_fatturapa_export_zip/wizard/export_fatturapa.py:30
 #: code:addons/l10n_it_fatturapa_export_zip/wizard/export_fatturapa.py:30
 #, python-format
 msgid "Attachment %s already exported. Remove ZIP file first"
 msgstr "Allegato %s già esportato. Rimuovere il file ZIP prima"
 
 #. module: l10n_it_fatturapa_export_zip
+#: code:addons/l10n_it_fatturapa_export_zip/wizard/export_fatturapa.py:35
 #: code:addons/l10n_it_fatturapa_export_zip/wizard/export_fatturapa.py:35
 #, python-format
 msgid "Attachment %s does not have XML file"
@@ -31,7 +34,7 @@ msgstr "L'allegato %s non ha file XML"
 #. module: l10n_it_fatturapa_export_zip
 #: model_terms:ir.ui.view,arch_db:l10n_it_fatturapa_export_zip.wizard_fatturapa_export
 msgid "Cancel"
-msgstr "Annulla"
+msgstr "Annullare"
 
 #. module: l10n_it_fatturapa_export_zip
 #: model:ir.model.fields,field_description:l10n_it_fatturapa_export_zip.field_wizard_fatturapa_export__create_uid
@@ -62,22 +65,22 @@ msgstr "Scaricare ZIP e-fattura XML"
 #. module: l10n_it_fatturapa_export_zip
 #: model:ir.model,name:l10n_it_fatturapa_export_zip.model_fatturapa_attachment_in
 msgid "E-bill import file"
-msgstr "File importazione e-fattura"
+msgstr "File importato e-fattura"
 
 #. module: l10n_it_fatturapa_export_zip
 #: model:ir.model,name:l10n_it_fatturapa_export_zip.model_fatturapa_attachment_out
 msgid "E-invoice Export File"
-msgstr "File esportazione e-fattura"
+msgstr "File e-fattura esportato"
 
 #. module: l10n_it_fatturapa_export_zip
 #: code:addons/l10n_it_fatturapa_export_zip/wizard/export_fatturapa.py:18
-#, python-format
+#: code:addons/l10n_it_fatturapa_export_zip/wizard/export_fatturapa.py:18
 msgid "E-invoice-export"
 msgstr "Esportazione-e-fattura"
 
 #. module: l10n_it_fatturapa_export_zip
 #: code:addons/l10n_it_fatturapa_export_zip/wizard/export_fatturapa.py:54
-#, python-format
+#: code:addons/l10n_it_fatturapa_export_zip/wizard/export_fatturapa.py:54
 msgid "Export E-Invoices"
 msgstr "Esportare e-fatture"
 
@@ -138,3 +141,5 @@ msgstr "ZIP esportato"
 #: model_terms:ir.ui.view,arch_db:l10n_it_fatturapa_export_zip.view_fatturapa_out_attachment_search
 msgid "ZIP Not Exported"
 msgstr "ZIP non esportato"
+
+
