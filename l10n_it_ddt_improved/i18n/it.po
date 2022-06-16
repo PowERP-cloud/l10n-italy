@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* l10n_it_ddt_improved
+# * l10n_it_ddt_improved
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo (12.0)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-18 14:01+0000\n"
 "PO-Revision-Date: 2021-05-18 14:01+0000\n"
-"Last-Translator: <>\n"
-"Language-Team: \n"
+"Last-Translator: Antonio M. Vigliotti <antoniomaria.vigliotti@gmail.com>\n"
+"Language-Team: Zeroincombenze (https://www.zeroincombenze.it)\n"
+"Language: it_IT\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
 
 #. module: l10n_it_ddt_improved
 #: code:addons/l10n_it_ddt_improved/models/stock_picking_package_preparation.py:321
-#, python-format
+#: code:addons/l10n_it_ddt_improved/models/stock_picking_package_preparation.py:321
 msgid "All the transfers must be \"Ready to Transfer\"."
-msgstr "Tutti i trasferimenti devono essere \"Pronti per Trasferire\"."
+msgstr "Tutti i movimenti devono essere \"Pronti al trasferimento\"."
 
 #. module: l10n_it_ddt_improved
 #: model_terms:ir.ui.view,arch_db:l10n_it_ddt_improved.report_package_barcode_small
@@ -87,17 +88,17 @@ msgstr "Volume massimo"
 #. module: l10n_it_ddt_improved
 #: model:ir.model.fields,help:l10n_it_ddt_improved.field_product_packaging__max_volume
 msgid "Maximum volume shippable in this packaging"
-msgstr "Massimo volume spedibile con questa imballaggio."
+msgstr "Massimo volume spedibile con questa imballaggio"
 
 #. module: l10n_it_ddt_improved
 #: code:addons/l10n_it_ddt_improved/models/stock_picking_package_preparation.py:336
-#, python-format
+#: code:addons/l10n_it_ddt_improved/models/stock_picking_package_preparation.py:336
 msgid "No packagings available."
 msgstr "Non ci sono confezioni disponibili."
 
 #. module: l10n_it_ddt_improved
 #: code:addons/l10n_it_ddt_improved/models/stock_picking_package_preparation.py:327
-#, python-format
+#: code:addons/l10n_it_ddt_improved/models/stock_picking_package_preparation.py:327
 msgid "No transfers to perform."
 msgstr "Non ci sono traferimenti da eseguire."
 
@@ -183,7 +184,7 @@ msgstr "Unità di misura"
 #: model:ir.model.fields,field_description:l10n_it_ddt_improved.field_galileo_product_product__volume
 #: model:ir.model.fields,field_description:l10n_it_ddt_improved.field_product_product__volume
 msgid "Volume"
-msgstr ""
+msgstr "Volume"
 
 #. module: l10n_it_ddt_improved
 #: model:ir.model.fields,field_description:l10n_it_ddt_improved.field_galileo_product_product__volume_uom_cat
@@ -209,4 +210,5 @@ msgstr "Larghezza"
 #: model:ir.model.fields,field_description:l10n_it_ddt_improved.field_product_product__width_uom_cat
 msgid "Width Uom Cat"
 msgstr "Unità di misura Larghezza"
+
 
