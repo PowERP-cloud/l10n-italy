@@ -6,7 +6,7 @@
             <field name="model">account.journal</field>
             <field name="inherit_id" ref="account.view_account_journal_form" />
             <field name="arch" type="xml">
-                <field name="enable_date" position="after">
+                <field name="refund_sequence_id" position="after">
                     <field name="rev_charge" />
                 </field>
             </field>
