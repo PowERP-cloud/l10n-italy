@@ -80,7 +80,7 @@ class ResConfigSettings(models.TransientModel):
         string='TD lock on payment terms',
         help='Locks TD generation based on payment terms from sale orders.',
         config_parameter='stock.ddt.lock_ddt_on_payment_terms',
-        deafult=False)
+        default=False)
 
     def lock_on_payment_terms(self):
         return self.env["ir.config_parameter"].sudo().get_param("stock.ddt.lock_ddt_on_payment_terms") or False
