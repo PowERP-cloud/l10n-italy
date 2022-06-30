@@ -2,7 +2,7 @@
 # Copyright 2021-22 SHS-AV s.r.l. <https://www.zeroincombenze.it>
 # Copyright 2021-22 Didotech s.r.l. <https://www.didotech.com>
 #
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 #
 
 from . import account_fiscal_position
