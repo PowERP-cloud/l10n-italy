@@ -1,23 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* l10n_it_account
+# * l10n_it_account
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0+e\n"
+"Project-Id-Version: Odoo (12.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-21 10:38+0000\n"
-"PO-Revision-Date: 2021-01-25 17:44+0000\n"
-"Last-Translator: Angeli Cecilia <cecilia@ooops404.com>\n"
-"Language-Team: \n"
-"Language: it\n"
+"POT-Creation-Date: 2022-06-05 19:04+0000\n"
+"PO-Revision-Date: 2022-06-05 19:04+0000\n"
+"Last-Translator: Antonio M. Vigliotti <antoniomaria.vigliotti@gmail.com>\n"
+"Language-Team: Zeroincombenze (https://www.zeroincombenze.it)\n"
+"Language: it_IT\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3.2\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.1\n"
 
 #. module: l10n_it_account
+#: code:addons/l10n_it_account/models/account_group.py:61
+#: code:addons/l10n_it_account/models/account_group.py:61
 #: code:addons/l10n_it_account/models/account_group.py:61
 #, python-format
 msgid ""
@@ -35,8 +37,9 @@ msgstr ""
 "                      <span class=\"text-right\">IVA:</span>"
 
 #. module: l10n_it_account
-#: code:addons/l10n_it_account/models/account_group.py:104
-#, python-format
+#: code:addons/l10n_it_account/models/account_group.py:105
+#: code:addons/l10n_it_account/models/account_group.py:105
+#: code:addons/l10n_it_account/models/account_group.py:105
 msgid "A recursion in '{}' parents has been found."
 msgstr "Trovata una ricorsività in \"{}\" padre."
 
@@ -69,8 +72,8 @@ msgstr "Conti"
 
 #. module: l10n_it_account
 #: model:ir.model.fields,help:l10n_it_account.field_account_group__account_ids
-msgid "Assigned accounts."
-msgstr "Conti assegnati."
+msgid "Assigned accounts"
+msgstr "Conti assegnati"
 
 #. module: l10n_it_account
 #: model:ir.model.fields,field_description:l10n_it_account.field_account_account_type__account_balance_sign
@@ -80,13 +83,15 @@ msgstr "Segno del saldo"
 
 #. module: l10n_it_account
 #: code:addons/l10n_it_account/models/account_type.py:42
-#, python-format
+#: code:addons/l10n_it_account/models/account_type.py:42
+#: code:addons/l10n_it_account/models/account_type.py:42
 msgid "Balance sign's value can only be 1 or -1."
 msgstr "Il valore del segno per il saldo può essere solo 1 o -1."
 
 #. module: l10n_it_account
 #: code:addons/l10n_it_account/models/account_group.py:27
-#, python-format
+#: code:addons/l10n_it_account/models/account_group.py:27
+#: code:addons/l10n_it_account/models/account_group.py:27
 msgid ""
 "Can't set '{}' as parent for group '{}'.\n"
 "{}"
@@ -102,20 +107,22 @@ msgstr "Aziende"
 #. module: l10n_it_account
 #: model:ir.model.fields,field_description:l10n_it_account.field_account_tax__cee_type
 msgid "Include in VAT register"
-msgstr "Includere nel registro IVA"
+msgstr "Includi nel registo IVA"
 
 #. module: l10n_it_account
-#: code:addons/l10n_it_account/models/account_group.py:65
-#, python-format
-msgid ""
-"Incoherent balance signs for '{}' and its subgroups:\n"
-"{}"
-msgstr ""
+#: model:ir.model,name:l10n_it_account.model_account_invoice
+msgid "Invoice"
+msgstr "Fattura"
 
 #. module: l10n_it_account
 #: model:ir.ui.menu,name:l10n_it_account.account_italian_localization
 msgid "Italian Localization"
 msgstr "Fiscalità italiana"
+
+#. module: l10n_it_account
+#: model:ir.model.fields,field_description:l10n_it_account.field_account_invoice__amount_net_pay
+msgid "Net to pay"
+msgstr ""
 
 #. module: l10n_it_account
 #: model_terms:ir.ui.view,arch_db:l10n_it_account.internal_layout
@@ -125,15 +132,19 @@ msgstr "Pagina:"
 #. module: l10n_it_account
 #: model:ir.model.fields,field_description:l10n_it_account.field_account_tax__parent_tax_ids
 msgid "Parent Taxes"
-msgstr "Imposte padre"
+msgstr "Imposte genitori"
 
 #. module: l10n_it_account
 #: selection:account.tax,cee_type:0
+#: selection:account.tax,cee_type
+#: selection:account.tax,cee_type
 msgid "Purchase"
 msgstr "Acquisto"
 
 #. module: l10n_it_account
 #: selection:account.tax,cee_type:0
+#: selection:account.tax,cee_type
+#: selection:account.tax,cee_type
 msgid "Sale"
 msgstr "Vendita"
 
@@ -148,26 +159,7 @@ msgid ""
 "Use in the case of tax with 'VAT integration'. This specifies the VAT "
 "register (sales / purchases) where the tax must be computed."
 msgstr ""
-"Utilizzare nel caso di imposta per \"integrazione IVA\". Specifica il "
-"registro IVA (vendite / acquisti) nel quale deve essere calcolata l'imposta."
+"Utilizzare nel caso di imposta per 'integrazione IVA'. Specifica il "
+"registro IVA (Vendite / acquisti) in cui deve essere computata l'imposta."
 
-#~ msgid "Incoherent balance signs for '{}' and its subgroups."
-#~ msgstr "Segni del saldo incoerenti per \"{}\" e i sottogruppi."
 
-#~ msgid "Cannot link accounts of different types to group '{}'."
-#~ msgstr "Impossibile collegare conti di tipo diverso al gruppo '{}'."
-
-#~ msgid "Date Range Types"
-#~ msgstr "Tipi di intervallo date"
-
-#~ msgid "Date Ranges"
-#~ msgstr "Intervalli date"
-
-#~ msgid "Date ranges"
-#~ msgstr "Intervalli date"
-
-#~ msgid "Generate Date Ranges"
-#~ msgstr "Generazione intervalli date"
-
-#~ msgid "Pag:"
-#~ msgstr "Pag:"

@@ -4,17 +4,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo (12.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2019-12-09 12:04+0000\n"
-"Last-Translator: Lorenzo Battistini <lb@takobi.online>\n"
-"Language-Team: none\n"
-"Language: it\n"
+"POT-Creation-Date: 2022-06-05 19:02+0000\n"
+"PO-Revision-Date: 2022-06-05 19:02+0000\n"
+"Last-Translator: Antonio M. Vigliotti <antoniomaria.vigliotti@gmail.com>\n"
+"Language-Team: Zeroincombenze (https://www.zeroincombenze.it)\n"
+"Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.9.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: l10n_it_website_portal_fatturapa
 #: model_terms:ir.ui.view,arch_db:l10n_it_website_portal_fatturapa.fatturapa_details
@@ -51,3 +51,5 @@ msgstr "Il tuo nome"
 #: model_terms:ir.ui.view,arch_db:l10n_it_website_portal_fatturapa.fatturapa_details
 msgid "Your Last Name"
 msgstr "Il tuo cognome"
+
+

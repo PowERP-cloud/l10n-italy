@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_43
+|icon| ITA - Inversione contabile 12.0.1.2.7_45
 ===============================================
 
 
@@ -378,65 +378,65 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_45 (2022-06-27)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Element '<field name="enable_date">' cannot be located in parent view
+
 12.0.1.2.7_44 (2022-04-13)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[FIX] Set date & date_invoice of self-invoice = invoice / Date auto-fattura = fattura
+* [FIX] Set date & date_invoice of self-invoice = invoice / Date auto-fattura = fattura
 
 12.0.1.2.7_43 (2022-04-13)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[FIX] Set check on RC tax / Impostato check su tassa reverse charge
+* [FIX] Set check on RC tax / Impostato check su tassa reverse charge
 
 12.0.1.2.7_42 (2022-04-01)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[FIX] Wrong customer partner / Errato partner cliente
+* [FIX] Wrong customer partner / Errato partner cliente
 
 12.0.1.2.7_41 (2022-03-18)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[FIX] Self invoice wrong date / Data registrazione errata in autofattura
+* [FIX] Self invoice wrong date / Data registrazione errata in autofattura
 
 12.0.1.2.7_40 (2022-03-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[FIX] More currency invoices / Fatture in valuta (più copertura)
+* [FIX] More currency invoices / Fatture in valuta (più copertura)
 
 12.0.1.2.7_39 (2022-02-25)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[FIX] Currency invoices / Fatture in valuta
+* [FIX] Currency invoices / Fatture in valuta
 
 12.0.1.2.7_38 (2022-02-22)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[FIX] Invalid tax nature check / Errato controllo natura codice IVA
+* [FIX] Invalid tax nature check / Errato controllo natura codice IVA
 
 12.0.1.2.7_37 (2022-01-07)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[FIX] Impostato tipo documento per l'autofattura da posizione fiscale
+* [FIX] Impostato tipo documento per l'autofattura da posizione fiscale
 
 12.0.1.2.7_36 (2021-12-30)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[FIX] Fix BUG 601 / 602
+* [FIX] Fix BUG 601 / 602
 
 12.0.1.2.7_35 (2021-12-17)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[FIX] Inserito avviso per conto iva vendite
+* [FIX] Inserito avviso per conto iva vendite
 
 12.0.1.2.7_34 (2021-12-16)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[FIX] Fix autofattura
-
-12.0.1.2.7_33 (2021-12-14)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-[FIX] Fix autofattura
+* [FIX] Fix autofattura
 
 
 
@@ -504,7 +504,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-04-13
+Last Update / Ultimo aggiornamento: 2022-06-30
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
