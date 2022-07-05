@@ -16,19 +16,20 @@ class AccountJournal(models.Model):
         'taxable_amount': 100,
     }
 
-    @api.depends('effetti_allo_sconto')
+    @api.depends('portafoglio_sbf')
     def _importo_effetti(self):
         for rec in self:
             if rec.effetti_allo_sconto and rec.effetti_allo_sconto.id:
                 query_select_account_balance = """
-                 SELECT 
+                 SELECT
                     SUM(debit) - SUM(credit) as balance
-                    FROM account_move_line, account_move 
+                    FROM account_move_line, account_move
                     WHERE account_move_line.account_id = {account_id}
                     and account_move_line.move_id = account_move.id
                     and account_move.state = 'posted'
                 """.format(
-                    account_id=rec.effetti_allo_sconto.id
+                    # account_id=rec.effetti_allo_sconto.id
+                    account_id=rec.portafoglio_sbf.id
                 )
 
                 self.env.cr.execute(query_select_account_balance)
@@ -47,14 +48,14 @@ class AccountJournal(models.Model):
         for rec in self:
             if rec.portafoglio_sbf and rec.portafoglio_sbf.id:
                 query_select_account_balance = """
-                    SELECT 
+                SELECT
                     SUM(debit) - SUM(credit) as balance
-                    FROM account_move_line, account_move 
-                    WHERE account_move_line.account_id = {account_id}
+                    FROM account_move_line, account_move
+                    WHERE (account_move_line.account_id = {account_id}
                     and account_move_line.move_id = account_move.id
-                    and account_move.state = 'posted'
+                    and account_move.state <> 'posted')
                 """.format(
-                    account_id=rec.portafoglio_sbf.id
+                    account_id=rec.portafoglio_sbf.id,
                 )
 
                 self.env.cr.execute(query_select_account_balance)
@@ -70,19 +71,22 @@ class AccountJournal(models.Model):
 
     @api.depends('limite_effetti_sbf', 'importo_effetti_sbf')
     def _disponibilita_effetti(self):
-        for rec in self:
-            residuo = rec.limite_effetti_sbf - (
-                rec.importo_effetti_sbf + rec.impegno_effetti_sbf
-            )
+        for bank in self:
+            if bank.wallet_ids:
+                residuo = 0.0
+                for wallet in bank.wallet_ids:
+                    wallet._disponibilita_effetti()
+                    residuo += wallet.disponibilita_effetti_sbf
+            else:
+                residuo = bank.limite_effetti_sbf + (
+                    bank.importo_effetti_sbf + bank.impegno_effetti_sbf
+                )
 
             if residuo > 0:
-                rec.disponibilita_effetti_sbf = residuo
+                bank.disponibilita_effetti_sbf = residuo
             else:
-                rec.disponibilita_effetti_sbf = 0.0
-            # end if
-        # end for
+                bank.disponibilita_effetti_sbf = 0.0
 
-    # end _disponibilita_effetti
 
     def _set_main_bank_account_id_default(self):
         return self.env['account.journal']
