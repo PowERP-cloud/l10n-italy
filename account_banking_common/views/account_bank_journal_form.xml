@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <record id="view_account_bank_journal_tree" model="ir.ui.view">
+        <field name="name">account.bank.journal.tree</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_bank_journal_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='bank_acc_number']" position="after">
+                <field name="disponibilita_effetti_sbf"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="view_account_bank_journal_form_banking_common" model="ir.ui.view">
         <field name="name">account.bank.journal.form.banking.common</field>
         <field name="model">account.journal</field>
@@ -25,11 +37,12 @@
                         </field>
                         <field name="main_bank_account_id" attrs="{'required': [('is_wallet', '=', True)], 'invisible': [('is_wallet', '=', False)]}"/>
                     </group>
-                    <group colspan="4" string="Configurazione conti pagamenti" attrs="{'invisible': [('is_wallet', '=', False)]}">
-                        <group>
+                    <group colspan="4" string="Configurazione conti pagamenti">
+                        <group
+                            attrs="{'invisible': [('is_wallet', '=', False)]}">
                                     <field name="invoice_financing_evaluate"/>
                         </group>
-                        <group>
+                        <group attrs="{'invisible': [('is_wallet', '=', False)]}">
                                 <field
                                       name="invoice_financing_percent"
                                       attrs="{
@@ -38,15 +51,15 @@
                                       }"
                                       />
                         </group>
-                        <group>
+                        <group attrs="{'invisible': [('is_wallet', '=', False)]}">
                             <field name="sezionale"/>
                             <field name="portafoglio_sbf"/>
                             <field name="effetti_allo_sconto"/>
                         </group>
                         <group>
-                            <field name="limite_effetti_sbf"/>
-                            <field name="impegno_effetti_sbf"/>
-                            <field name="importo_effetti_sbf"/>
+                            <field name="limite_effetti_sbf" attrs="{'invisible': [('is_wallet', '=', False)]}"/>
+                            <field name="impegno_effetti_sbf" attrs="{'invisible': [('is_wallet', '=', False)]}"/>
+                            <field name="importo_effetti_sbf" attrs="{'invisible': [('is_wallet', '=', False)]}"/>
                             <field name="disponibilita_effetti_sbf"/>
                         </group>
                     </group>
