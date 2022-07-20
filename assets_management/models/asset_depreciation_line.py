@@ -403,19 +403,21 @@ class AssetDepreciationLine(models.Model):
     def generate_account_move_single(self):
         self.ensure_one()
         am_obj = self.env['account.move']
+        if self.asset_accounting_info_ids.invoice_id:
+            self.move_id = self.asset_accounting_info_ids.invoice_id.move_id
+        else:
+            vals = self.get_account_move_vals()
+            if 'line_ids' not in vals:
+                vals['line_ids'] = []
 
-        vals = self.get_account_move_vals()
-        if 'line_ids' not in vals:
-            vals['line_ids'] = []
+            line_vals = self.get_account_move_line_vals()
+            for v in line_vals:
+                vals['line_ids'].append((0, 0, v))
 
-        line_vals = self.get_account_move_line_vals()
-        for v in line_vals:
-            vals['line_ids'].append((0, 0, v))
+            self.move_id = am_obj.create(vals)
 
-        self.move_id = am_obj.create(vals)
-
-        if self.final:
-            self.move_id.post()
+            if self.final:
+                self.move_id.post()
 
     def get_account_move_vals(self):
         self.ensure_one()
