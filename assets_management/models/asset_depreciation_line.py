@@ -11,7 +11,6 @@ class AssetDepreciationLine(models.Model):
     _name = 'asset.depreciation.line'
     _description = "Assets Depreciations Lines"
     _order = 'date asc, name asc'
-    _inherit = ['mail.thread']
 
     amount = fields.Monetary(
         string="Amount",
@@ -125,9 +124,6 @@ class AssetDepreciationLine(models.Model):
 
     final = fields.Boolean(
         string="Final",
-        # readonly=True,
-        # states={'draft': [('readonly', False)]},
-        track_visibility='onchange',
     )
 
     # Non-default parameter: set which `move_types` require numeration
