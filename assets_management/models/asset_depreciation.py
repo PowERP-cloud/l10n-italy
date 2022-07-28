@@ -449,7 +449,7 @@ class AssetDepreciation(models.Model):
                 dep_date, company=self.company_id
             )
             if fy_dep == fy_start:
-                # If current depreciation lies within the same fiscal year in
+                # If current depreciation lines within the same fiscal year in
                 # which the asset was registered, compute multiplier as a
                 # difference from date_dep multiplier and start_date
                 # multiplier, plus 1/lapse to avoid "skipping" one day

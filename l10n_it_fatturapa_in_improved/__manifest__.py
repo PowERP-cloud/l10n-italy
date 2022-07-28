@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     'name': 'Italian localization - l10n_it_fatturapa_in_improved',
-    'version': '0.3.1',
+    'version': '12.0.0.3.2',
     'category': 'Localisation/Italy',
     'summary': 'Corrections to official l10n_it_fatturapa_in',
     'author': 'powERP enterprise network',
@@ -92,7 +92,7 @@ Last Update / Ultimo aggiornamento: 2021-08-06
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status
-    :alt: 
+    :alt:
 .. |Build Status| image:: https://travis-ci.org/PowERP-cloud/custom-addons.svg?branch=12.0
     :target: https://travis-ci.com/PowERP-cloud/custom-addons
     :alt: github.com

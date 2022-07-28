@@ -10,5 +10,9 @@ class WizardImportFatturapa(models.TransientModel):
     @api.multi
     def link(self):
         result = super().link()
-        self.invoice_id.e_invoice_received_date = self.wizard_id.attachment_id.e_invoice_received_date.date()
+        self.invoice_id.e_invoice_received_date = (
+            self.wizard_id.attachment_id.e_invoice_received_date.date()
+            if self.wizard_id.attachment_id.e_invoice_received_date
+            else False
+        )
         return result
