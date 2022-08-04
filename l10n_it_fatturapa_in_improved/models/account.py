@@ -17,3 +17,10 @@ class AccountInvoice(models.Model):
                 line['tax_ids'] = [(4, self.env.user.company_id.arrotondamenti_tax_id.id, None)]
 
         return res
+
+    @api.multi
+    def remove_attachment_link(self):
+        self = self.with_context({
+            'avoid_check_date': True,
+        })
+        return super().remove_attachment_link()
