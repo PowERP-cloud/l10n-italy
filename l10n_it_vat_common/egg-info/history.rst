@@ -1,3 +1,8 @@
+12.0.1.0.4 (2022-08-04)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Eliminato domain del flag di esclusione comunicazione iva
+
 12.0.1.0.3 (2021-12-16)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -9,10 +9,14 @@ class WizardImportFatturapa(models.TransientModel):
 
     @api.multi
     def link(self):
+        if self.invoice_id.rc_self_invoice_id:
+            if self.invoice_id.rc_self_invoice_id.fiscal_document_type_id:
+                fdt = self.invoice_id.rc_self_invoice_id.fiscal_document_type_id
+                code = fdt.code
+                if code in ('TD17', 'TD18', 'TD19'):
+                    self = self.with_context({
+                        'autofattura': True,
+                    })
+        self.invoice_id.e_invoice_received_date = self.wizard_id.attachment_id.e_invoice_received_date.date()
         result = super().link()
-        self.invoice_id.e_invoice_received_date = (
-            self.wizard_id.attachment_id.e_invoice_received_date.date()
-            if self.wizard_id.attachment_id.e_invoice_received_date
-            else False
-        )
         return result

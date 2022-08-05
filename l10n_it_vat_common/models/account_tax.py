@@ -90,9 +90,9 @@ class AccountTax(models.Model):
         domain.append(('journal_id.type', '=', self.type_tax_use))
 
         journal = self.env['account.journal']
-        if hasattr(journal, 'comunicazione_dati_iva_escludi'):
-            domain.append(
-                ('journal_id.comunicazione_dati_iva_escludi', '=', False))
+        # if hasattr(journal, 'comunicazione_dati_iva_escludi'):
+        #     domain.append(
+        #         ('journal_id.comunicazione_dati_iva_escludi', '=', False))
 
         header_domain = [x for x in domain]
         header_domain.append(('state', '=', state))
