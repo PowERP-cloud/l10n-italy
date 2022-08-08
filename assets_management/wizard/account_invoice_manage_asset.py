@@ -416,6 +416,7 @@ class WizardInvoiceManageAsset(models.TransientModel):
                 'date': dismiss_date,
                 'move_type': 'out',
                 'name': _("From invoice(s) ") + inv_num,
+                'asset_id': asset.id,
             }
             dep_vals['line_ids'].append((0, 0, dep_line_vals))
 
@@ -433,6 +434,7 @@ class WizardInvoiceManageAsset(models.TransientModel):
                     'date': dismiss_date,
                     'move_type': move_type,
                     'name': _("From invoice(s) ") + inv_num,
+                    'asset_id': asset.id,
                 }
                 dep_vals['line_ids'].append((0, 0, dep_balance_vals))
 
@@ -496,6 +498,7 @@ class WizardInvoiceManageAsset(models.TransientModel):
                 'move_type': 'out',
                 'name': name,
                 'partial_dismissal': True,
+                'asset_id': asset.id,
             }
             dep_line_vals = {
                 'asset_accounting_info_ids': [
@@ -508,6 +511,7 @@ class WizardInvoiceManageAsset(models.TransientModel):
                 'move_type': 'depreciated',
                 'name': name,
                 'partial_dismissal': True,
+                'asset_id': asset.id,
             }
 
             dep_vals = {'line_ids': [
@@ -527,6 +531,8 @@ class WizardInvoiceManageAsset(models.TransientModel):
                     'move_type': 'gain' if balance > 0 else 'loss',
                     'name': name,
                     'partial_dismissal': True,
+                    'asset_id': asset.id,
+
                 }
                 dep_vals['line_ids'].append((0, 0, loss_gain_vals))
 
@@ -602,6 +608,7 @@ class WizardInvoiceManageAsset(models.TransientModel):
                     'date': inv.date,
                     'move_type': move_type,
                     'name': _("From invoice(s) ") + inv_num,
+                    'asset_id': asset.id,
                 }
                 dep_vals['line_ids'].append((0, 0, dep_line_vals))
 
