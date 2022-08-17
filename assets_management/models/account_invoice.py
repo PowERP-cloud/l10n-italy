@@ -51,15 +51,26 @@ class AccountInvoice(models.Model):
     def action_invoice_cancel(self):
         res = super().action_invoice_cancel()
         if self:
+            asset = False
             # Remove every a.a.info related to current invoices, and delete
             # related depreciation lines
             aa_infos = self.mapped(lambda i: i.get_linked_aa_info_records())
+            if aa_infos:
+                asset = aa_infos[0].asset_id
             dep_lines = aa_infos.mapped('dep_line_id')
             aa_infos.unlink()
             # Filtering needed: cannot delete dep lines with a.a.info
             dep_lines.filtered(
                 lambda l: not l.asset_accounting_info_ids
             ).unlink()
+            # clean sale data into asset
+            if asset:
+                asset.sale_amount = 0.0
+                asset.sold = False
+                asset.sale_date = False
+                asset.sale_invoice_id = False
+                asset.customer_id = False
+
         return res
 
     @api.multi

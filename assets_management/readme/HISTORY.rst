@@ -1,3 +1,13 @@
+12.0.1.0.0_23 (2022-08-17)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato ammortamento della dismissione nella riga fattura
+
+12.0.1.0.0_22 (2022-08-17)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito annullamento fattura di vendita collegata al cespite
+
 12.0.1.0.0_20 (2022-03-18)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
