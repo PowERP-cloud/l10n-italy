@@ -1,3 +1,8 @@
+12.0.1.0.0_23 (2022-08-17)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato ammortamento della dismissione nella riga fattura
+
 12.0.1.0.0_22 (2022-08-17)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
