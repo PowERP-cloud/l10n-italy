@@ -336,7 +336,13 @@ class WizardInvoiceManageAsset(models.TransientModel):
         """ Dismisses asset and returns it """
         self.ensure_one()
         self.check_pre_dismiss_asset()
+        for dep in self.asset_id.depreciation_ids:
+            dismiss_date = self.dismiss_date
+            depreciation = dep.generate_depreciation_lines(dismiss_date)
+            dep.post_generate_depreciation_lines(depreciation)
+
         old_dep_lines = self.asset_id.mapped('depreciation_ids.line_ids')
+
         self.asset_id.write(self.get_dismiss_asset_vals())
 
         for dep in self.asset_id.depreciation_ids:
@@ -402,6 +408,7 @@ class WizardInvoiceManageAsset(models.TransientModel):
             'sold': True,
         }
         for dep in asset.depreciation_ids:
+            # depreciation = dep.generate_depreciation_lines(dismiss_date)
             residual = dep.amount_residual
             dep_vals = {'line_ids': []}
             dep_writeoff = writeoff
