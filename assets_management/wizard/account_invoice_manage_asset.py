@@ -339,11 +339,12 @@ class WizardInvoiceManageAsset(models.TransientModel):
         for dep in self.asset_id.depreciation_ids:
             dismiss_date = self.dismiss_date
             depreciation = dep.generate_depreciation_lines(dismiss_date)
-            depreciation.asset_accounting_info_ids += [
-                (0, 0, {'invoice_line_id': l.id,
-                        'relation_type': self.management_type})
-                for l in self.invoice_line_ids
-            ]
+            info = self.env['asset.accounting.info']
+            for l in self.invoice_line_ids:
+                vals = {'invoice_line_id': l.id,
+                        'relation_type': self.management_type}
+                info += self.env['asset.accounting.info'].create(vals)
+            depreciation.asset_accounting_info_ids += info
 
             dep.post_generate_depreciation_lines(depreciation)
 
