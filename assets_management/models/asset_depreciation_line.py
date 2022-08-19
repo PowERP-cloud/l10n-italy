@@ -108,6 +108,11 @@ class AssetDepreciationLine(models.Model):
 
     partial_dismissal = fields.Boolean(string="Partial Dismissal")
 
+    partial_dismiss_percentage = fields.Float(
+        string='Percentage of partial dismiss',
+        default=0.0,
+    )
+
     percentage = fields.Float(string="%")
 
     requires_account_move = fields.Boolean(
