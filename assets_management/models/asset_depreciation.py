@@ -182,7 +182,7 @@ class AssetDepreciation(models.Model):
     def write(self, vals):
         if 'line_ids' in vals:
             for line in vals['line_ids']:
-                if len(line) == 3 and 'asset_id' not in line[2]:
+                if len(line) == 3 and line[2] and 'asset_id' not in line[2]:
                     line[2].update({
                         'asset_id': self.asset_id.id
                     })

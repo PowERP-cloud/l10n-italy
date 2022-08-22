@@ -576,6 +576,8 @@ class WizardInvoiceManageAsset(models.TransientModel):
         percentage = self.partial_dismiss_percentage
         purchase_amt = self.asset_purchase_amount
 
+        # ammortamenti precedenti
+
         max_date = max(asset.depreciation_ids.mapped('last_depreciation_date'))
         if max_date and max_date > dismiss_date:
             raise ValidationError(
@@ -595,20 +597,17 @@ class WizardInvoiceManageAsset(models.TransientModel):
 
         vals = {'depreciation_ids': []}
         for dep in asset.depreciation_ids:
-            if dep.pro_rata_temporis:
-                dep_writeoff = writeoff * dep.get_pro_rata_temporis_multiplier(
-                    dismiss_date, 'std'
-                )
-            else:
-                dep_writeoff = writeoff
+            residual = dep.amount_residual * percentage
+            dep_writeoff = writeoff
 
             name = _("Partial dismissal from invoice(s) {}").format(inv_num)
 
             # Ammortamento in percentuale
-
+            #
             # full_depreciation = dep.prepare_depreciation_line_vals(dismiss_date)
             dep_amount = dep.get_depreciation_amount(dismiss_date)
             percentage_amount = dep_amount / 100 * percentage
+            dep_year = fields.Date.from_string(dismiss_date).year
             dep_line_vals = {
                 'asset_accounting_info_ids': [
                     (0, 0, {'invoice_line_id': l.id,
@@ -618,7 +617,7 @@ class WizardInvoiceManageAsset(models.TransientModel):
                 'amount': percentage_amount,
                 'date': dismiss_date,
                 'move_type': 'depreciated',
-                'name': name,
+                'name':  _("{} - Depreciation").format(dep_year),
                 'partial_dismissal': True,
                 'partial_dismiss_percentage': percentage,
                 'asset_id': asset.id,
@@ -627,8 +626,9 @@ class WizardInvoiceManageAsset(models.TransientModel):
             dep_vals = {'line_ids': [(0, 0, dep_line_vals)]}
 
             # rettifica negativa
-
-            out_amount = min(purchase_amt, writeoff)
+            # valore del venduto in campo note
+            out_name = name + ': ' + 'Valore del venduto'
+            out_amount = min(residual, writeoff)
             out_line_vals = {
                 'asset_accounting_info_ids': [
                     (0, 0, {'invoice_line_id': l.id,
@@ -638,7 +638,7 @@ class WizardInvoiceManageAsset(models.TransientModel):
                 'amount': out_amount,
                 'date': dismiss_date,
                 'move_type': 'out',
-                'name': name,
+                'name': out_name,
                 'partial_dismissal': True,
                 'asset_id': asset.id,
             }
@@ -647,8 +647,10 @@ class WizardInvoiceManageAsset(models.TransientModel):
 
             # seconda rettifica negativa
 
-            if purchase_amt > writeoff:
-                out_amount_2 = purchase_amt - writeoff
+            # valore residuo di dismissione
+            if residual > writeoff:
+                out_name_2 = name + ': Valore residuo di dismissione'
+                out_amount_2 = residual - writeoff
                 out_line_vals_2 = {
                     'asset_accounting_info_ids': [
                         (0, 0, {'invoice_line_id': l.id,
@@ -658,7 +660,7 @@ class WizardInvoiceManageAsset(models.TransientModel):
                     'amount': out_amount_2,
                     'date': dismiss_date,
                     'move_type': 'out',
-                    'name': name,
+                    'name': out_name_2,
                     'partial_dismissal': True,
                     'asset_id': asset.id,
                 }
@@ -667,8 +669,9 @@ class WizardInvoiceManageAsset(models.TransientModel):
 
             # minusvalenza / plusvalenza?
 
-            minus_amount = purchase_amt - percentage_amount - writeoff
+            minus_amount = residual - percentage_amount - writeoff
             if not float_is_zero(minus_amount, digits):
+                loss_gain_name = 'Minusvalenza' if minus_amount > 0 else 'Plusvalenza'
                 loss_gain_vals = {
                     'asset_accounting_info_ids': [
                         (0, 0, {'invoice_line_id': l.id,
@@ -678,7 +681,7 @@ class WizardInvoiceManageAsset(models.TransientModel):
                     'amount': abs(minus_amount),
                     'date': dismiss_date,
                     'move_type': 'loss' if minus_amount > 0 else 'gain',
-                    'name': name,
+                    'name': name + ': ' + loss_gain_name,
                     'partial_dismissal': True,
                     'asset_id': asset.id,
 
