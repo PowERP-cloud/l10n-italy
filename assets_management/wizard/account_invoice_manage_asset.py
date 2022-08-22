@@ -829,7 +829,3 @@ class WizardInvoiceManageAsset(models.TransientModel):
         self.check_pre_update_asset()
         self.asset_id.write(self.get_update_asset_vals())
         return self.asset_id
-
-    # def percentage(self, part, all):
-    #     percentage = 100 * float(part)/float(all)
-    #     return str(percentage) + "%"

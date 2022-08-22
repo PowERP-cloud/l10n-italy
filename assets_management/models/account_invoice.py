@@ -57,7 +57,6 @@ class AccountInvoice(models.Model):
             aa_infos = self.mapped(lambda i: i.get_linked_aa_info_records())
             if aa_infos:
                 asset = aa_infos[0].asset_id
-            aa_infos.filtered(lambda i: i.invoice_id == self.id)
             dep_lines = aa_infos.mapped('dep_line_id')
             aa_infos.unlink()
             # Filtering needed: cannot delete dep lines with a.a.info
