@@ -180,6 +180,13 @@ class AssetDepreciation(models.Model):
 
     @api.multi
     def write(self, vals):
+        if 'line_ids' in vals:
+            for line in vals['line_ids']:
+                if len(line) == 3 and 'asset_id' not in line[2]:
+                    line[2].update({
+                        'asset_id': self.asset_id.id
+                    })
+                # print(line)
         res = super().write(vals)
         need_norm = self.filtered(lambda d: d.need_normalize_first_dep_nr())
         if need_norm:

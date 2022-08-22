@@ -60,6 +60,15 @@ class AccountInvoice(models.Model):
             dep_lines = aa_infos.mapped('dep_line_id')
             aa_infos.unlink()
             # Filtering needed: cannot delete dep lines with a.a.info
+            percentages = dep_lines.filtered(
+                lambda l: l.move_type == 'depreciated' and l.partial_dismissal is True and
+                l.partial_dismiss_percentage > 0
+            )
+            if percentages:
+                percentage = percentages[0].partial_dismiss_percentage
+            else:
+                percentage = 0
+
             dep_lines.filtered(
                 lambda l: not l.asset_accounting_info_ids
             ).unlink()
@@ -70,6 +79,8 @@ class AccountInvoice(models.Model):
                 asset.sale_date = False
                 asset.sale_invoice_id = False
                 asset.customer_id = False
+                if percentage and asset.partial_dismiss_percentage >= percentage:
+                    asset.partial_dismiss_percentage -= percentage
 
         return res
 

@@ -155,6 +155,11 @@ class Asset(models.Model):
         default=False,
     )
 
+    partial_dismiss_percentage = fields.Float(
+        string='Percentage of partial dismiss',
+        default=0.0,
+    )
+
     @api.model
     def create(self, vals):
         # Add depreciation if it's missing while category is set

@@ -1,3 +1,8 @@
+12.0.1.0.0_25 (2022-08-18)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Riabilitata la possibilità di inserire una riga cespite come richiesto dalla Community
+
 12.0.1.0.0_24 (2022-08-18)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

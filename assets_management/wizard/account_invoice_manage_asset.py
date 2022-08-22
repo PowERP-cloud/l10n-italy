@@ -56,6 +56,11 @@ class WizardInvoiceManageAsset(models.TransientModel):
         string="Depreciated Fund Amount"
     )
 
+    partial_dismiss_percentage = fields.Float(
+        string='Percentage of partial dismiss',
+        default=0.0,
+    )
+
     depreciation_type_ids = fields.Many2many(
         'asset.depreciation.type',
         string="Depreciation Types"
@@ -163,6 +168,14 @@ class WizardInvoiceManageAsset(models.TransientModel):
 
             self.invoice_line_ids = invoices.mapped('invoice_line_ids')\
                 .filtered(lambda l: not l.asset_accounting_info_ids)
+
+    @api.onchange('partial_dismiss_percentage', 'asset_id')
+    def onchange_partial_dismiss_percentage(self):
+        for record in  self:
+            if record.partial_dismiss_percentage > 0:
+                record.asset_purchase_amount = record.asset_id.purchase_amount / 100 * record.partial_dismiss_percentage
+            else:
+                record.asset_purchase_amount = 0.0
 
     @api.multi
     def link_asset(self):
@@ -554,6 +567,129 @@ class WizardInvoiceManageAsset(models.TransientModel):
 
         return vals
 
+    def get_partial_dismiss_asset_percentage_vals(self):
+        self.ensure_one()
+        asset = self.asset_id
+        currency = self.asset_id.currency_id
+        dismiss_date = self.dismiss_date
+        digits = self.env['decimal.precision'].precision_get('Account')
+        percentage = self.partial_dismiss_percentage
+        purchase_amt = self.asset_purchase_amount
+
+        max_date = max(asset.depreciation_ids.mapped('last_depreciation_date'))
+        if max_date and max_date > dismiss_date:
+            raise ValidationError(
+                _("Cannot dismiss an asset earlier than the last depreciation"
+                  " date.\n"
+                  "(Dismiss date: {}, last depreciation date: {}).")
+                .format(dismiss_date, max_date)
+            )
+
+        invoice = self.invoice_line_ids.mapped('invoice_id')
+        inv_num = invoice.number
+
+        writeoff = 0
+        for l in self.invoice_line_ids:
+            writeoff += l.currency_id.compute(l.price_subtotal, currency)
+        writeoff = round(writeoff, digits)
+
+        vals = {'depreciation_ids': []}
+        for dep in asset.depreciation_ids:
+            if dep.pro_rata_temporis:
+                dep_writeoff = writeoff * dep.get_pro_rata_temporis_multiplier(
+                    dismiss_date, 'std'
+                )
+            else:
+                dep_writeoff = writeoff
+
+            name = _("Partial dismissal from invoice(s) {}").format(inv_num)
+
+            # Ammortamento in percentuale
+
+            # full_depreciation = dep.prepare_depreciation_line_vals(dismiss_date)
+            dep_amount = dep.get_depreciation_amount(dismiss_date)
+            percentage_amount = dep_amount / 100 * percentage
+            dep_line_vals = {
+                'asset_accounting_info_ids': [
+                    (0, 0, {'invoice_line_id': l.id,
+                            'relation_type': self.management_type})
+                    for l in self.invoice_line_ids
+                ],
+                'amount': percentage_amount,
+                'date': dismiss_date,
+                'move_type': 'depreciated',
+                'name': name,
+                'partial_dismissal': True,
+                'partial_dismiss_percentage': percentage,
+                'asset_id': asset.id,
+            }
+
+            dep_vals = {'line_ids': [(0, 0, dep_line_vals)]}
+
+            # rettifica negativa
+
+            out_amount = min(purchase_amt, writeoff)
+            out_line_vals = {
+                'asset_accounting_info_ids': [
+                    (0, 0, {'invoice_line_id': l.id,
+                            'relation_type': self.management_type})
+                    for l in self.invoice_line_ids
+                ],
+                'amount': out_amount,
+                'date': dismiss_date,
+                'move_type': 'out',
+                'name': name,
+                'partial_dismissal': True,
+                'asset_id': asset.id,
+            }
+
+            dep_vals['line_ids'].append((0, 0, out_line_vals))
+
+            # seconda rettifica negativa
+
+            if purchase_amt > writeoff:
+                out_amount_2 = purchase_amt - writeoff
+                out_line_vals_2 = {
+                    'asset_accounting_info_ids': [
+                        (0, 0, {'invoice_line_id': l.id,
+                                'relation_type': self.management_type})
+                        for l in self.invoice_line_ids
+                    ],
+                    'amount': out_amount_2,
+                    'date': dismiss_date,
+                    'move_type': 'out',
+                    'name': name,
+                    'partial_dismissal': True,
+                    'asset_id': asset.id,
+                }
+
+                dep_vals['line_ids'].append((0, 0, out_line_vals_2))
+
+            # minusvalenza / plusvalenza?
+
+            minus_amount = purchase_amt - percentage_amount - writeoff
+            if not float_is_zero(minus_amount, digits):
+                loss_gain_vals = {
+                    'asset_accounting_info_ids': [
+                        (0, 0, {'invoice_line_id': l.id,
+                                'relation_type': self.management_type})
+                        for l in self.invoice_line_ids
+                    ],
+                    'amount': abs(minus_amount),
+                    'date': dismiss_date,
+                    'move_type': 'loss' if minus_amount > 0 else 'gain',
+                    'name': name,
+                    'partial_dismissal': True,
+                    'asset_id': asset.id,
+
+                }
+
+                dep_vals['line_ids'].append((0, 0, loss_gain_vals))
+
+            vals['depreciation_ids'].append((1, dep.id, dep_vals))
+
+        return vals
+
     def get_update_asset_vals(self):
         self.ensure_one()
         asset = self.asset_id
@@ -644,7 +780,43 @@ class WizardInvoiceManageAsset(models.TransientModel):
         self.ensure_one()
         self.check_pre_partial_dismiss_asset()
         old_dep_lines = self.asset_id.mapped('depreciation_ids.line_ids')
-        self.asset_id.write(self.get_partial_dismiss_asset_vals())
+        if self.partial_dismiss_percentage > 0:
+            if self.asset_id.partial_dismiss_percentage and (
+                self.partial_dismiss_percentage >= self.asset_id.partial_dismiss_percentage
+            ):
+                consentito = 100 - self.asset_id.partial_dismiss_percentage
+                raise ValidationError(
+                    _("La percentuale di dismissone supera il valore consentito {val}".format(val=consentito))
+                )
+
+            vals = self.get_partial_dismiss_asset_percentage_vals()
+        else:
+            vals = self.get_partial_dismiss_asset_vals()
+
+        self.asset_id.write(vals)
+
+        digits = self.env['decimal.precision'].precision_get('Account')
+        currency = self.asset_id.currency_id
+
+        writeoff = 0
+        for l in self.invoice_line_ids:
+            writeoff += l.currency_id.compute(l.price_subtotal, currency)
+        writeoff = round(writeoff, digits)
+
+        total_percentage = self.asset_id.partial_dismiss_percentage + self.partial_dismiss_percentage
+        asset_vals = {
+            'sale_amount': self.asset_id.sale_amount + writeoff,
+            'partial_dismiss_percentage': self.asset_id.partial_dismiss_percentage + self.partial_dismiss_percentage
+        }
+        if total_percentage >= 100:
+            invoice = self.invoice_ids[0]
+            asset_vals.update({
+                'customer_id': invoice.partner_id.id,
+                'sale_date': invoice.date,
+                'sale_invoice_id': invoice.id,
+                'sold': True,
+            })
+        self.asset_id.write(asset_vals)
 
         for dep in self.asset_id.depreciation_ids:
             (dep.line_ids - old_dep_lines).post_partial_dismiss_asset()
