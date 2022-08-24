@@ -103,7 +103,7 @@
                             <field name="purchase_amount"/>
                             <field name="supplier_ref"/>
                         </group>
-                        <group name="purchase_info"
+                        <group name="sale_info"
                                string="Sale Info">
                             <field name="sale_invoice_id"
                                    attrs="{'invisible': [('sale_invoice_id', '=', False)], 'readonly': [('sale_invoice_id', '!=', False)]}"/>
@@ -112,6 +112,7 @@
                             <field name="customer_id"/>
                             <field name="sale_date"/>
                             <field name="sale_amount"/>
+                            <field name="partial_dismiss_percentage" />
                             <field name="sold"/>
                         </group>
                     </group>

@@ -1,3 +1,8 @@
+12.0.1.0.0_27 (2022-08-24)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato controllo su data ammortamento e data dismissione
+
 12.0.1.0.0_26 (2022-08-22)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

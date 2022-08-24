@@ -7,6 +7,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_compare, float_is_zero
 import logging
+import datetime
 
 _logger = logging.getLogger(__file__)
 
@@ -334,6 +335,8 @@ class AssetDepreciation(models.Model):
                   " posted depreciation for the chosen date and types:\n{}")
                 .format(posted_names)
             )
+
+        self.check_previous_depreciation(dep_date)
 
     def generate_depreciation_lines(self, dep_date):
         # Set new date within context if necessary
@@ -668,3 +671,21 @@ class AssetDepreciation(models.Model):
         # edn for
         _logger.info('residual {}'.format(amount))
         return amount
+
+    @api.multi
+    def check_previous_depreciation(self, dep_date):
+        for dep in self:
+            anno_fiscale = self.env['account.fiscal.year'].get_fiscal_year_by_date(dep_date, company=dep.company_id)
+            inizio_esercizio = anno_fiscale.date_from
+            fine_esercizio_precedente = inizio_esercizio - datetime.timedelta(1)
+            last_depreciation_date = dep.asset_id.last_depreciation_date
+
+            if dep.asset_id.purchase_date > fine_esercizio_precedente:
+                continue
+            else:
+                if not last_depreciation_date or last_depreciation_date != fine_esercizio_precedente:
+                    asset_name = dep.asset_id.name
+                    raise ValidationError("Manca l'ammortamento dell'esercizio precedente per {asset}.".format(
+                        asset=asset_name
+                    ))
+
