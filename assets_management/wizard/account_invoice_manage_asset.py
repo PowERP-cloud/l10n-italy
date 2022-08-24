@@ -597,7 +597,7 @@ class WizardInvoiceManageAsset(models.TransientModel):
 
         vals = {'depreciation_ids': []}
         for dep in asset.depreciation_ids:
-            residual = dep.amount_residual * percentage
+            residual = dep.amount_residual / 100 * percentage
             dep_writeoff = writeoff
 
             name = _("Partial dismissal from invoice(s) {}").format(inv_num)
