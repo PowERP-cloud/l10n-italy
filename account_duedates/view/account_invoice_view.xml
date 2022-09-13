@@ -38,7 +38,7 @@
                             NB: editable="top" let's the user modify the item directly from the row, without
                                 opening a new form dialog
                         -->
-                        <tree editable="top" delete="false" create="false">
+                        <tree create="false" delete="false" edit="false" editable="bottom">
                             <field name="due_date" attrs="{'readonly':[('schedule_payment', '=', True)]}"/>
                             <field name="payment_method_id" attrs="{'readonly':[('schedule_payment', '=', True)]}"/>
                             <field name="due_amount" sum="Totale" attrs="{'readonly':[('schedule_payment', '=', True)]}"/>
@@ -93,6 +93,7 @@
             <xpath expr="/form/sheet/notebook/page[1]" position="after">
                 <page string="Scadenze">
                     <field name="check_duedates_payment" invisible="1" />
+                    <field class="alert alert-warning" placeholder="Avviso"  name="duedate_message" nolabel="1"/>
                     <field name="duedate_line_ids" attrs="{'invisible':[('check_duedates_payment', '=', True)]}" nolabel="1">
                         <!--
                             NB: editable="top" let's the user modify the item directly from the row, without

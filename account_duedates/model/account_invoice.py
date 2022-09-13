@@ -34,7 +34,7 @@ class AccountInvoice(models.Model):
         string='Righe scadenze',
         comodel_name='account.duedate_plus.line',
         related='duedate_manager_id.duedate_line_ids',
-        readonly=False,
+        readonly=True,
     )
 
     check_duedates_payment = fields.Boolean(
@@ -56,6 +56,12 @@ class AccountInvoice(models.Model):
         readonly=True,
         default='',
         copy=False,
+    )
+
+    duedate_message = fields.Text(
+        string='Warning message',
+        readonly=True,
+        default='L\'operazione di modifica delle righe è consentita solo dalla scadenza e solo per la data di scadenza.',
     )
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -93,6 +99,15 @@ class AccountInvoice(models.Model):
                     if ret:
                         msg = ret['title'] + '\n' + ret['message']
                         raise UserError(msg)
+                    if (
+                        'no_delete_duedate_line_ids' in values
+                        and invoice.move_id
+                        and invoice.check_duedates_payment is True
+                    ):
+                        msg = 'L\'operazione di modifica delle righe è consentita solo dalla scadenza' \
+                              ' e solo per la data di scadenza.'
+                        raise UserError(msg)
+
                     if (
                         'duedate_line_ids' in values
                         and invoice.move_id
