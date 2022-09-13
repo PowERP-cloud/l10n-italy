@@ -93,7 +93,7 @@
             <xpath expr="/form/sheet/notebook/page[1]" position="after">
                 <page string="Scadenze">
                     <field name="check_duedates_payment" invisible="1" />
-                    <field class="alert alert-warning" attrs="{'invisible':[('check_duedates_payment', '=', True)]}" placeholder="Avviso"  name="duedate_message" nolabel="1"/>
+                    <field class="alert alert-warning" attrs="{'invisible':[('check_duedates_payment', '=', False)]}" placeholder="Avviso"  name="duedate_message" nolabel="1"/>
                     <field name="duedate_line_ids" attrs="{'invisible':[('check_duedates_payment', '=', True)]}" nolabel="1">
                         <!--
                             NB: editable="top" let's the user modify the item directly from the row, without
