@@ -338,8 +338,16 @@ class AssetDepreciation(models.Model):
 
         self.check_previous_depreciation(dep_date)
 
+    def delete_current_depreciation_line(self, dep_date):
+        # dep.check_current_depreciation_lines(dep_date)
+        lines_to_delete = self.check_current_depreciation_lines(dep_date)
+        if lines_to_delete:
+            lines_to_delete.button_remove_account_move()
+            lines_to_delete.unlink()
+
     def generate_depreciation_lines(self, dep_date):
         # Set new date within context if necessary
+        self.delete_current_depreciation_line(dep_date)
         self.check_before_generate_depreciation_lines(dep_date)
 
         new_lines = self.env['asset.depreciation.line']
@@ -350,16 +358,7 @@ class AssetDepreciation(models.Model):
         return new_lines
 
     def generate_depreciation_lines_single(self, dep_date):
-        self.ensure_one()
-        final = self._context.get('final')
-
-        dep_nr = self.get_max_depreciation_nr() + 1
-        dep = self.with_context(dep_nr=dep_nr, used_asset=self.asset_id.used)
-        dep_amount = dep.get_depreciation_amount(dep_date)
-        dep = dep.with_context(dep_amount=dep_amount, final=final,)
-
-        vals = dep.prepare_depreciation_line_vals(dep_date)
-
+        vals = self.generate_depreciation_lines_single_vals(dep_date)
         return self.env['asset.depreciation.line'].create(vals)
 
     def generate_dismiss_account_move(self):
@@ -650,11 +649,12 @@ class AssetDepreciation(models.Model):
 
     def generate_depreciation_lines_single_vals(self, dep_date):
         self.ensure_one()
+        final = self._context.get('final')
 
         dep_nr = self.get_max_depreciation_nr() + 1
         dep = self.with_context(dep_nr=dep_nr, used_asset=self.asset_id.used)
         dep_amount = dep.get_depreciation_amount(dep_date)
-        dep = dep.with_context(dep_amount=dep_amount)
+        dep = dep.with_context(dep_amount=dep_amount, final=final,)
 
         return dep.prepare_depreciation_line_vals(dep_date)
 
@@ -673,19 +673,34 @@ class AssetDepreciation(models.Model):
         return amount
 
     @api.multi
+    def check_current_depreciation_lines(self, dep_date):
+        res = self.env['asset.depreciation.line']
+        for dep in self:
+            anno_fiscale = self.env['account.fiscal.year'].get_fiscal_year_by_date(dep_date, company=dep.company_id)
+
+            res += dep.env['asset.depreciation.line'].get_depreciation_lines(
+                date_from=anno_fiscale.date_from,
+                date_to=anno_fiscale.date_to,
+                final=False,
+                depreciation_ids=dep.id,
+            )
+        return res
+
+    @api.multi
     def check_previous_depreciation(self, dep_date):
         for dep in self:
             anno_fiscale = self.env['account.fiscal.year'].get_fiscal_year_by_date(dep_date, company=dep.company_id)
             inizio_esercizio = anno_fiscale.date_from
             fine_esercizio_precedente = inizio_esercizio - datetime.timedelta(1)
-            last_depreciation_date = dep.asset_id.last_depreciation_date
 
-            if dep.asset_id.purchase_date > fine_esercizio_precedente:
+            if dep.asset_id.purchase_date > fine_esercizio_precedente and (
+                fine_esercizio_precedente < dep_date <= anno_fiscale.date_to
+            ):
                 continue
             else:
+                last_depreciation_date = dep.last_depreciation_date
                 if not last_depreciation_date or last_depreciation_date != fine_esercizio_precedente:
                     asset_name = dep.asset_id.name
                     raise ValidationError("Manca l'ammortamento dell'esercizio precedente per {asset}.".format(
                         asset=asset_name
                     ))
-

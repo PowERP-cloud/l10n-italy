@@ -352,15 +352,16 @@ class WizardInvoiceManageAsset(models.TransientModel):
         for dep in self.asset_id.depreciation_ids:
             dismiss_date = self.dismiss_date
             dep.check_previous_depreciation(dismiss_date)
-            depreciation = dep.generate_depreciation_lines(dismiss_date)
-            info = self.env['asset.accounting.info']
-            for l in self.invoice_line_ids:
-                vals = {'invoice_line_id': l.id,
-                        'relation_type': self.management_type}
-                info += self.env['asset.accounting.info'].create(vals)
-            depreciation.asset_accounting_info_ids += info
 
-            dep.post_generate_depreciation_lines(depreciation)
+            depreciation = dep.generate_depreciation_lines(dismiss_date)
+            # info = self.env['asset.accounting.info']
+            # for l in self.invoice_line_ids:
+            #     vals = {'invoice_line_id': l.id,
+            #             'relation_type': self.management_type}
+            #     info += self.env['asset.accounting.info'].create(vals)
+            # depreciation.asset_accounting_info_ids += info
+            #
+            # dep.post_generate_depreciation_lines(depreciation)
 
         old_dep_lines = self.asset_id.mapped('depreciation_ids.line_ids')
 
@@ -787,10 +788,12 @@ class WizardInvoiceManageAsset(models.TransientModel):
         for dep in self.asset_id.depreciation_ids:
             dep.check_previous_depreciation(self.dismiss_date)
         if self.partial_dismiss_percentage > 0:
-            if self.asset_id.partial_dismiss_percentage and (
-                self.partial_dismiss_percentage >= self.asset_id.partial_dismiss_percentage
-            ):
-                consentito = 100 - self.asset_id.partial_dismiss_percentage
+            consentito = 100 - self.asset_id.partial_dismiss_percentage
+            if self.partial_dismiss_percentage > consentito:
+            # if self.asset_id.partial_dismiss_percentage and (
+            #     self.partial_dismiss_percentage >= self.asset_id.partial_dismiss_percentage
+            # ):
+            #     consentito = 100 - self.asset_id.partial_dismiss_percentage
                 raise ValidationError(
                     _("La percentuale di dismissone supera il valore consentito {val}".format(val=consentito))
                 )

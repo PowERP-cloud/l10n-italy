@@ -159,11 +159,11 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
                     and start_year <= l.date
                     and l.final is False
                 )
-
-                if newer_lines:
-                    newer_lines.button_remove_account_move()
-                    newer_lines.unlink()
-            # end if
+            #
+            #     if newer_lines:
+            #         newer_lines.button_remove_account_move()
+            #         newer_lines.unlink()
+            # # end if
 
             if extra and self.final:
                 for ln in extra:

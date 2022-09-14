@@ -22,11 +22,20 @@ class AssetDepreciationLine(models.Model):
 
     asset_id = fields.Many2one(
         'asset.asset',
-        required=True,
+        # required=True,
         # readonly=True,
-        # related='depreciation_id.asset_id',
-        # store=True,
+        related='depreciation_id.asset_id',
+        store=True,
         string="Asset",
+    )
+
+    type_id = fields.Many2one(
+        'asset.depreciation.type',
+        # required=True,
+        # readonly=True,
+        related='depreciation_id.type_id',
+        store=True,
+        string="Asset type",
     )
 
     balance = fields.Monetary(
@@ -603,3 +612,51 @@ class AssetDepreciationLine(models.Model):
         )
         if to_create_move:
             to_create_move.generate_account_move()
+
+    @api.model
+    def get_depreciation_lines(
+        self, date_from=None, date_to=None, asset_ids=None, type_ids=None, final=None, depreciation_ids=None):
+
+        domain = self.get_depreciation_lines_domain(
+            date_from=date_from, date_to=date_to, asset_ids=asset_ids, type_ids=type_ids, final=final, depreciation_ids=depreciation_ids)
+        return self.search(domain)
+
+    def get_depreciation_lines_domain(self, date_from=None, date_to=None, asset_ids=None, type_ids=None, final=None, depreciation_ids=None):
+        asset_ids = asset_ids or []
+        if not isinstance(asset_ids, (list, tuple)):
+            asset_ids = [asset_ids]
+
+        type_ids = type_ids or []
+        if not isinstance(type_ids, (list, tuple)):
+            type_ids = [type_ids]
+
+        depreciation_ids = depreciation_ids or []
+        if not isinstance(depreciation_ids, (list, tuple)):
+            depreciation_ids = [depreciation_ids]
+
+        domain = [
+            ('date', '!=', False),
+        ]
+
+        if final is not None:
+            domain.append(('final', '=', final))
+
+        if date_from:
+            domain.append(('date', '>=', date_from))
+
+        if date_to:
+            domain.append(('date', '<=', date_to))
+
+        if asset_ids:
+            domain.append(('asset_id', 'in', asset_ids))
+
+        if type_ids:
+            domain.append(('type_id', 'in', type_ids))
+
+        if depreciation_ids:
+            domain.append(('depreciation_id', 'in', depreciation_ids))
+
+        if self.asset_id.company_id:
+            domain.append(('company_id', '=', self.asset_id.company_id.id))
+
+        return domain
