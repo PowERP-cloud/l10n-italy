@@ -702,6 +702,7 @@ class AssetDepreciation(models.Model):
                 last_depreciation_date = dep.last_depreciation_date
                 if not last_depreciation_date or last_depreciation_date != fine_esercizio_precedente:
                     asset_name = dep.asset_id.name
-                    raise ValidationError("Manca l'ammortamento dell'esercizio precedente per {asset}.".format(
-                        asset=asset_name
-                    ))
+                    nature_name = dep.type_id.name
+                    raise ValidationError("Manca l'ammortamento dell'esercizio precedente per "
+                                          "la natura {nature} del {asset}.".format(asset=asset_name, nature=nature_name)
+                                          )
