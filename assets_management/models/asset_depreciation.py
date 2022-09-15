@@ -693,7 +693,7 @@ class AssetDepreciation(models.Model):
             anno_fiscale = self.env['account.fiscal.year'].get_fiscal_year_by_date(dep_date, company=dep.company_id)
             inizio_esercizio = anno_fiscale.date_from
             fine_esercizio_precedente = inizio_esercizio - datetime.timedelta(1)
-            # todo check if or
+            # validation
             if dep.asset_id.purchase_date > fine_esercizio_precedente and (
                 fine_esercizio_precedente < dep_date <= anno_fiscale.date_to
             ):

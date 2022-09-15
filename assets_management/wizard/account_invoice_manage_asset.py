@@ -349,11 +349,13 @@ class WizardInvoiceManageAsset(models.TransientModel):
         """ Dismisses asset and returns it """
         self.ensure_one()
         self.check_pre_dismiss_asset()
+        new_lines = self.env['asset.depreciation.line']
         for dep in self.asset_id.depreciation_ids:
             dismiss_date = self.dismiss_date
             dep.check_previous_depreciation(dismiss_date)
 
             depreciation = dep.generate_depreciation_lines(dismiss_date)
+            new_lines += depreciation
             # info = self.env['asset.accounting.info']
             # for l in self.invoice_line_ids:
             #     vals = {'invoice_line_id': l.id,
@@ -363,12 +365,14 @@ class WizardInvoiceManageAsset(models.TransientModel):
             #
             # dep.post_generate_depreciation_lines(depreciation)
 
-        old_dep_lines = self.asset_id.mapped('depreciation_ids.line_ids')
+        old_dep_lines = self.asset_id.mapped('depreciation_ids.line_ids') - new_lines
 
         self.asset_id.write(self.get_dismiss_asset_vals())
 
         for dep in self.asset_id.depreciation_ids:
             (dep.line_ids - old_dep_lines).post_dismiss_asset()
+        # make move where needed
+        new_lines.button_generate_account_move()
 
         return self.asset_id
 
