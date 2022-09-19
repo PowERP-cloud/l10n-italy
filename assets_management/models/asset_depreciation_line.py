@@ -5,6 +5,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from datetime import datetime
 
 
 class AssetDepreciationLine(models.Model):
@@ -161,6 +162,11 @@ class AssetDepreciationLine(models.Model):
                     "da questa interfaccia.\n"
                 )
             )
+        elif (
+            self._context.get('depreciated_by_line')
+            and vals['move_type'] in ('in', 'out')
+        ):
+            self.depreciation_before_in_out(vals)
 
         line = super().create(vals)
         if line.need_normalize_depreciation_nr():
@@ -660,3 +666,17 @@ class AssetDepreciationLine(models.Model):
             domain.append(('company_id', '=', self.asset_id.company_id.id))
 
         return domain
+
+    def depreciation_before_in_out(self, vals):
+        dep = self.env['asset.depreciation'].browse(vals['depreciation_id'])
+        asset = self.env['asset.asset'].browse(vals['asset_id'])
+
+        dpr_date = datetime.strptime(vals['date'], '%Y-%m-%d').date()
+        dep.check_previous_depreciation(dpr_date)
+        dep_lines = dep.with_context(depreciated_by_line=False).generate_depreciation_lines(dpr_date)
+
+        dep_lines.button_generate_account_move()
+
+        return True
+
+

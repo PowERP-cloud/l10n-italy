@@ -346,7 +346,14 @@ class WizardInvoiceManageAsset(models.TransientModel):
         return self.env['asset.asset'].create(self.get_create_asset_vals())
 
     def dismiss_asset(self):
-        """ Dismisses asset and returns it """
+        """
+        se c'è una dismissione parziale
+        1) Si divide l'anno in 2 periodi: 1 pre-dismissione (compresa la data di dismissione) e 1 post-dismissione
+        2) Si calcola l'ammortamento sino alla data di dismissione per la quota in carico (100% se mai nessuna dismissione)
+        3) Si calcola l'ammortamento dal giorno successivo per la quota residua di proprietà
+        4) Si sommano i 2 risultati
+
+        """
         self.ensure_one()
         self.check_pre_dismiss_asset()
         new_lines = self.env['asset.depreciation.line']
@@ -574,6 +581,7 @@ class WizardInvoiceManageAsset(models.TransientModel):
         return vals
 
     def get_partial_dismiss_asset_percentage_vals(self):
+
         self.ensure_one()
         asset = self.asset_id
         currency = self.asset_id.currency_id
@@ -603,16 +611,14 @@ class WizardInvoiceManageAsset(models.TransientModel):
 
         vals = {'depreciation_ids': []}
         for dep in asset.depreciation_ids:
-            residual = dep.amount_residual / 100 * percentage
-            dep_writeoff = writeoff
+            # residual = (dep.amount_residual / 100) * percentage
+            # dep_writeoff = writeoff
 
             name = _("Partial dismissal from invoice(s) {}").format(inv_num)
 
-            # Ammortamento in percentuale
-            #
-            # full_depreciation = dep.prepare_depreciation_line_vals(dismiss_date)
+            # Ammortamento totale fino a dismiss_date
             dep_amount = dep.get_depreciation_amount(dismiss_date)
-            percentage_amount = dep_amount / 100 * percentage
+
             dep_year = fields.Date.from_string(dismiss_date).year
             dep_line_vals = {
                 'asset_accounting_info_ids': [
@@ -620,7 +626,7 @@ class WizardInvoiceManageAsset(models.TransientModel):
                             'relation_type': self.management_type})
                     for l in self.invoice_line_ids
                 ],
-                'amount': percentage_amount,
+                'amount': dep_amount,
                 'date': dismiss_date,
                 'move_type': 'depreciated',
                 'name':  _("{} - Depreciation").format(dep_year),
@@ -632,16 +638,21 @@ class WizardInvoiceManageAsset(models.TransientModel):
             dep_vals = {'line_ids': [(0, 0, dep_line_vals)]}
 
             # rettifica negativa
-            # valore del venduto in campo note
+            # Valore residuo al momento della dismissione
+            residual = dep.amount_residual - dep_amount
+
+            # Valore residuo venduto / dismesso
+            out_partial = residual * percentage / 100
+
             out_name = name + ': ' + 'Valore del venduto'
-            out_amount = min(residual, writeoff)
+            # out_amount = min(out_partial, writeoff)
             out_line_vals = {
                 'asset_accounting_info_ids': [
                     (0, 0, {'invoice_line_id': l.id,
                             'relation_type': self.management_type})
                     for l in self.invoice_line_ids
                 ],
-                'amount': out_amount,
+                'amount': out_partial,
                 'date': dismiss_date,
                 'move_type': 'out',
                 'name': out_name,
@@ -651,31 +662,9 @@ class WizardInvoiceManageAsset(models.TransientModel):
 
             dep_vals['line_ids'].append((0, 0, out_line_vals))
 
-            # seconda rettifica negativa
-
-            # valore residuo di dismissione
-            if residual > writeoff:
-                out_name_2 = name + ': Valore residuo di dismissione'
-                out_amount_2 = residual - writeoff
-                out_line_vals_2 = {
-                    'asset_accounting_info_ids': [
-                        (0, 0, {'invoice_line_id': l.id,
-                                'relation_type': self.management_type})
-                        for l in self.invoice_line_ids
-                    ],
-                    'amount': out_amount_2,
-                    'date': dismiss_date,
-                    'move_type': 'out',
-                    'name': out_name_2,
-                    'partial_dismissal': True,
-                    'asset_id': asset.id,
-                }
-
-                dep_vals['line_ids'].append((0, 0, out_line_vals_2))
-
             # minusvalenza / plusvalenza?
 
-            minus_amount = residual - percentage_amount - writeoff
+            minus_amount = out_partial - writeoff
             if not float_is_zero(minus_amount, digits):
                 loss_gain_name = 'Minusvalenza' if minus_amount > 0 else 'Plusvalenza'
                 loss_gain_vals = {
