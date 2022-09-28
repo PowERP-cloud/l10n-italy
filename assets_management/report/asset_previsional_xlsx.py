@@ -472,16 +472,16 @@ class AssetJournalXslx(models.AbstractModel):
 
     def write_header(self, data):
         pos = self.row_pos
-        for col, data in data.items():
+        for col, data in data.items():  # noqa: B020
             self.sheet.write(pos, col, data['title'], data['tstyle'])
         self.row_pos += 1
 
     def write_value(self, data, obj):
         pos = self.row_pos
-        for col, data in data.items():
+        for col, data in data.items():  # noqa: B020
             value, style = getattr(obj, data['field']), data['vstyle']
             if data.get('type') == 'amount':
-                value = getattr(obj, 'format_amount')(value)
+                value = getattr(obj, 'format_amount')(value)  # noqa: B009
             if value in (False, None):
                 value = '/'
             self.sheet.write(pos, col, value, style)

@@ -1,20 +1,17 @@
 # Author(s): Silvio Gregorini (silviogregorini@openforce.it)
 # Copyright 2019 Openforce Srls Unipersonale (www.openforce.it)
-# Copyright 2021-22 powERP enterprise network <https://www.powerp.it>
+# Copyright 2021-22 librERP enterprise network <https://www.librerp.it>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_compare, float_is_zero
-import logging
 import datetime
-
-_logger = logging.getLogger(__file__)
 
 
 class AssetDepreciation(models.Model):
     _name = 'asset.depreciation'
-    _description = "Assets Depreciations"
+    _description = "Assets Depreciation's"
 
     amount_depreciable = fields.Monetary(
         string="Depreciable Amount"
@@ -293,10 +290,14 @@ class AssetDepreciation(models.Model):
 
     def check_before_generate_depreciation_lines(self, dep_date):
         # Check if self is a valid recordset
-        if not self:
+        if not self or not dep_date:
             raise ValidationError(
-                _("Cannot create any depreciation according to current"
-                  " settings.")
+                _("Cannot create any depreciation according to current settings.")
+            )
+
+        if any([dep for dep in self if dep.state == 'totally_depreciated']):
+            raise ValidationError(
+                'Cannot update totally depreciated types'
             )
 
         lines = self.mapped('line_ids')
@@ -304,10 +305,11 @@ class AssetDepreciation(models.Model):
         # Check if any depreciation already has newer depreciation lines
         # than the given date
         newer_lines = lines.filtered(
-            lambda l: l.move_type == 'depreciated'
-            and not l.partial_dismissal
-            and l.date > dep_date
-            and l.final is True
+            lambda ln: (
+                ln.move_type == 'depreciated'
+                and not ln.partial_dismissal
+                and ln.date > dep_date
+            )
         )
         if newer_lines:
             asset_names = ', '.join([
@@ -317,6 +319,41 @@ class AssetDepreciation(models.Model):
             raise ValidationError(
                 _("Cannot update the following assets which contain"
                   " newer depreciations for the chosen types:\n{}")
+                .format(asset_names)
+            )
+
+        # Check for 'in' or 'out' move types and set beginning date to next day
+        year = dep_date.year
+        date_from = datetime.date(year, 1, 1)
+
+        extra_lines = lines.filtered(
+            lambda ln: (
+                ln.move_type in lines.get_update_move_types()
+                and not ln.partial_dismissal
+                and ln.date <= dep_date
+            )
+        )
+        if extra_lines:
+            extra_date = max([x.date for x in extra_lines])
+            extra_date = extra_date + datetime.timedelta(1)
+            date_from = max(date_from, extra_date)
+
+        confirmed_lines = lines.filtered(
+            lambda ln: (
+                ln.move_type == 'depreciated'
+                and not ln.partial_dismissal
+                and date_from <= ln.date <= self.date_dep
+                and ln.final is True
+            )
+        )
+        if confirmed_lines:
+            asset_names = ', '.join([
+                asset_name for asset_id, asset_name in
+                confirmed_lines.mapped('depreciation_id.asset_id').name_get()
+            ])
+            raise ValidationError(
+                _("Cannot update the following assets which contain"
+                  " depreciations for the chosen types:\n{}")
                 .format(asset_names)
             )
 
@@ -352,12 +389,22 @@ class AssetDepreciation(models.Model):
 
         new_lines = self.env['asset.depreciation.line']
         for dep in self:
-            new_obj = dep.generate_depreciation_lines_single(dep_date)
-            new_lines += new_obj
+            new_lines |= dep.generate_depreciation_lines_single(dep_date)
 
         return new_lines
 
+    def generate_depreciation_lines_single_vals(self, dep_date):
+        self.ensure_one()
+        final = self._context.get('final')
+        dep_nr = self.get_max_depreciation_nr() + 1
+        dep = self.with_context(dep_nr=dep_nr, used_asset=self.asset_id.used)
+        dep_amount = dep.get_depreciation_amount(dep_date)
+        dep = dep.with_context(dep_amount=dep_amount, final=final)
+        return dep.prepare_depreciation_line_vals(dep_date)
+
     def generate_depreciation_lines_single(self, dep_date):
+        self.ensure_one()
+
         vals = self.generate_depreciation_lines_single_vals(dep_date)
         return self.env['asset.depreciation.line'].create(vals)
 
@@ -375,11 +422,22 @@ class AssetDepreciation(models.Model):
 
         self.dismiss_move_id = am_obj.create(vals)
 
-    def get_computed_amounts(self):
+    def get_computed_amounts(self, date_to=None):
+        """Evaluate all depreciation amounts:
+        - amount_depreciated_updated: asset initial value + 'in' & 'out' lines
+        - amount_depreciated: sum of 'depreciated' lines
+        - amount_historical: sum of 'historical' lines
+        - amount_gain: sum of 'gain' lines
+        - amount_loss: sum of 'loss' lines
+        - amount_in: sum of 'in' lines
+        - amount_out: sum of 'out' lines
+        - amount_residual: asset initial values + 'gain' & 'loss' lines
+        - amount_depreciable: amount_depreciable field value
+        """
         self.ensure_one()
         vals = {
             'amount_{}'.format(k): abs(v)
-            for k, v in self.line_ids.get_balances_grouped().items()
+            for k, v in self.line_ids.get_balances_grouped(date_to=date_to).items()
             if 'amount_{}'.format(k) in self._fields
         }
 
@@ -395,22 +453,24 @@ class AssetDepreciation(models.Model):
             vals.update({
                 'amount_depreciable_updated': amt_dep + sum([
                     ln.balance for ln in self.line_ids
-                    if ln.move_type in update_move_types
+                    if (ln.move_type in update_move_types and
+                        (not date_to or (
+                            date_to and ln.date <= date_to)))
                 ]),
                 'amount_residual': amt_dep + sum([
                     ln.balance for ln in self.line_ids
-                    if ln.move_type not in non_residual_types
-                ])
+                    if (ln.move_type not in non_residual_types and
+                        (not date_to or (
+                            date_to and ln.date <= date_to)))
+                ]),
+                'amount_depreciable': amt_dep,
             })
 
         return vals
 
     def get_depreciable_amount(self, dep_date=None):
-        types = self.line_ids.get_update_move_types()
-        return self.amount_depreciable + sum([
-            ln.balance for ln in self.line_ids
-            if ln.move_type in types and (not dep_date or ln.date <= dep_date)
-        ])
+        return self.get_computed_amounts(
+            date_to=dep_date)['amount_depreciable_updated']
 
     def get_depreciation_amount(self, dep_date):
         self.ensure_one()
@@ -647,17 +707,6 @@ class AssetDepreciation(models.Model):
             'final': final,
         }
 
-    def generate_depreciation_lines_single_vals(self, dep_date):
-        self.ensure_one()
-        final = self._context.get('final')
-
-        dep_nr = self.get_max_depreciation_nr() + 1
-        dep = self.with_context(dep_nr=dep_nr, used_asset=self.asset_id.used)
-        dep_amount = dep.get_depreciation_amount(dep_date)
-        dep = dep.with_context(dep_amount=dep_amount, final=final,)
-
-        return dep.prepare_depreciation_line_vals(dep_date)
-
     def calculate_residual_summary(self, dep_date):
         self.ensure_one()
         amount = 0.0
@@ -667,9 +716,6 @@ class AssetDepreciation(models.Model):
 
             if line.date < dep_date:
                 amount += line.amount
-            # end if
-        # edn for
-        _logger.info('residual {}'.format(amount))
         return amount
 
     @api.multi

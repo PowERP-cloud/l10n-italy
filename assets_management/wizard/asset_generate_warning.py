@@ -1,4 +1,4 @@
-# Copyright 2021-22 powERP enterprise network <https://www.powerp.it>
+# Copyright 2021-22 librERP enterprise network <https://www.librerp.it>
 # Copyright 2021-22 Didotech s.r.l. <https://www.didotech.com>
 # Copyright 2021-22 SHS-AV s.r.l. <https://www.zeroincombenze.it>
 #
@@ -10,7 +10,8 @@ from odoo import models, fields
 class AssetGenerateWarning(models.TransientModel):
     _name = "asset.generate.warning"
 
-    wizard_id = fields.Many2one('wizard.asset.generate.depreciation', string="Asset Wizard")
+    wizard_id = fields.Many2one('wizard.asset.generate.depreciation',
+                                string="Asset Wizard")
     reason_lines = fields.One2many(
         comodel_name="asset.confirm.reason.line",
         inverse_name="confirm_id",

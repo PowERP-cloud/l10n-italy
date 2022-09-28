@@ -1,6 +1,6 @@
 # Author(s): Silvio Gregorini (silviogregorini@openforce.it)
 # Copyright 2019 Openforce Srls Unipersonale (www.openforce.it)
-# Copyright 2021-22 powERP enterprise network <https://www.powerp.it>
+# Copyright 2021-22 librERP enterprise network <https://www.librerp.it>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import _, api, fields, models
@@ -167,13 +167,15 @@ class WizardInvoiceManageAsset(models.TransientModel):
             self.is_invoice_state_ok = is_invoice_state_ok
 
             self.invoice_line_ids = invoices.mapped('invoice_line_ids')\
-                .filtered(lambda l: not l.asset_accounting_info_ids)
+                .filtered(lambda ln: not ln.asset_accounting_info_ids)
 
     @api.onchange('partial_dismiss_percentage', 'asset_id')
     def onchange_partial_dismiss_percentage(self):
-        for record in  self:
+        for record in self:
             if record.partial_dismiss_percentage > 0:
-                record.asset_purchase_amount = record.asset_id.purchase_amount / 100 * record.partial_dismiss_percentage
+                record.asset_purchase_amount = (
+                    record.asset_id.purchase_amount *
+                    record.partial_dismiss_percentage / 100)
             else:
                 record.asset_purchase_amount = 0.0
 
@@ -221,8 +223,8 @@ class WizardInvoiceManageAsset(models.TransientModel):
             )
 
         if not all([
-            l.account_id == self.category_id.asset_account_id
-            for l in self.invoice_line_ids
+            ln.account_id == self.category_id.asset_account_id
+            for ln in self.invoice_line_ids
         ]):
             categ_name = self.category_id.name_get()[0][-1]
             acc_name = self.category_id.asset_account_id.name_get()[0][-1]
@@ -252,8 +254,8 @@ class WizardInvoiceManageAsset(models.TransientModel):
             )
 
         if not all([
-            l.account_id == self.asset_id.category_id.asset_account_id
-            for l in self.invoice_line_ids
+            ln.account_id == self.asset_id.category_id.asset_account_id
+            for ln in self.invoice_line_ids
         ]):
             ass_name = self.asset_id.make_name()
             ass_acc = self.asset_id.category_id.asset_account_id \
@@ -296,8 +298,8 @@ class WizardInvoiceManageAsset(models.TransientModel):
             )
 
         if not all([
-            l.account_id == self.asset_id.category_id.asset_account_id
-            for l in self.invoice_line_ids
+            ln.account_id == self.asset_id.category_id.asset_account_id
+            for ln in self.invoice_line_ids
         ]):
             ass_name = self.asset_id.make_name()
             ass_acc = self.asset_id.category_id.asset_account_id \
@@ -327,8 +329,8 @@ class WizardInvoiceManageAsset(models.TransientModel):
             )
 
         if not all([
-            l.account_id == self.asset_id.category_id.asset_account_id
-            for l in self.invoice_line_ids
+            ln.account_id == self.asset_id.category_id.asset_account_id
+            for ln in self.invoice_line_ids
         ]):
             ass_name = self.asset_id.make_name()
             ass_acc = self.asset_id.category_id.asset_account_id \
@@ -348,9 +350,12 @@ class WizardInvoiceManageAsset(models.TransientModel):
     def dismiss_asset(self):
         """
         se c'è una dismissione parziale
-        1) Si divide l'anno in 2 periodi: 1 pre-dismissione (compresa la data di dismissione) e 1 post-dismissione
-        2) Si calcola l'ammortamento sino alla data di dismissione per la quota in carico (100% se mai nessuna dismissione)
-        3) Si calcola l'ammortamento dal giorno successivo per la quota residua di proprietà
+        1) Si divide l'anno in 2 periodi:
+           1 pre-dismissione (compresa la data di dismissione) e 1 post-dismissione
+        2) Si calcola l'ammortamento sino alla data di dismissione
+           per la quota di proprietà (100% se mai nessuna dismissione parziale)
+        3) Si calcola l'ammortamento dal giorno successivo
+           per la quota residua di proprietà
         4) Si sommano i 2 risultati
 
         """
@@ -391,9 +396,9 @@ class WizardInvoiceManageAsset(models.TransientModel):
         purchase_invoice = self.invoice_line_ids.mapped('invoice_id')
         return {
             'asset_accounting_info_ids': [
-                (0, 0, {'invoice_line_id': l.id,
+                (0, 0, {'invoice_line_id': ln.id,
                         'relation_type': self.management_type})
-                for l in self.invoice_line_ids
+                for ln in self.invoice_line_ids
             ],
             'category_id': self.category_id.id,
             'code': self.code,
@@ -428,8 +433,8 @@ class WizardInvoiceManageAsset(models.TransientModel):
         inv_num = invoice.number
 
         writeoff = 0
-        for l in self.invoice_line_ids:
-            writeoff += l.currency_id.compute(l.price_subtotal, currency)
+        for ln in self.invoice_line_ids:
+            writeoff += ln.currency_id.compute(ln.price_subtotal, currency)
         writeoff = round(writeoff, digits)
 
         vals = {
@@ -448,9 +453,9 @@ class WizardInvoiceManageAsset(models.TransientModel):
 
             dep_line_vals = {
                 'asset_accounting_info_ids': [
-                    (0, 0, {'invoice_line_id': l.id,
+                    (0, 0, {'invoice_line_id': ln.id,
                             'relation_type': self.management_type})
-                    for l in self.invoice_line_ids
+                    for ln in self.invoice_line_ids
                 ],
                 'amount': min(residual, dep_writeoff),
                 'date': dismiss_date,
@@ -466,9 +471,9 @@ class WizardInvoiceManageAsset(models.TransientModel):
                 move_type = 'gain' if balance > 0 else 'loss'
                 dep_balance_vals = {
                     'asset_accounting_info_ids': [
-                        (0, 0, {'invoice_line_id': l.id,
+                        (0, 0, {'invoice_line_id': ln.id,
                                 'relation_type': self.management_type})
-                        for l in self.invoice_line_ids
+                        for ln in self.invoice_line_ids
                     ],
                     'amount': abs(balance),
                     'date': dismiss_date,
@@ -512,8 +517,8 @@ class WizardInvoiceManageAsset(models.TransientModel):
         inv_num = invoice.number
 
         writeoff = 0
-        for l in self.invoice_line_ids:
-            writeoff += l.currency_id.compute(l.price_subtotal, currency)
+        for ln in self.invoice_line_ids:
+            writeoff += ln.currency_id.compute(ln.price_subtotal, currency)
         writeoff = round(writeoff, digits)
 
         vals = {'depreciation_ids': []}
@@ -529,9 +534,9 @@ class WizardInvoiceManageAsset(models.TransientModel):
 
             out_line_vals = {
                 'asset_accounting_info_ids': [
-                    (0, 0, {'invoice_line_id': l.id,
+                    (0, 0, {'invoice_line_id': ln.id,
                             'relation_type': self.management_type})
-                    for l in self.invoice_line_ids
+                    for ln in self.invoice_line_ids
                 ],
                 'amount': purchase_amt,
                 'date': dismiss_date,
@@ -542,9 +547,9 @@ class WizardInvoiceManageAsset(models.TransientModel):
             }
             dep_line_vals = {
                 'asset_accounting_info_ids': [
-                    (0, 0, {'invoice_line_id': l.id,
+                    (0, 0, {'invoice_line_id': ln.id,
                             'relation_type': self.management_type})
-                    for l in self.invoice_line_ids
+                    for ln in self.invoice_line_ids
                 ],
                 'amount': - fund_amt,
                 'date': dismiss_date,
@@ -562,9 +567,9 @@ class WizardInvoiceManageAsset(models.TransientModel):
             if not float_is_zero(balance, digits):
                 loss_gain_vals = {
                     'asset_accounting_info_ids': [
-                        (0, 0, {'invoice_line_id': l.id,
+                        (0, 0, {'invoice_line_id': ln.id,
                                 'relation_type': self.management_type})
-                        for l in self.invoice_line_ids
+                        for ln in self.invoice_line_ids
                     ],
                     'amount': abs(balance),
                     'date': dismiss_date,
@@ -581,14 +586,13 @@ class WizardInvoiceManageAsset(models.TransientModel):
         return vals
 
     def get_partial_dismiss_asset_percentage_vals(self):
-
         self.ensure_one()
         asset = self.asset_id
         currency = self.asset_id.currency_id
         dismiss_date = self.dismiss_date
         digits = self.env['decimal.precision'].precision_get('Account')
         percentage = self.partial_dismiss_percentage
-        purchase_amt = self.asset_purchase_amount
+        # purchase_amt = self.asset_purchase_amount
 
         # ammortamenti precedenti
 
@@ -605,8 +609,8 @@ class WizardInvoiceManageAsset(models.TransientModel):
         inv_num = invoice.number
 
         writeoff = 0
-        for l in self.invoice_line_ids:
-            writeoff += l.currency_id.compute(l.price_subtotal, currency)
+        for ln in self.invoice_line_ids:
+            writeoff += ln.currency_id.compute(ln.price_subtotal, currency)
         writeoff = round(writeoff, digits)
 
         vals = {'depreciation_ids': []}
@@ -622,9 +626,9 @@ class WizardInvoiceManageAsset(models.TransientModel):
             dep_year = fields.Date.from_string(dismiss_date).year
             dep_line_vals = {
                 'asset_accounting_info_ids': [
-                    (0, 0, {'invoice_line_id': l.id,
+                    (0, 0, {'invoice_line_id': ln.id,
                             'relation_type': self.management_type})
-                    for l in self.invoice_line_ids
+                    for ln in self.invoice_line_ids
                 ],
                 'amount': dep_amount,
                 'date': dismiss_date,
@@ -648,9 +652,9 @@ class WizardInvoiceManageAsset(models.TransientModel):
             # out_amount = min(out_partial, writeoff)
             out_line_vals = {
                 'asset_accounting_info_ids': [
-                    (0, 0, {'invoice_line_id': l.id,
+                    (0, 0, {'invoice_line_id': ln.id,
                             'relation_type': self.management_type})
-                    for l in self.invoice_line_ids
+                    for ln in self.invoice_line_ids
                 ],
                 'amount': out_partial,
                 'date': dismiss_date,
@@ -669,9 +673,9 @@ class WizardInvoiceManageAsset(models.TransientModel):
                 loss_gain_name = 'Minusvalenza' if minus_amount > 0 else 'Plusvalenza'
                 loss_gain_vals = {
                     'asset_accounting_info_ids': [
-                        (0, 0, {'invoice_line_id': l.id,
+                        (0, 0, {'invoice_line_id': ln.id,
                                 'relation_type': self.management_type})
-                        for l in self.invoice_line_ids
+                        for ln in self.invoice_line_ids
                     ],
                     'amount': abs(minus_amount),
                     'date': dismiss_date,
@@ -695,11 +699,11 @@ class WizardInvoiceManageAsset(models.TransientModel):
         digits = self.env['decimal.precision'].precision_get('Account')
 
         grouped_invoice_lines = {}
-        for l in self.invoice_line_ids:
-            inv = l.invoice_id
+        for ln in self.invoice_line_ids:
+            inv = ln.invoice_id
             if inv not in grouped_invoice_lines:
                 grouped_invoice_lines[inv] = self.env['account.invoice.line']
-            grouped_invoice_lines[inv] |= l
+            grouped_invoice_lines[inv] |= ln
 
         vals = {'depreciation_ids': []}
         for dep in asset.depreciation_ids.filtered(
@@ -748,9 +752,9 @@ class WizardInvoiceManageAsset(models.TransientModel):
 
                 dep_line_vals = {
                     'asset_accounting_info_ids': [
-                        (0, 0, {'invoice_line_id': l.id,
+                        (0, 0, {'invoice_line_id': ln.id,
                                 'relation_type': self.management_type})
-                        for l in lines
+                        for ln in lines
                     ],
                     'amount': amount,
                     'date': inv.date,
@@ -783,14 +787,10 @@ class WizardInvoiceManageAsset(models.TransientModel):
         if self.partial_dismiss_percentage > 0:
             consentito = 100 - self.asset_id.partial_dismiss_percentage
             if self.partial_dismiss_percentage > consentito:
-            # if self.asset_id.partial_dismiss_percentage and (
-            #     self.partial_dismiss_percentage >= self.asset_id.partial_dismiss_percentage
-            # ):
-            #     consentito = 100 - self.asset_id.partial_dismiss_percentage
                 raise ValidationError(
-                    _("La percentuale di dismissone supera il valore consentito {val}".format(val=consentito))
+                    _("La percentuale di dismissone supera il valore consentito {val}".
+                      format(val=consentito))
                 )
-
             vals = self.get_partial_dismiss_asset_percentage_vals()
         else:
             vals = self.get_partial_dismiss_asset_vals()
@@ -801,14 +801,17 @@ class WizardInvoiceManageAsset(models.TransientModel):
         currency = self.asset_id.currency_id
 
         writeoff = 0
-        for l in self.invoice_line_ids:
-            writeoff += l.currency_id.compute(l.price_subtotal, currency)
+        for ln in self.invoice_line_ids:
+            writeoff += ln.currency_id.compute(ln.price_subtotal, currency)
         writeoff = round(writeoff, digits)
 
-        total_percentage = self.asset_id.partial_dismiss_percentage + self.partial_dismiss_percentage
+        total_percentage = (self.asset_id.partial_dismiss_percentage +
+                            self.partial_dismiss_percentage)
         asset_vals = {
             'sale_amount': self.asset_id.sale_amount + writeoff,
-            'partial_dismiss_percentage': self.asset_id.partial_dismiss_percentage + self.partial_dismiss_percentage
+            'partial_dismiss_percentage': (
+                self.asset_id.partial_dismiss_percentage +
+                self.partial_dismiss_percentage)
         }
         if total_percentage >= 100:
             invoice = self.invoice_ids[0]

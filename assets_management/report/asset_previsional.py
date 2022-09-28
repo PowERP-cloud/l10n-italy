@@ -1,6 +1,6 @@
 # Author(s): Silvio Gregorini (silviogregorini@openforce.it)
 # Copyright 2019 Openforce Srls Unipersonale (www.openforce.it)
-# Copyright 2021-22 powERP enterprise network <https://www.powerp.it>
+# Copyright 2021-22 librERP enterprise network <https://www.librerp.it>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from collections import OrderedDict
@@ -258,9 +258,9 @@ class Report(models.TransientModel):
                     for fyear, lines in lines_by_fyear.items():
                         if fyear.date_to >= dep.date_start:
                             prev = not lines or not any(
-                                l.move_type == 'depreciated'
-                                and not l.partial_dismissal
-                                for l in lines
+                                ln.move_type == 'depreciated'
+                                and not ln.partial_dismissal
+                                for ln in lines
                             )
                             sequence += 1
                             line_ids = lines.ids

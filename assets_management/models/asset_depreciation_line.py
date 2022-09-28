@@ -1,6 +1,6 @@
 # Author(s): Silvio Gregorini (silviogregorini@openforce.it)
 # Copyright 2019 Openforce Srls Unipersonale (www.openforce.it)
-# Copyright 2021-22 powERP enterprise network <https://www.powerp.it>
+# Copyright 2021-22 librERP enterprise network <https://www.librerp.it>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import _, api, fields, models
@@ -145,7 +145,7 @@ class AssetDepreciationLine(models.Model):
     _numbered_move_types = ('depreciated', 'historical')
     # Non-default parameter: set which `move_types` do not concur to
     # asset.depreciation's `amount_residual` field compute
-    _non_residual_move_types = ('gain',)
+    _non_residual_move_types = ('gain', 'loss')
     # Non-default parameter: set which `move_types` get to update the
     # depreciable amount
     _update_move_types = ('in', 'out')
@@ -289,10 +289,12 @@ class AssetDepreciationLine(models.Model):
         self.ensure_one()
         return self.asset_accounting_info_ids
 
-    def get_balances_grouped(self):
+    def get_balances_grouped(self, date_to=None):
         """Groups balances of line in `self` by line.move_type"""
         balances_grouped = {}
         for line in self:
+            if date_to and line.date > date_to:
+                continue
             if line.move_type not in balances_grouped:
                 balances_grouped[line.move_type] = 0
             balances_grouped[line.move_type] += line.balance

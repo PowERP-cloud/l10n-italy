@@ -1,6 +1,6 @@
 # Author(s): Silvio Gregorini (silviogregorini@openforce.it)
 # Copyright 2019 Openforce Srls Unipersonale (www.openforce.it)
-# Copyright 2021-22 powERP enterprise network <https://www.powerp.it>
+# Copyright 2021-22 librERP enterprise network <https://www.librerp.it>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import _, api, fields, models
@@ -144,7 +144,7 @@ class WizardAccountMoveManageAsset(models.TransientModel):
 
             self.is_move_state_ok = all([m.state == 'posted' for m in moves])
             self.move_line_ids = moves.mapped('line_ids').filtered(
-                lambda l: not l.asset_accounting_info_ids
+                lambda ln: not ln.asset_accounting_info_ids
             )
             if 'purchase' in move_types and 'sale' in move_types:
                 self.move_type = 'wrong'
@@ -203,8 +203,8 @@ class WizardAccountMoveManageAsset(models.TransientModel):
             )
 
         if not all([
-            l.account_id == self.category_id.asset_account_id
-            for l in self.move_line_ids
+            ln.account_id == self.category_id.asset_account_id
+            for ln in self.move_line_ids
         ]):
             categ_name = self.category_id.name_get()[0][-1]
             acc_name = self.category_id.asset_account_id.name_get()[0][-1]
@@ -235,8 +235,8 @@ class WizardAccountMoveManageAsset(models.TransientModel):
             )
 
         if not all([
-            l.account_id == self.asset_id.category_id.asset_account_id
-            for l in self.move_line_ids
+            ln.account_id == self.asset_id.category_id.asset_account_id
+            for ln in self.move_line_ids
         ]):
             ass_name = self.asset_id.make_name()
             ass_acc = self.asset_id.category_id.asset_account_id \
@@ -279,8 +279,8 @@ class WizardAccountMoveManageAsset(models.TransientModel):
             )
 
         if not all([
-            l.account_id == self.asset_id.category_id.asset_account_id
-            for l in self.move_line_ids
+            ln.account_id == self.asset_id.category_id.asset_account_id
+            for ln in self.move_line_ids
         ]):
             ass_name = self.asset_id.make_name()
             ass_acc = self.asset_id.category_id.asset_account_id \
@@ -310,8 +310,8 @@ class WizardAccountMoveManageAsset(models.TransientModel):
             )
 
         if not all([
-            l.account_id == self.asset_id.category_id.asset_account_id
-            for l in self.move_line_ids
+            ln.account_id == self.asset_id.category_id.asset_account_id
+            for ln in self.move_line_ids
         ]):
             ass_name = self.asset_id.make_name()
             ass_acc = self.asset_id.category_id.asset_account_id \
@@ -351,9 +351,9 @@ class WizardAccountMoveManageAsset(models.TransientModel):
         move = self.move_line_ids.mapped('move_id')
         return {
             'asset_accounting_info_ids': [
-                (0, 0, {'move_line_id': l.id,
+                (0, 0, {'move_line_id': ln.id,
                         'relation_type': self.management_type})
-                for l in self.move_line_ids
+                for ln in self.move_line_ids
             ],
             'category_id': self.category_id.id,
             'code': self.code,
@@ -388,8 +388,8 @@ class WizardAccountMoveManageAsset(models.TransientModel):
         move_nums = move.name
 
         writeoff = 0
-        for l in self.move_line_ids:
-            writeoff += l.currency_id.compute(l.credit - l.debit, currency)
+        for ln in self.move_line_ids:
+            writeoff += ln.currency_id.compute(ln.credit - ln.debit, currency)
         writeoff = round(writeoff, digits)
 
         customer = self.env['res.partner']
@@ -411,9 +411,9 @@ class WizardAccountMoveManageAsset(models.TransientModel):
 
             dep_line_vals = {
                 'asset_accounting_info_ids': [
-                    (0, 0, {'move_line_id': l.id,
+                    (0, 0, {'move_line_id': ln.id,
                             'relation_type': self.management_type})
-                    for l in self.move_line_ids
+                    for ln in self.move_line_ids
                 ],
                 'amount': min(residual, dep_writeoff),
                 'date': dismiss_date,
@@ -428,9 +428,9 @@ class WizardAccountMoveManageAsset(models.TransientModel):
                 move_type = 'gain' if balance > 0 else 'loss'
                 dep_balance_vals = {
                     'asset_accounting_info_ids': [
-                        (0, 0, {'move_line_id': l.id,
+                        (0, 0, {'move_line_id': ln.id,
                                 'relation_type': self.management_type})
-                        for l in self.move_line_ids
+                        for ln in self.move_line_ids
                     ],
                     'amount': abs(balance),
                     'date': dismiss_date,
@@ -473,8 +473,8 @@ class WizardAccountMoveManageAsset(models.TransientModel):
         move_nums = move.name
 
         writeoff = 0
-        for l in self.move_line_ids:
-            writeoff += l.currency_id.compute(l.credit - l.debit, currency)
+        for ln in self.move_line_ids:
+            writeoff += ln.currency_id.compute(ln.credit - ln.debit, currency)
         writeoff = round(writeoff, digits)
 
         vals = {'depreciation_ids': []}
@@ -490,9 +490,9 @@ class WizardAccountMoveManageAsset(models.TransientModel):
 
             out_line_vals = {
                 'asset_accounting_info_ids': [
-                    (0, 0, {'move_line_id': l.id,
+                    (0, 0, {'move_line_id': ln.id,
                             'relation_type': self.management_type})
-                    for l in self.move_line_ids
+                    for ln in self.move_line_ids
                 ],
                 'amount': purchase_amt,
                 'date': dismiss_date,
@@ -502,9 +502,9 @@ class WizardAccountMoveManageAsset(models.TransientModel):
             }
             dep_line_vals = {
                 'asset_accounting_info_ids': [
-                    (0, 0, {'move_line_id': l.id,
+                    (0, 0, {'move_line_id': ln.id,
                             'relation_type': self.management_type})
-                    for l in self.move_line_ids
+                    for ln in self.move_line_ids
                 ],
                 'amount': - fund_amt,
                 'date': dismiss_date,
@@ -521,9 +521,9 @@ class WizardAccountMoveManageAsset(models.TransientModel):
             if not float_is_zero(balance, digits):
                 loss_gain_vals = {
                     'asset_accounting_info_ids': [
-                        (0, 0, {'move_line_id': l.id,
+                        (0, 0, {'move_line_id': ln.id,
                                 'relation_type': self.management_type})
-                        for l in self.move_line_ids
+                        for ln in self.move_line_ids
                     ],
                     'amount': abs(balance),
                     'date': dismiss_date,
@@ -544,11 +544,11 @@ class WizardAccountMoveManageAsset(models.TransientModel):
         digits = self.env['decimal.precision'].precision_get('Account')
 
         grouped_move_lines = {}
-        for l in self.move_line_ids:
-            move = l.move_id
+        for ln in self.move_line_ids:
+            move = ln.move_id
             if move not in grouped_move_lines:
                 grouped_move_lines[move] = self.env['account.move.line']
-            grouped_move_lines[move] |= l
+            grouped_move_lines[move] |= ln
 
         vals = {'depreciation_ids': []}
         for dep in asset.depreciation_ids.filtered(
@@ -584,9 +584,9 @@ class WizardAccountMoveManageAsset(models.TransientModel):
                 amount = 0
                 if lines:
                     amount = abs(sum(
-                        l.currency_id.compute(
-                            l.debit - l.credit, dep.currency_id
-                        ) for l in lines
+                        ln.currency_id.compute(
+                            ln.debit - ln.credit, dep.currency_id
+                        ) for ln in lines
                     ))
                 sign = 1
                 if move_type == 'out':
@@ -606,9 +606,9 @@ class WizardAccountMoveManageAsset(models.TransientModel):
 
                 dep_line_vals = {
                     'asset_accounting_info_ids': [
-                        (0, 0, {'move_line_id': l.id,
+                        (0, 0, {'move_line_id': ln.id,
                                 'relation_type': self.management_type})
-                        for l in lines
+                        for ln in lines
                     ],
                     'amount': amount,
                     'date': move.date,

@@ -1,6 +1,6 @@
 # Author(s): Silvio Gregorini (silviogregorini@openforce.it)
 # Copyright 2019 Openforce Srls Unipersonale (www.openforce.it)
-# Copyright 2021-22 powERP enterprise network <https://www.powerp.it>
+# Copyright 2021-22 librERP enterprise network <https://www.librerp.it>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import _, api, fields, models
@@ -48,3 +48,24 @@ class AssetDepreciationType(models.Model):
                   " by categories.")
             )
         return super().unlink()
+
+    def get_dep_type_id_civilistico(self):
+        internal_sequence = self.env['ir.model.data'].search([
+            ('model', '=', 'asset.depreciation.type'),
+            ('name', '=', 'ad_type_civilistico')
+        ])
+        return internal_sequence.res_id
+
+    def get_dep_type_id_fiscale(self):
+        internal_sequence = self.env['ir.model.data'].search([
+            ('model', '=', 'asset.depreciation.type'),
+            ('name', '=', 'ad_type_fiscale')
+        ])
+        return internal_sequence.res_id
+
+    def get_dep_type_id_gestionale(self):
+        internal_sequence = self.env['ir.model.data'].search([
+            ('model', '=', 'asset.depreciation.type'),
+            ('name', '=', 'ad_type_gestionale')
+        ])
+        return internal_sequence.res_id

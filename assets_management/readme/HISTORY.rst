@@ -1,7 +1,7 @@
 12.0.1.0.0_29 (2022-09-19)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* [FIX] Inserito dismissione proma delle rettifiche
+* [REF] Refactoring per gestione dismissione parziale
 
 12.0.1.0.0_28 (2022-09-14)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

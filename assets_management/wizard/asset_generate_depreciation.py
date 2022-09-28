@@ -1,11 +1,10 @@
 # Author(s): Silvio Gregorini (silviogregorini@openforce.it)
 # Copyright 2019 Openforce Srls Unipersonale (www.openforce.it)
-# Copyright 2021-22 powERP enterprise network <https://www.powerp.it>
+# Copyright 2021-22 librERP enterprise network <https://www.librerp.it>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import datetime
 from odoo import api, fields, models
-from odoo.exceptions import UserError
 
 
 class WizardAssetsGenerateDepreciations(models.TransientModel):
@@ -102,85 +101,13 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
         # Add depreciation date in context just in case
         deps = self.get_depreciations().with_context(dep_date=self.date_dep,
                                                      final=self.final)
-        for dep in deps:
-            # no depreciation
-            # if dep.asset_id not in assets:
-            #     assets.append(dep.asset_id)
-            # # end if
-
-            # if dep.state == 'non_depreciated':
-            #     continue
-
-            # already closed
-            if dep.state == 'totally_depreciated':
-                raise UserError(
-                    'Non si può effettuare l\'ammortamento {} poichè il bene '
-                    'risulta già ammortizzato '.format(dep.display_name)
-                )
-
-            # existenz of lines beyond
-            lines = dep.line_ids
-
-            # not depreciated type
-            extra = lines.filtered(lambda line: line.move_type != 'depreciated'
-                                   and line.final is False)
-
-            # start
-            year = self.date_dep.year
-            start_year = datetime.date(year, 1, 1)
-            end_year = datetime.date(year, 12, 31)
-
-            # final is True
-            confirmed_lines = lines.filtered(
-                lambda l:
-                l.move_type == 'depreciated'
-                and not l.partial_dismissal
-                and start_year <= l.date <= self.date_dep
-                and l.final is True
-            )
-
-            if confirmed_lines:
-                raise UserError(
-                    'Non si può effettuare l\'ammortamento del bene '
-                    'poichè per {} esistono ammortamenti consolidati entro la '
-                    'data impostata '
-                    .format(dep.display_name)
-                )
-            else:
-                newer_lines = lines.filtered(
-                    lambda l:
-                    l.move_type == 'depreciated'
-                    and not l.partial_dismissal
-                    and start_year <= l.date
-                    and l.final is False
-                )
-            #
-            #     if newer_lines:
-            #         newer_lines.button_remove_account_move()
-            #         newer_lines.unlink()
-            # # end if
-
-            if extra and self.final:
-                for ln in extra:
-                    if ln.move_id and ln.move_id.state == 'draft':
-                        ln.move_id.post()
-                        ln.final = True
-                    # end if
-                # end for
-            # end if
-
         dep_lines = deps.generate_depreciation_lines(self.date_dep)
         deps.post_generate_depreciation_lines(dep_lines)
-
-        # for asset in assets:
-        #     asset.compute_last_depreciation_date()
-        # # end if
-
-        # if self._context.get('reload_window'):
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'reload'
-        }
+        if self._context.get('reload_window'):
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'reload'
+            }
 
     def get_depreciations(self):
         self.ensure_one()
@@ -189,7 +116,7 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
 
     def get_depreciations_domain(self):
         domain = [
-            ('amount_residual', '>', 0),
+            ('amount_residual', '>', 0.0),
             ('date_start', '!=', False),
             ('date_start', '<', self.date_dep),
             ('type_id', 'in', self.type_ids.ids),
@@ -214,7 +141,7 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
             lines.append((0, 0, {
                 'reason': 'ATTENZIONE: l\'operazione è irreversibile!'}))
 
-            current_year = datetime.date.today().year
+            # current_year = datetime.date.today().year
             year = self.date_dep.year
             end_year = datetime.date(year, 12, 31)
             current_date_str = self.date_dep.strftime('%d-%m-%Y')
@@ -223,39 +150,37 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
             # check date
             if self.date_dep < end_year:
                 lines.append((0, 0, {
-                    'reason': "ATTENZIONE: la data inserita per "
-                              "l'ammortamento {curr}"
-                              " è fuori esercizio (inferiore a quella usuale "
-                              "per l'anno indicato {endy} ).".format(
-                                curr=current_date_str, endy=end_year_str)
-                }))
+                    "reason":
+                        "ATTENZIONE: la data inserita per l'ammortamento {curr}"
+                        " è fuori esercizio (inferiore a quella usuale "
+                        "per l'anno indicato {endy} ).".format(
+                            curr=current_date_str, endy=end_year_str)}))
 
             if self.date_dep > end_year:
                 lines.append((0, 0, {
-                    'reason': 'ATTENZIONE: la data inserita per l\'ammortamento'
-                              ' {curr} è fuori esercizio (superiore a quella '
-                              'usuale per l\'anno indicato {endy}).'.format(
-                                curr=current_date_str, endy=end_year_str)}))
+                    "reason":
+                        'ATTENZIONE: la data inserita per l\'ammortamento'
+                        ' {curr} è fuori esercizio (superiore a quella '
+                        'usuale per l\'anno indicato {endy}).'.format(
+                            curr=current_date_str, endy=end_year_str)}))
 
             # get assets
             deps = self.get_depreciations().with_context(dep_date=self.date_dep,
                                                          final=self.final)
             for dep in deps:
-                extra = dep.line_ids.filtered(lambda l:
-                                              l.move_type != 'depreciated'
-                                              and l.final is False)
+                extra = dep.line_ids.filtered(lambda ln:
+                                              ln.move_type != 'depreciated'
+                                              and ln.final is False)
                 if extra:
                     for ln in extra:
                         tipo = ln.depreciation_line_type_id.display_name
                         asset = ln.depreciation_id.display_name
                         lines.append((0, 0, {
-                            'reason': 'ATTENZIONE: il movimento "{movimento}" '
-                                      'di tipo {tipo} per il bene "{asset}" '
-                                      'risulta non consolidato'.format(
-                                       movimento=ln.name,
-                                       asset=asset,
-                                       tipo=tipo)
-                        }))
+                            "reason":
+                                'ATTENZIONE: il movimento "{movimento}" '
+                                'di tipo {tipo} per il bene "{asset}" '
+                                'risulta non consolidato'.format(
+                                    movimento=ln.name, asset=asset, tipo=tipo)}))
 
             wz_id = self.env['asset.generate.warning'].create({
                 'wizard_id': wizard.id,
