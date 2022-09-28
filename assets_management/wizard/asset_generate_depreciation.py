@@ -40,8 +40,6 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
         )
         if fiscal_year:
             return fiscal_year.date_to
-        # end if
-
         return fields.Date.today()
 
     @api.model
@@ -101,9 +99,6 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
         Reloads the current window if necessary.
         """
         self.ensure_one()
-
-        # assets
-        # assets = list()
         # Add depreciation date in context just in case
         deps = self.get_depreciations().with_context(dep_date=self.date_dep,
                                                      final=self.final)

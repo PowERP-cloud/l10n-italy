@@ -61,8 +61,9 @@ class AccountInvoice(models.Model):
             aa_infos.unlink()
             # Filtering needed: cannot delete dep lines with a.a.info
             percentages = dep_lines.filtered(
-                lambda l: l.move_type == 'depreciated' and l.partial_dismissal is True and
-                l.partial_dismiss_percentage > 0
+                lambda ln: (ln.move_type == 'depreciated' and
+                            ln.partial_dismissal is True and
+                            ln.partial_dismiss_percentage > 0)
             )
             if percentages:
                 percentage = percentages[0].partial_dismiss_percentage
@@ -110,8 +111,8 @@ class AccountInvoice(models.Model):
         else:
             for inv in self:
                 inv.hide_link_asset_button = not any([
-                    l.account_id.id in valid_account_ids.ids
-                    for l in inv.invoice_line_ids
+                    ln.account_id.id in valid_account_ids.ids
+                    for ln in inv.invoice_line_ids
                 ]) or inv.state in ('draft', 'cancel')
 
     @api.multi

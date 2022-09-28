@@ -191,7 +191,7 @@ class AssetDepreciationLine(models.Model):
     def unlink(self):
         if self.mapped('asset_accounting_info_ids'):
             lines = self.filtered('asset_accounting_info_ids')
-            name_list = "\n".join([l[-1] for l in lines.name_get()])
+            name_list = "\n".join([ln[-1] for ln in lines.name_get()])
             raise ValidationError(
                 _(
                     "The lines you you are trying to delete are currently"
@@ -204,7 +204,7 @@ class AssetDepreciationLine(models.Model):
             lines = self.filtered(
                 lambda l: l.move_id and l.move_id.state != 'draft'
             )
-            name_list = "\n".join([l[-1] for l in lines.name_get()])
+            name_list = "\n".join([ln[-1] for ln in lines.name_get()])
             raise ValidationError(
                 _(
                     "Following lines are linked to posted account moves, and"
@@ -621,13 +621,18 @@ class AssetDepreciationLine(models.Model):
 
     @api.model
     def get_depreciation_lines(
-        self, date_from=None, date_to=None, asset_ids=None, type_ids=None, final=None, depreciation_ids=None):
-
+        self, date_from=None, date_to=None, asset_ids=None,
+        type_ids=None, final=None, depreciation_ids=None
+    ):
         domain = self.get_depreciation_lines_domain(
-            date_from=date_from, date_to=date_to, asset_ids=asset_ids, type_ids=type_ids, final=final, depreciation_ids=depreciation_ids)
+            date_from=date_from, date_to=date_to, asset_ids=asset_ids,
+            type_ids=type_ids, final=final, depreciation_ids=depreciation_ids)
         return self.search(domain)
 
-    def get_depreciation_lines_domain(self, date_from=None, date_to=None, asset_ids=None, type_ids=None, final=None, depreciation_ids=None):
+    def get_depreciation_lines_domain(
+        self, date_from=None, date_to=None, asset_ids=None, type_ids=None, final=None,
+        depreciation_ids=None
+    ):
         asset_ids = asset_ids or []
         if not isinstance(asset_ids, (list, tuple)):
             asset_ids = [asset_ids]
@@ -669,14 +674,13 @@ class AssetDepreciationLine(models.Model):
 
     def depreciation_before_in_out(self, vals):
         dep = self.env['asset.depreciation'].browse(vals['depreciation_id'])
-        asset = self.env['asset.asset'].browse(vals['asset_id'])
+        # asset = self.env['asset.asset'].browse(vals['asset_id'])
 
         dpr_date = datetime.strptime(vals['date'], '%Y-%m-%d').date()
         dep.check_previous_depreciation(dpr_date)
-        dep_lines = dep.with_context(depreciated_by_line=False).generate_depreciation_lines(dpr_date)
+        dep_lines = dep.with_context(
+            depreciated_by_line=False).generate_depreciation_lines(dpr_date)
 
         dep_lines.button_generate_account_move()
 
         return True
-
-

@@ -1,5 +1,6 @@
 # Copyright 2021 Sergio Corato <https://github.com/sergiocorato>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+from datetime import date
 from odoo import fields
 from odoo.tests.common import TransactionCase
 from dateutil.relativedelta import relativedelta
@@ -51,6 +52,19 @@ class TestAssets(TransactionCase):
             'mode_id': self.env.ref(
                 'assets_management.ad_mode_materiale').id,
         })
+        year = date.today().year
+        self.env['account.fiscal.year'].create({
+            'name': '%s' % year,
+            'date_from': date(year, 1, 1),
+            'date_to': date(year, 12, 31),
+        })
+        year -= 1
+        self.env['account.fiscal.year'].create({
+            'name': '%s' % year,
+            'date_from': date(year, 1, 1),
+            'date_to': date(year, 12, 31),
+        })
+
 
     def _create_asset(self):
         asset = self.env['asset.asset'].create({
@@ -65,7 +79,8 @@ class TestAssets(TransactionCase):
 
     def test_create_depreciation(self):
         asset = self._create_asset()
-        self.assertEqual(asset.state, 'non_depreciated',
+        self.assertEqual(asset.state,
+                         'non_depreciated',
                          'Asset is not in non depreciated state!')
 
         wiz_vals = asset.with_context(
@@ -74,4 +89,9 @@ class TestAssets(TransactionCase):
         wiz = self.env['wizard.asset.generate.depreciation'].with_context(
             wiz_vals['context']
         ).create({})
+        year = date.today().year - 1
+        wiz.date_dep = date(year, 12, 31)
+        wiz.do_generate()
+        year = date.today().year
+        wiz.date_dep = date(year, 12, 31)
         wiz.do_generate()
