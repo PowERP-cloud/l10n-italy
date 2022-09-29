@@ -204,8 +204,8 @@ class AssetDepreciation(models.Model):
             )
         if any([m.state != 'draft' for m in self.mapped('dismiss_move_id')]):
             deps = self.filtered(
-                lambda l: l.dismiss_move_id
-                and l.dismiss_move_id.state != 'draft'
+                lambda ln: ln.dismiss_move_id
+                and ln.dismiss_move_id.state != 'draft'
             )
             name_list = "\n".join([ln[-1] for ln in deps.name_get()])
             raise ValidationError(
@@ -268,8 +268,7 @@ class AssetDepreciation(models.Model):
                  'asset_id.sold')
     def _compute_amounts(self):
         for dep in self:
-            vals = dep.get_computed_amounts()
-            dep.update(vals)
+            dep.update(dep.get_computed_amounts())
 
     @api.multi
     @api.depends('line_ids', 'line_ids', 'line_ids.date', 'line_ids.move_type')
@@ -280,8 +279,8 @@ class AssetDepreciation(models.Model):
         """
         for dep in self:
             dep_lines = dep.line_ids.filtered(
-                lambda l: l.move_type == 'depreciated'
-                and not l.partial_dismissal
+                lambda ln: ln.move_type == 'depreciated'
+                and not ln.partial_dismissal
             )
             if dep_lines:
                 dep.last_depreciation_date = max(dep_lines.mapped('date'))
@@ -342,7 +341,7 @@ class AssetDepreciation(models.Model):
             lambda ln: (
                 ln.move_type == 'depreciated'
                 and not ln.partial_dismissal
-                and date_from <= ln.date <= self.date_dep
+                and date_from <= ln.date <= dep_date
                 and ln.final is True
             )
         )
@@ -373,10 +372,7 @@ class AssetDepreciation(models.Model):
                 .format(posted_names)
             )
 
-        self.check_previous_depreciation(dep_date)
-
     def delete_current_depreciation_line(self, dep_date):
-        # dep.check_current_depreciation_lines(dep_date)
         lines_to_delete = self.check_current_depreciation_lines(dep_date)
         if lines_to_delete:
             lines_to_delete.button_remove_account_move()
@@ -387,6 +383,7 @@ class AssetDepreciation(models.Model):
         self.delete_current_depreciation_line(dep_date)
         self.check_before_generate_depreciation_lines(dep_date)
 
+        self.check_previous_depreciation(dep_date)
         new_lines = self.env['asset.depreciation.line']
         for dep in self:
             new_lines |= dep.generate_depreciation_lines_single(dep_date)
@@ -422,9 +419,10 @@ class AssetDepreciation(models.Model):
 
         self.dismiss_move_id = am_obj.create(vals)
 
-    def get_computed_amounts(self, date_to=None):
+    def get_computed_amounts(self, date_to=None, ext=None):
         """Evaluate all depreciation amounts:
         - amount_depreciated_updated: asset initial value + 'in' & 'out' lines
+        - last_depreciated_date: last date with 'in' & 'out' lines (only if ext)
         - amount_depreciated: sum of 'depreciated' lines
         - amount_historical: sum of 'historical' lines
         - amount_gain: sum of 'gain' lines
@@ -432,7 +430,7 @@ class AssetDepreciation(models.Model):
         - amount_in: sum of 'in' lines
         - amount_out: sum of 'out' lines
         - amount_residual: asset initial values + 'gain' & 'loss' lines
-        - amount_depreciable: amount_depreciable field value
+        - amount_depreciable: amount_depreciable field value (only if ext)
         """
         self.ensure_one()
         vals = {
@@ -441,15 +439,20 @@ class AssetDepreciation(models.Model):
             if 'amount_{}'.format(k) in self._fields
         }
 
+        amt_dep = self.amount_depreciable
         if self.asset_id.sold:
             vals.update({
                 'amount_depreciable_updated': 0,
-                'amount_residual': 0
+                'amount_residual': 0,
             })
+            if ext:
+                vals.update({
+                    'last_depreciable_date': False,
+                    'amount_depreciable': amt_dep,
+                })
         else:
             non_residual_types = self.line_ids.get_non_residual_move_types()
             update_move_types = self.line_ids.get_update_move_types()
-            amt_dep = self.amount_depreciable
             vals.update({
                 'amount_depreciable_updated': amt_dep + sum([
                     ln.balance for ln in self.line_ids
@@ -463,9 +466,19 @@ class AssetDepreciation(models.Model):
                         (not date_to or (
                             date_to and ln.date <= date_to)))
                 ]),
-                'amount_depreciable': amt_dep,
             })
-
+            if ext:
+                in_out_dates = [
+                    ln.date for ln in self.line_ids
+                    if (ln.move_type in update_move_types and
+                        (not date_to or (
+                            date_to and ln.date <= date_to)))
+                ]
+                vals.update({
+                    'last_depreciable_date':
+                        max(in_out_dates) if in_out_dates else False,
+                    'amount_depreciable': amt_dep,
+                })
         return vals
 
     def get_depreciable_amount(self, dep_date=None):
@@ -509,13 +522,26 @@ class AssetDepreciation(models.Model):
                 _("Depreciations cannot start before {}.").format(dt_start_str)
             )
 
-        if self.pro_rata_temporis or self._context.get('force_prorata'):
-            fiscal_year_obj = self.env['account.fiscal.year']
+        fiscal_year_obj = self.env['account.fiscal.year']
+        fy_dep = fiscal_year_obj.get_fiscal_year_by_date(
+            dep_date, company=self.company_id
+        )
+        last_depreciable_date = self.get_computed_amounts(
+            date_to=fy_dep.date_to, ext=True)['last_depreciable_date']
+
+        if dep_date < fields.Date.from_string(fy_dep.date_to):
+            # Partial depreciation
+            multiplier *= self.get_pro_rata_temporis_multiplier(
+                dep_date, 'std'
+            )
+        elif last_depreciable_date and last_depreciable_date != fy_dep.date_from:
+            # asset with 'in' / 'out' moves
+            multiplier *= self.get_pro_rata_temporis_multiplier(
+                last_depreciable_date + datetime.timedelta(1), 'dte'
+            )
+        elif self.pro_rata_temporis or self._context.get('force_prorata'):
             fy_start = fiscal_year_obj.get_fiscal_year_by_date(
                 date_start, company=self.company_id
-            )
-            fy_dep = fiscal_year_obj.get_fiscal_year_by_date(
-                dep_date, company=self.company_id
             )
             if fy_dep == fy_start:
                 # If current depreciation lines within the same fiscal year in
@@ -636,8 +662,8 @@ class AssetDepreciation(models.Model):
                      date to fiscal year's last day
         """
         self.ensure_one()
-        if not (self.pro_rata_temporis or self._context.get('force_prorata')):
-            return 1
+        # if not (self.pro_rata_temporis or self._context.get('force_prorata')):
+        #     return 1
 
         dt_start, dt, dt_end = self.get_pro_rata_temporis_dates(date)
         lapse = (dt_end - dt_start).days + 1
@@ -722,37 +748,43 @@ class AssetDepreciation(models.Model):
     def check_current_depreciation_lines(self, dep_date):
         res = self.env['asset.depreciation.line']
         for dep in self:
-            anno_fiscale = self.env['account.fiscal.year'].get_fiscal_year_by_date(
+            fiscal_year = self.env['account.fiscal.year'].get_fiscal_year_by_date(
                 dep_date, company=dep.company_id)
-
+            date_from = dep.get_computed_amounts(
+                date_to=fiscal_year.date_to, ext=True)['last_depreciable_date']
+            if date_from:
+                date_from = date_from + datetime.timedelta(1)
+            else:
+                date_from = fiscal_year.date_from
             res += dep.env['asset.depreciation.line'].get_depreciation_lines(
-                date_from=anno_fiscale.date_from,
-                date_to=anno_fiscale.date_to,
+                date_from=date_from,
+                date_to=fiscal_year.date_to,
                 final=False,
                 depreciation_ids=dep.id,
-                type_ids=['depreciated']
             )
         return res
 
     @api.multi
     def check_previous_depreciation(self, dep_date):
         for dep in self:
-            anno_fiscale = self.env['account.fiscal.year'].get_fiscal_year_by_date(
+            fiscal_year = self.env['account.fiscal.year'].get_fiscal_year_by_date(
                 dep_date, company=dep.company_id)
-            inizio_esercizio = anno_fiscale.date_from
-            fine_esercizio_precedente = inizio_esercizio - datetime.timedelta(1)
-            # validation
-            if dep.asset_id.purchase_date > fine_esercizio_precedente and (
-                fine_esercizio_precedente < dep_date <= anno_fiscale.date_to
-            ):
-                continue
+            last_depreciable_date = dep.get_computed_amounts(
+                date_to=fiscal_year.date_to, ext=True)['last_depreciable_date']
+            if last_depreciable_date:
+                prior_fy_date_to = last_depreciable_date
             else:
-                last_depreciation_date = dep.last_depreciation_date
-                if (not last_depreciation_date or
-                        last_depreciation_date != fine_esercizio_precedente):
-                    asset_name = dep.asset_id.name
-                    nature_name = dep.type_id.name
-                    raise ValidationError(
-                        "Manca l'ammortamento dell'esercizio precedente per "
-                        "la natura {nature} del {asset}.".format(
-                            asset=asset_name, nature=nature_name))
+                fy_date_from = fiscal_year.date_from
+                prior_fy_date_to = fy_date_from - datetime.timedelta(1)
+            if dep.asset_id.purchase_date > prior_fy_date_to:
+                # Fresh purchased asset or asset with 'in' / 'out' lines
+                continue
+            last_depreciation_date = dep.last_depreciation_date
+            if (not last_depreciation_date or
+                    last_depreciation_date != prior_fy_date_to):
+                asset_name = dep.asset_id.name
+                nature_name = dep.type_id.name
+                raise ValidationError(
+                    "Manca l'ammortamento dell'esercizio precedente per "
+                    "la natura {nature} del {asset}.".format(
+                        asset=asset_name, nature=nature_name))

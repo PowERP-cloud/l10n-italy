@@ -21,7 +21,7 @@ class AssetAccountingInfo(models.Model):
     upon some fields' changes, and would have made it very hard to be
     customizable by third party modules.
     Therefore, it has been chosen to define them as simple Python methods which
-    are called right after ``create`` and ``write`` methods if some fields
+    are called right after ``create`` and ``write`` methods if some fields
     (which can be retrieved by method ``get_main_fields``) are found within
     ``vals`` dictionary.
     """

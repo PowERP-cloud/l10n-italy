@@ -75,7 +75,8 @@ class AssetDepreciationLine(models.Model):
     )
 
     depreciation_line_type_id = fields.Many2one(
-        'asset.depreciation.line.type', string="Depreciation Type"
+        'asset.depreciation.line.type',
+        string="Depreciation Type"
     )
 
     depreciation_nr = fields.Integer(
@@ -96,7 +97,10 @@ class AssetDepreciationLine(models.Model):
         string="Force Dep. Num",
     )
 
-    move_id = fields.Many2one('account.move', string="Move")
+    move_id = fields.Many2one(
+        'account.move',
+        string="Move"
+    )
 
     move_type = fields.Selection(
         [
@@ -123,7 +127,7 @@ class AssetDepreciationLine(models.Model):
         default=0.0,
     )
 
-    percentage = fields.Float(string="%")
+    # percentage = fields.Float(string="%")
 
     requires_account_move = fields.Boolean(
         readonly=True,
@@ -139,6 +143,11 @@ class AssetDepreciationLine(models.Model):
 
     final = fields.Boolean(
         string="Final",
+    )
+
+    depreciation_line_linked_id = fields.Many2one(
+        'asset.depreciation.line',
+        string="Linked Depreciation Move"
     )
 
     # Non-default parameter: set which `move_types` require numeration
@@ -171,12 +180,10 @@ class AssetDepreciationLine(models.Model):
         line = super().create(vals)
         if line.need_normalize_depreciation_nr():
             line.normalize_depreciation_nr(force=True)
-        # end if
         if line.move_type in line.get_update_move_types():
             if line.requires_account_move:
                 line.button_generate_account_move()
                 return line
-        # end if
         return line
 
     @api.multi
@@ -633,8 +640,12 @@ class AssetDepreciationLine(models.Model):
 
     def get_depreciation_lines_domain(
         self, date_from=None, date_to=None, asset_ids=None, type_ids=None, final=None,
-        depreciation_ids=None
+        depreciation_ids=None, move_types=None,
     ):
+        move_types = move_types or 'depreciated'
+        if not isinstance(move_types, (list, tuple)):
+            move_types = [move_types]
+
         asset_ids = asset_ids or []
         if not isinstance(asset_ids, (list, tuple)):
             asset_ids = [asset_ids]
@@ -648,6 +659,7 @@ class AssetDepreciationLine(models.Model):
             depreciation_ids = [depreciation_ids]
 
         domain = [
+            ('move_type', 'in', move_types),
             ('date', '!=', False),
         ]
 
@@ -675,14 +687,15 @@ class AssetDepreciationLine(models.Model):
         return domain
 
     def depreciation_before_in_out(self, vals):
+        """
+        When 'out' or 'in' moves are created, it is needed to evaluate the depreciation
+        amount until 'out' / 'in' move, because these moves update asset value and
+        depreciation value is depending on asset value.
+        """
         dep = self.env['asset.depreciation'].browse(vals['depreciation_id'])
-        # asset = self.env['asset.asset'].browse(vals['asset_id'])
-
-        dpr_date = datetime.strptime(vals['date'], '%Y-%m-%d').date()
-        dep.check_previous_depreciation(dpr_date)
+        dep_date = datetime.strptime(vals['date'], '%Y-%m-%d').date()
         dep_lines = dep.with_context(
-            depreciated_by_line=False).generate_depreciation_lines(dpr_date)
-
+            depreciated_by_line=False).generate_depreciation_lines(dep_date)
         dep_lines.button_generate_account_move()
 
         return True
