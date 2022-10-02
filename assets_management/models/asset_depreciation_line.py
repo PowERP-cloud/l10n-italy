@@ -631,16 +631,17 @@ class AssetDepreciationLine(models.Model):
     @api.model
     def get_depreciation_lines(
         self, date_from=None, date_to=None, asset_ids=None,
-        type_ids=None, final=None, depreciation_ids=None
+        type_ids=None, final=None, depreciation_ids=None, company_id=None
     ):
         domain = self.get_depreciation_lines_domain(
             date_from=date_from, date_to=date_to, asset_ids=asset_ids,
-            type_ids=type_ids, final=final, depreciation_ids=depreciation_ids)
+            type_ids=type_ids, final=final, depreciation_ids=depreciation_ids,
+            company_id=company_id)
         return self.search(domain)
 
     def get_depreciation_lines_domain(
         self, date_from=None, date_to=None, asset_ids=None, type_ids=None, final=None,
-        depreciation_ids=None, move_types=None,
+        depreciation_ids=None, move_types=None, company_id=None
     ):
         move_types = move_types or 'depreciated'
         if not isinstance(move_types, (list, tuple)):
@@ -681,8 +682,11 @@ class AssetDepreciationLine(models.Model):
         if depreciation_ids:
             domain.append(('depreciation_id', 'in', depreciation_ids))
 
-        if self.asset_id.company_id:
-            domain.append(('company_id', '=', self.asset_id.company_id.id))
+        if company_id:
+            if isinstance(company_id, int):
+                domain.append(('company_id', '=', company_id))
+            else:
+                domain.append(('company_id', '=', company_id.id))
 
         return domain
 

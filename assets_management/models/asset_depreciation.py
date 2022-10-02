@@ -271,7 +271,7 @@ class AssetDepreciation(models.Model):
             dep.update(dep.get_computed_amounts())
 
     @api.multi
-    @api.depends('line_ids', 'line_ids', 'line_ids.date', 'line_ids.move_type')
+    @api.depends('line_ids', 'line_ids.date', 'line_ids.move_type')
     def _compute_last_depreciation_date(self):
         """
         Update date upon deps with at least one depreciation line (excluding
@@ -393,7 +393,7 @@ class AssetDepreciation(models.Model):
     def generate_depreciation_lines_single_vals(self, dep_date):
         self.ensure_one()
         final = self._context.get('final')
-        dep_nr = self.get_max_depreciation_nr() + 1
+        dep_nr = self.get_next_depreciation_nr()
         dep = self.with_context(dep_nr=dep_nr, used_asset=self.asset_id.used)
         dep_amount = dep.get_depreciation_amount(dep_date)
         dep = dep.with_context(dep_amount=dep_amount, final=final)
@@ -402,8 +402,23 @@ class AssetDepreciation(models.Model):
     def generate_depreciation_lines_single(self, dep_date):
         self.ensure_one()
 
+        fiscal_year_model = self.env['account.fiscal.year']
+        fy = fiscal_year_model.get_fiscal_year_by_date(
+            dep_date, company=self.asset_id.company_id
+        )
+        line_model = self.env['asset.depreciation.line']
+        line_move = line_model.get_depreciation_lines(
+            date_from=fy.date_from, date_to=fy.date_to,
+            asset_ids=self.asset_id.id, type_ids=self.type_id.id)
         vals = self.generate_depreciation_lines_single_vals(dep_date)
-        return self.env['asset.depreciation.line'].create(vals)
+        # TODO> Merge depreciation lines
+        if False:
+            if not line_move:
+                return line_model.create(vals)
+            return line_move[0].write(
+                {'date': vals['date'], 'amount': vals['amount'] + line_move[0].amount}
+            )
+        return line_model.create(vals)
 
     def generate_dismiss_account_move(self):
         self.ensure_one()
@@ -610,13 +625,13 @@ class AssetDepreciation(models.Model):
             'ref': _("Asset dismissal: ") + self.asset_id.make_name(),
         }
 
-    def get_max_depreciation_nr(self):
+    def get_next_depreciation_nr(self):
         self.ensure_one()
         num_lines = self.line_ids.filtered('requires_depreciation_nr')
         nums = num_lines.mapped('depreciation_nr')
         if not nums:
             nums = [0]
-        return max(nums)
+        return max(nums) + 1
 
     def get_pro_rata_temporis_dates(self, date):
         """
@@ -752,7 +767,7 @@ class AssetDepreciation(models.Model):
                 dep_date, company=dep.company_id)
             date_from = dep.get_computed_amounts(
                 date_to=fiscal_year.date_to, ext=True)['last_depreciable_date']
-            if date_from:
+            if date_from and date_from > fiscal_year.date_from:
                 date_from = date_from + datetime.timedelta(1)
             else:
                 date_from = fiscal_year.date_from
@@ -761,6 +776,7 @@ class AssetDepreciation(models.Model):
                 date_to=fiscal_year.date_to,
                 final=False,
                 depreciation_ids=dep.id,
+                company_id=dep.company_id
             )
         return res
 
@@ -771,7 +787,7 @@ class AssetDepreciation(models.Model):
                 dep_date, company=dep.company_id)
             last_depreciable_date = dep.get_computed_amounts(
                 date_to=fiscal_year.date_to, ext=True)['last_depreciable_date']
-            if last_depreciable_date:
+            if last_depreciable_date and last_depreciable_date > fiscal_year.date_from:
                 prior_fy_date_to = last_depreciable_date
             else:
                 fy_date_from = fiscal_year.date_from
@@ -788,3 +804,48 @@ class AssetDepreciation(models.Model):
                     "Manca l'ammortamento dell'esercizio precedente per "
                     "la natura {nature} del {asset}.".format(
                         asset=asset_name, nature=nature_name))
+
+    @api.model
+    def get_depreciations(
+        self, date_from=None, date_to=None, asset_ids=None, type_ids=None,
+        company_id=None
+    ):
+        domain = self.get_depreciations_domain(
+            date_from=date_from, date_to=date_to, asset_ids=asset_ids,
+            type_ids=type_ids, company_id=company_id
+        )
+        return self.search(domain)
+
+    def get_depreciations_domain(
+        self, date_from=None, date_to=None, asset_ids=None, type_ids=None,
+        company_id=None
+    ):
+        asset_ids = asset_ids or []
+        if not isinstance(asset_ids, (list, tuple)):
+            asset_ids = [asset_ids]
+
+        type_ids = type_ids or []
+        if not isinstance(type_ids, (list, tuple)):
+            type_ids = [type_ids]
+
+        domain = []
+
+        if date_from:
+            domain.append(('last_depreciation_date', '>=', date_from))
+
+        if date_to:
+            domain.append(('last_depreciation_date', '<=', date_to))
+
+        if asset_ids:
+            domain.append(('asset_id', 'in', asset_ids))
+
+        if type_ids:
+            domain.append(('type_id', 'in', type_ids))
+
+        if company_id:
+            if isinstance(company_id, int):
+                domain.append(('company_id', '=', company_id))
+            else:
+                domain.append(('company_id', '=', company_id.id))
+
+        return domain
