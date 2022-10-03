@@ -631,12 +631,13 @@ class AssetDepreciationLine(models.Model):
     @api.model
     def get_depreciation_lines(
         self, date_from=None, date_to=None, asset_ids=None,
-        type_ids=None, final=None, depreciation_ids=None, company_id=None
+        type_ids=None, final=None, depreciation_ids=None, move_types=None,
+        company_id=None
     ):
         domain = self.get_depreciation_lines_domain(
             date_from=date_from, date_to=date_to, asset_ids=asset_ids,
             type_ids=type_ids, final=final, depreciation_ids=depreciation_ids,
-            company_id=company_id)
+            move_types=move_types, company_id=company_id)
         return self.search(domain)
 
     def get_depreciation_lines_domain(

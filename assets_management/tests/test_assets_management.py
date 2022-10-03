@@ -395,9 +395,20 @@ class TestAssets(TransactionCase):
         self.assertEqual(asset.state,
                          'totally_depreciated',
                          'Asset is not in non depreciated state!')
+        # Now remove last depreciation lines, dismiss asset and repeat depreciation
+        self.get_depreciation_lines(asset=asset, date_from=date(year, 12, 31)).unlink()
+        self.assertEqual(asset.state,
+                         'partially_depreciated',
+                         'Asset is not in non depreciated state!')
+        # Dismiss
+        vals = {
+            'amount': 150.0,
+            'asset_id': asset.id,
+            'date': date(year, 7, 31).strftime('%Y-%m-%d'),
+        }
+        self.env['asset.depreciation'].generate_dismiss_line(vals)
 
     def test_asset(self):
-        # import pdb; pdb.set_trace()
         self._test_asset_1()
         self._test_asset_2()
         self._test_asset_3()

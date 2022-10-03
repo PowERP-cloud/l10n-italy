@@ -371,6 +371,7 @@ class AssetDepreciation(models.Model):
                   " posted depreciation for the chosen date and types:\n{}")
                 .format(posted_names)
             )
+        self.check_previous_depreciation(dep_date)
 
     def delete_current_depreciation_line(self, dep_date):
         lines_to_delete = self.check_current_depreciation_lines(dep_date)
@@ -383,7 +384,6 @@ class AssetDepreciation(models.Model):
         self.delete_current_depreciation_line(dep_date)
         self.check_before_generate_depreciation_lines(dep_date)
 
-        self.check_previous_depreciation(dep_date)
         new_lines = self.env['asset.depreciation.line']
         for dep in self:
             new_lines |= dep.generate_depreciation_lines_single(dep_date)
@@ -407,18 +407,78 @@ class AssetDepreciation(models.Model):
             dep_date, company=self.asset_id.company_id
         )
         line_model = self.env['asset.depreciation.line']
-        line_move = line_model.get_depreciation_lines(
+        # TODO> Merge depreciation lines
+        # line_move = line_model.get_depreciation_lines(
+        line_model.get_depreciation_lines(
             date_from=fy.date_from, date_to=fy.date_to,
             asset_ids=self.asset_id.id, type_ids=self.type_id.id)
         vals = self.generate_depreciation_lines_single_vals(dep_date)
         # TODO> Merge depreciation lines
-        if False:
-            if not line_move:
-                return line_model.create(vals)
-            return line_move[0].write(
-                {'date': vals['date'], 'amount': vals['amount'] + line_move[0].amount}
-            )
+        # if <flag_merge>:
+        #     if not line_move:
+        #         return line_model.create(vals)
+        #     return line_move[0].write(
+        #         {'date': vals['date'], 'amount': vals['amount'] + line_move[0].amount}
+        #     )
         return line_model.create(vals)
+
+    def generate_dismiss_line(self, vals):
+        if 'date' not in vals:
+            raise ValidationError(
+                _("Missed dismiss date")
+            )
+        if 'asset_id' not in vals:
+            raise ValidationError(
+                _("Missed dismiss asset")
+            )
+        if 'amount' not in vals:
+            raise ValidationError(
+                _("Missed dismiss amount")
+            )
+        deps = self.get_depreciations(
+            date_ref=vals['date'], asset_ids=vals['asset_id'])
+        if isinstance(vals['date'], str):
+            dep_date = datetime.datetime.strptime(vals['date'], '%Y-%m-%d').date()
+        else:
+            dep_date = vals['date']
+        deps.check_before_generate_depreciation_lines(dep_date)
+
+        new_lines = self.env['asset.depreciation.line']
+        for dep_type in self.env["asset.depreciation.type"].search([]):
+            vals['depreciation_id'] = dep_type.id
+            new_lines |= self.generate_dismiss_line_single(vals)
+
+        line_model = self.env['asset.depreciation.line']
+        for dep in deps:
+            out_line = line_model.get_depreciation_lines(
+                depreciation_ids=dep.id,
+                move_types='out',
+                date_from=vals['date'],
+                date_to=vals['date'])[0]
+            dep_line = line_model.get_depreciation_lines(
+                depreciation_ids=dep.id,
+                move_types='depreciated',
+                date_from=vals['date'],
+                date_to=vals['date'])[0]
+            vals['depreciation_id'] = dep.id
+            balance = out_line.amount - dep_line.amount
+            vals['amount'] = abs(balance)
+            if balance > 0:
+                vals['move_type'] = 'gain'
+                vals['name'] = 'Dismiss Gain'
+            else:
+                vals['move_type'] = 'loss'
+                vals['name'] = 'Dismiss Loss'
+            self.env['asset.depreciation.line'].create(vals)
+        return new_lines
+
+    def generate_dismiss_line_single(self, vals):
+        vals.update({
+            'move_type': 'out',
+            'name': _("Dismiss")
+        })
+        line_model = self.env['asset.depreciation.line']
+        return line_model.with_context(depreciated_by_line=True).create(vals)
 
     def generate_dismiss_account_move(self):
         self.ensure_one()
@@ -807,19 +867,29 @@ class AssetDepreciation(models.Model):
 
     @api.model
     def get_depreciations(
-        self, date_from=None, date_to=None, asset_ids=None, type_ids=None,
-        company_id=None
+        self, date_ref=None, date_from=None, date_to=None,
+        asset_ids=None, type_ids=None, with_residual=None, company_id=None
     ):
         domain = self.get_depreciations_domain(
-            date_from=date_from, date_to=date_to, asset_ids=asset_ids,
-            type_ids=type_ids, company_id=company_id
+            date_ref=date_ref, date_from=date_from, date_to=date_to,
+            asset_ids=asset_ids, type_ids=type_ids,
+            with_residual=with_residual, company_id=company_id
         )
         return self.search(domain)
 
     def get_depreciations_domain(
-        self, date_from=None, date_to=None, asset_ids=None, type_ids=None,
-        company_id=None
+        self, date_ref=None, date_from=None, date_to=None,
+        asset_ids=None, type_ids=None, with_residual=None, company_id=None
     ):
+        if date_ref and (date_from == "fy.date_from" or date_to == "fy.date_to"):
+            fiscal_year_model = self.env['account.fiscal.year']
+            fy = fiscal_year_model.get_fiscal_year_by_date(
+                date_ref, company=self.company_id
+            )
+            if date_from == "fy.date_from":
+                date_from = fy.date_from
+            if date_to == "fy.date_to":
+                date_to = fy.date_to
         asset_ids = asset_ids or []
         if not isinstance(asset_ids, (list, tuple)):
             asset_ids = [asset_ids]
@@ -829,6 +899,12 @@ class AssetDepreciation(models.Model):
             type_ids = [type_ids]
 
         domain = []
+
+        if with_residual:
+            domain.append(('amount_residual', '>', 0.0))
+
+        if date_ref:
+            domain.append(('date_start', '<', date_ref))
 
         if date_from:
             domain.append(('last_depreciation_date', '>=', date_from))
