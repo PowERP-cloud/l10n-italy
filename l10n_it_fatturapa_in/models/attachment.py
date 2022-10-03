@@ -1,3 +1,4 @@
+# © 2022 Andrei Levin - Didotech srl (www.didotech.com)
 
 import base64
 from odoo import fields, models, api, _
@@ -86,7 +87,8 @@ class FatturaPAAttachmentIn(models.Model):
                 .with_context(from_attachment=att)
             fatt = wiz_obj.get_invoice_obj(att)
             cedentePrestatore = fatt.FatturaElettronicaHeader.CedentePrestatore
-            partner_id = wiz_obj.getCedPrest(cedentePrestatore)
+            dati_generali_documento = fatt.FatturaElettronicaBody[0].DatiGenerali.DatiGeneraliDocumento
+            partner_id = wiz_obj.getCedPrest(cedentePrestatore, dati_generali_documento)
             att.xml_supplier_id = partner_id
             att.invoices_number = len(fatt.FatturaElettronicaBody)
             att.invoices_total = 0

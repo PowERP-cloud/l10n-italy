@@ -1,3 +1,5 @@
+# © 2022 Andrei Levin - Didotech srl (www.didotech.com)
+
 import logging
 import re
 import odoo
@@ -246,9 +248,23 @@ class WizardImportFatturapa(models.TransientModel):
 
             return partner_model.create(vals).id
 
-    def getCedPrest(self, cedPrest):
+    def getCedPrest(self, cedPrest, dati_generali):
         partner_model = self.env['res.partner']
-        partner_id = self.getPartnerBase(cedPrest.DatiAnagrafici)
+
+        partner_id = False
+        if dati_generali.TipoDocumento in ('TD17', 'TD18', 'TD19'):
+            # When we create XML we clean partner name, so we can't use it to find original partner
+            autoinvoices = self.env['account.invoice'].search([
+                ('number', '=', dati_generali.Numero),
+                ('date_invoice', '=', dati_generali.Data),
+                ('fiscal_document_type_id.code', '=', dati_generali.TipoDocumento),
+                ('type', '=', 'out_invoice')
+            ])
+            if autoinvoices:
+                partner_id = autoinvoices[0].partner_id.id
+
+        if not partner_id:
+            partner_id = self.getPartnerBase(cedPrest.DatiAnagrafici)
         no_contact_update = False
         if partner_id:
             no_contact_update = partner_model.browse(partner_id).\
@@ -1565,7 +1581,8 @@ class WizardImportFatturapa(models.TransientModel):
             fatt = self.get_invoice_obj(fatturapa_attachment)
             cedentePrestatore = fatt.FatturaElettronicaHeader.CedentePrestatore
             # 1.2
-            partner_id = self.getCedPrest(cedentePrestatore)
+            dati_generali_documento = fatt.FatturaElettronicaBody[0].DatiGenerali.DatiGeneraliDocumento
+            partner_id = self.getCedPrest(cedentePrestatore, dati_generali_documento)
             # 1.3
             TaxRappresentative = fatt.FatturaElettronicaHeader.\
                 RappresentanteFiscale
