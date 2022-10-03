@@ -268,19 +268,24 @@ class AccountMoveLine(models.Model):
                     move_line.full_reconcile_id.reconciled_line_ids
                 )
 
-                if reconcile_line_list[0].id != move_line.id:
-                    reconcile_line = reconcile_line_list[0]
-                else:
-                    reconcile_line = reconcile_line_list[1]
-                # end if
-
                 # Eliminazione riconciliazione
                 move_line.remove_move_reconcile()
 
-                # Creeazione recordset con righe da riconciliare
-                self.browse(
-                    [insoluto_move_line.id, reconcile_line.id]
-                ).reconcile()
+                # se tra i movimenti non più riconciliati ne trovo ancora
+                if len(reconcile_line_list) > 2:
+                    reconcile_line_list = reconcile_line_list.filtered(lambda x: x.reconciled is False)
+
+                if reconcile_line_list:
+                    if reconcile_line_list[0].id != move_line.id:
+                        reconcile_line = reconcile_line_list[0]
+                    else:
+                        reconcile_line = reconcile_line_list[1]
+                    # end if
+
+                    # Creeazione recordset con righe da riconciliare
+                    self.browse(
+                        [insoluto_move_line.id, reconcile_line.id]
+                    ).reconcile()
             # end if
         # end for
 
