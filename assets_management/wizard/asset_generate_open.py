@@ -103,8 +103,6 @@ class WizardAssetsGenerateOpen(models.TransientModel):
 
         # move_id = am_obj.create(vals)
 
-        asset.is_open = True
-
         return {
             'type': 'ir.actions.client',
             'tag': 'reload'

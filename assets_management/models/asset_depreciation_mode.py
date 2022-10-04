@@ -64,8 +64,8 @@ class AssetDepreciationMode(models.Model):
         ):
             raise UserError(
                 _(
-                    "Cannot delete depreciation modes while they're still "
-                    "linked to categories."
+                    "Cannot delete depreciation modes while they're still linked"
+                    " to categories."
                 )
             )
         if (
@@ -75,8 +75,8 @@ class AssetDepreciationMode(models.Model):
         ):
             raise UserError(
                 _(
-                    "Cannot delete depreciation modes while they're still "
-                    "linked to depreciations."
+                    "Cannot delete depreciation modes while they're still linked"
+                    " to depreciations."
                 )
             )
         return super().unlink()

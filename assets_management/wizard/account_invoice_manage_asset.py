@@ -172,10 +172,10 @@ class WizardInvoiceManageAsset(models.TransientModel):
     @api.onchange('partial_dismiss_percentage', 'asset_id')
     def onchange_partial_dismiss_percentage(self):
         for record in self:
-            if record.partial_dismiss_percentage > 0:
+            if record.percentage > 0:
                 record.asset_purchase_amount = (
                     record.asset_id.purchase_amount *
-                    record.partial_dismiss_percentage / 100)
+                    record.percentage / 100)
             else:
                 record.asset_purchase_amount = 0.0
 
@@ -785,7 +785,7 @@ class WizardInvoiceManageAsset(models.TransientModel):
         for dep in self.asset_id.depreciation_ids:
             dep.check_previous_depreciation(self.dismiss_date)
         if self.partial_dismiss_percentage > 0:
-            consentito = 100 - self.asset_id.partial_dismiss_percentage
+            consentito = 100 - self.asset_id.percentage
             if self.partial_dismiss_percentage > consentito:
                 raise ValidationError(
                     _("La percentuale di dismissone supera il valore consentito {val}".
@@ -805,12 +805,12 @@ class WizardInvoiceManageAsset(models.TransientModel):
             writeoff += ln.currency_id.compute(ln.price_subtotal, currency)
         writeoff = round(writeoff, digits)
 
-        total_percentage = (self.asset_id.partial_dismiss_percentage +
+        total_percentage = (self.asset_id.percentage +
                             self.partial_dismiss_percentage)
         asset_vals = {
             'sale_amount': self.asset_id.sale_amount + writeoff,
             'partial_dismiss_percentage': (
-                self.asset_id.partial_dismiss_percentage +
+                self.asset_id.percentage +
                 self.partial_dismiss_percentage)
         }
         if total_percentage >= 100:

@@ -11,7 +11,7 @@ import datetime
 
 class AssetDepreciation(models.Model):
     _name = 'asset.depreciation'
-    _description = "Assets Depreciation's"
+    _description = "Assets Depreciations"
 
     amount_depreciable = fields.Monetary(
         string="Depreciable Amount"
@@ -402,16 +402,16 @@ class AssetDepreciation(models.Model):
     def generate_depreciation_lines_single(self, dep_date):
         self.ensure_one()
 
-        fiscal_year_model = self.env['account.fiscal.year']
-        fy = fiscal_year_model.get_fiscal_year_by_date(
-            dep_date, company=self.asset_id.company_id
-        )
+        # TODO> Merge depreciation lines
+        # fiscal_year_model = self.env['account.fiscal.year']
+        # fy = fiscal_year_model.get_fiscal_year_by_date(
+        #     dep_date, company=self.asset_id.company_id
+        # )
         line_model = self.env['asset.depreciation.line']
         # TODO> Merge depreciation lines
         # line_move = line_model.get_depreciation_lines(
-        line_model.get_depreciation_lines(
-            date_from=fy.date_from, date_to=fy.date_to,
-            asset_ids=self.asset_id.id, type_ids=self.type_id.id)
+        #     date_from=fy.date_from, date_to=fy.date_to,
+        #     asset_ids=self.asset_id.id, type_ids=self.type_id.id)
         vals = self.generate_depreciation_lines_single_vals(dep_date)
         # TODO> Merge depreciation lines
         # if <flag_merge>:
@@ -435,33 +435,30 @@ class AssetDepreciation(models.Model):
             raise ValidationError(
                 _("Missed dismiss amount")
             )
+        dismis_amount = vals['amount']
+        if isinstance(vals['date'], str):
+            dismis_date = datetime.datetime.strptime(vals['date'], '%Y-%m-%d').date()
+        else:
+            dismis_date = vals['date']
         deps = self.get_depreciations(
             date_ref=vals['date'], asset_ids=vals['asset_id'])
-        if isinstance(vals['date'], str):
-            dep_date = datetime.datetime.strptime(vals['date'], '%Y-%m-%d').date()
-        else:
-            dep_date = vals['date']
-        deps.check_before_generate_depreciation_lines(dep_date)
+        dep_lines = deps.generate_depreciation_lines(dismis_date)
 
-        new_lines = self.env['asset.depreciation.line']
-        for dep_type in self.env["asset.depreciation.type"].search([]):
-            vals['depreciation_id'] = dep_type.id
-            new_lines |= self.generate_dismiss_line_single(vals)
+        out_lines = self.env['asset.depreciation.line']
+        for dep in deps:
+            vals['depreciation_id'] = dep.id
+            vals['amount'] = dep.amount_residual
+            if vals['amount']:
+                out_lines |= self.generate_dismiss_line_single(vals)
 
         line_model = self.env['asset.depreciation.line']
         for dep in deps:
-            out_line = line_model.get_depreciation_lines(
-                depreciation_ids=dep.id,
-                move_types='out',
-                date_from=vals['date'],
-                date_to=vals['date'])[0]
-            dep_line = line_model.get_depreciation_lines(
-                depreciation_ids=dep.id,
-                move_types='depreciated',
-                date_from=vals['date'],
-                date_to=vals['date'])[0]
+            dep_line = [x for x in dep_lines if x.depreciation_id.id == dep.id]
+            if not dep_line:
+                continue
+            dep_line = dep_line[0]
             vals['depreciation_id'] = dep.id
-            balance = out_line.amount - dep_line.amount
+            balance = dismis_amount - dep_line.amount
             vals['amount'] = abs(balance)
             if balance > 0:
                 vals['move_type'] = 'gain'
@@ -469,8 +466,9 @@ class AssetDepreciation(models.Model):
             else:
                 vals['move_type'] = 'loss'
                 vals['name'] = 'Dismiss Loss'
-            self.env['asset.depreciation.line'].create(vals)
-        return new_lines
+            line_model.create(vals)
+
+        return out_lines
 
     def generate_dismiss_line_single(self, vals):
         vals.update({
@@ -557,8 +555,7 @@ class AssetDepreciation(models.Model):
         return vals
 
     def get_depreciable_amount(self, dep_date=None):
-        return self.get_computed_amounts(
-            date_to=dep_date)['amount_depreciable_updated']
+        return self.get_computed_amounts(date_to=dep_date)['amount_depreciable_updated']
 
     def get_depreciation_amount(self, dep_date):
         self.ensure_one()
@@ -572,11 +569,7 @@ class AssetDepreciation(models.Model):
         digits = self.env['decimal.precision'].precision_get('Account')
         dep_amount = round(amount * multiplier, digits)
 
-        # If amount_residual < dep_amount: use amount_residual as dep_amount
-        if float_compare(self.amount_residual, dep_amount, digits) < 0:
-            dep_amount = self.amount_residual
-
-        return dep_amount
+        return min(dep_amount, self.amount_residual)
 
     def get_depreciation_amount_multiplier(self, dep_date):
         self.ensure_one()

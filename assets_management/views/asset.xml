@@ -48,11 +48,10 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <field name="is_open" invisible="1"/>
                     <button name="launch_wizard_generate_open"
                             string="Apertura bene"
                             type="object"
-                            attrs="{'invisible': ['|', ('is_open', '=', True),
+                            attrs="{'invisible': [
                             '|', ('state', '!=', 'non_depreciated'),
                             ('purchase_invoice_id', '!=', False)]}"
                     />
@@ -79,7 +78,6 @@
                             <field name="category_id" attrs="{'readonly': [('state', '!=', 'non_depreciated')]}"/>
                             <field name="code"/>
                             <field name="used" attrs="{'readonly': [('state', '!=', 'non_depreciated')]}"/>
-                            <field name="is_open" groups="base.group_no_one"/>
                         </group>
                         <group>
                             <field name="company_id"

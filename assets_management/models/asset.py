@@ -131,11 +131,6 @@ class Asset(models.Model):
         string="Used",
     )
 
-    is_open = fields.Boolean(
-        string="Opened",
-        default=False,
-    )
-
     partial_dismiss_percentage = fields.Float(
         string='Percentage of partial dismiss',
         default=0.0,

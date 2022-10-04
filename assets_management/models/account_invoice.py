@@ -63,10 +63,10 @@ class AccountInvoice(models.Model):
             percentages = dep_lines.filtered(
                 lambda ln: (ln.move_type == 'depreciated' and
                             ln.partial_dismissal is True and
-                            ln.partial_dismiss_percentage > 0)
+                            ln.percentage > 0)
             )
             if percentages:
-                percentage = percentages[0].partial_dismiss_percentage
+                percentage = percentages[0].percentage
             else:
                 percentage = 0
 

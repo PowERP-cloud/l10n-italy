@@ -56,7 +56,7 @@ class TestAssets(TransactionCase):
                 'date_to': date(year, 12, 31),
             })
 
-    # TDDO> Remove before publish final code
+    # TODO> Remove before publish final code
     def tearDown(self):
         super().tearDown()
         self.env.cr.commit()               # pylint: disable=invalid-commit
@@ -165,6 +165,7 @@ class TestAssets(TransactionCase):
                          'Missed depreciation move!')
 
     def _test_asset_1(self):
+        # Basic test #1
         # We test 3 years depreciations:
         # 1. From (year-2)-10-01 to (year-2)-12-31 -> 50% rate (asset #1)
         # 2. From (year-1)-01-01 to (year-1)-12-31 -> Full year depreciation (100% rate)
@@ -249,6 +250,7 @@ class TestAssets(TransactionCase):
                              'Invalid depreciation amount!')
 
     def _test_asset_2(self):
+        # Basic test #2
         # We test 3 years depreciations:
         # 1. From (year-2)-10-01 to (year-2)-12-31 -> 92 days depreciation (asset #2)
         # 2. From (year-1)-01-01 to (year-1)-12-31 -> Full year depreciation (100% rate)
@@ -312,7 +314,7 @@ class TestAssets(TransactionCase):
                              'Invalid depreciation amount!')
 
     def _test_asset_3(self):
-        # Special tests
+        # Out + Dismiss tests
         # Asset #1, year #2: depreciation moves removed, then value will be reduced
         asset = self.asset_1
         year = date.today().year - 1
@@ -336,8 +338,8 @@ class TestAssets(TransactionCase):
                              'Invalid asset updated value!')
         # Now check for depreciation amount, 90 or 91 days (leap year)
         rate = self.day_rate(date(year, 1, 1), date(year, 3, 31), is_leap=isleap(year))
-        depreciation_amount = 250 * rate
-        dep_residual = 1000.0 - 125.0 - 750.0 - depreciation_amount
+        depreciation_amount = float_round(250 * rate, 2)
+        dep_residual = float_round(1000.0 - 125.0 - 750.0 - depreciation_amount, 2)
         ctr = 0
         for dep in self.get_depreciation_lines(asset=asset,
                                                date_from=date(year, 3, 31),
@@ -372,7 +374,7 @@ class TestAssets(TransactionCase):
         wiz.do_generate()
         # Depreciable amount is 250.0 (1000.0€ - 750.0€) * 25% = 62.5€
         # Depreciated residual amount is 62.5€ * (1 - rate)
-        depreciation_amount = 62.5 * (1 - rate)
+        depreciation_amount = float_round(62.5 * (1 - rate), 2)
         dep_residual -= depreciation_amount
         # ctr = 0
         for dep in self.get_depreciation_lines(asset=asset, date_from=wiz.date_dep):
@@ -384,9 +386,9 @@ class TestAssets(TransactionCase):
                          len(asset.depreciation_ids) * 2,
                          'Missed depreciation move!')
         # Year #3: Repeat depreciation
-        # Residual value is 1000.0€ - 125.0€ (1.st depreciation) - 61.64 (2.nd sepr.) -
+        # Residual value is 1000.0€ - 125.0€ (1.st depreciation) - 61.64 (2.nd depr.) -
         # 750.0 € (out) - 47.09€ (last depreciation) = 16.27€
-        # So last depreciation will be reducet from 250 * 25% = 62.2 € to 16.27€
+        # So last depreciation will be reduced from 250 * 25% = 62.2 € to 16.27€
         year = date.today().year
         wiz.date_dep = date(year, 12, 31)
         wiz.do_generate()
@@ -395,18 +397,25 @@ class TestAssets(TransactionCase):
         self.assertEqual(asset.state,
                          'totally_depreciated',
                          'Asset is not in non depreciated state!')
-        # Now remove last depreciation lines, dismiss asset and repeat depreciation
+        # Now remove last depreciation lines before dismiss asset
         self.get_depreciation_lines(asset=asset, date_from=date(year, 12, 31)).unlink()
         self.assertEqual(asset.state,
                          'partially_depreciated',
                          'Asset is not in non depreciated state!')
-        # Dismiss
+        # Dismiss asset on 2022-07-31:
+        # Now check for depreciation amount, 212 or 213 days (leap year)
+        # 16.27€ * 212 / 365 * 25% = 2.36€ or 16.27€ * 213 / 366 * 25% = 2.37€
+        dismis_date = date(year, 7, 31)
+        rate = self.day_rate(date(year, 1, 1), dismis_date, is_leap=isleap(year))
+        depreciation_amount = float_round(dep_residual * rate * 0.25, 2)
         vals = {
             'amount': 150.0,
             'asset_id': asset.id,
-            'date': date(year, 7, 31).strftime('%Y-%m-%d'),
+            'date': dismis_date.strftime('%Y-%m-%d'),
         }
         self.env['asset.depreciation'].generate_dismiss_line(vals)
+        # self._test_all_depreciation_lines(
+        #     wiz, asset, amount=depreciation_amount, depreciation_nr=4, final=False)
 
     def test_asset(self):
         self._test_asset_1()
