@@ -442,21 +442,35 @@ class AssetDepreciation(models.Model):
             dismis_date = vals['date']
         deps = self.get_depreciations(
             date_ref=vals['date'], asset_ids=vals['asset_id'])
-        dep_lines = deps.generate_depreciation_lines(dismis_date)
 
         out_lines = self.env['asset.depreciation.line']
+        residuals = {}
         for dep in deps:
             vals['depreciation_id'] = dep.id
+            # Temporary value
+            residuals[dep.id] = dep.amount_residual
             vals['amount'] = dep.amount_residual
             if vals['amount']:
                 out_lines |= self.generate_dismiss_line_single(vals)
 
         line_model = self.env['asset.depreciation.line']
+        # Set right out value
+        for out_line in out_lines:
+            dep_line = dep.env['asset.depreciation.line'].get_depreciation_lines(
+                date_from=dismis_date,
+                date_to=dismis_date,
+                depreciation_ids=out_line.depreciation_id.id,
+            )[0]
+            # Evaluate right out value
+            out_line.amount = residuals[out_line.depreciation_id.id] - dep_line.amount
+
         for dep in deps:
-            dep_line = [x for x in dep_lines if x.depreciation_id.id == dep.id]
-            if not dep_line:
-                continue
-            dep_line = dep_line[0]
+            dep_line = dep.env['asset.depreciation.line'].get_depreciation_lines(
+                date_from=dismis_date,
+                date_to=dismis_date,
+                depreciation_ids=dep.id,
+                move_types='out',
+            )[0]
             vals['depreciation_id'] = dep.id
             balance = dismis_amount - dep_line.amount
             vals['amount'] = abs(balance)
