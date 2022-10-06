@@ -5,6 +5,7 @@ from calendar import isleap
 # from odoo import fields
 from odoo.tools.float_utils import float_round
 from odoo.tests.common import TransactionCase
+from odoo.exceptions import UserError, ValidationError
 # from dateutil.relativedelta import relativedelta
 
 
@@ -42,8 +43,7 @@ class TestAssets(TransactionCase):
               '=',
               self.env.ref('account.data_account_type_expenses').id)
              ], limit=1)[0]
-        self.journal = self.env['account.journal'].search(
-            [('type', '=', 'general')], limit=1)[0]
+        self.journal = self.env['account.journal'].search([('code', '=', 'ADJ')])[0]
 
         self.asset_category_1 = self._create_category(1)
         self.asset_category_2 = self._create_category(2)
@@ -62,19 +62,21 @@ class TestAssets(TransactionCase):
         self.env.cr.commit()               # pylint: disable=invalid-commit
 
     def _create_category(self, cat_nr):
-        category = self.env['asset.category'].create({
+        vals = {
             'name': 'Asset category #%s' % cat_nr,
             'asset_account_id': self.account_fixed_assets.id,
             'depreciation_account_id': self.account_depreciation.id,
             'fund_account_id': self.account_fund.id,
             'gain_account_id': self.account_gain.id,
             'loss_account_id': self.account_loss.id,
-            'journal_id': self.journal.id,
-        })
+        }
         if cat_nr == 1:
-            for rec in self.env['asset.category.depreciation.type'].search(
-                [('category_id', '=', category.id)]
-            ):
+            vals['journal_id'] = self.env.ref(
+                'assets_management.asset_account_journal').id
+        category = self.env['asset.category'].create(vals)
+        type_model = self.env['asset.category.depreciation.type']
+        for rec in type_model.search([('category_id', '=', category.id)]):
+            if cat_nr == 1:
                 rec.write(
                     {
                         'percentage': 25,
@@ -83,10 +85,7 @@ class TestAssets(TransactionCase):
                             self.env.ref('assets_management.ad_mode_materiale').id,
                     }
                 )
-        elif cat_nr == 2:
-            for rec in self.env['asset.category.depreciation.type'].search(
-                [('category_id', '=', category.id)]
-            ):
+            elif cat_nr == 2:
                 rec.write(
                     {
                         'percentage': 24,
@@ -98,17 +97,20 @@ class TestAssets(TransactionCase):
         return category
 
     def _create_asset(self, asset_nr):
-        return self.env['asset.asset'].create({
+        vals = {
             'name': 'Test asset #%s' % asset_nr,
             'category_id':
                 self.asset_category_1.id if asset_nr == 1 else self.asset_category_2.id,
-            'company_id': self.env.ref('base.main_company').id,
             'currency_id': self.env.ref('base.main_company').currency_id.id,
             'purchase_amount': 1000.0 if asset_nr == 1 else 2500,
             'purchase_date':
                 date(date.today().year - 2, 12, 1)
                 if asset_nr == 1 else date(date.today().year - 2, 10, 1),
-        })
+        }
+        if asset_nr == 1:
+            vals['company_id'] = self.env.ref('base.main_company').id
+            vals['code'] = "One"
+        return self.env['asset.asset'].create(vals)
 
     def day_rate(self, date_from, date_to, is_leap=None):
         return ((date_to - date_from).days + 1) / (365 if not is_leap else 366)
@@ -251,13 +253,20 @@ class TestAssets(TransactionCase):
             self.assertEqual(float_round(dep.amount_depreciated, 2),
                              float_round(deps_amount[dep], 2),
                              'Invalid depreciation amount!')
+        # (A4) Special test: cannot generate depreciation on (year-2)
+        year = date.today().year - 2
+        wiz.date_dep = date(year, 12, 31)
+        with self.assertRaises(ValidationError):
+            wiz.do_generate()
 
     def _test_asset_2(self):
         # Basic test #2
-        # We test 3 years depreciations:
-        # 1. From (year-2)-10-01 to (year-2)-12-31 -> 92 days depreciation (asset #2)
-        # 2. From (year-1)-01-01 to (year-1)-12-31 -> Full year depreciation (100% rate)
-        # 3. From (year)-01-01 to today -> unpredictable partial depreciation
+        #
+        # We test 3 years depreciations of 2500.0€ asset #2:
+        # Test (setup)   : Test (B1)         | Test (B2)         | Test (B3)
+        # (year-2)-10-01 : (year-2)-12-31    | (year-1)-12-31    | Today
+        # start -> 2500€ : 92/365 -> 150.82€ | depr.100% -> 600€ | depr -> 0..600.0€
+        #
         asset = self.asset_2
         self.assertEqual(asset.state,
                          'non_depreciated',
@@ -383,7 +392,6 @@ class TestAssets(TransactionCase):
         wiz.date_dep = date(year, 12, 31)
         wiz.do_generate()
 
-
         depreciation_amount = float_round((1000.0 - down_value) * 0.25 * (1 - rate), 2)
         dep_residual -= depreciation_amount
         # ctr = 0
@@ -419,7 +427,6 @@ class TestAssets(TransactionCase):
         # (year-1)-12-31  | (year-1)-01-31    : (year-1)-01-31   : (year-1)-01-31
         # Residual 36.56€ | depr -> 5.84€     : 'out' -> -30.72€ : gain -> 119.28€
         #
-        # import pdb; pdb.set_trace()
         dismis_date = date(year, 1, 31)
         rate = self.day_rate(date(year, 1, 1), dismis_date, is_leap=isleap(year))
         depreciation_amount = float_round(250.0 * rate * 0.25, 2)
@@ -451,7 +458,18 @@ class TestAssets(TransactionCase):
             self._test_depreciation_line(wiz, dep, asset,
                                          amount=dep_amount)
 
+    def _test_asset_9(self):
+        # Special final tests
+        #
+        # Check for journal unlink is impossible when journal use in asset
+        with self.assertRaises(UserError):
+            self.journal.unlink()
+        self.assertEqual(self.journal.id,
+                         self.env.ref('assets_management.asset_account_journal').id,
+                         'Invalid asset journal')
+
     def test_asset(self):
         self._test_asset_1()
         self._test_asset_2()
         self._test_asset_3()
+        self._test_asset_9()

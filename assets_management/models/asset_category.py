@@ -18,13 +18,11 @@ class AssetCategory(models.Model):
 
     @api.model
     def get_default_journal(self):
-        journal = self.env['account.journal'].search([('code', '=', 'ADPCD')])
+        journal = self.env['account.journal'].search([('code', '=', 'ADJ')])
         if journal:
             return journal.id
         else:
             return False
-        # end if
-    # end get_defaul_journal
 
     @api.model
     def get_default_type_ids(self):

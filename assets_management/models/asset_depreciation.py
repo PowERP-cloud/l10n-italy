@@ -184,7 +184,6 @@ class AssetDepreciation(models.Model):
                     line[2].update({
                         'asset_id': self.asset_id.id
                     })
-                # print(line)
         res = super().write(vals)
         need_norm = self.filtered(lambda d: d.need_normalize_first_dep_nr())
         if need_norm:
@@ -299,81 +298,95 @@ class AssetDepreciation(models.Model):
                 'Cannot update totally depreciated types'
             )
 
-        lines = self.mapped('line_ids')
+        for dep in self:
+            lines = dep.mapped('line_ids')
+            fiscal_year_model = self.env['account.fiscal.year']
+            fy = fiscal_year_model.get_fiscal_year_by_date(
+                dep_date, company=dep.asset_id.company_id
+            )
+            date_from = fy.date_from
+            prior_fy_date_to = fy.date_from - datetime.timedelta(1)
 
-        # Check if any depreciation already has newer depreciation lines
-        # than the given date
-        newer_lines = lines.filtered(
-            lambda ln: (
-                ln.move_type == 'depreciated'
-                and not ln.partial_dismissal
-                and ln.date > dep_date
+            newer_lines = lines.filtered(
+                lambda ln: (
+                    ln.move_type == 'depreciated'
+                    and ln.date > fy.date_to
+                )
             )
-        )
-        if newer_lines:
-            asset_names = ', '.join([
-                asset_name for asset_id, asset_name in
-                newer_lines.mapped('depreciation_id.asset_id').name_get()
-            ])
-            raise ValidationError(
-                _("Cannot update the following assets which contain"
-                  " newer depreciations for the chosen types:\n{}")
-                .format(asset_names)
-            )
+            if newer_lines:
+                asset_name = dep.asset_id.name
+                nature_name = dep.type_id.name
+                raise ValidationError(
+                    _("The following asset {asset} contains depreciation newer"
+                      " than end of fiscal year for nature {nature}").format(
+                        asset=asset_name, nature=nature_name)
+                )
 
-        # Check for 'in' or 'out' move types and set beginning date to next day
-        year = dep_date.year
-        date_from = datetime.date(year, 1, 1)
+            older_lines = lines.filtered(
+                lambda ln: (
+                    ln.move_type == 'depreciated'
+                    and ln.date <=  prior_fy_date_to
+                )
+            )
+            last_depreciation_date = False
+            if older_lines:
+                last_depreciation_date = max([x.date for x in older_lines])
+            if (
+                dep.asset_id.purchase_date <= prior_fy_date_to and (
+                not last_depreciation_date or
+                last_depreciation_date != prior_fy_date_to)
+            ):
+                asset_name = dep.asset_id.name
+                nature_name = dep.type_id.name
+                raise ValidationError(
+                    "Last fiscal year of following asset {asset} without valid"
+                    " depreciation for nature {nature}".format(
+                        asset=asset_name, nature=nature_name))
 
-        extra_lines = lines.filtered(
-            lambda ln: (
-                ln.move_type in lines.get_update_move_types()
-                and not ln.partial_dismissal
-                and ln.date <= dep_date
+            extra_lines = lines.filtered(
+                lambda ln: (
+                    ln.move_type in lines.get_update_move_types()
+                    and fy.date_from <= ln.date <= dep_date
+                )
             )
-        )
-        if extra_lines:
-            extra_date = max([x.date for x in extra_lines])
-            extra_date = extra_date + datetime.timedelta(1)
-            date_from = max(date_from, extra_date)
+            if extra_lines:
+                prior_fy_date_to = max([x.date for x in extra_lines])
+                date_from = prior_fy_date_to + datetime.timedelta(1)
 
-        confirmed_lines = lines.filtered(
-            lambda ln: (
-                ln.move_type == 'depreciated'
-                and not ln.partial_dismissal
-                and date_from <= ln.date <= dep_date
-                and ln.final is True
+            confirmed_lines = lines.filtered(
+                lambda ln: (
+                    ln.move_type == 'depreciated'
+                    and ln.date >= date_from
+                    and ln.final is True
+                )
             )
-        )
-        if confirmed_lines:
-            asset_names = ', '.join([
-                asset_name for asset_id, asset_name in
-                confirmed_lines.mapped('depreciation_id.asset_id').name_get()
-            ])
-            raise ValidationError(
-                _("Cannot update the following assets which contain"
-                  " depreciations for the chosen types:\n{}")
-                .format(asset_names)
-            )
+            if confirmed_lines:
+                asset_name = dep.asset_id.name
+                nature_name = dep.type_id.name
+                raise ValidationError(
+                    _("The following asset {} contains final depreciation newer"
+                      " than depreciation date for nature {}").format(
+                        asset=asset_name, nature=nature_name)
+                )
 
-        posted_lines = lines.filtered(
-            lambda l: l.date == dep_date
-            and l.move_id
-            and l.move_id.state != 'draft'
-        )
-        if posted_lines:
-            posted_names = ', '.join([
-                asset_name for asset_id, asset_name in
-                posted_lines.mapped('depreciation_id.asset_id').name_get()
-            ])
-            raise ValidationError(
-                _("Cannot update the following assets which contain"
-                  " posted depreciation for the chosen date and types:\n{}")
-                .format(posted_names)
+            posted_lines = lines.filtered(
+                lambda ln: (
+                    ln.date >= date_from
+                    and ln.move_id
+                    and ln.move_id.state != 'draft'
+                )
             )
-        self.check_previous_depreciation(dep_date)
+            if posted_lines:
+                asset_name = dep.asset_id.name
+                nature_name = dep.type_id.name
+                raise ValidationError(
+                    _("Cannot update the following assets {} which contains"
+                      " posted depreciation for the nature {}:").format(
+                        asset=asset_name, nature=nature_name)
+                )
 
     def delete_current_depreciation_line(self, dep_date):
+        self.check_before_generate_depreciation_lines(dep_date)
         lines_to_delete = self.check_current_depreciation_lines(dep_date)
         if lines_to_delete:
             lines_to_delete.button_remove_account_move()
@@ -382,7 +395,6 @@ class AssetDepreciation(models.Model):
     def generate_depreciation_lines(self, dep_date):
         # Set new date within context if necessary
         self.delete_current_depreciation_line(dep_date)
-        self.check_before_generate_depreciation_lines(dep_date)
 
         new_lines = self.env['asset.depreciation.line']
         for dep in self:
@@ -846,31 +858,6 @@ class AssetDepreciation(models.Model):
                 company_id=dep.company_id
             )
         return res
-
-    @api.multi
-    def check_previous_depreciation(self, dep_date):
-        for dep in self:
-            fiscal_year = self.env['account.fiscal.year'].get_fiscal_year_by_date(
-                dep_date, company=dep.company_id)
-            last_depreciable_date = dep.get_computed_amounts(
-                date_to=fiscal_year.date_to, ext=True)['last_depreciable_date']
-            if last_depreciable_date and last_depreciable_date > fiscal_year.date_from:
-                prior_fy_date_to = last_depreciable_date
-            else:
-                fy_date_from = fiscal_year.date_from
-                prior_fy_date_to = fy_date_from - datetime.timedelta(1)
-            if dep.asset_id.purchase_date > prior_fy_date_to:
-                # Fresh purchased asset or asset with 'in' / 'out' lines
-                continue
-            last_depreciation_date = dep.last_depreciation_date
-            if (not last_depreciation_date or
-                    last_depreciation_date != prior_fy_date_to):
-                asset_name = dep.asset_id.name
-                nature_name = dep.type_id.name
-                raise ValidationError(
-                    "Manca l'ammortamento dell'esercizio precedente per "
-                    "la natura {nature} del {asset}.".format(
-                        asset=asset_name, nature=nature_name))
 
     @api.model
     def get_depreciations(
