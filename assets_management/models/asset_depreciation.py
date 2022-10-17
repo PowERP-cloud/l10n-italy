@@ -99,7 +99,7 @@ class AssetDepreciation(models.Model):
     force_first_dep_nr = fields.Boolean(string="Force First Dep. Num")
 
     last_depreciation_date = fields.Date(
-        compute="_compute_last_depreciation_date",
+        compute="_compute_amounts",
         store=True,
         string="Last Dep.",
     )
@@ -112,6 +112,13 @@ class AssetDepreciation(models.Model):
         "asset.depreciation.mode",
         required=True,
         string="Mode",
+    )
+
+    partial_dismiss_percentage = fields.Float(
+        compute="_compute_amounts",
+        store=True,
+        string="Percentage of partial dismiss",
+        default=0.0,
     )
 
     percentage = fields.Float(string="Depreciation (%)")
@@ -235,30 +242,16 @@ class AssetDepreciation(models.Model):
     @api.multi
     @api.depends(
         "amount_depreciable",
+        "line_ids",
         "line_ids.amount",
         "line_ids.balance",
         "line_ids.move_type",
+        "line_ids.date",
         "asset_id.sold",
     )
     def _compute_amounts(self):
         for dep in self:
             dep.update(dep.get_computed_amounts())
-
-    @api.multi
-    @api.depends("line_ids", "line_ids.date", "line_ids.move_type")
-    def _compute_last_depreciation_date(self):
-        """
-        Update date upon deps with at least one depreciation line (excluding
-        partial dismissal); else set field to False
-        """
-        for dep in self:
-            dep_lines = dep.line_ids.filtered(
-                lambda ln: ln.move_type == "depreciated" and not ln.partial_dismissal
-            )
-            if dep_lines:
-                dep.last_depreciation_date = max(dep_lines.mapped("date"))
-            else:
-                dep.last_depreciation_date = False
 
     def check_before_generate_depreciation_lines(self, dep_date):
         # Check if self is a valid recordset
@@ -416,17 +409,20 @@ class AssetDepreciation(models.Model):
         else:
             dismis_date = vals["date"]
         deps = self.get_depreciations(date_ref=vals["date"], asset_ids=vals["asset_id"])
+        partial_dismiss_percentage = vals.get("partial_dismiss_percentage", 100)
 
+        # Write out lines: depreciation line will be created before 'out' write!
         out_lines = self.env["asset.depreciation.line"]
         residuals = {}
         for dep in deps:
             vals["depreciation_id"] = dep.id
-            # Temporary value
+            # Temporary residual value before any operation
             residuals[dep.id] = dep.amount_residual
-            vals["amount"] = dep.amount_residual
-            if vals["amount"]:
-                out_lines |= self.generate_dismiss_line_single(vals)
+            dep_percentage = 100.0 - dep.partial_dismiss_percentage
+            vals["amount"] = 0.0
+            out_lines |= self.generate_dismiss_line_single(vals)
 
+        # Out amount must be evaluated based on residual and out value
         line_model = self.env["asset.depreciation.line"]
         # Set right out value
         for out_line in out_lines:
@@ -436,8 +432,11 @@ class AssetDepreciation(models.Model):
                 depreciation_ids=out_line.depreciation_id.id,
             )[0]
             # Evaluate right out value
-            out_line.amount = residuals[out_line.depreciation_id.id] - dep_line.amount
+            out_line.amount = (residuals[out_line.depreciation_id.id] -
+                               dep_line.amount) * min(dep_percentage,
+                                                      partial_dismiss_percentage) / 100
 
+        # Noe evaluate gain or loss
         for dep in deps:
             dep_line = dep.env["asset.depreciation.line"].get_depreciation_lines(
                 date_from=dismis_date,
@@ -481,6 +480,7 @@ class AssetDepreciation(models.Model):
         """Evaluate all depreciation amounts:
         - amount_depreciated_updated: asset initial value + 'in' & 'out' lines
         - last_depreciated_date: last date with 'in' & 'out' lines (only if ext)
+        - last_depreciation_date: last date of depreciation line
         - amount_depreciated: sum of 'depreciated' lines
         - amount_historical: sum of 'historical' lines
         - amount_gain: sum of 'gain' lines
@@ -503,6 +503,7 @@ class AssetDepreciation(models.Model):
                 {
                     "amount_depreciable_updated": 0,
                     "amount_residual": 0,
+                    "partial_dismiss_percentage": 100.0,
                 }
             )
             if ext:
@@ -515,46 +516,36 @@ class AssetDepreciation(models.Model):
         else:
             non_residual_types = self.line_ids.get_non_residual_move_types()
             update_move_types = self.line_ids.get_update_move_types()
+            amt_residual = amt_update = percentage = 0.0
+            last_depreciable_date = False
+            last_depreciation_date = False
+            for ln in self.line_ids:
+                if date_to and ln.date > date_to:
+                    continue
+                if ln.move_type not in non_residual_types:
+                    amt_residual += ln.balance
+                if ln.move_type in update_move_types:
+                    amt_update += ln.balance
+                    if ln.partial_dismissal:
+                        percentage += ln.partial_dismiss_percentage
+                    if not last_depreciable_date or ln.date > last_depreciable_date:
+                        last_depreciable_date = ln.date
+                if ln.move_type == "depreciated":
+                    if not last_depreciation_date or ln.date > last_depreciation_date:
+                        last_depreciation_date = ln.date
+
             vals.update(
                 {
-                    "amount_depreciable_updated": amt_dep
-                    + sum(
-                        [
-                            ln.balance
-                            for ln in self.line_ids
-                            if (
-                                ln.move_type in update_move_types
-                                and (not date_to or (date_to and ln.date <= date_to))
-                            )
-                        ]
-                    ),
-                    "amount_residual": amt_dep
-                    + sum(
-                        [
-                            ln.balance
-                            for ln in self.line_ids
-                            if (
-                                ln.move_type not in non_residual_types
-                                and (not date_to or (date_to and ln.date <= date_to))
-                            )
-                        ]
-                    ),
+                    "amount_depreciable_updated": amt_dep + amt_update,
+                    "amount_residual": amt_dep + amt_residual,
+                    "partial_dismiss_percentage": percentage,
+                    "last_depreciation_date": last_depreciation_date,
                 }
             )
             if ext:
-                in_out_dates = [
-                    ln.date
-                    for ln in self.line_ids
-                    if (
-                        ln.move_type in update_move_types
-                        and (not date_to or (date_to and ln.date <= date_to))
-                    )
-                ]
                 vals.update(
                     {
-                        "last_depreciable_date": max(in_out_dates)
-                        if in_out_dates
-                        else False,
+                        "last_depreciable_date": last_depreciable_date,
                         "amount_depreciable": amt_dep,
                     }
                 )
@@ -773,10 +764,10 @@ class AssetDepreciation(models.Model):
         for d in self:
             if force or d.need_normalize_first_dep_nr():
                 d.onchange_normalize_first_dep_nr()
-
-    def post_generate_depreciation_lines(self, lines=None):
-        lines = lines or self.env["asset.depreciation.line"]
-        lines.filtered("requires_account_move").button_generate_account_move()
+    #
+    # def post_generate_depreciation_lines(self, lines=None):
+    #     lines = lines or self.env["asset.depreciation.line"]
+    #     lines.filtered("requires_account_move").button_generate_account_move()
 
     def prepare_depreciation_line_vals(self, dep_date):
         self.ensure_one()

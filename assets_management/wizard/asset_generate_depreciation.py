@@ -99,7 +99,7 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
             dep_date=self.date_dep, final=self.final
         )
         dep_lines = deps.generate_depreciation_lines(self.date_dep)
-        deps.post_generate_depreciation_lines(dep_lines)
+        # deps.post_generate_depreciation_lines(dep_lines)
         if self._context.get("reload_window"):
             return {"type": "ir.actions.client", "tag": "reload"}
 

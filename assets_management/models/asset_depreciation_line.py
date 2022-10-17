@@ -118,6 +118,11 @@ class AssetDepreciationLine(models.Model):
 
     partial_dismissal = fields.Boolean(string="Partial Dismissal")
 
+    partial_dismiss_percentage = fields.Float(
+        string="Percentage of partial dismiss",
+        default=0.0,
+    )
+
     percentage = fields.Float(
         string="Percentage of partial dismiss",
         default=0.0,
@@ -154,12 +159,24 @@ class AssetDepreciationLine(models.Model):
 
     @api.model
     def create(self, vals):
+        if (vals.get("partial_dismiss_percentage") and
+            not vals.get("partial_dismissal", False)
+        ):
+            raise ValidationError(
+                _("Partial dismiss without flag")
+            )
+        elif (vals.get("partial_dismissal", False) and
+              not vals.get("partial_dismiss_percentage", 0.0)
+        ):
+            raise ValidationError(
+                _("Partial dismiss without percentage")
+            )
         if (
             self._context.get("depreciated_by_line")
             and vals["move_type"] == "depreciated"
         ):
             raise ValidationError(
-                _("L'ammortamento non è consentito " "da questa interfaccia.\n")
+                _("L'ammortamento non è consentito da questa interfaccia.")
             )
         elif self._context.get("depreciated_by_line") and vals["move_type"] in (
             "in",
@@ -170,10 +187,9 @@ class AssetDepreciationLine(models.Model):
         line = super().create(vals)
         if line.need_normalize_depreciation_nr():
             line.normalize_depreciation_nr(force=True)
-        if line.move_type in line.get_update_move_types():
-            if line.requires_account_move:
-                line.button_generate_account_move()
-                return line
+        if line.requires_account_move:
+            line.generate_account_move()
+            return line
         return line
 
     @api.multi
@@ -312,7 +328,7 @@ class AssetDepreciationLine(models.Model):
     def get_non_residual_move_types(self):
         """
         Returns list of `move_type` vals that do not concur to
-        asset.depreciation's `amount_residual` field compute
+        asset.depreciations `amount_residual` field compute
         """
         return self._non_residual_move_types
 
@@ -582,7 +598,7 @@ class AssetDepreciationLine(models.Model):
 
     def needs_account_move(self):
         self.ensure_one()
-        return self.requires_account_move and not self.move_id and self.amount
+        return self.requires_account_move and not self.move_id  # and self.amount
 
     def post_dismiss_asset(self):
         dep = self.mapped("depreciation_id")

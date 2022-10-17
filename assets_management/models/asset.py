@@ -17,6 +17,13 @@ class Asset(models.Model):
     def get_default_company_id(self):
         return self.env.user.company_id
 
+    @api.multi
+    @api.depends("depreciation_ids")
+    def _compute_partial_dismiss_percentage(self):
+        for asset in self:
+            asset.partial_dismiss_percentage = max(
+                [x.partial_dismiss_percentage for x in asset.depreciation_ids])
+
     asset_accounting_info_ids = fields.One2many(
         "asset.accounting.info", "asset_id", string="Accounting Info"
     )
@@ -109,6 +116,7 @@ class Asset(models.Model):
 
     partial_dismiss_percentage = fields.Float(
         string="Percentage of partial dismiss",
+        compute=_compute_partial_dismiss_percentage,
         default=0.0,
     )
 

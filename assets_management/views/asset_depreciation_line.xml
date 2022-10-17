@@ -111,6 +111,12 @@
                                    attrs="{'readonly': [('final', '=', True)]}"
                             />
                             <field name="balance" widget="monetary"/>
+                            <field name="percentage"
+                                   attrs="{'invisible':[('move_type', '!=', 'depreciated')]}"/>
+                            <field name="partial_dismissal"
+                                   attrs="{'invisible':[('move_type', '!=', 'out')]}"/>
+                            <field name="partial_dismiss_percentage"
+                                   attrs="{'invisible':['|', ('move_type', '!=', 'out'), ('partial_dismissal', '!=', True)]}"/>
                             <field name="move_id"
                                    attrs="{'readonly': [('final', '=', True)]}"
                             />

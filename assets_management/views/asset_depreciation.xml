@@ -32,6 +32,7 @@
                         <field name="amount_loss" widget="monetary"/>
                         <field name="amount_gain" widget="monetary"/>
                         <field name="amount_residual" widget="monetary"/>
+                        <field name="partial_dismiss_percentage"/>
                         <field name="currency_id"
                                groups="base.group_multi_currency"/>
                         <field name="company_id"
