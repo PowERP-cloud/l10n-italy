@@ -1,10 +1,11 @@
 # Copyright 2021 Sergio Corato <https://github.com/sergiocorato>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
-from datetime import date
+from datetime import datetime, date
 from calendar import isleap
 
 # from odoo import fields
 from odoo.tools.float_utils import float_round
+from odoo.tools.safe_eval import safe_eval
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError, ValidationError
 
@@ -90,6 +91,43 @@ class TestAssets(TransactionCase):
     def tearDown(self):
         super().tearDown()
         self.env.cr.commit()  # pylint: disable=invalid-commit
+
+    def envtest_wizard_start(self, action_name, module, default=None, ctx=None):
+        """Start a wizard from an action name
+        This function simulate web interface; it tests:
+        * view names
+        * wizard structure
+        """
+        act_model = "ir.actions.act_window"
+        ir_action = self.env[act_model].for_xml_id(module, action_name)
+        res_model = ir_action["res_model"]
+        ctx = ctx or {}
+        vals = default or {}
+        wizard = self.env[res_model].with_context(ctx).create(vals)
+        ir_action["res_id"] = wizard.id
+        self.env["ir.ui.view"].browse(ir_action["view_id"][0])
+        return ir_action
+
+    def envtest_wizard_exec(self, ir_action, button_name=None):
+        res_model = ir_action['res_model']
+        ctx = safe_eval(ir_action.get('context')) if isinstance(
+            ir_action.get('context'),
+            str) else ir_action.get('context', {})
+        if isinstance(ctx.get("active_id"), int):
+            wizard = self.env[res_model].with_context(ctx).browse(ctx['active_id'])
+        elif ctx.get("active_id"):
+            wizard = ctx['active_id']
+        elif isinstance(ir_action.get("res_id"), int):
+            wizard = self.env[res_model].with_context(ctx).browse(ir_action['res_id'])
+        else:
+            raise (TypeError, "Invalid object/model")
+        button_name = button_name or 'process'
+        if hasattr(wizard, button_name):
+            return getattr(wizard, button_name)()
+        return False
+
+    def envtest_is_action(self, ir_action):
+        return ir_action.get("type", "ir.actions.act_window") == "ir.actions.act_window"
 
     def _create_category(self, cat_nr):
         vals = {
@@ -587,6 +625,44 @@ class TestAssets(TransactionCase):
                              20.0,
                              "Invalid dismiss rate!")
 
+    def _test_asset_8(self):
+        # Wizard tests
+        #
+        # Delete all records
+        self.get_depreciation_lines().unlink()
+        action_name = "action_wizard_asset_generate_depreciation"
+        year = date.today().year - 2
+        date_dep = date(year, 12, 31)
+        vals = {
+            "date_dep": datetime.strftime(date_dep, "%Y-%m-%d"),
+            "final": True,
+        }
+        ir_action = self.envtest_wizard_start(
+            action_name, "assets_management", default=vals)
+        act_window = self.envtest_wizard_exec(ir_action, "do_warning")
+        self.assertTrue(self.envtest_is_action(act_window))
+        self.assertEqual(
+            act_window["res_model"],
+            "asset.generate.warning",
+            "Invalid response for 'Final depreciations'"
+        )
+        act_window = self.envtest_wizard_exec(act_window, "do_generate")
+        self._test_all_depreciation_lines(
+            date_dep,
+            self.asset_1,
+            amount=125.0,
+            depreciation_nr=1,
+            final=True
+        )
+        depreciation_amount = 150.82 if isleap(year) else 151.23
+        self._test_all_depreciation_lines(
+            date_dep,
+            self.asset_2,
+            amount=depreciation_amount,
+            depreciation_nr=1,
+            final=True
+        )
+
     def _test_asset_9(self):
         # Special final tests
         #
@@ -604,4 +680,5 @@ class TestAssets(TransactionCase):
         self._test_asset_2()
         self._test_asset_3()
         self._test_asset_4()
+        self._test_asset_8()
         self._test_asset_9()
