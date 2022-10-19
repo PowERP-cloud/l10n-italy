@@ -27,7 +27,7 @@ class AssetAccountingInfo(models.Model):
     """
 
     _name = "asset.accounting.info"
-    _description = "Asset Accounting Relations"
+    _description = "Asset accounting relationship"
     _table = "asset_accounting_info"
 
     asset_id = fields.Many2one("asset.asset", ondelete="set null", string="Asset")
@@ -39,7 +39,15 @@ class AssetAccountingInfo(models.Model):
     )
 
     dep_line_id = fields.Many2one(
-        "asset.depreciation.line", ondelete="set null", string="Depreciation Line"
+        "asset.depreciation.line",
+        ondelete="set null",
+        string="In / Out Line"
+    )
+
+    related_dep_line_id = fields.Many2one(
+        "asset.depreciation.line",
+        ondelete="set null",
+        string="Depreciation Line"
     )
 
     invoice_id = fields.Many2one(

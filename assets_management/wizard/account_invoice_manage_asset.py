@@ -2,7 +2,7 @@
 # Copyright 2019 Openforce Srls Unipersonale (www.openforce.it)
 # Copyright 2021-22 librERP enterprise network <https://www.librerp.it>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
-
+#
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_compare, float_is_zero
@@ -59,7 +59,6 @@ class WizardInvoiceManageAsset(models.TransientModel):
     )
 
     dismiss_date = fields.Date(
-        default=fields.Date.today(),
         string="Dismiss Date",
     )
 
@@ -162,19 +161,21 @@ class WizardInvoiceManageAsset(models.TransientModel):
                 is_invoice_state_ok = True
             self.is_invoice_state_ok = is_invoice_state_ok
 
+            valid_account_ids = invoices.get_valid_accounts()
             self.invoice_line_ids = invoices.mapped("invoice_line_ids").filtered(
-                lambda ln: not ln.asset_accounting_info_ids
+                lambda ln: (not ln.asset_accounting_info_ids and
+                            ln.account_id.id in valid_account_ids.ids)
             )
 
-    @api.onchange("partial_dismiss_percentage", "asset_id")
-    def onchange_partial_dismiss_percentage(self):
-        for record in self:
-            if record.percentage > 0:
-                record.asset_purchase_amount = (
-                    record.asset_id.purchase_amount * record.percentage / 100
-                )
-            else:
-                record.asset_purchase_amount = 0.0
+    # @api.onchange("partial_dismiss_percentage", "asset_id")
+    # def onchange_partial_dismiss_percentage(self):
+    #     for record in self:
+    #         if record.percentage > 0:
+    #             record.asset_purchase_amount = (
+    #                 record.asset_id.purchase_amount * record.percentage / 100
+    #             )
+    #         else:
+    #             record.asset_purchase_amount = 0.0
 
     @api.multi
     def link_asset(self):
@@ -222,9 +223,10 @@ class WizardInvoiceManageAsset(models.TransientModel):
                 _("Cannot create asset if lines come from different invoices!")
             )
 
+        valid_account_ids = self.invoice_ids.get_valid_accounts()
         if not all(
             [
-                ln.account_id == self.category_id.asset_account_id
+                ln.account_id.id in valid_account_ids.ids
                 for ln in self.invoice_line_ids
             ]
         ):
@@ -243,6 +245,11 @@ class WizardInvoiceManageAsset(models.TransientModel):
         if not self.asset_id:
             raise ValidationError(_("Please choose an asset before continuing!"))
 
+        valid_account_ids = self.invoice_ids.get_valid_accounts()
+        self.invoice_line_ids = self.invoice_line_ids.filtered(
+            lambda ln: ln.account_id.id in valid_account_ids.ids
+        )
+
         if not self.invoice_line_ids:
             raise ValidationError(
                 _("At least one invoice line is mandatory to dismiss" " an asset!")
@@ -251,21 +258,6 @@ class WizardInvoiceManageAsset(models.TransientModel):
         if not len(self.invoice_line_ids.mapped("invoice_id")) == 1:
             raise ValidationError(
                 _("Cannot dismiss asset if lines come from different" " invoices!")
-            )
-
-        if not all(
-            [
-                ln.account_id == self.asset_id.category_id.asset_account_id
-                for ln in self.invoice_line_ids
-            ]
-        ):
-            ass_name = self.asset_id.make_name()
-            ass_acc = self.asset_id.category_id.asset_account_id.name_get()[0][-1]
-            raise ValidationError(
-                _(
-                    "You need to choose invoice lines with account `{}` if you"
-                    " need them to dismiss asset `{}`!"
-                ).format(ass_acc, ass_name)
             )
 
     def check_pre_link_asset(self):
@@ -341,44 +333,25 @@ class WizardInvoiceManageAsset(models.TransientModel):
         return self.env["asset.asset"].create(self.get_create_asset_vals())
 
     def dismiss_asset(self):
-        """
-        se c'è una dismissione parziale
-        1) Si divide l'anno in 2 periodi:
-           1 pre-dismissione (compresa la data di dismissione) e 1 post-dismissione
-        2) Si calcola l'ammortamento sino alla data di dismissione
-           per la quota di proprietà (100% se mai nessuna dismissione parziale)
-        3) Si calcola l'ammortamento dal giorno successivo
-           per la quota residua di proprietà
-        4) Si sommano i 2 risultati
-
-        """
         self.ensure_one()
+        if not self.dismiss_date:
+            self.dismiss_date = self.invoice_ids[0].date_invoice
         self.check_pre_dismiss_asset()
-        new_lines = self.env["asset.depreciation.line"]
-        for dep in self.asset_id.depreciation_ids:
-            dismiss_date = self.dismiss_date
-            dep.check_previous_depreciation(dismiss_date)
-
-            depreciation = dep.generate_depreciation_lines(dismiss_date)
-            new_lines += depreciation
-            # info = self.env['asset.accounting.info']
-            # for l in self.invoice_line_ids:
-            #     vals = {'invoice_line_id': l.id,
-            #             'relation_type': self.management_type}
-            #     info += self.env['asset.accounting.info'].create(vals)
-            # depreciation.asset_accounting_info_ids += info
-            #
-            # dep.post_generate_depreciation_lines(depreciation)
-
-        old_dep_lines = self.asset_id.mapped("depreciation_ids.line_ids") - new_lines
-
-        self.asset_id.write(self.get_dismiss_asset_vals())
-
-        for dep in self.asset_id.depreciation_ids:
-            (dep.line_ids - old_dep_lines).post_dismiss_asset()
-        # make move where needed
-        new_lines.button_generate_account_move()
-
+        currency = self.asset_id.currency_id
+        digits = self.env["decimal.precision"].precision_get("Account")
+        invoice = self.invoice_line_ids.mapped("invoice_id")
+        amount = 0
+        for ln in self.invoice_line_ids:
+            amount += ln.currency_id.compute(ln.price_subtotal, currency)
+        amount = round(amount, digits)
+        vals = {
+            "customer_id": invoice.partner_id.id,
+            "asset_id": self.asset_id.id,
+            "amount": amount,
+            "date": self.dismiss_date.strftime("%Y-%m-%d")
+        }
+        self.env["asset.depreciation"].generate_dismiss_line(
+            vals, invoice_line_ids=self.invoice_line_ids)
         return self.asset_id
 
     def get_create_asset_vals(self):
@@ -408,93 +381,6 @@ class WizardInvoiceManageAsset(models.TransientModel):
             "supplier_ref": purchase_invoice.reference or "",
             "used": self.used,
         }
-
-    def get_dismiss_asset_vals(self):
-        self.ensure_one()
-        asset = self.asset_id
-        currency = self.asset_id.currency_id
-        dismiss_date = self.dismiss_date
-        digits = self.env["decimal.precision"].precision_get("Account")
-
-        max_date = max(asset.depreciation_ids.mapped("last_depreciation_date"))
-        if max_date and max_date > dismiss_date:
-            raise ValidationError(
-                _(
-                    "Cannot dismiss an asset earlier than the last depreciation"
-                    " date.\n"
-                    "(Dismiss date: {}, last depreciation date: {})."
-                ).format(dismiss_date, max_date)
-            )
-
-        invoice = self.invoice_line_ids.mapped("invoice_id")
-        inv_num = invoice.number
-
-        writeoff = 0
-        for ln in self.invoice_line_ids:
-            writeoff += ln.currency_id.compute(ln.price_subtotal, currency)
-        writeoff = round(writeoff, digits)
-
-        vals = {
-            "customer_id": invoice.partner_id.id,
-            "depreciation_ids": [],
-            "sale_amount": writeoff,
-            "sale_date": invoice.date,
-            "sale_invoice_id": invoice.id,
-            "sold": True,
-        }
-        for dep in asset.depreciation_ids:
-            # depreciation = dep.generate_depreciation_lines(dismiss_date)
-            residual = dep.amount_residual
-            dep_vals = {"line_ids": []}
-            dep_writeoff = writeoff
-
-            dep_line_vals = {
-                "asset_accounting_info_ids": [
-                    (
-                        0,
-                        0,
-                        {
-                            "invoice_line_id": ln.id,
-                            "relation_type": self.management_type,
-                        },
-                    )
-                    for ln in self.invoice_line_ids
-                ],
-                "amount": min(residual, dep_writeoff),
-                "date": dismiss_date,
-                "move_type": "out",
-                "name": _("From invoice(s) ") + inv_num,
-                "asset_id": asset.id,
-            }
-            dep_vals["line_ids"].append((0, 0, dep_line_vals))
-
-            balance = dep_writeoff - residual
-            if not float_is_zero(balance, digits):
-                balance = round(balance, digits)
-                move_type = "gain" if balance > 0 else "loss"
-                dep_balance_vals = {
-                    "asset_accounting_info_ids": [
-                        (
-                            0,
-                            0,
-                            {
-                                "invoice_line_id": ln.id,
-                                "relation_type": self.management_type,
-                            },
-                        )
-                        for ln in self.invoice_line_ids
-                    ],
-                    "amount": abs(balance),
-                    "date": dismiss_date,
-                    "move_type": move_type,
-                    "name": _("From invoice(s) ") + inv_num,
-                    "asset_id": asset.id,
-                }
-                dep_vals["line_ids"].append((0, 0, dep_balance_vals))
-
-            vals["depreciation_ids"].append((1, dep.id, dep_vals))
-
-        return vals
 
     def get_invoice_type_2_dep_line_type(self):
         self.ensure_one()

@@ -157,8 +157,23 @@ class AssetDepreciationLine(models.Model):
     # depreciable amount
     _update_move_types = ("in", "out")
 
+    def depreciation_before_in_out(self, vals):
+        """
+        When 'out' or 'in' moves are created, it is needed to evaluate the depreciation
+        amount until 'out' / 'in' move, because these moves update asset value and
+        depreciation value is depending on asset value.
+        """
+        dep = self.env["asset.depreciation"].browse(vals["depreciation_id"])
+        dep_lines = dep.with_context(
+            depreciated_by_line=False).generate_depreciation_lines(
+            datetime.strptime(vals["date"], "%Y-%m-%d").date()
+        )
+        dep_lines.generate_account_move()
+        return dep_lines
+
     @api.model
-    def create(self, vals):
+    def check_4_values(self, vals):
+        """Check for valid values on create"""
         if (vals.get("partial_dismiss_percentage") and
             not vals.get("partial_dismissal", False)
         ):
@@ -171,25 +186,44 @@ class AssetDepreciationLine(models.Model):
             raise ValidationError(
                 _("Partial dismiss without percentage")
             )
-        if (
-            self._context.get("depreciated_by_line")
-            and vals["move_type"] == "depreciated"
-        ):
+        if not vals.get("asset_id"):
             raise ValidationError(
-                _("L'ammortamento non è consentito da questa interfaccia.")
+                _("Missed asset")
             )
-        elif self._context.get("depreciated_by_line") and vals["move_type"] in (
-            "in",
-            "out",
-        ):
-            self.depreciation_before_in_out(vals)
+        if not vals.get("depreciation_id"):
+            raise ValidationError(
+                _("Missed depreciation nature")
+            )
+        vals["move_type"] = vals.get("move_type", "depreciated")
+
+    @api.model
+    def create(self, vals):
+        self.check_4_values(vals)
+        if (self._context.get("depreciated_by_line") and
+              vals["move_type"] in ("in", "out")):
+
+            dep_lines = self.depreciation_before_in_out(vals)
+            if "asset_accounting_info_ids" not in vals:
+                vals["asset_accounting_info_ids"] = [
+                    (
+                        0,
+                        0,
+                        {
+                            "asset_id": vals["asset_id"],
+                            "relation_type": "update",
+                            "related_dep_line_id": dep_lines[0].id,
+                        },
+                    )
+                ]
+            else:
+                for acc_info in vals["asset_accounting_info_ids"]:
+                    acc_info[2]["related_dep_line_id"] =  dep_lines[0].id
 
         line = super().create(vals)
         if line.need_normalize_depreciation_nr():
             line.normalize_depreciation_nr(force=True)
         if line.requires_account_move:
             line.generate_account_move()
-            return line
         return line
 
     @api.multi
@@ -702,18 +736,3 @@ class AssetDepreciationLine(models.Model):
                 domain.append(("company_id", "=", company_id.id))
 
         return domain
-
-    def depreciation_before_in_out(self, vals):
-        """
-        When 'out' or 'in' moves are created, it is needed to evaluate the depreciation
-        amount until 'out' / 'in' move, because these moves update asset value and
-        depreciation value is depending on asset value.
-        """
-        dep = self.env["asset.depreciation"].browse(vals["depreciation_id"])
-        dep_date = datetime.strptime(vals["date"], "%Y-%m-%d").date()
-        dep_lines = dep.with_context(
-            depreciated_by_line=False
-        ).generate_depreciation_lines(dep_date)
-        dep_lines.button_generate_account_move()
-
-        return True

@@ -11,7 +11,7 @@ import datetime
 
 class AssetDepreciation(models.Model):
     _name = "asset.depreciation"
-    _description = "Assets Depreciations"
+    _description = "Assets depreciation type summary"
 
     amount_depreciable = fields.Monetary(string="Depreciable Amount")
 
@@ -396,7 +396,7 @@ class AssetDepreciation(models.Model):
         #     )
         return line_model.create(vals)
 
-    def generate_dismiss_line(self, vals):
+    def generate_dismiss_line(self, vals, invoice_line_ids=None):
         if "date" not in vals:
             raise ValidationError(_("Missed dismiss date"))
         if "asset_id" not in vals:
@@ -420,7 +420,8 @@ class AssetDepreciation(models.Model):
             residuals[dep.id] = dep.amount_residual
             dep_percentage = 100.0 - dep.partial_dismiss_percentage
             vals["amount"] = 0.0
-            out_lines |= self.generate_dismiss_line_single(vals)
+            out_lines |= self.generate_dismiss_line_single(
+                vals, invoice_line_ids=invoice_line_ids)
 
         # Out amount must be evaluated based on residual and out value
         line_model = self.env["asset.depreciation.line"]
@@ -457,8 +458,23 @@ class AssetDepreciation(models.Model):
 
         return out_lines
 
-    def generate_dismiss_line_single(self, vals):
+    def generate_dismiss_line_single(self, vals, invoice_line_ids=None):
         vals.update({"move_type": "out", "name": _("Dismiss")})
+        if invoice_line_ids:
+            vals["asset_accounting_info_ids"] = []
+            for line in invoice_line_ids:
+                vals["asset_accounting_info_ids"].append(
+                    (
+                        0,
+                        0,
+                        {
+                            "asset_id": vals["asset_id"],
+                            "relation_type": "update",
+                            "invoice_id": line.invoice_id.id,
+                            "invoice_line_id": line.id,
+                        },
+                    )
+                )
         line_model = self.env["asset.depreciation.line"]
         return line_model.with_context(depreciated_by_line=True).create(vals)
 

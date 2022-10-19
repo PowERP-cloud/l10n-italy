@@ -17,22 +17,32 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
 
     @api.model
     def get_default_date_dep(self):
-        query = (
-            "SELECT MAX(date) FROM asset_depreciation_line WHERE "
-            "final='true' and move_type = 'depreciated'"
-        )
-        self._cr.execute(query)
-        date = self._cr.fetchone()
-        # has depreciation
-        if date[0]:
+
+        def query_last_date(final=None):
+            query = (
+                "SELECT MAX(date) FROM asset_depreciation_line "
+                "WHERE move_type='depreciated'"
+            )
+            if final:
+                query += " and final='true'"
+            self._cr.execute(query)
+            return self._cr.fetchone()
+
+        date = query_last_date(final=True)
+        if not date or not date[0]:
+            date = query_last_date(final=False)
+        if not date or not date[0]:
+            query = "SELECT MAX(purchase_date) FROM asset_asset "
+            self._cr.execute(query)
+            date = self._cr.fetchone()
+        if date and date[0]:
+            # Found depreciation
             last_date = date[0]
             last_date += datetime.timedelta(days=1)
         else:
             last_date = fields.Date.today()
-        # end if
 
-        # search for end of fiscal year if is set according
-        # with the year of last date
+        # search for end of fiscal year for returned last date
         fiscal_year = self.env["account.fiscal.year"].get_fiscal_year_by_date(
             last_date, company=self.env.user.company_id, miss_raise=False
         )
