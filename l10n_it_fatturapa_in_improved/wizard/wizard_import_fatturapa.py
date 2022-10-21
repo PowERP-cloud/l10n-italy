@@ -74,3 +74,18 @@ class WizardImportFatturapa(models.TransientModel):
                 ):
                     account_taxes = def_purchase_tax
         return account_taxes
+
+    def invoiceCreate(
+        self, fatt, fatturapa_attachment, FatturaBody, partner_id
+    ):
+        invoice_id = super().invoiceCreate(fatt, fatturapa_attachment, FatturaBody, partner_id)
+        partner = self.env['res.partner'].browse(partner_id)
+        if partner.e_invoice_default_account_id:
+            invoice = self.env['account.invoice'].browse(invoice_id)
+            for line in invoice.invoice_line_ids:
+                line.write({
+                    'account_id': partner.e_invoice_default_account_id.id
+                })
+
+        return invoice_id
+
