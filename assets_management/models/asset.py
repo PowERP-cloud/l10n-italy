@@ -21,8 +21,11 @@ class Asset(models.Model):
     @api.depends("depreciation_ids")
     def _compute_partial_dismiss_percentage(self):
         for asset in self:
-            asset.partial_dismiss_percentage = max(
-                [x.partial_dismiss_percentage for x in asset.depreciation_ids])
+            if asset.depreciation_ids:
+                asset.partial_dismiss_percentage = max(
+                    [x.partial_dismiss_percentage for x in asset.depreciation_ids])
+            else:
+                asset.partial_dismiss_percentage = 0.0
 
     asset_accounting_info_ids = fields.One2many(
         "asset.accounting.info", "asset_id", string="Accounting Info"
