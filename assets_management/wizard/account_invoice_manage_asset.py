@@ -333,6 +333,7 @@ class WizardInvoiceManageAsset(models.TransientModel):
         return self.env["asset.asset"].create(self.get_create_asset_vals())
 
     def dismiss_asset(self):
+        """ Dismisses asset and returns it """
         self.ensure_one()
         if not self.dismiss_date:
             self.dismiss_date = self.invoice_ids[0].date_invoice
@@ -352,6 +353,17 @@ class WizardInvoiceManageAsset(models.TransientModel):
         }
         self.env["asset.depreciation"].generate_dismiss_line(
             vals, invoice_line_ids=self.invoice_line_ids)
+
+        vals = {
+            'customer_id': invoice.partner_id.id,
+            'sale_amount': amount,
+            'sale_date': invoice.date,
+            'sale_invoice_id': invoice.id,
+            'sold': True,
+            "partial_dismiss_percentage": 100.0,
+        }
+        self.asset_id.write(vals)
+
         return self.asset_id
 
     def get_create_asset_vals(self):
@@ -711,6 +723,19 @@ class WizardInvoiceManageAsset(models.TransientModel):
                 )
 
             vals["depreciation_ids"].append((1, dep.id, dep_vals))
+
+        purchase_amount = self.invoice_line_ids.get_asset_purchase_amount(
+            currency=self.currency_id
+        )
+        purchase_invoice = self.invoice_line_ids.mapped("invoice_id")
+        vals.update({
+            "company_id": self.company_id.id,
+            "currency_id": self.currency_id.id,
+            "purchase_amount": purchase_amount,
+            "purchase_date": self.purchase_date,
+            "supplier_id": purchase_invoice.partner_id.id,
+            "supplier_ref": purchase_invoice.reference or "",
+        })
 
         return vals
 

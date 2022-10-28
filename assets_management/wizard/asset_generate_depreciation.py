@@ -18,21 +18,26 @@ class WizardAssetsGenerateDepreciations(models.TransientModel):
     @api.model
     def get_default_date_dep(self):
 
-        def query_last_date(final=None):
+        def query_last_date(asset_id=None, final=None):
             query = (
-                "SELECT MAX(date) FROM asset_depreciation_line "
-                "WHERE move_type='depreciated'"
+                "SELECT MAX(date) FROM asset_depreciation_line"
+                " WHERE move_type='depreciated'"
             )
+            if asset_id:
+                query += "and asset_id=%s" % asset_id
             if final:
                 query += " and final='true'"
             self._cr.execute(query)
             return self._cr.fetchone()
 
-        date = query_last_date(final=True)
+        asset_id = self._context.get("active_id")
+        date = query_last_date(asset_id=asset_id, final=True)
         if not date or not date[0]:
             date = query_last_date(final=False)
         if not date or not date[0]:
-            query = "SELECT MAX(purchase_date) FROM asset_asset "
+            query = "SELECT MIN(purchase_date) FROM asset_asset "
+            if asset_id:
+                query += " WHERE id=%s" % asset_id
             self._cr.execute(query)
             date = self._cr.fetchone()
         if date and date[0]:

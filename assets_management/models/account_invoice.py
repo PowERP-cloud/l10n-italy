@@ -71,14 +71,20 @@ class AccountInvoice(models.Model):
             dep_lines.filtered(lambda l: not l.asset_accounting_info_ids).unlink()
             # clean sale data into asset
             if asset:
-                asset.sale_amount = 0.0
-                asset.sold = False
-                asset.sale_date = False
-                asset.sale_invoice_id = False
-                asset.customer_id = False
-                if percentage and asset.partial_dismiss_percentage >= percentage:
-                    asset.partial_dismiss_percentage -= percentage
-
+                if self.type in ("in_refund", "out_invoice"):
+                    asset.sale_amount = 0.0
+                    asset.sold = False
+                    asset.sale_date = False
+                    asset.sale_invoice_id = False
+                    asset.customer_id = False
+                    if percentage and asset.partial_dismiss_percentage >= percentage:
+                        asset.partial_dismiss_percentage -= percentage
+                elif self.type in ("in_invoice", "out_refund"):
+                    asset.purchase_amount = 0.0
+                    asset.purchase_date = False
+                    asset.purchase_invoice_id = False
+                    asset.supplier_id = False
+                    asset.supplier_ref = False
         return res
 
     @api.multi
@@ -117,6 +123,7 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def open_wizard_manage_asset(self):
+        """Wizard to connect invoice lines to asset"""
         self.ensure_one()
         lines = self.invoice_line_ids.filtered(
             lambda l: not l.asset_accounting_info_ids
@@ -131,9 +138,9 @@ class AccountInvoice(models.Model):
             {
                 "default_company_id": self.company_id.id,
                 "default_dismiss_date": self.date_invoice or self.date_due,
+                "default_purchase_date": self.date_invoice or self.date_due,
                 "default_invoice_ids": [(6, 0, self.ids)],
                 "default_invoice_line_ids": [(6, 0, lines.ids)],
-                "default_purchase_date": self.date_invoice or self.date_due,
                 "invoice_ids": self.ids,
             }
         )

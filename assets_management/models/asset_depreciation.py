@@ -245,8 +245,10 @@ class AssetDepreciation(models.Model):
         "line_ids",
         "line_ids.amount",
         "line_ids.balance",
-        "line_ids.move_type",
         "line_ids.date",
+        "line_ids.move_type",
+        "asset_id.purchase_amount",
+        "asset_id.sale_amount",
         "asset_id.sold",
     )
     def _compute_amounts(self):
@@ -403,6 +405,7 @@ class AssetDepreciation(models.Model):
             raise ValidationError(_("Missed dismiss asset"))
         if "amount" not in vals:
             raise ValidationError(_("Missed dismiss amount"))
+        digits = self.env["decimal.precision"].precision_get("Account")
         dismis_amount = vals["amount"]
         if isinstance(vals["date"], str):
             dismis_date = datetime.datetime.strptime(vals["date"], "%Y-%m-%d").date()
@@ -413,11 +416,8 @@ class AssetDepreciation(models.Model):
 
         # Write out lines: depreciation line will be created before 'out' write!
         out_lines = self.env["asset.depreciation.line"]
-        residuals = {}
         for dep in deps:
             vals["depreciation_id"] = dep.id
-            # Temporary residual value before any operation
-            residuals[dep.id] = dep.amount_residual
             dep_percentage = 100.0 - dep.partial_dismiss_percentage
             vals["amount"] = 0.0
             out_lines |= self.generate_dismiss_line_single(
@@ -425,17 +425,13 @@ class AssetDepreciation(models.Model):
 
         # Out amount must be evaluated based on residual and out value
         line_model = self.env["asset.depreciation.line"]
-        # Set right out value
         for out_line in out_lines:
-            dep_line = dep.env["asset.depreciation.line"].get_depreciation_lines(
-                date_from=dismis_date,
-                date_to=dismis_date,
-                depreciation_ids=out_line.depreciation_id.id,
-            )[0]
-            # Evaluate right out value
-            out_line.amount = (residuals[out_line.depreciation_id.id] -
-                               dep_line.amount) * min(dep_percentage,
-                                                      partial_dismiss_percentage) / 100
+            out_line.amount = min(
+                dismis_amount,
+                round(dep.amount_residual
+                      * (min(dep_percentage, partial_dismiss_percentage) / 100),
+                      digits)
+            )
 
         # Noe evaluate gain or loss
         for dep in deps:
@@ -446,7 +442,7 @@ class AssetDepreciation(models.Model):
                 move_types="out",
             )[0]
             vals["depreciation_id"] = dep.id
-            balance = dismis_amount - dep_line.amount
+            balance = round(dismis_amount - dep_line.amount, digits)
             vals["amount"] = abs(balance)
             if balance > 0:
                 vals["move_type"] = "gain"

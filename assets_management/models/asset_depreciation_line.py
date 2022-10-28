@@ -124,7 +124,7 @@ class AssetDepreciationLine(models.Model):
     )
 
     percentage = fields.Float(
-        string="Percentage of partial dismiss",
+        string="Percentage of depreciation",
         default=0.0,
     )
 
@@ -144,9 +144,9 @@ class AssetDepreciationLine(models.Model):
         string="Final",
     )
 
-    depreciation_line_linked_id = fields.Many2one(
-        "asset.depreciation.line", string="Linked Depreciation Move"
-    )
+    # depreciation_line_linked_id = fields.Many2one(
+    #     "asset.depreciation.line", string="Linked Depreciation Move"
+    # )
 
     # Non-default parameter: set which `move_types` require numeration
     _numbered_move_types = ("depreciated", "historical")
@@ -168,7 +168,7 @@ class AssetDepreciationLine(models.Model):
             depreciated_by_line=False).generate_depreciation_lines(
             datetime.strptime(vals["date"], "%Y-%m-%d").date()
         )
-        dep_lines.generate_account_move()
+        # dep_lines.generate_account_move()
         return dep_lines
 
     @api.model
@@ -195,6 +195,9 @@ class AssetDepreciationLine(models.Model):
                 _("Missed depreciation nature")
             )
         vals["move_type"] = vals.get("move_type", "depreciated")
+        if 'message_follower_ids' in vals:
+            del vals['message_follower_ids']
+
 
     @api.model
     def create(self, vals):
@@ -232,6 +235,8 @@ class AssetDepreciationLine(models.Model):
         for line in self:
             if line.need_normalize_depreciation_nr():
                 line.normalize_depreciation_nr(force=True)
+            if line.move_id:
+                line.update_account_move()
         return res
 
     @api.multi
@@ -428,7 +433,7 @@ class AssetDepreciationLine(models.Model):
         every non-depreciation line.
         :param force: force normalization for every depreciations' lines
         """
-        for dep in self.mapped("depreciation_id"):
+        for dep in self.with_context(no_update_move=True).mapped("depreciation_id"):
 
             # Avoid if user chooses to use custom numbers
             if dep.force_all_dep_nr:
@@ -468,21 +473,42 @@ class AssetDepreciationLine(models.Model):
     def generate_account_move_single(self):
         self.ensure_one()
         am_obj = self.env["account.move"]
-        if self.asset_accounting_info_ids.invoice_id:
-            self.move_id = self.asset_accounting_info_ids.invoice_id.move_id
-        else:
-            vals = self.get_account_move_vals()
-            if "line_ids" not in vals:
-                vals["line_ids"] = []
 
+        # if (
+        #     self.move_type in self.get_update_move_types()
+        #     and self.asset_accounting_info_ids.invoice_id
+        # ):
+        #     self.move_id = self.asset_accounting_info_ids.invoice_id.move_id
+        # else:
+        vals = self.get_account_move_vals()
+        line_vals = self.get_account_move_line_vals()
+        for v in line_vals:
+            vals["line_ids"].append((0, 0, v))
+
+        self.move_id = am_obj.create(vals)
+        if self.final:
+            self.move_id.post()
+
+    def update_account_move(self):
+        if not self._context.get("no_update_move", False):
+            self.ensure_one()
+            vals = {
+                "company_id": self.company_id.id,
+                "date": self.date,
+                "line_ids": [],
+                "ref": _("Asset: ") + self.asset_id.make_name(),
+                "line_ids": [],
+            }
             line_vals = self.get_account_move_line_vals()
-            for v in line_vals:
-                vals["line_ids"].append((0, 0, v))
-
-            self.move_id = am_obj.create(vals)
-
-            if self.final:
-                self.move_id.post()
+            for nr, v in enumerate(line_vals):
+                if nr < len(self.move_id.line_ids):
+                    vals["line_ids"].append((1, self.move_id.line_ids[nr].id, v))
+                else:
+                    vals["line_ids"].append((0, 0, v))
+            if len(self.move_id.line_ids) > len(line_vals):
+                for nr in range(len(line_vals), len(self.move_id.line_ids)):
+                    vals["line_ids"].append((2, self.move_id.line_ids[nr].id))
+            self.move_id.write(vals)
 
     def get_account_move_vals(self):
         self.ensure_one()
@@ -501,7 +527,6 @@ class AssetDepreciationLine(models.Model):
             raise NotImplementedError(
                 _("Cannot create account move lines: no method is specified.")
             )
-
         return method()
 
     def get_account_move_line_vals_methods(self):
@@ -638,11 +663,11 @@ class AssetDepreciationLine(models.Model):
         dep = self.mapped("depreciation_id")
         dep.ensure_one()
         types = ("gain", "loss")
-        gain_or_loss = self.filtered(
+        to_create_move = self.filtered(
             lambda l: l.needs_account_move() and l.move_type in types
         )
-        if gain_or_loss:
-            gain_or_loss.generate_account_move_single()
+        if to_create_move:
+            to_create_move.generate_account_move_single()
             dep.generate_dismiss_account_move()
 
     def post_partial_dismiss_asset(self):
