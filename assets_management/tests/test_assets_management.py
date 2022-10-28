@@ -151,19 +151,6 @@ class TestAssets(TransactionCase):
                     "date_to": date(year, 12, 31),
                 }
             )
-        # Now we search for last invoice recorded
-        invs = self.env["account.invoice"].search(
-            [("type", "=", "out_invoice")], order="number"
-        )
-        self.sale_invoice = invs[0]
-        self.sale_invoice.journal_id.update_posted = True  # Assure invoice cancel
-        self.sale_invoice.action_invoice_cancel()
-        self.sale_invoice.action_invoice_draft()
-        self.sale_invoice.invoice_line_ids[
-            -1
-        ].account_id = self.asset_1.category_id.asset_account_id.id
-        self.sale_invoice.date_invoice = date(date.today().year, 1, 31)
-        self.sale_invoice.action_invoice_open()
 
     # TODO> Remove before publish final code
     def tearDown(self):
@@ -365,6 +352,37 @@ class TestAssets(TransactionCase):
             vals["code"] = "Two"
         return self.env["asset.asset"].create(vals)
 
+    def set_sale_invoice_4_asset_1(self):
+        # Now we search for last invoice recorded and use line #2 for asset #1
+        invs = self.env["account.invoice"].search(
+            [("type", "=", "out_invoice")], order="number"
+        )
+        self.sale_invoice = invs[0]
+        self.sale_invoice.journal_id.update_posted = True  # Assure invoice cancel
+        self.sale_invoice.action_invoice_cancel()
+        self.sale_invoice.action_invoice_draft()
+        # Change last line
+        self.sale_invoice.invoice_line_ids[
+            -1
+        ].account_id = self.asset_1.category_id.asset_account_id.id
+        TEST_VALUE["asset_1.sale_amount"] = self.sale_invoice.invoice_line_ids[
+            -1
+        ].price_subtotal
+        self.sale_invoice.date_invoice = date(date.today().year, 1, 31)
+        self.sale_invoice.action_invoice_open()
+
+    def set_sale_invoice_4_asset_2(self):
+        self.sale_invoice.action_invoice_cancel()
+        self.sale_invoice.action_invoice_draft()
+        # Change 1.st line
+        self.sale_invoice.invoice_line_ids[
+            0
+        ].account_id = self.asset_1.category_id.asset_account_id.id
+        TEST_VALUE["asset_2.sale_amount"] = self.sale_invoice.invoice_line_ids[
+            0
+        ].price_subtotal
+        self.sale_invoice.action_invoice_open()
+
     def _day_rate(self, date_from, date_to, is_leap=None):
         return ((date_to - date_from).days + 1) / (365 if not is_leap else 366)
 
@@ -396,17 +414,19 @@ class TestAssets(TransactionCase):
                 self.assertEqual(
                     dep.amount,
                     line.credit,
-                    "Invalid credit amount for fund move %s" % dep.move_id.id
+                    "Invalid credit amount for fund move %s" % dep.move_id.id,
                 )
             elif line.account_id == self.account_depreciation:
                 self.assertEqual(
                     dep.amount,
                     line.debit,
-                    "Invalid debit amount for fund move %s" % dep.move_id.id
+                    "Invalid debit amount for fund move %s" % dep.move_id.id,
                 )
             else:
-                raise (TypeError,
-                       "Invalid line account for fund move %s" % dep.move_id.id)
+                raise (
+                    TypeError,
+                    "Invalid line account for fund move %s" % dep.move_id.id,
+                )
 
     def _check_4_move_gain(self, dep):
         for line in dep.move_id.line_ids:
@@ -414,17 +434,19 @@ class TestAssets(TransactionCase):
                 self.assertEqual(
                     dep.amount,
                     line.credit,
-                    "Invalid credit amount for gain move %s" % dep.move_id.id
+                    "Invalid credit amount for gain move %s" % dep.move_id.id,
                 )
             elif line.account_id == self.account_fixed_assets:
                 self.assertEqual(
                     dep.amount,
                     line.debit,
-                    "Invalid debit amount for gain move %s" % dep.move_id.id
+                    "Invalid debit amount for gain move %s" % dep.move_id.id,
                 )
             else:
-                raise (TypeError,
-                       "Invalid line account for gain move %s" % dep.move_id.id)
+                raise (
+                    TypeError,
+                    "Invalid line account for gain move %s" % dep.move_id.id,
+                )
 
     def _check_4_move_out(self, dep):
         for line in dep.move_id.line_ids:
@@ -432,17 +454,19 @@ class TestAssets(TransactionCase):
                 self.assertEqual(
                     dep.amount,
                     line.credit,
-                    "Invalid credit amount for out move %s" % dep.move_id.id
+                    "Invalid credit amount for out move %s" % dep.move_id.id,
                 )
             elif line.account_id == self.account_loss:
                 self.assertEqual(
                     dep.amount,
                     line.debit,
-                    "Invalid debit amount for out move %s" % dep.move_id.id
+                    "Invalid debit amount for out move %s" % dep.move_id.id,
                 )
             else:
-                raise (TypeError,
-                       "Invalid line account for out move %s" % dep.move_id.id)
+                raise (
+                    TypeError,
+                    "Invalid line account for out move %s" % dep.move_id.id,
+                )
 
     def _check_4_move(self, dep):
         if dep.move_id:
@@ -559,9 +583,7 @@ class TestAssets(TransactionCase):
     ):
         date_dep = date_dep or TEST_VALUE["date.eoy_2"]
         if asset:
-            vals = {
-                "asset_ids": [(6, 0, [asset.id])]
-            }
+            vals = {"asset_ids": [(6, 0, [asset.id])]}
         else:
             vals = {}
         web_changes = [("date_dep", datetime.strftime(date_dep, "%Y-%m-%d"))]
@@ -577,8 +599,120 @@ class TestAssets(TransactionCase):
             act_windows,
             button_name="do_warning",
             web_changes=web_changes,
-            windows_break=windows_break
+            windows_break=windows_break,
         )
+
+    def run_dismis_asset_1(self):
+        asset = self.asset_1
+        act_window = self.sale_invoice.open_wizard_manage_asset()
+        act_window = self.envtest_wizard_start(act_window)
+        self.envtest_wizard_exec(
+            act_window,
+            button_name="link_asset",
+            button_ctx={"show_asset": 0},
+            web_changes=[
+                ("management_type", "dismiss"),
+                ("invoice_ids", [(6, 0, [self.sale_invoice.id])]),
+                ("asset_id", self.asset_1.id),
+            ],
+        )
+        year = date.today().year
+        dismis_date = date(year, 1, 31)
+        rate = self._day_rate(date(year, 1, 1), dismis_date, is_leap=isleap(year))
+        depreciation_amount = float_round(
+            TEST_VALUE["asset_1.depreciation_amount"] * rate, 2
+        )
+        depreciated_amount = float_round(
+            TEST_VALUE["asset_1.amount_depreciated_1"] + depreciation_amount, 2
+        )
+        self._test_all_depreciation_lines(
+            dismis_date, asset, amount=depreciation_amount, depreciation_nr=3
+        )
+        for dep in self._get_depreciation_lines(
+            asset=asset,
+            move_type="out",
+            date_from=dismis_date,
+            date_to=dismis_date,
+        ):
+            down_value = float_round(
+                TEST_VALUE["asset_1.purchase_amount"] - depreciated_amount, 2
+            )
+            self.assertEqual(
+                float_round(dep.amount, 2), down_value, "Invalid dismiss amount!"
+            )
+            self._check_4_move(dep)
+        for dep in self._get_depreciation_lines(
+            asset=asset,
+            move_type="gain",
+            date_from=dismis_date,
+            date_to=dismis_date,
+        ):
+            down_value = float_round(
+                TEST_VALUE["asset_1.sale_amount"]
+                - (TEST_VALUE["asset_1.purchase_amount"] - depreciated_amount),
+                2,
+            )
+            self.assertEqual(
+                float_round(dep.amount, 2), down_value, "Invalid gain amount!"
+            )
+            self._check_4_move(dep)
+
+    def run_dismis_asset_2(self):
+        asset = self.asset_2
+        act_window = self.sale_invoice.open_wizard_manage_asset()
+        act_window = self.envtest_wizard_start(act_window)
+        self.envtest_wizard_exec(
+            act_window,
+            button_name="link_asset",
+            button_ctx={"show_asset": 0},
+            web_changes=[
+                ("management_type", "dismiss"),
+                ("invoice_ids", [(6, 0, [self.sale_invoice.id])]),
+                ("invoice_line_ids",
+                 [(6, 0, [self.sale_invoice.invoice_line_ids[0].id])]),
+                ("asset_id", self.asset_2.id),
+            ],
+        )
+        year = date.today().year
+        dismis_date = date(year, 1, 31)
+        rate = self._day_rate(date(year, 1, 1), dismis_date, is_leap=isleap(year))
+        depreciation_amount = float_round(
+            TEST_VALUE["asset_2.depreciation_amount"] * rate, 2
+        )
+        depreciated_amount = float_round(
+            TEST_VALUE["asset_2.amount_depreciated_1"] + depreciation_amount, 2
+        )
+        self._test_all_depreciation_lines(
+            dismis_date, asset, amount=depreciation_amount, depreciation_nr=3
+        )
+        for dep in self._get_depreciation_lines(
+            asset=asset,
+            move_type="out",
+            date_from=dismis_date,
+            date_to=dismis_date,
+        ):
+            down_value = float_round(
+                TEST_VALUE["asset_2.purchase_amount"] - depreciated_amount, 2
+            )
+            self.assertEqual(
+                float_round(dep.amount, 2), down_value, "Invalid dismiss amount!"
+            )
+            self._check_4_move(dep)
+        for dep in self._get_depreciation_lines(
+            asset=asset,
+            move_type="gain",
+            date_from=dismis_date,
+            date_to=dismis_date,
+        ):
+            down_value = float_round(
+                TEST_VALUE["asset_2.sale_amount"]
+                - (TEST_VALUE["asset_2.purchase_amount"] - depreciated_amount),
+                2,
+            )
+            self.assertEqual(
+                float_round(dep.amount, 2), down_value, "Invalid gain amount!"
+            )
+            self._check_4_move(dep)
 
     def _test_asset_1(self):
         # Basic test #1
@@ -675,58 +809,8 @@ class TestAssets(TransactionCase):
             self._run_wizard_4_depreciation(date_dep=date_dep, asset=asset)
         #
         # (A9) Dismiss
-        # self._remove_depreciation_lines(asset=asset)
-        act_window = self.sale_invoice.open_wizard_manage_asset()
-        act_window = self.envtest_wizard_start(act_window)
-        self.envtest_wizard_exec(
-            act_window,
-            button_name="link_asset",
-            button_ctx={"show_asset": 0},
-            web_changes=[
-                ("management_type", "dismiss"),
-                ("invoice_ids", [(6, 0, [self.sale_invoice.id])]),
-                ("asset_id", self.asset_1.id),
-            ],
-        )
-        year = date.today().year
-        dismis_date = date(year, 1, 31)
-        rate = self._day_rate(date(year, 1, 1), dismis_date, is_leap=isleap(year))
-        depreciation_amount = float_round(
-            TEST_VALUE["asset_1.depreciation_amount"] * rate, 2
-        )
-        depreciated_amount = float_round(
-            TEST_VALUE["asset_1.amount_depreciated_1"] + depreciation_amount, 2
-        )
-        self._test_all_depreciation_lines(
-            dismis_date, asset, amount=depreciation_amount, depreciation_nr=3
-        )
-        for dep in self._get_depreciation_lines(
-            asset=asset,
-            move_type="out",
-            date_from=dismis_date,
-            date_to=dismis_date,
-        ):
-            down_value = float_round(
-                TEST_VALUE["asset_1.purchase_amount"] - depreciated_amount, 2
-            )
-            self.assertEqual(
-                float_round(dep.amount, 2), down_value, "Invalid dismiss amount!"
-            )
-            self._check_4_move(dep)
-        for dep in self._get_depreciation_lines(
-            asset=asset,
-            move_type="gain",
-            date_from=dismis_date,
-            date_to=dismis_date,
-        ):
-            down_value = float_round(
-                1400.0 - (TEST_VALUE["asset_1.purchase_amount"] - depreciated_amount),
-                2,
-            )
-            self.assertEqual(
-                float_round(dep.amount, 2), down_value, "Invalid gain amount!"
-            )
-            self._check_4_move(dep)
+        self.set_sale_invoice_4_asset_1()
+        self.run_dismis_asset_1()
 
     def _test_asset_2(self):
         # Basic test #2
@@ -737,70 +821,69 @@ class TestAssets(TransactionCase):
         # start -> 2500€ : 92/365 -> 150.82€ | depr.100% -> 600€ | depr -> 0..600.0€
         #
         asset = self.asset_2
-
-        deps_amount = {}
-        # Year #1: Generate 92 days depreciation -> 2500.00€ * 24% * 92 / 365 = 151.23€
-        # If year - 2 is leap depreciation value is 150.82€
-        self.assertEqual(
-            asset.state,
-            "partially_depreciated",
-            "Asset is not in non depreciated state!",
+        #
+        # (B1) Year #1: Generate 92 days depreciation -> 2500.00€ * 24% * 92 / 365 = 151.23€
+        # If year-2 is leap depreciation value is 150.82€
+        # Depreciation for year-2 is run before starting this test
+        #
+        # (B2) Year #2: Depreciation amount is 600€ (2500€ * 24%)
+        # Depreciation for year-1 is run before starting this test
+        #
+        # (B3) Year #3: Current depreciation amount depends on today: value is <= 600€
+        date_dep = date.today()
+        year = date_dep.year
+        rate = self._day_rate(date(year, 1, 1), date_dep, is_leap=isleap(year))
+        self._run_wizard_4_depreciation(date_dep=date_dep, asset=asset)
+        depreciation_amount = float_round(
+            TEST_VALUE["asset_2.depreciation_amount"] * rate, 2
         )
-        year = date.today().year - 2
-        date_dep = date(year, 12, 31)
-        depreciation_amount = TEST_VALUE["asset_2.depreciation_amount_1"]
-        self._test_all_depreciation_lines(
-            date_dep, asset, amount=depreciation_amount, depreciation_nr=1, final=False
-        )
-        for dep in asset.depreciation_ids:
-            self.assertEqual(
-                float_round(dep.amount_depreciated, 2),
-                depreciation_amount,
-                "Invalid depreciation amount!",
-            )
-            if dep not in deps_amount:
-                deps_amount[dep] = dep.amount_depreciated
-
-        # Year #2: Depreciation amount is 600€ (2500€ * 24%)
-        year = date.today().year - 1
-        act_windows, wiz = self._run_wizard_4_depreciation(
-            date(year, 12, 31), asset=asset
+        depreciated_amount = float_round(
+            TEST_VALUE["asset_2.amount_depreciated_1"] + depreciation_amount, 2
         )
         self._test_all_depreciation_lines(
-            wiz.date_dep,
-            asset,
-            amount=TEST_VALUE["asset_2.depreciation_amount"],
-            depreciation_nr=2,
-            final=False,
-        )
-        for dep in asset.depreciation_ids:
-            deps_amount[dep] += TEST_VALUE["asset_2.depreciation_amount"]
-            self.assertEqual(
-                float_round(dep.amount_depreciated, 2),
-                float_round(deps_amount[dep], 2),
-                "Invalid depreciation amount!",
-            )
-
-        # Year #3: Current depreciation amount depends on today: value is <= 600€
-        wiz.date_dep = date.today()
-        year = wiz.date_dep.year
-        rate = self._day_rate(date(year, 1, 1), wiz.date_dep, is_leap=isleap(year))
-        wiz.do_generate()
-        depreciation_amount = TEST_VALUE["asset_2.depreciation_amount"] * rate
-        self._test_all_depreciation_lines(
-            wiz.date_dep,
+            date_dep,
             asset,
             amount=depreciation_amount,
             depreciation_nr=3,
             final=False,
         )
         for dep in asset.depreciation_ids:
-            deps_amount[dep] += depreciation_amount
             self.assertEqual(
                 float_round(dep.amount_depreciated, 2),
-                float_round(deps_amount[dep], 2),
-                "Invalid depreciation amount!",
+                depreciated_amount,
+                "Invalid depreciated amount!",
             )
+        #
+        # (B9) Dismiss
+        # self._remove_depreciation_lines(asset=asset)
+        self.set_sale_invoice_4_asset_2()
+        self.run_dismis_asset_2()
+        #
+        # In order to run dismission tests on asset #2 we used the same sale invoice
+        # We set invoice state to cancel and this action unlinked asset #1 from invoice
+        # So now we have to relink line #2 of invoice to asset #1
+        # (A9.b) Check for deleted out & ganin lines
+        year = date.today().year
+        dismis_date = date(year, 1, 31)
+        self.assertFalse(
+            self._get_depreciation_lines(
+                asset=self.asset_1,
+                move_type="out",
+                date_from=dismis_date,
+                date_to=dismis_date
+            ),
+            "Found out undelede out moves"
+        )
+        self.assertFalse(
+            self._get_depreciation_lines(
+                asset=self.asset_1,
+                move_type="gain",
+                date_from=dismis_date,
+                date_to=dismis_date
+            ),
+            "Found out undelede out moves"
+        )
+        self.run_dismis_asset_1()
 
     def _test_asset_3(self):
         # Out + Dismiss tests asset #1
@@ -1074,7 +1157,7 @@ class TestAssets(TransactionCase):
         self._test_depreciation_all_assets_y2(False)
         self._test_depreciation_all_assets_y1(False)
         self._test_asset_1()
-        # self._test_asset_2()
+        self._test_asset_2()
         # self._test_asset_3()
         # self._test_asset_4()
         # self._test_asset_8()
