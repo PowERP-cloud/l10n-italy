@@ -269,18 +269,6 @@ class AssetDepreciationLine(models.Model):
     def name_get(self):
         return [(line.id, line.make_name()) for line in self]
 
-    @api.constrains("company_id")
-    def check_company(self):
-        for dep_line in self:
-            comp = dep_line.get_linked_aa_info_records().mapped("company_id")
-            if len(comp) > 1 or (comp and comp != dep_line.company_id):
-                raise ValidationError(
-                    _(
-                        "`{}`: cannot change depreciation line's company once"
-                        " it's already related to an asset."
-                    ).format(dep_line.make_name())
-                )
-
     @api.constrains("depreciation_nr")
     def check_depreciation_nr_coherence(self):
         for dep in self.mapped("depreciation_id"):

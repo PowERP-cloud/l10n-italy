@@ -335,12 +335,12 @@ class WizardInvoiceManageAsset(models.TransientModel):
     def dismiss_asset(self):
         """ Dismisses asset and returns it """
         self.ensure_one()
-        if not self.dismiss_date:
-            self.dismiss_date = self.invoice_ids[0].date_invoice
-        self.check_pre_dismiss_asset()
         currency = self.asset_id.currency_id
         digits = self.env["decimal.precision"].precision_get("Account")
         invoice = self.invoice_line_ids.mapped("invoice_id")
+        if not self.dismiss_date:
+            self.dismiss_date = self.invoice.date_invoice
+        self.check_pre_dismiss_asset()
         amount = 0
         for ln in self.invoice_line_ids:
             amount += ln.currency_id.compute(ln.price_subtotal, currency)
@@ -401,112 +401,6 @@ class WizardInvoiceManageAsset(models.TransientModel):
     def get_management_type_2_method(self):
         self.ensure_one()
         return self._management_type_2_method
-
-    def get_partial_dismiss_asset_vals(self):
-        self.ensure_one()
-        asset = self.asset_id
-        currency = self.asset_id.currency_id
-        dismiss_date = self.dismiss_date
-        digits = self.env["decimal.precision"].precision_get("Account")
-        fund_amt = self.depreciated_fund_amount
-        purchase_amt = self.asset_purchase_amount
-
-        max_date = max(asset.depreciation_ids.mapped("last_depreciation_date"))
-        if max_date and max_date > dismiss_date:
-            raise ValidationError(
-                _(
-                    "Cannot dismiss an asset earlier than the last depreciation"
-                    " date.\n"
-                    "(Dismiss date: {}, last depreciation date: {})."
-                ).format(dismiss_date, max_date)
-            )
-
-        invoice = self.invoice_line_ids.mapped("invoice_id")
-        inv_num = invoice.number
-
-        writeoff = 0
-        for ln in self.invoice_line_ids:
-            writeoff += ln.currency_id.compute(ln.price_subtotal, currency)
-        writeoff = round(writeoff, digits)
-
-        vals = {"depreciation_ids": []}
-        for dep in asset.depreciation_ids:
-            if dep.pro_rata_temporis:
-                dep_writeoff = writeoff * dep.get_pro_rata_temporis_multiplier(
-                    dismiss_date, "std"
-                )
-            else:
-                dep_writeoff = writeoff
-
-            name = _("Partial dismissal from invoice(s) {}").format(inv_num)
-
-            out_line_vals = {
-                "asset_accounting_info_ids": [
-                    (
-                        0,
-                        0,
-                        {
-                            "invoice_line_id": ln.id,
-                            "relation_type": self.management_type,
-                        },
-                    )
-                    for ln in self.invoice_line_ids
-                ],
-                "amount": purchase_amt,
-                "date": dismiss_date,
-                "move_type": "out",
-                "name": name,
-                "partial_dismissal": True,
-                "asset_id": asset.id,
-            }
-            dep_line_vals = {
-                "asset_accounting_info_ids": [
-                    (
-                        0,
-                        0,
-                        {
-                            "invoice_line_id": ln.id,
-                            "relation_type": self.management_type,
-                        },
-                    )
-                    for ln in self.invoice_line_ids
-                ],
-                "amount": -fund_amt,
-                "date": dismiss_date,
-                "move_type": "depreciated",
-                "name": name,
-                "partial_dismissal": True,
-                "asset_id": asset.id,
-            }
-
-            dep_vals = {"line_ids": [(0, 0, out_line_vals), (0, 0, dep_line_vals)]}
-
-            balance = (fund_amt + dep_writeoff) - purchase_amt
-            if not float_is_zero(balance, digits):
-                loss_gain_vals = {
-                    "asset_accounting_info_ids": [
-                        (
-                            0,
-                            0,
-                            {
-                                "invoice_line_id": ln.id,
-                                "relation_type": self.management_type,
-                            },
-                        )
-                        for ln in self.invoice_line_ids
-                    ],
-                    "amount": abs(balance),
-                    "date": dismiss_date,
-                    "move_type": "gain" if balance > 0 else "loss",
-                    "name": name,
-                    "partial_dismissal": True,
-                    "asset_id": asset.id,
-                }
-                dep_vals["line_ids"].append((0, 0, loss_gain_vals))
-
-            vals["depreciation_ids"].append((1, dep.id, dep_vals))
-
-        return vals
 
     def get_partial_dismiss_asset_percentage_vals(self):
         self.ensure_one()
@@ -742,55 +636,35 @@ class WizardInvoiceManageAsset(models.TransientModel):
     def partial_dismiss_asset(self):
         """Dismisses asset partially and returns it"""
         self.ensure_one()
-        self.check_pre_partial_dismiss_asset()
-        old_dep_lines = self.asset_id.mapped("depreciation_ids.line_ids")
-        for dep in self.asset_id.depreciation_ids:
-            dep.check_previous_depreciation(self.dismiss_date)
-        if self.partial_dismiss_percentage > 0:
-            consentito = 100 - self.asset_id.percentage
-            if self.partial_dismiss_percentage > consentito:
-                raise ValidationError(
-                    _(
-                        "La percentuale di dismissone supera il valore consentito {val}".format(
-                            val=consentito
-                        )
-                    )
-                )
-            vals = self.get_partial_dismiss_asset_percentage_vals()
-        else:
-            vals = self.get_partial_dismiss_asset_vals()
-
-        self.asset_id.write(vals)
-
-        digits = self.env["decimal.precision"].precision_get("Account")
         currency = self.asset_id.currency_id
-
-        writeoff = 0
+        digits = self.env["decimal.precision"].precision_get("Account")
+        invoice = self.invoice_line_ids.mapped("invoice_id")
+        if not self.dismiss_date:
+            self.dismiss_date = self.invoice.date_invoice
+        self.check_pre_dismiss_asset()
+        amount = 0
         for ln in self.invoice_line_ids:
-            writeoff += ln.currency_id.compute(ln.price_subtotal, currency)
-        writeoff = round(writeoff, digits)
-
-        total_percentage = self.asset_id.percentage + self.partial_dismiss_percentage
-        asset_vals = {
-            "sale_amount": self.asset_id.sale_amount + writeoff,
-            "partial_dismiss_percentage": (
-                self.asset_id.percentage + self.partial_dismiss_percentage
-            ),
+            amount += ln.currency_id.compute(ln.price_subtotal, currency)
+        amount = round(amount, digits)
+        vals = {
+            "customer_id": invoice.partner_id.id,
+            "asset_id": self.asset_id.id,
+            "amount": amount,
+            "date": self.dismiss_date.strftime("%Y-%m-%d"),
+            "partial_dismiss_percentage": self.partial_dismiss_percentage,
         }
-        if total_percentage >= 100:
-            invoice = self.invoice_ids[0]
-            asset_vals.update(
-                {
-                    "customer_id": invoice.partner_id.id,
-                    "sale_date": invoice.date,
-                    "sale_invoice_id": invoice.id,
-                    "sold": True,
-                }
-            )
-        self.asset_id.write(asset_vals)
+        self.env["asset.depreciation"].generate_dismiss_line(
+            vals, invoice_line_ids=self.invoice_line_ids)
 
-        for dep in self.asset_id.depreciation_ids:
-            (dep.line_ids - old_dep_lines).post_partial_dismiss_asset()
+        vals = {
+            'customer_id': invoice.partner_id.id,
+            'sale_amount': amount,
+            'sale_date': invoice.date,
+            'sale_invoice_id': invoice.id,
+            'sold': True,
+            "partial_dismiss_percentage": 100.0,
+        }
+        self.asset_id.write(vals)
 
         return self.asset_id
 

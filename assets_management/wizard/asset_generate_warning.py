@@ -9,7 +9,7 @@ from odoo import models, fields
 
 class AssetGenerateWarning(models.TransientModel):
     _name = "asset.generate.warning"
-    _descrition = "Warning before generate depreciations"
+    _description = "Warning before generate depreciations"
 
     wizard_id = fields.Many2one(
         "wizard.asset.generate.depreciation", string="Asset Wizard"
@@ -26,6 +26,7 @@ class AssetGenerateWarning(models.TransientModel):
 
 class AssetConfirmReasonLine(models.TransientModel):
     _name = "asset.confirm.reason.line"
+    _description = "Confirmation before generate depreciations"
 
     confirm_id = fields.Many2one("asset.generate.warning", string="Numero elenco")
     reason = fields.Char(string="Avviso", size=255, readonly=True)

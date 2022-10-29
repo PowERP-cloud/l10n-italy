@@ -399,6 +399,9 @@ class AssetDepreciation(models.Model):
         return line_model.create(vals)
 
     def generate_dismiss_line(self, vals, invoice_line_ids=None):
+        """Generate dismission records.
+        May be calls by invoice wizard (with invoice_line_ids)
+        or from asset for disposal"""
         if "date" not in vals:
             raise ValidationError(_("Missed dismiss date"))
         if "asset_id" not in vals:
@@ -413,6 +416,8 @@ class AssetDepreciation(models.Model):
             dismis_date = vals["date"]
         deps = self.get_depreciations(date_ref=vals["date"], asset_ids=vals["asset_id"])
         partial_dismiss_percentage = vals.get("partial_dismiss_percentage", 100)
+        if "partial_dismiss_percentage" in vals and partial_dismiss_percentage < 100.0:
+            vals["partial_dismissal"] = True
 
         # Write out lines: depreciation line will be created before 'out' write!
         out_lines = self.env["asset.depreciation.line"]
