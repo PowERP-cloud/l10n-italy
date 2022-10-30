@@ -113,7 +113,7 @@ class WizardInvoiceManageAsset(models.TransientModel):
 
     # Mapping between invoice type and depreciation line type
     _invoice_type_2_dep_line_type = {
-        "in_invoice": "in",
+        "in_invoice": "purchase",
         "out_invoice": "out",
         "in_refund": "out",
         "out_refund": "in",
@@ -570,7 +570,7 @@ class WizardInvoiceManageAsset(models.TransientModel):
                         line.price_subtotal, dep.currency_id
                     )
                 sign = 1
-                if move_type in ["out", "depreciated", "historical"]:
+                if move_type in ["out", "depreciated", "historical", "sale"]:
                     sign = -1
                 # Block updates if the amount to be written off is higher than
                 # the residual amount
@@ -604,6 +604,8 @@ class WizardInvoiceManageAsset(models.TransientModel):
                     "name": _("From invoice(s) ") + inv_num,
                     "asset_id": asset.id,
                 }
+                if move_type == "in":
+                    dep_line_vals["move_type"] = "purchase"
                 dep_vals["line_ids"].append((0, 0, dep_line_vals))
 
             if balances < 0 and residual + balances < 0:

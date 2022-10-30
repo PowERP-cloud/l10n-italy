@@ -106,6 +106,8 @@ class AssetDepreciationLine(models.Model):
             ("out", "Out"),
             ("loss", "Capital Loss"),
             ("gain", "Capital Gain"),
+            ("purchase", "Purchase"),
+            ("sale", "Sale"),
         ],
         string="Type",
         required=True,
@@ -144,15 +146,11 @@ class AssetDepreciationLine(models.Model):
         string="Final",
     )
 
-    # depreciation_line_linked_id = fields.Many2one(
-    #     "asset.depreciation.line", string="Linked Depreciation Move"
-    # )
-
     # Non-default parameter: set which `move_types` require numeration
     _numbered_move_types = ("depreciated", "historical")
     # Non-default parameter: set which `move_types` do not concur to
     # asset.depreciation's `amount_residual` field compute
-    _non_residual_move_types = ("gain", "loss")
+    _non_residual_move_types = ("gain", "loss", "purchase", "sale")
     # Non-default parameter: set which `move_types` get to update the
     # depreciable amount
     _update_move_types = ("in", "out")
@@ -284,7 +282,7 @@ class AssetDepreciationLine(models.Model):
     @api.depends("amount", "move_type")
     def _compute_balance(self):
         for line in self:
-            if line.move_type in ["out", "depreciated", "historical", "loss"]:
+            if line.move_type in ["out", "depreciated", "historical", "loss", "sale"]:
                 line.balance = -line.amount
             else:
                 line.balance = line.amount
@@ -459,6 +457,8 @@ class AssetDepreciationLine(models.Model):
             line.generate_account_move_single()
 
     def generate_account_move_single(self):
+        if self.move_type in ("purchase", "sale"):
+            return
         self.ensure_one()
         am_obj = self.env["account.move"]
 

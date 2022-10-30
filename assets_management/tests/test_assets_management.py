@@ -30,6 +30,8 @@ TEST_DATA = {
     "date.eoy": date(date.today().year, 12, 31),
     "asset_1_2.date.disposal": date(date.today().year, 1, 31),
     "asset_4.date.disposal": date(date.today().year, 7, 31),
+    "asset_1_3.date.disposal": date(date.today().year - 2, 12, 1),
+    "asset_2_4.date.disposal": date(date.today().year - 2, 10, 1),
     "cat_1.percentage": 25,
     "cat_2.percentage": 24,
     "asset_1.purchase_amount": 1000.0,
@@ -391,14 +393,96 @@ class TestAssets(TransactionCase):
             vals["code"] = "Two"
         return self.env["asset.asset"].create(vals)
 
-    def set_sale_invoice_asset_1(self):
-        tax = self.env["account.tax"].search(
+    def get_sale_tax(self):
+        return self.env["account.tax"].search(
             [
                 ("type_tax_use", "=", "sale"),
                 ("amount", ">", 0.0),
                 ("company_id", "=", self.env.ref("base.main_company").id),
             ]
         )[0]
+
+    def get_purchase_tax(self):
+        return self.env["account.tax"].search(
+            [
+                ("type_tax_use", "=", "purchase"),
+                ("amount", ">", 0.0),
+                ("company_id", "=", self.env.ref("base.main_company").id),
+            ]
+        )[0]
+
+    def set_purchase_invoice_asset_1(self):
+        tax = self.get_purchase_tax()
+        vals = {
+            "partner_id": self.env.ref("base.res_partner_1").id,
+            "type": "in_invoice",
+            "date_invoice":TEST_DATA["asset_1_3.date.disposal"].strftime('%Y-%m-%d'),
+            "reference": "20-012-001",
+            "invoice_line_ids": [],
+        }
+        vals["invoice_line_ids"].append((
+            0,
+            0,
+            {
+                "name": "Asset One",
+                "account_id": self.asset_1.category_id.asset_account_id.id,
+                "price_unit": TEST_DATA["asset_1.purchase_amount"],
+                "quantity": 1.0,
+                "invoice_line_tax_ids": [(6, 0, [tax.id])],
+            },
+        ))
+        vals["invoice_line_ids"].append((
+            0,
+            0,
+            {
+                "name": "Asset Three",
+                "account_id": self.asset_1.category_id.asset_account_id.id,
+                "price_unit": TEST_DATA["asset_1.purchase_amount"],
+                "quantiy": 1.0,
+                "invoice_line_tax_ids": [(6, 0, [tax.id])],
+            },
+        ))
+        self.purchase_invoice = self.env["account.invoice"].create(vals)
+        self.purchase_invoice.journal_id.update_posted = True  # Assure invoice cancel
+        self.purchase_invoice.action_invoice_open()
+
+    def set_purchase_invoice_asset_2(self):
+        tax = self.get_purchase_tax()
+        vals = {
+            "partner_id": self.env.ref("base.res_partner_3").id,
+            "type": "in_invoice",
+            "date_invoice":TEST_DATA["asset_2_4.date.disposal"].strftime('%Y-%m-%d'),
+            "reference": "20-010-001",
+            "invoice_line_ids": [],
+        }
+        vals["invoice_line_ids"].append((
+            0,
+            0,
+            {
+                "name": "Asset Two",
+                "account_id": self.asset_2.category_id.asset_account_id.id,
+                "price_unit": TEST_DATA["asset_2.purchase_amount"],
+                "quantity": 1.0,
+                "invoice_line_tax_ids": [(6, 0, [tax.id])],
+            },
+        ))
+        vals["invoice_line_ids"].append((
+            0,
+            0,
+            {
+                "name": "Asset Four",
+                "account_id": self.asset_2.category_id.asset_account_id.id,
+                "price_unit": TEST_DATA["asset_2.purchase_amount"],
+                "quantiy": 1.0,
+                "invoice_line_tax_ids": [(6, 0, [tax.id])],
+            },
+        ))
+        self.purchase_invoice2 = self.env["account.invoice"].create(vals)
+        self.purchase_invoice2.journal_id.update_posted = True  # Assure invoice cancel
+        self.purchase_invoice2.action_invoice_open()
+
+    def set_sale_invoice_asset_1(self):
+        tax = self.get_sale_tax()
         account = self.env["account.account"].search(
             [
                 ("user_type_id", "=", self.env.ref("account.data_account_type_revenue").id),
@@ -446,15 +530,9 @@ class TestAssets(TransactionCase):
         self.sale_invoice.action_invoice_open()
 
     def set_sale_invoice_asset_4(self):
-        tax = self.env["account.tax"].search(
-            [
-                ("type_tax_use", "=", "sale"),
-                ("amount", ">", 0.0),
-                ("company_id", "=", self.env.ref("base.main_company").id),
-            ]
-        )[0]
+        tax = self.get_sale_tax()
         vals = {
-            "partner_id": self.env.ref("base.res_partner_12").id,
+            "partner_id": self.env.ref("base.res_partner_2").id,
             "type": "out_invoice",
             "date_invoice":TEST_DATA["asset_4.date.disposal"].strftime('%Y-%m-%d'),
             "invoice_line_ids": [],
@@ -470,9 +548,9 @@ class TestAssets(TransactionCase):
                 "invoice_line_tax_ids": [(6, 0, [tax.id])],
             },
         ))
-        self.sale_invoice2 = self.env["account.invoice"].create(vals)
-        self.sale_invoice2.journal_id.update_posted = True  # Assure invoice cancel
-        self.sale_invoice2.action_invoice_open()
+        self.sale_invoice4 = self.env["account.invoice"].create(vals)
+        self.sale_invoice4.journal_id.update_posted = True  # Assure invoice cancel
+        self.sale_invoice4.action_invoice_open()
 
     def _day_rate(self, date_from, date_to, is_leap=None):
         return ((date_to - date_from).days + 1) / (365 if not is_leap else 366)
@@ -691,6 +769,66 @@ class TestAssets(TransactionCase):
             button_name="do_warning",
             web_changes=web_changes,
             windows_break=windows_break,
+        )
+
+    def run_buy_asset_1_3(self):
+        act_window = self.purchase_invoice.open_wizard_manage_asset()
+        act_window = self.envtest_wizard_start(act_window)
+        self.envtest_wizard_exec(
+            act_window,
+            button_name="link_asset",
+            button_ctx={"show_asset": 0},
+            web_changes=[
+                ("invoice_ids", [(6, 0, [self.purchase_invoice.id])]),
+                ("invoice_line_ids",
+                 [(6, 0, [self.purchase_invoice.invoice_line_ids[0].id])]),
+                ("asset_id", self.asset_1.id),
+                ("management_type", "update"),
+            ],
+        )
+        act_window = self.purchase_invoice.open_wizard_manage_asset()
+        act_window = self.envtest_wizard_start(act_window)
+        self.envtest_wizard_exec(
+            act_window,
+            button_name="link_asset",
+            button_ctx={"show_asset": 0},
+            web_changes=[
+                ("invoice_ids", [(6, 0, [self.purchase_invoice.id])]),
+                ("invoice_line_ids",
+                 [(6, 0, [self.purchase_invoice.invoice_line_ids[1].id])]),
+                ("asset_id", self.asset_3.id),
+                ("management_type", "update"),
+            ],
+        )
+
+    def run_buy_asset_2_4(self):
+        act_window = self.purchase_invoice2.open_wizard_manage_asset()
+        act_window = self.envtest_wizard_start(act_window)
+        self.envtest_wizard_exec(
+            act_window,
+            button_name="link_asset",
+            button_ctx={"show_asset": 0},
+            web_changes=[
+                ("invoice_ids", [(6, 0, [self.purchase_invoice2.id])]),
+                ("invoice_line_ids",
+                 [(6, 0, [self.purchase_invoice2.invoice_line_ids[0].id])]),
+                ("asset_id", self.asset_2.id),
+                ("management_type", "update"),
+            ],
+        )
+        act_window = self.purchase_invoice2.open_wizard_manage_asset()
+        act_window = self.envtest_wizard_start(act_window)
+        self.envtest_wizard_exec(
+            act_window,
+            button_name="link_asset",
+            button_ctx={"show_asset": 0},
+            web_changes=[
+                ("invoice_ids", [(6, 0, [self.purchase_invoice2.id])]),
+                ("invoice_line_ids",
+                 [(6, 0, [self.purchase_invoice2.invoice_line_ids[1].id])]),
+                ("asset_id", self.asset_4.id),
+                ("management_type", "update"),
+            ],
         )
 
     def run_dismis_asset_1(self):
@@ -1136,16 +1274,16 @@ class TestAssets(TransactionCase):
         # Sale price: 500€ -> Gain 500€ - 280.14€ = 219.86€
         asset = self.asset_4
         self.set_sale_invoice_asset_4()
-        act_window = self.sale_invoice2.open_wizard_manage_asset()
+        act_window = self.sale_invoice4.open_wizard_manage_asset()
         act_window = self.envtest_wizard_start(act_window)
         self.envtest_wizard_exec(
             act_window,
             button_name="link_asset",
             button_ctx={"show_asset": 0},
             web_changes=[
-                ("invoice_ids", [(6, 0, [self.sale_invoice2.id])]),
+                ("invoice_ids", [(6, 0, [self.sale_invoice4.id])]),
                 ("invoice_line_ids",
-                 [(6, 0, [x.id for x in self.sale_invoice2.invoice_line_ids])]),
+                 [(6, 0, [x.id for x in self.sale_invoice4.invoice_line_ids])]),
                 ("asset_id", self.asset_4.id),
                 ("management_type", "partial_dismiss"),
                 ("partial_dismiss_percentage",
@@ -1243,10 +1381,14 @@ class TestAssets(TransactionCase):
         )
 
     def test_asset(self):
+        self.set_purchase_invoice_asset_1()
+        self.set_purchase_invoice_asset_2()
         for asset in self.asset_1, self.asset_2, self.asset_3:
             self.assertEqual(
                 asset.state, "non_depreciated", "Asset is not in non depreciated state!"
             )
+        self.run_buy_asset_1_3()
+        self.run_buy_asset_2_4()
         self._test_depreciation_all_assets_y2(False)
         self._test_depreciation_all_assets_y2(True)
         self._test_depreciation_all_assets_y1(False)

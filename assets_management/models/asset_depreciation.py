@@ -438,7 +438,7 @@ class AssetDepreciation(models.Model):
                       digits)
             )
 
-        # Noe evaluate gain or loss
+        # Now evaluate gain or loss
         for dep in deps:
             dep_line = dep.env["asset.depreciation.line"].get_depreciation_lines(
                 date_from=dismis_date,
