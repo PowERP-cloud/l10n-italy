@@ -24,7 +24,6 @@
         <field name="code">RIV</field>
         <field name="type">in</field>
     </record>
-
     <record id="adpl_type_sva" model="asset.depreciation.line.type">
         <field name="name">Svalutazione</field>
         <field name="code">SVA</field>
