@@ -1,3 +1,8 @@
+12.0.1.0.1_11 (2022-10-07)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Corretto anomalie della registrazione contabile delle note di credito con split payment
+
 12.0.1.0.1_10 (2021-08-19)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 

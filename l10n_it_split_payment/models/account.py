@@ -70,7 +70,7 @@ class AccountInvoice(models.Model):
         }
         if self.type == 'out_refund':
             vals['debit'] = 0
-            vals['credit'] = tax.credit
+            vals['credit'] = tax.debit
         return vals
 
     def _build_client_credit_line(self, tax):
@@ -86,7 +86,7 @@ class AccountInvoice(models.Model):
         }
         if self.type == 'out_refund':
             vals['credit'] = 0
-            vals['debit'] = tax.credit
+            vals['debit'] = tax.debit
         return vals
 
     @api.multi
@@ -110,8 +110,15 @@ class AccountInvoice(models.Model):
                 tax_line = invoice.move_id.line_ids.filtered(
                     lambda x: x.partner_id.id == self.partner_id.id and self.company_id.id == x.company_id.id and x.line_type == 'tax')
 
-                tax_duedate = invoice.move_id.line_ids.filtered(
-                    lambda x: x.account_id.id == self.account_id.id and x.debit == self.amount_sp and x.partner_id.id == self.partner_id.id and self.company_id.id == x.company_id.id)
+                # fattura
+                if self.type == 'out_invoice':
+                    tax_duedate = invoice.move_id.line_ids.filtered(
+                        lambda x: x.account_id.id == self.account_id.id and x.debit == self.amount_sp and x.partner_id.id == self.partner_id.id and self.company_id.id == x.company_id.id)
+                # nota di credito
+                if self.type == 'out_refund':
+                    tax_duedate = invoice.move_id.line_ids.filtered(
+                        lambda x: x.account_id.id == self.account_id.id and x.credit == self.amount_sp and x.partner_id.id == self.partner_id.id and self.company_id.id == x.company_id.id)
+
 
                 transfer_ids.append(tax_duedate.id)
 
