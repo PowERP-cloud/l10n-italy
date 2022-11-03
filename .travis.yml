@@ -1,0 +1,72 @@
+language: python
+
+python:
+  - "3.6"
+  - "3.7"
+
+sudo: false
+cache: pip
+  apt: true
+  directories:
+    - $HOME/.cache/pip
+
+virtualenv:
+  system_site_packages: false
+
+git:
+  submodules: false
+  depth: false
+
+services:
+  - postgresql
+
+addons:
+  apt:
+    sources:
+      - pov-wkhtmltopdf
+    # Search your sources alias here:
+    # https://github.com/travis-ci/apt-source-whitelist/blob/master/ubuntu.json
+    packages:
+      # - build-essential                 # Pre-installed
+      # - curl                            # Pre-installed
+      - expect-dev
+      # - less-plugin-clean-css           # Pre-installed
+      # - lessc                           # Pre-installed
+      - libevent-dev
+      - libffi-dev
+      - libssl-dev
+      # - nodejs                          # Pre-installed
+      # - npm                             # Pre-installed
+      - python3-dev
+      # - python-setuptools               # Pre-installed
+      # - wkhtmltopdf                     # Pre-installed
+      - zlib1g
+
+before_install:
+  # Use Zeroincombenze(R) tools
+  - git clone https://github.com/zeroincombenze/tools.git ${HOME}/tools --single-branch --depth=1
+  - ${HOME}/tools/install_tools.sh -qpt
+  - source ${HOME}/devel/activate_tools
+
+install:
+  - travis_install_env
+  - export EXCLUDE=hw_scanner,hw_escpos,theme_bootswatch
+
+env:
+  global:
+  - TRAVIS_DEBUG_MODE="2"
+  - WKHTMLTOPDF_VERSION="0.12.5"
+  - VERSION="14.0" TESTS="0" LINT_CHECK="0" ODOO_TNLBOT="0"
+
+  matrix:
+  - LINT_CHECK="1"
+  - TESTS="1" ODOO_REPO="librerp/OCB"
+  - TESTS="1" ODOO_REPO="OCA/OCB"
+  - TESTS="1" ODOO_REPO="odoo/odoo"
+
+
+script:
+  - travis_run_tests
+
+after_success:
+  - travis_after_tests_success

@@ -1,2 +1,11 @@
-# See https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst#oca_dependencies-txt
-web
+account-invoicing
+account-financial-tools
+account-financial-reporting
+account-payment
+intrastat-extrastat
+partner-contact
+pos
+product-attribute
+report-print-send
+server-ux
+stock-logistics-workflow

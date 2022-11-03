@@ -1,7 +1,6 @@
-# generated from manifests external_dependencies
 asn1crypto
-codicefiscale
+codicefiscale==0.9
 elementpath
 openupgradelib
-unidecode
+'unidecode>1.2.0'
 xmlschema>=1.7.0
