@@ -27,6 +27,7 @@ class FatturaPACommon(AccountTestInvoicingCommon):
         )
         self.env.user = self.account_manager
         self.company = self.env.company
+        self.company.e_invoice_transmitter_id = self.company.partner_id.id
 
         self.wizard_model = self.env["wizard.export.fatturapa"]
         self.data_model = self.env["ir.model.data"]
@@ -143,6 +144,10 @@ class FatturaPACommon(AccountTestInvoicingCommon):
         self.res_partner_fatturapa_4 = self.env.ref(
             "l10n_it_fatturapa.res_partner_fatturapa_4"
         )
+        # B2C Customer IT
+        self.res_partner_fatturapa_6 = self.env.ref(
+            "l10n_it_fatturapa.res_partner_fatturapa_6"
+        )
         self.EUR = self.env.ref("base.EUR")
         # United Arab Emirates currency
         self.AED = self.env.ref("base.AED")
@@ -150,6 +155,7 @@ class FatturaPACommon(AccountTestInvoicingCommon):
             "UPDATE res_company SET currency_id = %s WHERE id = %s",
             [self.EUR.id, self.company.id],
         )
+        self.trasmittente = self.env.ref("l10n_it_fatturapa.res_partner_fatturapa_1")
         # Otherwise self.company in cache could keep the old wrong value USD
         self.company.refresh()
 

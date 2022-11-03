@@ -21,8 +21,12 @@ msgstr ""
 "%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: l10n_it_fatturapa_out
-#: model_terms:ir.ui.view,arch_db:l10n_it_fatturapa_out.account_invoice_it_cessionario_committente
-msgid "99999999999"
+#: model_terms:ir.ui.view,arch_db:l10n_it_fatturapa_out.view_account_config_settings
+msgid ""
+"<span class=\"o_form_label\">Transmitter</span>\n"
+"                            <span class=\"fa fa-lg fa-building-o\" title="
+"\"Values set here are company-specific.\" aria-label=\"Values set here are "
+"company-specific.\"/>"
 msgstr ""
 
 #. module: l10n_it_fatturapa_out
@@ -140,6 +144,11 @@ msgid "Database Data"
 msgstr ""
 
 #. module: l10n_it_fatturapa_out
+#: model_terms:ir.ui.view,arch_db:l10n_it_fatturapa_out.view_account_config_settings
+msgid "Default user used as transmitter in customer e-invoice"
+msgstr ""
+
+#. module: l10n_it_fatturapa_out
 #: model:ir.model.fields.selection,name:l10n_it_fatturapa_out.selection__account_move__fatturapa_state__delivered
 #: model:ir.model.fields.selection,name:l10n_it_fatturapa_out.selection__fatturapa_attachment_out__state__validated
 msgid "Delivered"
@@ -164,6 +173,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_it_fatturapa_out.field_res_partner__display_name
 #: model:ir.model.fields,field_description:l10n_it_fatturapa_out.field_wizard_export_fatturapa__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: l10n_it_fatturapa_out
+#: model:ir.model.fields,field_description:l10n_it_fatturapa_out.field_res_company__e_invoice_transmitter_id
+#: model:ir.model.fields,field_description:l10n_it_fatturapa_out.field_res_config_settings__e_invoice_transmitter_id
+msgid "E-bill Transmitter"
 msgstr ""
 
 #. module: l10n_it_fatturapa_out
@@ -304,6 +319,11 @@ msgid "Followers (Partners)"
 msgstr ""
 
 #. module: l10n_it_fatturapa_out
+#: model:ir.model.fields.selection,name:l10n_it_fatturapa_out.selection__res_company__xml_divisa_value__force_eur
+msgid "Force euro"
+msgstr ""
+
+#. module: l10n_it_fatturapa_out
 #: model:ir.model.fields,field_description:l10n_it_fatturapa_out.field_account_bank_statement_line__has_pdf_invoice_print
 #: model:ir.model.fields,field_description:l10n_it_fatturapa_out.field_account_move__has_pdf_invoice_print
 #: model:ir.model.fields,field_description:l10n_it_fatturapa_out.field_account_payment__has_pdf_invoice_print
@@ -400,7 +420,7 @@ msgstr ""
 #. module: l10n_it_fatturapa_out
 #: code:addons/l10n_it_fatturapa_out/models/account.py:0
 #, python-format
-msgid "Invoice %s has XML and can't be canceled. Delete the XML before."
+msgid "Invoice %s has XML and can't be reset to draft. Delete the XML before."
 msgstr ""
 
 #. module: l10n_it_fatturapa_out
@@ -444,6 +464,11 @@ msgstr ""
 #. module: l10n_it_fatturapa_out
 #: model:ir.model,name:l10n_it_fatturapa_out.model_account_move
 msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_it_fatturapa_out
+#: model:ir.model.fields.selection,name:l10n_it_fatturapa_out.selection__res_company__xml_divisa_value__keep_orig
+msgid "Keep original"
 msgstr ""
 
 #. module: l10n_it_fatturapa_out
@@ -733,6 +758,12 @@ msgid "This attachment contains the PDF report of the linked invoice"
 msgstr ""
 
 #. module: l10n_it_fatturapa_out
+#: model:ir.model.fields,help:l10n_it_fatturapa_out.field_res_company__e_invoice_transmitter_id
+#: model:ir.model.fields,help:l10n_it_fatturapa_out.field_res_config_settings__e_invoice_transmitter_id
+msgid "This partner will be used as transmitter in out invoice."
+msgstr ""
+
+#. module: l10n_it_fatturapa_out
 #: model:ir.model.fields,help:l10n_it_fatturapa_out.field_wizard_export_fatturapa__report_print_menu
 msgid "This report will be automatically included in the created XML"
 msgstr ""
@@ -774,6 +805,11 @@ msgid "User %s uploaded a new e-invoice file"
 msgstr ""
 
 #. module: l10n_it_fatturapa_out
+#: model_terms:ir.ui.view,arch_db:l10n_it_fatturapa_out.account_invoice_line_it_FatturaPA
+msgid "Valuta"
+msgstr ""
+
+#. module: l10n_it_fatturapa_out
 #: model:ir.model.fields,field_description:l10n_it_fatturapa_out.field_fatturapa_attachment_out__website_message_ids
 msgid "Website Messages"
 msgstr ""
@@ -781,6 +817,12 @@ msgstr ""
 #. module: l10n_it_fatturapa_out
 #: model:ir.model.fields,help:l10n_it_fatturapa_out.field_fatturapa_attachment_out__website_message_ids
 msgid "Website communication history"
+msgstr ""
+
+#. module: l10n_it_fatturapa_out
+#: model:ir.model.fields,field_description:l10n_it_fatturapa_out.field_res_company__xml_divisa_value
+#: model:ir.model.fields,field_description:l10n_it_fatturapa_out.field_res_config_settings__xml_divisa_value
+msgid "XML Divisa value"
 msgstr ""
 
 #. module: l10n_it_fatturapa_out

@@ -21,7 +21,7 @@
          <DatiAnagrafici>
             <IdFiscaleIVA>
                <IdPaese>BE</IdPaese>
-               <IdCodice>0477472701</IdCodice>
+               <IdCodice>BE0477472701</IdCodice>
             </IdFiscaleIVA>
             <Anagrafica>
                <Denominazione>Intra EU supplier</Denominazione>
@@ -78,7 +78,7 @@
             <NumeroLinea>1</NumeroLinea>
             <CodiceArticolo>
                <CodiceTipo>ODOO</CodiceTipo>
-               <CodiceValore>DESK0004</CodiceValore>
+               <CodiceValore>FURN_0098</CodiceValore>
             </CodiceArticolo>
             <Descrizione>Invoice for sample product</Descrizione>
             <Quantita>1.000</Quantita>

@@ -2,7 +2,7 @@ from datetime import date
 
 from psycopg2 import IntegrityError
 
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.modules import get_module_resource
 from odoo.tests import Form
 from odoo.tools import mute_logger
@@ -144,8 +144,8 @@ class TestFatturaPAXMLValidation(FatturapaCommon):
                 self.assertEqual(e_line.cod_article_ids[0].code_val, "12345")
         self.assertEqual(
             invoice.inconsistencies,
-            u"Company Name field contains 'Societa' "
-            u"Alpha SRL'. Your System contains 'SOCIETA' ALPHA SRL'\n\n",
+            "Company Name field contains 'Societa' "
+            "Alpha SRL'. Your System contains 'SOCIETA' ALPHA SRL'\n\n",
         )
         # allow following test to reuse the same XML file
         invoice.ref = invoice.payment_reference = "14041"
@@ -344,13 +344,13 @@ class TestFatturaPAXMLValidation(FatturapaCommon):
         invoice2 = self.invoice_model.browse(invoice2_id)
         self.assertEqual(
             invoice1.inconsistencies,
-            u"Company Name field contains 'Societa' "
-            u"Alpha SRL'. Your System contains 'SOCIETA' ALPHA SRL'\n\n",
+            "Company Name field contains 'Societa' "
+            "Alpha SRL'. Your System contains 'SOCIETA' ALPHA SRL'\n\n",
         )
         self.assertEqual(
             invoice2.inconsistencies,
-            u"Company Name field contains 'Societa' "
-            u"Alpha SRL'. Your System contains 'SOCIETA' ALPHA SRL'\n\n",
+            "Company Name field contains 'Societa' "
+            "Alpha SRL'. Your System contains 'SOCIETA' ALPHA SRL'\n\n",
         )
 
     def test_14_xml_import(self):
@@ -366,10 +366,8 @@ class TestFatturaPAXMLValidation(FatturapaCommon):
         self.assertEqual(invoice.amount_tax, 0.0)
         self.assertEqual(
             invoice.inconsistencies,
-            u"Company Name field contains 'Societa' "
+            "Company Name field contains 'Societa' "
             "Alpha SRL'. Your System contains 'SOCIETA' ALPHA SRL'\n\n"
-            u"XML contains tax with percentage '15.55'"
-            " but it does not exist in your system\n"
             "XML contains tax with percentage '15.55'"
             " but it does not exist in your system",
         )
@@ -897,6 +895,50 @@ class TestFatturaPAXMLValidation(FatturapaCommon):
         invoice = self.invoice_model.browse(invoice_ids)
         self.assertTrue(invoice.fatturapa_attachment_in_id.is_self_invoice)
 
+    def test_53_xml_import(self):
+        """
+        Check that VAT of non-IT partner is not checked.
+        """
+        partner_model = self.env["res.partner"]
+        # Arrange: A partner with vat GB99999999999 does not exist
+        not_valid_vat = "GB99999999999"
+
+        def vat_partner_exists():
+            return partner_model.search(
+                [
+                    ("vat", "=", not_valid_vat),
+                ]
+            )
+
+        self.assertFalse(vat_partner_exists())
+
+        # Act: Import an e-bill containing a supplier with vat GB99999999999
+        self.create_attachment(
+            "test53",
+            "IT01234567890_x05mX.xml",
+        )
+
+        # Assert: A partner with vat GB99999999999 exists,
+        # and the vat is usually not valid for UK
+        self.assertTrue(vat_partner_exists())
+        with self.assertRaises(ValidationError) as ve:
+            partner_model.create(
+                [
+                    {
+                        "name": "Test not valid VAT",
+                        "country_id": self.ref("base.uk"),
+                        "vat": not_valid_vat,
+                    }
+                ]
+            )
+        exc_message = ve.exception.args[0]
+        self.assertRegex(
+            exc_message,
+            "VAT number .*{not_valid_vat}.* does not seem to be valid".format(
+                not_valid_vat=not_valid_vat,
+            ),
+        )
+
     def test_01_xml_link(self):
         """
         E-invoice lines are created.
@@ -995,6 +1037,17 @@ class TestFatturaPAXMLValidation(FatturapaCommon):
         See https://github.com/OCA/l10n-italy/issues/2349"""
         invoices = self.invoice_model.create([{}, {}])
         self.assertEqual(invoices.mapped("e_invoice_validation_error"), [False, False])
+
+    def test_duplicated_vat_on_partners(self):
+        supplier = self.env["res.partner"].search(
+            [("vat", "=", "IT05979361218")], limit=1
+        )
+
+        duplicated_supplier = supplier.copy()
+        self.assertEqual(supplier.vat, duplicated_supplier.vat)
+        attach = self.run_wizard("duplicated_vat", "IT05979361218_012.xml", mode=False)
+        self.assertFalse(attach.xml_supplier_id)
+        self.assertTrue(attach.inconsistencies)
 
 
 class TestFatturaPAEnasarco(FatturapaCommon):

@@ -4,63 +4,36 @@ import logging
 import os
 from datetime import datetime
 
-import xmlschema
 from lxml import etree
 from unidecode import unidecode
 
 from odoo.exceptions import UserError
-from odoo.modules.module import get_module_resource
 from odoo.tools import float_repr
 from odoo.tools.translate import _
 
-from odoo.addons.l10n_it_account.tools.account_tools import encode_for_export
+from odoo.addons.l10n_it_account.tools.account_tools import (
+    encode_for_export,
+    fpa_schema,
+)
 
 _logger = logging.getLogger(__name__)
-
-# XXX da vedere se spostare in fatturapa e fare una import del validator, es.
-# from from odoo.addons.l10n_it_fatturapa import FPAValidator
-
-
-# fix <xs:import namespace="http://www.w3.org/2000/09/xmldsig#"
-#      schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd" /> # noqa: B950
-class FPAValidator:
-
-    _XSD_SCHEMA = "Schema_del_file_xml_FatturaPA_versione_1.2.1.xsd"
-    _xml_schema_1_2_1 = get_module_resource(
-        "l10n_it_fatturapa", "data", "xsd", _XSD_SCHEMA
-    )
-    _old_xsd_specs = get_module_resource(
-        "l10n_it_fatturapa", "data", "xsd", "xmldsig-core-schema.xsd"
-    )
-
-    def __init__(self):
-        self.error_log = []
-        locations = {"http://www.w3.org/2000/09/xmldsig#": self._old_xsd_specs}
-        self._validator = xmlschema.XMLSchema(
-            self._xml_schema_1_2_1,
-            locations=locations,
-            validation="lax",
-            allow="local",
-            loglevel=20,
-        )
-
-    def __call__(self, *args, **kwargs):
-        self.error_log = list(self._validator.iter_errors(*args, **kwargs))
-        return not self.error_log
-
 
 DEFAULT_INVOICE_ITALIAN_DATE_FORMAT = "%Y-%m-%d"
 
 
+def format_numbers(number):
+    # format number to str with between 2 and 8 decimals (event if it's .00)
+    number_splited = str(number).split(".")
+    if len(number_splited) == 1:
+        return "%.02f" % number
+
+    cents = number_splited[1]
+    if len(cents) > 8:
+        return "%.08f" % number
+    return float_repr(number, max(2, len(cents)))
+
+
 class EFatturaOut:
-
-    _validator = FPAValidator()
-
-    def validate(self, tree):
-        ret = self._validator(tree)
-        errors = self._validator.error_log
-        return (ret, errors)
-
     def get_template_values(self):  # noqa: C901
         """Prepare values and helper functions for the template"""
 
@@ -76,17 +49,6 @@ class EFatturaOut:
             # (e.g. 90.85000000000001).
             return float_repr(number, min(2, currency.decimal_places))
 
-        def format_numbers(number):
-            # format number to str with between 2 and 8 decimals (event if it's .00)
-            number_splited = str(number).split(".")
-            if len(number_splited) == 1:
-                return "%.02f" % number
-
-            cents = number_splited[1]
-            if len(cents) > 8:
-                return "%.08f" % number
-            return float_repr(number, max(2, len(cents)))
-
         def format_numbers_two(number):
             # format number to str with 2 (event if it's .00)
             return "%.02f" % number
@@ -99,7 +61,7 @@ class EFatturaOut:
                 return number
             return False
 
-        def format_price(line, sign=1):
+        def format_price(line, sign=1, original_currency=False):
             res = line.price_unit
             if line.tax_ids and line.tax_ids[0].price_include:
                 res = line.price_unit / (1 + (line.tax_ids[0].amount / 100))
@@ -113,6 +75,10 @@ class EFatturaOut:
             # e quantity (vd. format_quantity)
             if line.quantity < 0:
                 res = -res
+
+            # force EUR unless we want the original currency
+            if not original_currency:
+                res = fpa_to_eur(res, line.move_id)
 
             # XXX arrotondamento?
             res = "{prezzo:.{precision}f}".format(
@@ -141,12 +107,24 @@ class EFatturaOut:
             res = ("{qta:.{precision}f}".format(qta=quantity, precision=uom_precision),)
             return res[0]
 
-        def get_vat_number(vat):
-            # return vat[2:].replace(' ', '') if vat else ""
-            return vat[2:] if vat else ""
+        def get_id_fiscale_iva(partner, prefer_fiscalcode=False):
+            id_paese = partner.country_id.code
 
-        def get_vat_country(vat):
-            return vat[:2].upper() if vat else ""
+            if partner.vat:
+                if id_paese == "IT" and partner.vat.startswith("IT"):
+                    id_codice = partner.vat[2:]
+                else:
+                    id_codice = partner.vat
+            else:
+                id_codice = "99999999999"
+
+            if prefer_fiscalcode and partner.fiscalcode:
+                id_codice = partner.fiscalcode
+
+            return {
+                "id_paese": id_paese,
+                "id_codice": id_codice,
+            }
 
         def get_causale(invoice):
             res = []
@@ -191,67 +169,9 @@ class EFatturaOut:
             return False
 
         def get_all_taxes(record):
-            """Generate summary data for taxes.
-            Odoo does that for us, but only for nonzero taxes.
-            SdI expects a summary for every tax mentioned in the invoice,
-            even those with price_total == 0.
-            """
-
-            def _key(tax_id):
-                return tax_id.id
-
-            out_computed = {}
-            # existing tax lines
-            tax_ids = record.line_ids.filtered(lambda line: line.tax_line_id)
-            for tax_id in tax_ids:
-                tax_line_id = tax_id.tax_line_id
-                aliquota = format_numbers(tax_line_id.amount)
-                key = _key(tax_line_id)
-                out_computed[key] = {
-                    "AliquotaIVA": aliquota,
-                    "Natura": tax_line_id.kind_id.code,
-                    # 'Arrotondamento':'',
-                    "ImponibileImporto": tax_id.tax_base_amount,
-                    "Imposta": tax_id.price_total,
-                    "EsigibilitaIVA": tax_line_id.payability,
-                }
-                if tax_line_id.law_reference:
-                    out_computed[key]["RiferimentoNormativo"] = encode_for_export(
-                        tax_line_id.law_reference, 100
-                    )
-
-            out = {}
-            # check for missing tax lines
-            for line in record.invoice_line_ids:
-                if line.display_type in ("line_section", "line_note"):
-                    # notes and sections
-                    # we ignore line.tax_ids altogether,
-                    # (it is popolated with a default tax usually)
-                    # and use another tax in the template
-                    continue
-                for tax_id in line.tax_ids:
-                    aliquota = format_numbers(tax_id.amount)
-                    key = _key(tax_id)
-                    if key in out_computed:
-                        continue
-                    if key not in out:
-                        out[key] = {
-                            "AliquotaIVA": aliquota,
-                            "Natura": tax_id.kind_id.code,
-                            # 'Arrotondamento':'',
-                            "ImponibileImporto": line.price_subtotal,
-                            "Imposta": 0.0,
-                            "EsigibilitaIVA": tax_id.payability,
-                        }
-                        if tax_id.law_reference:
-                            out[key]["RiferimentoNormativo"] = encode_for_export(
-                                tax_id.law_reference, 100
-                            )
-                    else:
-                        out[key]["ImponibileImporto"] += line.price_subtotal
-                        out[key]["Imposta"] += 0.0
-            out.update(out_computed)
-            return out
+            # wrapper to a method in wizard (for better overriding)
+            wiz = self.env["wizard.export.fatturapa"]
+            return wiz.getAllTaxes(record)
 
         def get_importo(line):
             str_number = str(line.discount)
@@ -259,6 +179,25 @@ class EFatturaOut:
             if number <= 2:
                 return False
             return line.price_unit * line.discount / 100
+
+        def get_importo_totale(invoice):
+            # wrapper to a method in wizard (for better overriding)
+            wiz = self.env["wizard.export.fatturapa"]
+            return wiz.getImportoTotale(invoice)
+
+        def get_payments(invoice):
+            # wrapper to a method in wizard (for better overriding)
+            wiz = self.env["wizard.export.fatturapa"]
+            return wiz.getPayments(invoice)
+
+        def fpa_to_eur(amount, invoice):
+            currency = invoice.currency_id
+            euro = self.env.ref("base.EUR")
+            if currency == euro:
+                return amount
+            return currency._convert(
+                amount, euro, invoice.company_id, invoice.date, False
+            )
 
         if self.partner_id.commercial_partner_id.is_pa:
             # check value code
@@ -281,21 +220,25 @@ class EFatturaOut:
             "format_phone": format_phone,
             "format_quantity": format_quantity,
             "format_price": format_price,
-            "get_vat_number": get_vat_number,
-            "get_vat_country": get_vat_country,
             "get_causale": get_causale,
             "get_nome_attachment": get_nome_attachment,
             "get_type_attachment": get_type_attachment,
+            "get_id_fiscale_iva": get_id_fiscale_iva,
             "codice_destinatario": code.upper(),
             "in_eu": in_eu,
             "unidecode": unidecode,
             "wizard": self.wizard,
             "get_importo": get_importo,
+            "get_importo_totale": get_importo_totale,
+            "get_payments": get_payments,
             "all_taxes": {
                 invoice.id: get_all_taxes(invoice) for invoice in self.invoices
             },
+            "fpa_to_eur": fpa_to_eur,
         }
-        return template_values
+
+        wiz = self.env["wizard.export.fatturapa"]
+        return wiz.getTemplateValues(template_values)
 
     def to_xml(self, env):
         """Create the xml file content.
@@ -311,8 +254,8 @@ class EFatturaOut:
         # 14.0 - occorre rimuovere gli spazi tra i tag
         root = etree.fromstring(content, parser=etree.XMLParser(remove_blank_text=True))
         # già che ci siamo, validiamo con l'XMLSchema dello SdI
-        ok, errors = self.validate(root)
-        if not ok:
+        errors = list(fpa_schema.iter_errors(root))
+        if errors:
             # XXX - da migliorare?
             # i controlli precedenti dovrebbero escludere errori di sintassi XML
             # with open("/tmp/fatturaout.xml", "wb") as o:

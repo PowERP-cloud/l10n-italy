@@ -5,12 +5,14 @@ import base64
 
 from odoo import fields
 from odoo.exceptions import UserError
+from odoo.tests import tagged
 from odoo.tests.common import Form
 
 from odoo.addons.l10n_it_fatturapa_out.tests.fatturapa_common import FatturaPACommon
 from odoo.addons.l10n_it_reverse_charge.tests.rc_common import ReverseChargeCommon
 
 
+@tagged("post_install", "-at_install")
 class TestFatturaPAXMLValidation(ReverseChargeCommon, FatturaPACommon):
     def setUp(self):
         super().setUp()
@@ -66,7 +68,7 @@ class TestFatturaPAXMLValidation(ReverseChargeCommon, FatturaPACommon):
         invoice_form.date = fields.Date.from_string(invoice_date)
         invoice_form.ref = ref
         with invoice_form.line_ids.new() as line_form:
-            line_form.product_id = cls.env.ref("product.product_product_4d")
+            line_form.product_id = cls.env.ref("product.product_product_4c")
             line_form.name = "Invoice for sample product"
             line_form.price_unit = 100
             line_form.tax_ids.clear()
