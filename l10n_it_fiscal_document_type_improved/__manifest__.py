@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Italian localization - fiscal Document Type Improved',
-    'version': '0.7.0',
+    'version': '0.8.0',
     'category': 'Localisation/Italy',
     'summary': 'Improvements for module l10n_it_fiscal_document_type',
     'author': 'powERP enterprise network',
