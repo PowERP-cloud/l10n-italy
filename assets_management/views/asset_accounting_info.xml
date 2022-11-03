@@ -36,6 +36,7 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="asset_id"/>
+                <field name="related_dep_line_id"/>
                 <field name="dep_line_id"/>
                 <field name="relation_type"/>
                 <field name="invoice_id"/>
@@ -59,6 +60,10 @@
                             <field name="asset_id"
                                    options="{'no_create_edit': 1}"
                                    required="1"/>
+                            <field name="related_dep_line_id"
+                                   options="{'no_create_edit': 1}"
+                                   domain="[('asset_id', '=', asset_id)]"
+                                   attrs="{'invisible': [('asset_id', '=', False)]}"/>
                             <field name="dep_line_id"
                                    options="{'no_create_edit': 1}"
                                    domain="[('asset_id', '=', asset_id)]"

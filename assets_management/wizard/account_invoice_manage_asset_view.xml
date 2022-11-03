@@ -93,10 +93,19 @@
                         <group>
                             <field name="dismiss_date"
                                    attrs="{'required': [('management_type', '=', 'partial_dismiss')]}"/>
+
+                            <field name="partial_dismiss_percentage" />
+
                             <field name="asset_purchase_amount"
-                                   attrs="{'required': [('management_type', '=', 'partial_dismiss')]}"/>
+                                   attrs="{'required': [('management_type', '=', 'partial_dismiss'), ('partial_dismiss_percentage', '=', 0.0)],
+                                   'readonly': [('partial_dismiss_percentage', '&gt;', 0.0)]
+                                   }" force_save="1"/>
+
                             <field name="depreciated_fund_amount"
-                                   attrs="{'required': [('management_type', '=', 'partial_dismiss')]}"/>
+                                   attrs="{'required': [('management_type', '=', 'partial_dismiss'), ('partial_dismiss_percentage', '=', 0.0)],
+                                   'readonly': [('partial_dismiss_percentage', '&gt;', 0.0)]
+                                   }"/>
+
                         </group>
                     </group>
                     <group name="dismiss_asset_settings"

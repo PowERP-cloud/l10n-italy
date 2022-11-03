@@ -1,8 +1,11 @@
 # © 2022 Andrei Levin - Didotech srl (www.didotech.com)
 
 import base64
+import zipfile
+from io import BytesIO
 from odoo import fields, models, api, _
 from odoo.tools import format_date
+from odoo.exceptions import ValidationError
 
 
 class FatturaPAAttachmentIn(models.Model):
@@ -43,6 +46,8 @@ class FatturaPAAttachmentIn(models.Model):
 
     e_invoice_validation_message = fields.Text(
         compute='_compute_e_invoice_validation_error')
+
+    xml_has_attachment = fields.Boolean(default=False, compute='_get_has_attachment')
 
     _sql_constraints = [(
         'ftpa_attachment_in_name_uniq',
@@ -136,3 +141,52 @@ class FatturaPAAttachmentIn(models.Model):
                 'invoice_id': invoice_id,
             }
             AttachModel.create(_attach_dict)
+
+    @api.multi
+    def _get_has_attachment(self):
+        for att in self:
+            fatt = self.env['wizard.import.fatturapa'].get_invoice_obj(att)
+            for invoice_body in fatt.FatturaElettronicaBody:
+                AttachmentsData = invoice_body.Allegati
+                if AttachmentsData:
+                    att.xml_has_attachment = True
+
+    @api.multi
+    def download_attachment(self):
+        in_memory_zip = BytesIO()
+        zf = zipfile.ZipFile(in_memory_zip, "w")
+        zf.debug = 3
+        fatt = self.env['wizard.import.fatturapa'].get_invoice_obj(self)
+        attachments = False
+        for invoice_body in fatt.FatturaElettronicaBody:
+            AttachmentsData = invoice_body.Allegati
+            if AttachmentsData:
+                for attach in AttachmentsData:
+                    if not attach.NomeAttachment:
+                        raise ValidationError(_('Attachment Name is Required'))
+                    content = attach.Attachment
+                    name = attach.NomeAttachment
+                    attachments = True
+                    zf.writestr(name, content)
+        if attachments:
+            for zfile in zf.filelist:
+                zfile.create_system = 0
+
+            if not zf.infolist():
+                zf.writestr('empty', 'empty')
+
+            zf.close()
+            in_memory_zip.seek(0)
+            out = in_memory_zip.read()
+            attach_vals = {
+                'name': self.name + '.zip',
+                'datas_fname': self.name + '.zip',
+                'datas': base64.encodestring(out),
+            }
+            zip_att = self.env['ir.attachment'].create(attach_vals)
+
+            return {
+                'type': 'ir.actions.act_url',
+                'url': f"web/content/?model=ir.attachment&field=datas&filename_field=datas_fname&download=true&filename={attach_vals['name']}&id={zip_att.id}",
+                'target': 'self'
+            }

@@ -80,6 +80,9 @@
                 <field name="invoices_total" sum="Bills Total"/>
                 <field name="registered"/>
                 <field name="in_invoice_ids"/>
+                <field name="xml_has_attachment" invisible="1"/>
+                <button name="download_attachment" string="Download" icon="fa-download" type="object"
+                        attrs="{'invisible': [('xml_has_attachment','=',False)]}"/>
             </tree>
         </field>
     </record>

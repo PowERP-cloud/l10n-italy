@@ -1,3 +1,43 @@
+12.0.1.0.0_29 (2022-09-19)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [REF] Refactoring per gestione dismissione parziale
+
+12.0.1.0.0_28 (2022-09-14)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Corretti bug dismissione cespite
+
+12.0.1.0.0_27 (2022-08-24)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato controllo su data ammortamento e data dismissione
+
+12.0.1.0.0_26 (2022-08-22)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Aggiornato dismissione parziale
+
+12.0.1.0.0_25 (2022-08-18)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Riabilitata la possibilità di inserire una riga cespite come richiesto dalla Community
+
+12.0.1.0.0_24 (2022-08-18)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Risolto bug inserimento info nella righe ammortamenti
+
+12.0.1.0.0_23 (2022-08-17)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Impostato ammortamento della dismissione nella riga fattura
+
+12.0.1.0.0_22 (2022-08-17)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestito annullamento fattura di vendita collegata al cespite
+
 12.0.1.0.0_20 (2022-03-18)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
