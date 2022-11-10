@@ -6,38 +6,31 @@
 from . import misc
 
 
-BANK_EXPENSES_ACCOUNT_EXTERNAL_ID = 'account.data_account_type_expenses'
+BANK_EXPENSES_ACCOUNT_EXTERNAL_ID = "account.data_account_type_expenses"
 
-CURRENT_ASSETS_ACCOUNT_EXTERNAL_ID = 'account.data_account_type_current_assets'
-LIQUIDITY_ACCOUNT_EXTERNAL_ID = 'account.data_account_type_liquidity'
-CURRENT_LIABILITIES_ACCOUNT_EXTERNAL_ID = \
-    'account.data_account_type_current_liabilities'
+CURRENT_ASSETS_ACCOUNT_EXTERNAL_ID = "account.data_account_type_current_assets"
+LIQUIDITY_ACCOUNT_EXTERNAL_ID = "account.data_account_type_liquidity"
+CURRENT_LIABILITIES_ACCOUNT_EXTERNAL_ID = (
+    "account.data_account_type_current_liabilities"
+)
 
 
 transfer_journal = [
-    ('type', 'not in', ['sale', 'sale_refund', 'purchase', 'purchase_refund'])
+    ("type", "not in", ["sale", "sale_refund", "purchase", "purchase_refund"])
 ]
 sezionale = transfer_journal
 
-transfer_account = [
-    ('user_type_id.type', '=', 'receivable')
-]
+transfer_account = [("user_type_id.type", "=", "receivable")]
 conto_effetti_attivi = transfer_account
 
-banca_conto_effetti = [
-    ('user_type_id.type', 'in', ['bank', 'receivable'])
-]
+banca_conto_effetti = [("user_type_id.type", "in", ["bank", "receivable"])]
 
-effetti_allo_sconto = [
-    ('user_type_id.type', 'in', ['bank', 'receivable'])
-]
+effetti_allo_sconto = [("user_type_id.type", "in", ["bank", "receivable"])]
 
 
 def get_bank_expenses_account(env):
-    acct_type_id = misc.external_id_to_id(
-        env, BANK_EXPENSES_ACCOUNT_EXTERNAL_ID
-    )
-    return [('user_type_id', '=', acct_type_id)]
+    acct_type_id = misc.external_id_to_id(env, BANK_EXPENSES_ACCOUNT_EXTERNAL_ID)
+    return [("user_type_id", "=", acct_type_id)]
 
 
 def domain_effetti_allo_sconto(env):
@@ -55,12 +48,14 @@ def domain_effetti_allo_sconto(env):
     # ))
     #
     # return [('user_type_id', 'in', acct_type_ids)]
-    return [('nature', '=', 'A'), ('user_type_id.type', 'not in',
-                                   ['payable', 'receivable'])]
+    return [
+        ("nature", "=", "A"),
+        ("user_type_id.type", "not in", ["payable", "receivable"]),
+    ]
 
 
 def domain_portafoglio_sbf():
-    return ['|', ('nature', '=', 'P'), ('user_type_id.type', '=', 'liquidity')]
+    return ["|", ("nature", "=", "P"), ("user_type_id.type", "=", "liquidity")]
 
 
 get_expenses_account = get_bank_expenses_account

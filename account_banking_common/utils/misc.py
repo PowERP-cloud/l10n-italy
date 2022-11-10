@@ -4,11 +4,10 @@
 # Copyright 2020-22 Didotech s.r.l. <https://www.didotech.com>
 #
 def external_id_to_res_model_data(env, external_id):
-    module, name = external_id.split('.')
-    resource = env['ir.model.data'].search([
-        ('module', '=', module),
-        ('name', '=', name)
-    ])
+    module, name = external_id.split(".")
+    resource = env["ir.model.data"].search(
+        [("module", "=", module), ("name", "=", name)]
+    )
     return resource
 
 

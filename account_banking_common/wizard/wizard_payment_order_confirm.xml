@@ -10,7 +10,6 @@
                     <field name="amount_expense"
                            attrs="{'invisible':[('account_expense','=', False)]}"/>
                 </group>
-
                 <footer>
                     <button type="object" name="registra_incasso"
                             string="Conferma"

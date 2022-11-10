@@ -13,42 +13,40 @@ class AccountInvoice(models.Model, BaseMixin):
     # override settings of the field
     # adding open state to modification
     partner_bank_id = fields.Many2one(
-        'res.partner.bank',
-        string='Bank Account',
+        "res.partner.bank",
+        string="Bank Account",
         readonly=True,
-        states={'draft': [('readonly', False)], 'open': [('readonly', False)]},
+        states={"draft": [("readonly", False)], "open": [("readonly", False)]},
     )
 
     company_partner_id = fields.Many2one(
-        'res.partner',
-        related='company_id.partner_id',
-        string='Company partner',
+        "res.partner",
+        related="company_id.partner_id",
+        string="Company partner",
         readonly=True,
         store=False,
     )
 
-    @api.onchange('partner_bank_id', 'partner_id')
+    @api.onchange("partner_bank_id", "partner_id")
     def onchange_partner_bank_id(self):
-        current_domain = [('bank_is_wallet', '=', False)]
-        if self.type in ('out_invoice', 'out_refund'):
-            current_domain.append(('partner_id', '=', self.company_id.partner_id.id))
-        elif self.type in ('in_invoice', 'in_refund'):
+        current_domain = [("bank_is_wallet", "=", False)]
+        if self.type in ("out_invoice", "out_refund"):
+            current_domain.append(("partner_id", "=", self.company_id.partner_id.id))
+        elif self.type in ("in_invoice", "in_refund"):
             in_domain = list()
-            in_domain.append('|')
-            in_domain.append(('partner_id', '=', self.company_id.partner_id.id)),
-            in_domain.append(('partner_id', '=', self.partner_id.id)),
+            in_domain.append("|")
+            in_domain.append(("partner_id", "=", self.company_id.partner_id.id)),
+            in_domain.append(("partner_id", "=", self.partner_id.id)),
             current_domain += in_domain
         # end if
-        return {'domain': {'partner_bank_id': current_domain}}
+        return {"domain": {"partner_bank_id": current_domain}}
 
     # end onchange_partner_bank_id
 
     def write(self, vals):
-        if 'partner_bank_id' in vals:
-            if self.state == 'open':
-                self.move_id.write({
-                        'partner_bank_id': vals['partner_bank_id']
-                })
+        if "partner_bank_id" in vals:
+            if self.state == "open":
+                self.move_id.write({"partner_bank_id": vals["partner_bank_id"]})
             # end if
         # end if
         # if 'company_bank_id' in vals:
@@ -69,5 +67,5 @@ class AccountInvoice(models.Model, BaseMixin):
         # # end if
 
         return super().write(vals)
-    # end write
 
+    # end write

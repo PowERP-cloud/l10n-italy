@@ -60,7 +60,7 @@ env:
 
   matrix:
   - LINT_CHECK="1"
-  - TESTS="1" ODOO_REPO="powerp/OCB"
+  - TESTS="1" ODOO_REPO="powerp/OCB "UNIT_TEST="1"
   - TESTS="1" ODOO_REPO="OCA/OCB"
   - TESTS="1" ODOO_REPO="odoo/odoo"
 

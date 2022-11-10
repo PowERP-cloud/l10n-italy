@@ -21,7 +21,7 @@ class AccountInvoice(models.Model):
             # Take the last transport document
             delivery_document = delivery_document_model.search([
                 ('id', 'in', self.env.context['active_ids'])
-            ], order='date desc', limit=1)[0]
+            ], order='date desc', limit=1)
 
         if delivery_document and delivery_document.date.month == datetime.datetime.now().month:
             domain = [('code', '=', 'TD24')]
