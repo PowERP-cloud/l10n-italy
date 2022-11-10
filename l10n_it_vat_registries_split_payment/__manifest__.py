@@ -14,8 +14,8 @@
               "Odoo Community Association (OCA)",
     'license': 'AGPL-3',
     'application': False,
-    'installable': True,
-    'auto_install': True,
+    'installable': False,
+    # 'auto_install': True,
     'depends': [
         'l10n_it_vat_registries',
         'l10n_it_split_payment'
