@@ -19,7 +19,7 @@
         <field name="arch" type="xml">
 
             <xpath expr="//form/sheet/group[1]/group[last()]" position="after">
-                <group colspan="4" string="Conti di default" >
+                <group colspan="4" string="Conti Effetti attivi a presentazione distinta" >
                     <field name="default_credit_account_id" />
                     <field name="default_debit_account_id" />
                     <field name="default_bank_expenses_account"/>
@@ -53,6 +53,7 @@
                         </group>
                         <group attrs="{'invisible': [('is_wallet', '=', False)]}">
                             <field name="sezionale"/>
+                            <field name="effetti_presentati"/>
                             <field name="portafoglio_sbf"/>
                             <field name="effetti_allo_sconto"/>
                         </group>

@@ -7,7 +7,6 @@ import logging
 
 from odoo import models, api, fields
 
-from ..utils import domains
 
 _logger = logging.getLogger(__name__)
 
@@ -17,10 +16,25 @@ class WizardInsoluto(models.TransientModel):
     _name = "wizard.account.banking.common.insoluto"
     _description = "Gestione insoluti"
 
+    def _get_bank_expenses_account(self):
+        return [
+            "|",
+            (
+                "user_type_id",
+                "=",
+                self.env.ref("account.data_account_type_expenses").id
+            ),
+            (
+                "user_type_id",
+                "=",
+                self.env.ref("account.data_account_type_direct_costs").id
+            )
+        ]
+
     expenses_account = fields.Many2one(
         "account.account",
         string="Conto Spese",
-        domain=lambda self: domains.get_bank_expenses_account(self.env),
+        domain=_get_bank_expenses_account,
     )
 
     expenses_amount = fields.Float(string="Importo spese")

@@ -5,7 +5,7 @@
 #
 {
     "name": "Account Banking Common",
-    "version": "12.0.3.7.45",
+    "version": "12.0.3.7.46",
     "category": "Accounting",
     "summary": "Common stuff for payment modules",
     "author": "powERP enterprise network and other partners",
@@ -19,6 +19,7 @@
         "account_payment_order",
         "account_payment_method",
         "account_common_mixin",
+        "l10n_it_coa_base",
     ],
     "data": [
         "views/res_partner_bank_view.xml",

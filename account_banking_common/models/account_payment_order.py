@@ -6,49 +6,55 @@
 """
 Account entries are (invoice amount is 100):
 
-1.generated2uploaded()
+1.generated2uploaded()       | (3) one journal entry per due date
     Create account entry after banking file is uploaded. Managed by OCA module
     account_payment_order. Journal depends on payment mode.
-    Account entry, 1 entry for every due date; account date is due date (in the future)
-    if not wallet transfer bank account is uded:
-    | Description                     | Debit | Credit | Notes
-    | Receivable account from invoice |       |    100 | (1)
-    | Pay off account from journal    |   100 |        | (1)(2) Effetti attivi
+    Account entry; account date is due date (in the future)
+    if no wallet transfer bank account is used.
+    | Description             | Debit | Credit | Notes
+    |🕑Receivable account     |       |    100 | (2) from invoice
+    |🕓Pay off/Effetti attivi |   100 |        | (1)/(2)(4) from journal debit/credit
+
+TYPE 1
 2.action_accreditato() -> registra_accredito()
     Create account entry after bank accepted the uploaded file.
     Account entry type 1, one entry:
-    | Description                            | Debit | Credit | Notes
-    | conto_effetti_attivi (portafoglio_sbf) |       |    100 | (1) Portafoglio SBF
-    | effetti_allo_sconto                    |   100 |        | (3) Effetti allo sconto
+    | Description             | Debit | Credit | Notes
+    |🕘Portafoglio SBF        |       |    100 | (3) from journal conto_effetti_attivi
+    |🕕Effetti allo sconto    |   100 |        | (3) from journal effetti_allo_sconto
 3.open_wizard_payment_confirm() -> registra_incasso()
     Create account entry when customer really pays for invoice. Bank transfer customer
     payment on company banking account. All account balances must be closed.
     Account entry type 1, 1 entry for every bank transfer (invoice amount 100):
-    | Description                            | Debit | Credit | Notes
-    | Pay off account from journal           |       |    100 | (1)
-    | Liquidity account                      |   100 |        | 1 line
-    | effetti_allo_sconto                    |       |    100 | 1 line
-    | conto_effetti_attivi (portafoglio_sbf) |   100 |        | 1 line
+    | Description             | Debit | Credit | Notes
+    |🕓Pay off/Effetti attivi |       |    100 | (2)(4) from journal debit/credit
+    |🕛Liquidity account      |   100 |        | (1) from parent journal debit/credit
+    |🕕Effetti allo sconto    |       |    100 | (1) from journal effetti_allo_sconto
+    |🕘Portafoglio SBF        |   100 |        | (1) from journal conto_effetti_attivi
 
+TYPE 2
 2.action_accreditato() -> registra_accredito()
     Create account entry after bank accepted the uploaded file.
     Account entry type 2, one entry:
-    | Description                            | Debit | Credit | Notes
-    | Pay off account from journal           |       |    100 | (1)(2)
-    | conto_effetti_attivi                   |   100 |        | (1)(2)
-    | portafoglio_sbf                        |       |    100 | (3) Portafoglio SBF
-    | effetti_allo_sconto (transitorio)      |   100 |        | (3) Effetti allo sconto
+    | Description             | Debit | Credit | Notes
+    |🕓Pay off/Effetti attivi |       |    100 | (2)(4) from journal debit/credit
+    |🕕Effetti allo sconto    |   100 |        | (3) from journal effetti_allo_sconto
+    |🕕Effetti allo sconto    |       |    100 | (3) from journal effetti_allo_sconto
+    |  Effetti presentati     |   100 |        | (3) from journal effetti_presentati
 3.open_wizard_payment_confirm() -> registra_incasso()
     Create account entry when customer really pays for invoice. Bank transfer customer
     payment on company banking account. All account balances must be closed.
     Account entry type 2, 1 entry for every bank transfer (invoice amount 100):
-    | Description                            | Debit | Credit | Notes
-    | Liquidity account                      |   100 |        | 1 line
-    | effetti_allo_sconto (transitorio)      |       |    100 | 1 line
+    | Description             | Debit | Credit | Notes
+    |  Effetti presentati     |       |    100 | (3) from journal effetti_presentati
+    |🕛Liquidity account      |   100 |        | (1) from parent journal debit/credit
+
 Notes:
-    (1) One line for every line in payment order (invoice line due date)
-    (2) OCA uses an ordinary asset account; Librerp uses receivable account with partner
-    (3) One line for every due date (grouped by due date)
+    (1) One line for journal entry
+    (2) One line for every line in payment order (invoice line due date)
+    (3) One line per due date (records grouped by due date)
+    (4) OCA uses an ordinary asset account; Librerp uses receivable account with partner
+
 
 All account entries are based on following elements:
 

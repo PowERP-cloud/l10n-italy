@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.44
+|icon| Account Banking Common 12.0.3.7.46
 =========================================
 
 
@@ -149,6 +149,18 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.46 (2022-11-15)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Confirm payment w/o company bank / Conferma pagamento segnala assenza banca azienda
+* [FIX] Crash if not compiled portafoglio SBF / Crash se manca conto portafoglio SBF
+* [IMP] Bank form: help and more info / Form banca: help + info dettagliate
+
+12.0.3.7.45 (2022-10-03)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Gestione riconciliazioni degli insoluti
+
 12.0.3.7.44 (2022-07-05)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -201,17 +213,6 @@ ChangeLog History / Cronologia modifiche
 
  * [IMP] Gestione operazioni di registrazione pagamenti fornitori e compensazione tra fatture e note di credito nelle registrazioni
  * [IMP] Gestione spese bancarie
-
-12.0.3.7.34 (2022-03-02)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
- * [IMP] Possibilità di scegliere sezionale e data registrazione contabile al momento della registrazione del pagamento
- * [FIX] Correzione nome modello
-
-12.0.3.7.33 (2022-03-02)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito annullamento distinta che ha scadenze con incasso effettuato
 
 
 
@@ -275,7 +276,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-07-05
+Last Update / Ultimo aggiornamento: 2022-11-22
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

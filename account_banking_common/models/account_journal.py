@@ -3,9 +3,8 @@
 # Copyright 2020-22 powERP enterprise network <https://www.powerp.it>
 # Copyright 2020-22 Didotech s.r.l. <https://www.didotech.com>
 #
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.addons.account_banking_common.utils import domains
 
 
 class AccountJournal(models.Model):
@@ -16,10 +15,78 @@ class AccountJournal(models.Model):
         "taxable_amount": 100,
     }
 
+    def _domain_effetti_allo_sconto(self):
+        return [
+            (
+                "user_type_id",
+                "in",
+                [
+                    self.env.ref("account.data_account_type_current_assets").id,
+                    self.env.ref("account.data_account_type_receivable").id,
+                    self.env.ref("account.data_account_type_liquidity").id
+                ]
+            )
+        ]
+
+    def _domain_effetti_presentati(self):
+        return [
+            (
+                "user_type_id",
+                "in",
+                [
+                    self.env.ref("account.data_account_type_current_assets").id,
+                    self.env.ref("account.data_account_type_liquidity").id
+                ]
+            )
+        ]
+
+    def _domain_portafoglio_sbf(self):
+        return [
+            (
+                "user_type_id",
+                "in",
+                [
+                    self.env.ref("account.data_account_type_current_liabilities").id,
+                    self.env.ref("account.data_account_type_liquidity").id
+                ]
+            )
+        ]
+
+    def _domain_expenses_account(self):
+        return [
+            (
+                "user_type_id",
+                "in",
+                [
+                    self.env.ref("account.data_account_type_expenses").id,
+                    self.env.ref("account.data_account_type_direct_costs").id
+                ]
+            )
+        ]
+
+    def _domain_sezionale(self):
+        return [
+            (
+                "type",
+                "in",
+                ["bank", "general"]
+            ),
+        ]
+
+    def _domain_main_sezionale(self):
+        return [
+            (
+                "type",
+                "in",
+                ["bank", "cash"]
+            ),
+            ("is_wallet", "=", False),
+        ]
+
     @api.depends("portafoglio_sbf")
     def _importo_effetti(self):
         for rec in self:
-            if rec.effetti_allo_sconto and rec.effetti_allo_sconto.id:
+            if rec.portafoglio_sbf and rec.portafoglio_sbf.id:
                 query_select_account_balance = """
                  SELECT
                     SUM(debit) - SUM(credit) as balance
@@ -38,10 +105,6 @@ class AccountJournal(models.Model):
                 rec.importo_effetti_sbf = anticipo[0]
             else:
                 rec.importo_effetti_sbf = 0.0
-            # end if
-        # end for
-
-    # end _importo_effetti
 
     @api.depends("portafoglio_sbf")
     def _impegno_effetti(self):
@@ -134,11 +197,8 @@ class AccountJournal(models.Model):
 
     main_bank_account_id = fields.Many2one(
         comodel_name="account.journal",
-        string="Conto padre",
-        domain=[
-            ("type", "in", ["bank", "cash"]),
-            ("is_wallet", "=", False),
-        ],
+        string="Conto principale di liquidità",
+        domain= _domain_main_sezionale,
         default=_set_main_bank_account_id_default,
     )
 
@@ -162,25 +222,49 @@ class AccountJournal(models.Model):
     sezionale = fields.Many2one(
         string="Sezionale",
         comodel_name="account.journal",
-        domain=domains.transfer_journal,
+        domain=_domain_sezionale,
     )
 
     effetti_allo_sconto = fields.Many2one(
         string="Effetti allo sconto",
         comodel_name="account.account",
-        domain=lambda self: domains.domain_effetti_allo_sconto(self.env),
+        domain=_domain_effetti_allo_sconto,
+        help=(
+            "Conto usato (in dare) per l'accredito distinta\n"
+            "Per gestire il controllo del credito cliente\n"
+            "usare un conto di tipo credito cliente"
+        )
     )
 
     portafoglio_sbf = fields.Many2one(
         string="Conto portafoglio SBF",
         comodel_name="account.account",
-        domain=lambda self: domains.domain_portafoglio_sbf(),
+        domain=_domain_portafoglio_sbf,
+        help=(
+            "Conto di portafoglio bancario SBF dopo accredito distinta\n"
+            "Questo conto è la copia del conto di portafoglio del e-banking\n"
+            "Non può esser usato in caso di uso effetti presentati\n"
+        )
+    )
+
+    effetti_presentati = fields.Many2one(
+        string="Effetti presentatti SBF",
+        comodel_name="account.account",
+        domain=_domain_effetti_presentati,
+        help=(
+            "Conto usato (in dare) per l'incasso cliente in 3 passi\n"
+            "L'effetto transita per i conti attivo->sconto->presentato\n"
+            "invece dell'usuale ciclo attivo->sconto\n"
+            "Attenzione! Si perde il controllo del credito verso il cliente\n"
+            "e non è possibile gestire la disponibilità del portafoglio!"
+        )
     )
 
     default_bank_expenses_account = fields.Many2one(
         string="Conto di default per spese bancarie",
         comodel_name="account.account",
-        domain=lambda self: domains.get_bank_expenses_account(self.env),
+        domain=_domain_expenses_account,
+        help="Conto predefinito per registrare le spese bancarie"
     )
 
     limite_effetti_sbf = fields.Float(string="Affidamento bancario SBF", default=0.0)
@@ -203,34 +287,50 @@ class AccountJournal(models.Model):
         self._validate_invoice_financing_percent()
         return result
 
-    # end if
-
     @api.multi
     def write(self, vals):
         result = super().write(vals)
-
         for journal in self:
             journal._validate_invoice_financing_percent()
-        # end for
-
         return result
-
-    # end if
 
     @api.onchange("is_wallet")
     def _on_change_is_wallet(self):
         if not self.is_wallet:
-            # empty parent
             if self.main_bank_account_id:
                 self.main_bank_account_id = self._set_main_bank_account_id_default()
-            # end if
-        # end if
+        else:
+            if (
+                self.default_debit_account_id.user_type_id
+                !=
+                self.env.ref("account.data_account_type_receivable")
+            ):
+                return {
+                    "warning": {
+                        "title": _("Attenzione"),
+                        "message": _(
+                            "Il conto dare predefinito deve essere "
+                            "un conto di tipo credito clienti"
+                        ),
+                    }
+                }
+            if (
+                self.default_credit_account_id.user_type_id
+                !=
+                self.env.ref("account.data_account_type_receivable")
+            ):
+                return {
+                    "warning": {
+                        "title": _("Attenzione"),
+                        "message": _(
+                            "Il conto avere predefinito deve essere "
+                            "un conto di tipo credito clienti"
+                        ),
+                    }
+                }
         if self.bank_account_id:
             bank_account = self.env["res.partner.bank"].browse(self.bank_account_id.id)
             bank_account.write({"bank_is_wallet": self.is_wallet})
-        # end if
-
-    # end _on_change_portafolio_account
 
     @api.model
     def get_payment_method_config(self):
@@ -242,6 +342,7 @@ class AccountJournal(models.Model):
             "conto_effetti_attivi": self.portafoglio_sbf,
             "effetti_allo_sconto": self.effetti_allo_sconto,
             "conto_spese_bancarie": self.default_bank_expenses_account,
+            "effetti_presentati": self.effetti_presentati,
         }
 
     @api.onchange("invoice_financing_evaluate")
