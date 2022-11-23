@@ -1,7 +1,8 @@
-#
+# Copyright 2020-22 LibrERP enterprise network <https://www.librerp.it>
 # Copyright 2020-22 SHS-AV s.r.l. <https://www.zeroincombenze.it>
-# Copyright 2020-22 powERP enterprise network <https://www.powerp.it>
 # Copyright 2020-22 Didotech s.r.l. <https://www.didotech.com>
+#
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 #
 """
 Account entries are (invoice amount is 100):
@@ -20,7 +21,7 @@ TYPE 1
     Create account entry after bank accepted the uploaded file.
     Account entry type 1, one entry:
     | Description             | Debit | Credit | Notes
-    |🕘Portafoglio SBF        |       |    100 | (3) from journal conto_effetti_attivi
+    |🕘Portafoglio SBF        |       |    100 | (3) from journal portafoglio_sbf
     |🕕Effetti allo sconto    |   100 |        | (3) from journal effetti_allo_sconto
 3.open_wizard_payment_confirm() -> registra_incasso()
     Create account entry when customer really pays for invoice. Bank transfer customer
@@ -30,7 +31,7 @@ TYPE 1
     |🕓Pay off/Effetti attivi |       |    100 | (2)(4) from journal debit/credit
     |🕛Liquidity account      |   100 |        | (1) from parent journal debit/credit
     |🕕Effetti allo sconto    |       |    100 | (1) from journal effetti_allo_sconto
-    |🕘Portafoglio SBF        |   100 |        | (1) from journal conto_effetti_attivi
+    |🕘Portafoglio SBF        |   100 |        | (1) from journal portafoglio_sbf
 
 TYPE 2
 2.action_accreditato() -> registra_accredito()
@@ -39,6 +40,7 @@ TYPE 2
     | Description             | Debit | Credit | Notes
     |🕓Pay off/Effetti attivi |       |    100 | (2)(4) from journal debit/credit
     |🕕Effetti allo sconto    |   100 |        | (3) from journal effetti_allo_sconto
+    |                         |       |        |
     |🕕Effetti allo sconto    |       |    100 | (3) from journal effetti_allo_sconto
     |  Effetti presentati     |   100 |        | (3) from journal effetti_presentati
 3.open_wizard_payment_confirm() -> registra_incasso()
@@ -63,12 +65,13 @@ All account entries are based on following elements:
 - bank_journal (journal): journal used in some account entries
 - pay-off (account): debit / credit account from journal
 - transfer_account (account); usused (it servers for OCA modules)
-- banca_conto_effetti (account): same of portafoglio_sbf for type 1 entries
+- portafoglio_sbf (account): same of portafoglio_sbf for type 1 entries
 - conto_effetti_attivi (account): credit account of action_accreditato()
 - effetti_allo_sconto (account): debit account of action_accreditato()
                                  on journal/bank record may be called portafoglio_sbf
 - conto_spese_bancarie (account): banking expenses
 """
+from collections import defaultdict
 from odoo import models, api, fields, _
 from odoo.exceptions import UserError
 
@@ -321,7 +324,54 @@ class AccountPaymentOrder(models.Model):
 
         return credit_account
 
-    # end _set_expense_credit_account
+    def prepare_move_lines(self, account, side, mode=None):
+        """Prepare all move line from payment order
+        Line may be grouped by date (mode="date")
+
+        Args:
+            account (obj): account ID for move line
+            side (str): may be 'debit' or 'credit'
+            mode (str): may be 'line', 'duedate', 'sum'
+                * line: means 1 line of every payment line
+                * duedate: group bye due date
+                * sum: sum all line amounts
+                * auto: means 'line' if account is receivable else duedate
+
+        Returns:
+            list of account.move.line values to use in account_move.line_ids
+        """
+        if mode == "auto":
+            mode = "line" if account.user_type_id.type == "receivable" else "duedate"
+        move_lines = list()
+        if mode == "line":
+            for line in self.payment_line_ids:
+                vals = line.prepare_1_move_line(account.id, side)
+                move_lines.append((0, 0, vals))
+        elif mode == "duedate":
+            groups = defaultdict(list)
+            [
+                groups[line.ml_maturity_date].append(line.amount_currency)
+                for line in self.payment_line_ids
+            ]
+            sum_list = [
+                (key, sum(groups[key]))
+                for key in groups.keys()
+            ]
+            line = self.payment_line_ids[0]
+            for duedate in sum_list:
+                vals = line.prepare_1_move_line(
+                    account.id, side, duedate=duedate[0], amount=duedate[1])
+                move_lines.append((0, 0, vals))
+        elif mode == "sum":
+            amount = sum([list.amount_currency for line in self.payment_line_ids])
+            vals = self.payment_line_ids[0].prepare_1_move_line(
+                account.id, side, amount=amount)
+            move_lines.append((0, 0, vals))
+        else:
+            raise UserError(
+                "Invalid %s value: must be 'line' or 'duedate' or 'sum'" % mode
+            )
+        return move_lines
 
     @api.multi
     def _create_reconcile_move(self, hashcode, blines):
@@ -403,3 +453,38 @@ class AccountPaymentOrder(models.Model):
                 }
             )
         return vals
+
+
+class AccountPaymentLine(models.Model):
+    _inherit = "account.payment.line"
+
+    def prepare_1_move_line(self, account_id, side, duedate=None, amount=None):
+        """Prepare account move line value"""
+        if side not in ("debit", "credit"):
+            raise UserError(
+                "Invalid %s value: must be 'debit' or 'credit'" % side
+            )
+        opposite_side = "debit" if side == "credit" else "credit"
+        values = {
+            "account_id": account_id,
+            side: amount or self.amount_currency,
+            opposite_side: 0.0,
+        }
+        if not duedate and amount:
+            values["name"] = str(
+                f'Distinta scadenze {self.order_id.name}'
+            )
+        elif duedate:
+            values["name"] = str(
+                f'Distinta scadenze {self.order_id.name}'
+                ' - '
+                f'Scadenza {duedate}'
+            )
+        else:
+            values["name"] = str(
+                f'Distinta scadenze {self.order_id.name}'
+                ' - '
+                f'Fattura {self.move_line_id.move_id.name}'
+            )
+            values["partner_id"] = self.partner_id.id
+        return values

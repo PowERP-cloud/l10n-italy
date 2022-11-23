@@ -1,11 +1,15 @@
+# Copyright 2020-22 LibrERP enterprise network <https://www.librerp.it>
+# Copyright 2020-22 SHS-AV s.r.l. <https://www.zeroincombenze.it>
+# Copyright 2020-22 Didotech s.r.l. <https://www.didotech.com>
+#
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
+#
 import os
 import logging
 from .testenv import MainTest as SingleTransactionCase
 
 _logger = logging.getLogger(__name__)
 
-# For some model we use test data in z0bug_odoo and so, we do not declare values dict
-# See (https://github.com/zeroincombenze/tools)
 TEST_ACCOUNT_JOURNAL = {
     "z0bug.bank11_journal": {},
 }

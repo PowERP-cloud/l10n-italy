@@ -1,7 +1,8 @@
-#
+# Copyright 2020-22 LibrERP enterprise network <https://www.librerp.it>
 # Copyright 2020-22 SHS-AV s.r.l. <https://www.zeroincombenze.it>
-# Copyright 2020-22 powERP enterprise network <https://www.powerp.it>
 # Copyright 2020-22 Didotech s.r.l. <https://www.didotech.com>
+#
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 #
 from collections import defaultdict
 from odoo import models, api, fields
@@ -113,7 +114,7 @@ class AccountMoveLine(models.Model):
         #     verified we can pick the payment order of the first
         #     record in self
 
-        pol = self[0].payment_order_lines[0]  # Payment order line
+        pol = self[0].payment_line_ids[0]  # Payment order line
         po = pol.order_id  # Payment order
 
         # pol_partner = pol.partner_id  # Partner for this duedate

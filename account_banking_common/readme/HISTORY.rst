@@ -3,7 +3,9 @@
 
 * [FIX] Confirm payment w/o company bank / Conferma pagamento segnala assenza banca azienda
 * [FIX] Crash if not compiled portafoglio SBF / Crash se manca conto portafoglio SBF
+* [FIX] Errato caricamento conto effetti attivi
 * [IMP] Bank form: help and more info / Form banca: help + info dettagliate
+* [IMP] Field account_move_line.payment_order_lines renamed to payment_line_ids
 
 12.0.3.7.45 (2022-10-03)
 ~~~~~~~~~~~~~~~~~~~~~~~~

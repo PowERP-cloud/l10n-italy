@@ -1,7 +1,8 @@
-#
+# Copyright 2020-22 LibrERP enterprise network <https://www.librerp.it>
 # Copyright 2020-22 SHS-AV s.r.l. <https://www.zeroincombenze.it>
-# Copyright 2020-22 powERP enterprise network <https://www.powerp.it>
 # Copyright 2020-22 Didotech s.r.l. <https://www.didotech.com>
+#
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 #
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -22,8 +23,9 @@ class AccountJournal(models.Model):
                 "in",
                 [
                     self.env.ref("account.data_account_type_current_assets").id,
+                    self.env.ref("account.data_account_type_liquidity").id,
                     self.env.ref("account.data_account_type_receivable").id,
-                    self.env.ref("account.data_account_type_liquidity").id
+                    self.env.ref("account.data_account_type_payable").id,
                 ]
             )
         ]
@@ -35,7 +37,9 @@ class AccountJournal(models.Model):
                 "in",
                 [
                     self.env.ref("account.data_account_type_current_assets").id,
-                    self.env.ref("account.data_account_type_liquidity").id
+                    self.env.ref("account.data_account_type_liquidity").id,
+                    self.env.ref("account.data_account_type_receivable").id,
+                    self.env.ref("account.data_account_type_payable").id,
                 ]
             )
         ]
@@ -46,8 +50,10 @@ class AccountJournal(models.Model):
                 "user_type_id",
                 "in",
                 [
-                    self.env.ref("account.data_account_type_current_liabilities").id,
-                    self.env.ref("account.data_account_type_liquidity").id
+                    self.env.ref("account.data_account_type_current_assets").id,
+                    self.env.ref("account.data_account_type_liquidity").id,
+                    self.env.ref("account.data_account_type_receivable").id,
+                    self.env.ref("account.data_account_type_payable").id,
                 ]
             )
         ]
@@ -93,9 +99,8 @@ class AccountJournal(models.Model):
                     FROM account_move_line, account_move
                     WHERE account_move_line.account_id = {account_id}
                     and account_move_line.move_id = account_move.id
-                    and account_move.state = 'posted'
+                    and account_move.state = 'posted')
                 """.format(
-                    # account_id=rec.effetti_allo_sconto.id
                     account_id=rec.portafoglio_sbf.id
                 )
 
@@ -127,10 +132,6 @@ class AccountJournal(models.Model):
                 rec.impegno_effetti_sbf = impegno[0]
             else:
                 rec.impegno_effetti_sbf = 0.0
-            # end if
-        # end for
-
-    # end _impegno_effetti
 
     @api.depends("limite_effetti_sbf", "importo_effetti_sbf")
     def _disponibilita_effetti(self):
@@ -153,8 +154,6 @@ class AccountJournal(models.Model):
     def _set_main_bank_account_id_default(self):
         return self.env["account.journal"]
 
-    # end _set_main_bank_account_id_default
-
     def _set_wallet_ids_default(self):
         domain = [
             ("type", "in", ["bank", "cash"]),
@@ -164,16 +163,11 @@ class AccountJournal(models.Model):
 
         return self.search(domain)
 
-    # end _set_wallet_ids_default
-
     def is_wallet_default(self):
         if self.bank_account_id:
             return self.bank_account_id.bank_is_wallet
         else:
             return False
-        # end if
-
-    # end is_wallet_default
 
     @api.depends("wallet_ids")
     def _has_children(self):
@@ -181,9 +175,6 @@ class AccountJournal(models.Model):
             self.has_children = True
         else:
             self.has_children = False
-        # end if
-
-    # end _has_children
 
     is_wallet = fields.Boolean(string="Conto di portafoglio", default=is_wallet_default)
 
@@ -334,16 +325,42 @@ class AccountJournal(models.Model):
 
     @api.model
     def get_payment_method_config(self):
-        return {
-            "sezionale": self.sezionale,
-            "transfer_journal": self.sezionale,
-            "transfer_account": self.portafoglio_sbf,
-            "banca_conto_effetti": self.portafoglio_sbf,
-            "conto_effetti_attivi": self.portafoglio_sbf,
-            "effetti_allo_sconto": self.effetti_allo_sconto,
-            "conto_spese_bancarie": self.default_bank_expenses_account,
-            "effetti_presentati": self.effetti_presentati,
-        }
+        if self.is_wallet:
+            return {
+                "sezionale": self.sezionale,
+                "transfer_journal": self.sezionale,
+                "bank_journal": self.main_bank_account_id,
+                "liquidity_account": (
+                    self.main_bank_account_id.default_debit_account_id
+                    or self.main_bank_account_id.default_credit_account_id
+                ),
+                "transfer_account": self.portafoglio_sbf,
+                # Deprecated
+                "banca_conto_effetti": self.portafoglio_sbf,
+                "portafoglio_sbf": self.portafoglio_sbf,
+                "conto_effetti_attivi":
+                    self.default_debit_account_id or self.default_credit_account_id,
+                "effetti_allo_sconto": self.effetti_allo_sconto,
+                "conto_spese_bancarie": self.default_bank_expenses_account,
+                "effetti_presentati": self.effetti_presentati,
+            }
+        else:
+            return {
+                "sezionale": self.sezionale,
+                "transfer_journal": self.sezionale,
+                "bank_journal": self,
+                "liquidity_account":
+                    self.default_debit_account_id or self.default_credit_account_id,
+                "transfer_account": None,
+                # Deprecated
+                "banca_conto_effetti": None,
+                "portafoglio_sbf": None,
+                "conto_effetti_attivi":None,
+                "effetti_allo_sconto": None,
+                "conto_spese_bancarie": self.default_bank_expenses_account,
+                "effetti_presentati": None,
+            }
+
 
     @api.onchange("invoice_financing_evaluate")
     def _onchange_invoice_financing_evaluate(self):
@@ -372,3 +389,23 @@ class AccountJournal(models.Model):
         # end if
 
     # end _validate_invoice_financing_percent
+
+    @api.onchange("portafoglio_sbf")
+    @api.onchange("effetti_presentati")
+    def _onchange_account_effetti(self):
+        if self.effetti_presentati and self.portafoglio_sbf:
+            return {
+                "warning": {
+                    "title": _("Attenzione"),
+                    "message": _(
+                        "I conti 'Effetti presentati SBF' e 'Conto portafoglio SBF' "
+                        "sono in conflitto: impostare soltanto uno dei due\n"
+                        "Usare 'Effetti presentati SBF' per la tradizionale gestione "
+                        "delle RIBA. Questa configurazione disabilita "
+                        "il controllo del credito verso il cliente e della "
+                        "disponibilità del portafoglio!\n"
+                        "Usare 'Conto portafoglio SBF' per gestire e controllare "
+                        "il conto di portafoglio\n"
+                    ),
+                }
+            }

@@ -154,7 +154,9 @@ ChangeLog History / Cronologia modifiche
 
 * [FIX] Confirm payment w/o company bank / Conferma pagamento segnala assenza banca azienda
 * [FIX] Crash if not compiled portafoglio SBF / Crash se manca conto portafoglio SBF
+* [FIX] Errato caricamento conto effetti attivi
 * [IMP] Bank form: help and more info / Form banca: help + info dettagliate
+* [IMP] Field account_move_line.payment_order_lines renamed to payment_line_ids
 
 12.0.3.7.45 (2022-10-03)
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -237,6 +239,7 @@ Authors / Autori
 * `powERP <https://www.powerp.it>`__
 * `SHS-AV s.r.l. <https://www.zeroincombenze.it/>`__
 * `Didotech s.r.l. <https://www.didotech.com>`__
+* `LibrERP <https://www.librerp.it>`__
 
 
 Contributors / Collaboratori
@@ -276,7 +279,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-11-22
+Last Update / Ultimo aggiornamento: 2022-11-23
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

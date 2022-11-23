@@ -1,4 +1,9 @@
-# -*- coding: utf-8 -*-
+# Copyright 2020-22 LibrERP enterprise network <https://www.librerp.it>
+# Copyright 2020-22 SHS-AV s.r.l. <https://www.zeroincombenze.it>
+# Copyright 2020-22 Didotech s.r.l. <https://www.didotech.com>
+#
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
+#
 """Test Environment v2.0.1.2
 
 Copy this file in tests directory of your module.
@@ -46,12 +51,10 @@ For furthermore information, please:
 from __future__ import unicode_literals
 from past.builtins import basestring, long
 
-# import sys
 import logging
 
 from odoo.tools.safe_eval import safe_eval
 
-# from odoo.exceptions import Warning
 
 import python_plus
 from z0bug_odoo.test_common import SingleTransactionCase
