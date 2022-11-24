@@ -6,49 +6,49 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo (12.0)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-05 18:32+0000\n"
-"PO-Revision-Date: 2022-06-05 18:32+0000\n"
+"POT-Creation-Date: 2022-11-24 19:09+0000\n"
+"PO-Revision-Date: 2022-11-24 19:09+0000\n"
 "Last-Translator: Antonio M. Vigliotti <antoniomaria.vigliotti@gmail.com>\n"
-"Language-Team: Zeroincombenze (https://www.zeroincombenze.it)\n"
 "Language: it_IT\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language-Team: Zeroincombenze (https://www.zeroincombenze.it)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.10.1\n"
+"Generated-By: Babel 2.3.4\n"
 
 #. module: account_banking_common
 #: model_terms:ir.ui.view,arch_db:account_banking_common.res_config_settings_view_common_form
 msgid "Abbuoni attivi"
-msgstr ""
+msgstr "Abbuoni attivi"
 
 #. module: account_banking_common
 #: model_terms:ir.ui.view,arch_db:account_banking_common.res_config_settings_view_common_form
 msgid "Abbuoni delta"
-msgstr ""
+msgstr "Abbuoni delta"
 
 #. module: account_banking_common
 #: model_terms:ir.ui.view,arch_db:account_banking_common.res_config_settings_view_common_form
 msgid "Abbuoni passivi"
-msgstr ""
+msgstr "Abbuoni passivi"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_res_company__rebate_active
 #: model:ir.model.fields,field_description:account_banking_common.field_res_config_settings__rebate_active
 msgid "Abbuono attivo"
-msgstr ""
+msgstr "Abbuono attivo"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_res_company__rebate_passive
 #: model:ir.model.fields,field_description:account_banking_common.field_res_config_settings__rebate_passive
 msgid "Abbuono passivo"
-msgstr ""
+msgstr "Abbuono passivo"
 
 #. module: account_banking_common
 #: model_terms:ir.ui.view,arch_db:account_banking_common.inherit_account_payment_order_form
 #: model_terms:ir.ui.view,arch_db:account_banking_common.wizard_payment_order_credit
 msgid "Accredito"
-msgstr ""
+msgstr "Accredito"
 
 #. module: account_banking_common
 #: model_terms:ir.ui.view,arch_db:account_banking_common.wizard_account_payment_add_move_line
@@ -68,45 +68,47 @@ msgstr "Aggiungi all'ordine di pagamento"
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_banking_common_insoluto__charge_client
 msgid "Addebito spese a cliente"
-msgstr ""
+msgstr "Addebito spese a cliente"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_account_bank_statement_import_journal_creation__limite_effetti_sbf
 #: model:ir.model.fields,field_description:account_banking_common.field_account_journal__limite_effetti_sbf
 msgid "Affidamento bancario SBF"
-msgstr ""
+msgstr "Affidamento bancario SBF"
 
 #. module: account_banking_common
 #: model_terms:ir.ui.view,arch_db:account_banking_common.wizard_set_payment_method
 msgid "Aggiorna"
-msgstr ""
+msgstr "Aggiorna"
 
 #. module: account_banking_common
 #: model_terms:ir.ui.view,arch_db:account_banking_common.wizard_set_payment_method
 msgid "Aggiorna metodi di pagamento"
-msgstr ""
+msgstr "Aggiorna metodi di pagamento"
 
 #. module: account_banking_common
 #: model:ir.actions.server,name:account_banking_common.server_action_duedates_update
 msgid "Aggiorna metodo di pagamento"
-msgstr ""
+msgstr "Aggiorna metodo di pagamento"
 
 #. module: account_banking_common
 #: model:ir.actions.server,name:account_banking_common.server_action_add_to_payment_order
 msgid "Aggiungi a Distinta"
-msgstr ""
+msgstr "Aggiungi a Distinta"
 
 #. module: account_banking_common
 #: model_terms:ir.ui.view,arch_db:account_banking_common.wizard_payment_order_confirm
 #: model_terms:ir.ui.view,arch_db:account_banking_common.wizard_payment_order_credit
 msgid "Annulla"
-msgstr ""
+msgstr "Annulla"
 
 #. module: account_banking_common
-#: code:addons/account_banking_common/wizard/wizard_account_register_payment.py:96
-#: code:addons/account_banking_common/wizard/wizard_account_register_payment.py:96
+#: code:addons/account_banking_common/models/account_journal.py:301
+#: code:addons/account_banking_common/models/account_journal.py:315
+#: code:addons/account_banking_common/models/account_journal.py:399
+#: code:addons/account_banking_common/wizard/wizard_account_register_payment.py:88
 msgid "Attenzione"
-msgstr ""
+msgstr "Attenzione"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_account_invoice__partner_bank_id
@@ -147,17 +149,17 @@ msgstr "Annullare"
 #. module: account_banking_common
 #: model_terms:ir.ui.view,arch_db:account_banking_common.inherit_account_payment_order_form
 msgid "Cancel Payments"
-msgstr ""
+msgstr "Cancel Payments"
 
 #. module: account_banking_common
 #: model_terms:ir.ui.view,arch_db:account_banking_common.view_account_bank_journal_form_banking_common
 msgid "Castelletto pagamenti"
-msgstr ""
+msgstr "Castelletto pagamenti"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_account_payment_order__payment_method_code
 msgid "Codice metodo di pagamento"
-msgstr ""
+msgstr "Codice metodo di pagamento"
 
 #. module: account_banking_common
 #: model:ir.model,name:account_banking_common.model_res_company
@@ -167,30 +169,30 @@ msgstr "Aziende"
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_account_invoice__company_partner_id
 msgid "Company partner"
-msgstr ""
+msgstr "Company partner"
 
 #. module: account_banking_common
 #: model:ir.actions.server,name:account_banking_common.server_action_duedates_compensate
 #: model_terms:ir.ui.view,arch_db:account_banking_common.wizard_account_compensation_generate
 msgid "Compensazioni"
-msgstr ""
+msgstr "Compensazioni"
 
 #. module: account_banking_common
 #: model_terms:ir.ui.view,arch_db:account_banking_common.wizard_account_register_payment
 #: model_terms:ir.ui.view,arch_db:account_banking_common.wizard_payment_order_confirm
 #: model_terms:ir.ui.view,arch_db:account_banking_common.wizard_payment_order_credit
 msgid "Conferma"
-msgstr ""
+msgstr "Conferma"
 
 #. module: account_banking_common
 #: model_terms:ir.ui.view,arch_db:account_banking_common.wizard_payment_order_confirm
 msgid "Conferma Pgamento"
-msgstr ""
+msgstr "Conferma Pgamento"
 
 #. module: account_banking_common
 #: model:ir.actions.server,name:account_banking_common.server_action_payment_confirm
 msgid "Conferma pagamento"
-msgstr ""
+msgstr "Conferma pagamento"
 
 #. module: account_banking_common
 #: model:ir.model,name:account_banking_common.model_res_config_settings
@@ -200,7 +202,7 @@ msgstr "Impostazioni di configurazione"
 #. module: account_banking_common
 #: model_terms:ir.ui.view,arch_db:account_banking_common.view_account_bank_journal_form_banking_common
 msgid "Configurazione conti pagamenti"
-msgstr ""
+msgstr "Configurazione conti pagamenti"
 
 #. module: account_banking_common
 #: model_terms:ir.ui.view,arch_db:account_banking_common.wizard_account_compensation_generate
@@ -208,15 +210,15 @@ msgid "Confirm"
 msgstr "Confermare"
 
 #. module: account_banking_common
+#: model_terms:ir.ui.view,arch_db:account_banking_common.view_account_bank_journal_form_banking_common
+msgid "Conti Effetti attivi a presentazione distinta"
+msgstr "Conti Effetti attivi a presentazione distinta"
+
+#. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_account_setup_bank_manual_config__bank_wallet_ids
 #: model:ir.model.fields,field_description:account_banking_common.field_res_partner_bank__bank_wallet_ids
 msgid "Conti bancari"
-msgstr ""
-
-#. module: account_banking_common
-#: model_terms:ir.ui.view,arch_db:account_banking_common.view_account_bank_journal_form_banking_common
-msgid "Conti di default"
-msgstr ""
+msgstr "Conti bancari"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_account_bank_statement_import_journal_creation__wallet_ids
@@ -226,18 +228,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_banking_common.payment_config_notebook_res_partner_bank_form
 #: model_terms:ir.ui.view,arch_db:account_banking_common.view_account_bank_journal_form_banking_common
 msgid "Conti di portafoglio"
-msgstr ""
+msgstr "Conti di portafoglio"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_banking_common_insoluto__expenses_account
 msgid "Conto Spese"
-msgstr ""
+msgstr "Conto Spese"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_account_bank_statement_import_journal_creation__default_bank_expenses_account
 #: model:ir.model.fields,field_description:account_banking_common.field_account_journal__default_bank_expenses_account
 msgid "Conto di default per spese bancarie"
-msgstr ""
+msgstr "Conto di default per spese bancarie"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_account_bank_statement_import_journal_creation__is_wallet
@@ -247,41 +249,91 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_banking_common.field_res_partner_bank__bank_is_wallet
 #: model:ir.model.fields,field_description:account_banking_common.field_res_partner_bank__journal_is_wallet
 msgid "Conto di portafoglio"
-msgstr ""
+msgstr "Conto di portafoglio"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_account_payment_order__is_wallet_company_bank
 msgid "Conto di portafoglio aziendale"
+msgstr "Conto di portafoglio aziendale"
+
+#. module: account_banking_common
+#: model:ir.model.fields,help:account_banking_common.field_account_bank_statement_import_journal_creation__portafoglio_sbf
+#: model:ir.model.fields,help:account_banking_common.field_account_journal__portafoglio_sbf
+msgid ""
+"Conto di portafoglio bancario SBF dopo accredito distinta\n"
+"Questo conto è la copia del conto di portafoglio del e-banking\n"
+"Non può esser usato in caso di uso effetti presentati\n"
 msgstr ""
+"Conto di portafoglio bancario SBF dopo accredito distinta\n"
+"Questo conto è la copia del conto di portafoglio del e-banking\n"
+"Non può esser usato in caso di uso effetti presentati\n"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_account_bank_statement_import_journal_creation__has_children
-#: model:ir.model.fields,field_description:account_banking_common.field_account_bank_statement_import_journal_creation__main_bank_account_id
 #: model:ir.model.fields,field_description:account_banking_common.field_account_journal__has_children
-#: model:ir.model.fields,field_description:account_banking_common.field_account_journal__main_bank_account_id
 #: model:ir.model.fields,field_description:account_banking_common.field_account_setup_bank_manual_config__bank_main_bank_account_id
 #: model:ir.model.fields,field_description:account_banking_common.field_account_setup_bank_manual_config__journal_main_bank_account_id
 #: model:ir.model.fields,field_description:account_banking_common.field_res_partner_bank__bank_main_bank_account_id
 #: model:ir.model.fields,field_description:account_banking_common.field_res_partner_bank__journal_main_bank_account_id
 msgid "Conto padre"
-msgstr ""
+msgstr "Conto padre"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_account_bank_statement_import_journal_creation__portafoglio_sbf
 #: model:ir.model.fields,field_description:account_banking_common.field_account_journal__portafoglio_sbf
 msgid "Conto portafoglio SBF"
-msgstr ""
+msgstr "Conto portafoglio SBF"
+
+#. module: account_banking_common
+#: model:ir.model.fields,help:account_banking_common.field_account_bank_statement_import_journal_creation__default_bank_expenses_account
+#: model:ir.model.fields,help:account_banking_common.field_account_journal__default_bank_expenses_account
+msgid "Conto predefinito per registrare le spese bancarie"
+msgstr "Conto predefinito per registrare le spese bancarie"
+
+#. module: account_banking_common
+#: model:ir.model.fields,field_description:account_banking_common.field_account_bank_statement_import_journal_creation__main_bank_account_id
+#: model:ir.model.fields,field_description:account_banking_common.field_account_journal__main_bank_account_id
+msgid "Conto principale di liquidità"
+msgstr "Conto principale di liquidità"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_payment_order_confirm__account_expense
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_payment_order_credit__account_expense
 msgid "Conto spese"
-msgstr ""
+msgstr "Conto spese"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_register_payment__expenses_account
 msgid "Conto spese bancarie"
+msgstr "Conto spese bancarie"
+
+#. module: account_banking_common
+#: model:ir.model.fields,help:account_banking_common.field_account_bank_statement_import_journal_creation__effetti_allo_sconto
+#: model:ir.model.fields,help:account_banking_common.field_account_journal__effetti_allo_sconto
+msgid ""
+"Conto usato (in dare) per l'accredito distinta\n"
+"Per gestire il controllo del credito cliente\n"
+"usare un conto di tipo credito cliente"
 msgstr ""
+"Conto usato (in dare) per l'accredito distinta\n"
+"Per gestire il controllo del credito cliente\n"
+"usare un conto di tipo credito cliente"
+
+#. module: account_banking_common
+#: model:ir.model.fields,help:account_banking_common.field_account_bank_statement_import_journal_creation__effetti_presentati
+#: model:ir.model.fields,help:account_banking_common.field_account_journal__effetti_presentati
+msgid ""
+"Conto usato (in dare) per l'incasso cliente in 3 passi\n"
+"L'effetto transita per i conti attivo->sconto->presentato\n"
+"invece dell'usuale ciclo attivo->sconto\n"
+"Attenzione! Si perde il controllo del credito verso il cliente\n"
+"e non è possibile gestire la disponibilità del portafoglio!"
+msgstr ""
+"Conto usato (in dare) per l'incasso cliente in 3 passi\n"
+"L'effetto transita per i conti attivo->sconto->presentato\n"
+"invece dell'usuale ciclo attivo->sconto\n"
+"Attenzione! Si perde il controllo del credito verso il cliente\n"
+"e non è possibile gestire la disponibilità del portafoglio!"
 
 #. module: account_banking_common
 #: model_terms:ir.ui.view,arch_db:account_banking_common.wizard_account_payment_generate
@@ -296,12 +348,12 @@ msgstr "Creare righe di pagamento"
 #. module: account_banking_common
 #: model:ir.model,name:account_banking_common.model_wizard_account_compensation_generate
 msgid "Create compensation from duedates tree view"
-msgstr ""
+msgstr "Create compensation from duedates tree view"
 
 #. module: account_banking_common
 #: model:ir.model,name:account_banking_common.model_wizard_payment_order_confirm
 msgid "Create confirm payment wizard from due dates tree view"
-msgstr ""
+msgstr "Create confirm payment wizard from due dates tree view"
 
 #. module: account_banking_common
 #: model:ir.model,name:account_banking_common.model_wizard_account_payment_generate
@@ -335,17 +387,16 @@ msgstr "Creato il"
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_payment_order_credit__credit_date
 msgid "Data accredito"
-msgstr ""
+msgstr "Data accredito"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_compensation_generate__compensation_date
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_register_payment__registration_date
 msgid "Data di registrazione"
-msgstr ""
+msgstr "Data di registrazione"
 
 #. module: account_banking_common
-#: code:addons/account_banking_common/models/account_payment_order.py:290
-#: code:addons/account_banking_common/models/account_payment_order.py:290
+#: code:addons/account_banking_common/models/account_payment_order.py:419
 #, python-format
 msgid "Debit order %s"
 msgstr "Distinta scadenze %s"
@@ -354,7 +405,7 @@ msgstr "Distinta scadenze %s"
 #: model:ir.model.fields,field_description:account_banking_common.field_res_company__rebate_delta
 #: model:ir.model.fields,field_description:account_banking_common.field_res_config_settings__rebate_delta
 msgid "Delta abbuono"
-msgstr ""
+msgstr "Delta abbuono"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_payment_generate__description
@@ -365,7 +416,7 @@ msgstr "Descrizione"
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_register_payment__payment_difference
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_register_payment__payment_difference_show
 msgid "Differenza di pagamento"
-msgstr ""
+msgstr "Differenza di pagamento"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_banking_common_insoluto__display_name
@@ -383,30 +434,48 @@ msgstr "Nome visualizzato"
 #: model:ir.model.fields,field_description:account_banking_common.field_account_bank_statement_import_journal_creation__disponibilita_effetti_sbf
 #: model:ir.model.fields,field_description:account_banking_common.field_account_journal__disponibilita_effetti_sbf
 msgid "Disponibilità residua"
-msgstr ""
+msgstr "Disponibilità residua"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_account_bank_statement_import_journal_creation__effetti_allo_sconto
 #: model:ir.model.fields,field_description:account_banking_common.field_account_journal__effetti_allo_sconto
 msgid "Effetti allo sconto"
-msgstr ""
+msgstr "Effetti allo sconto"
+
+#. module: account_banking_common
+#: model:ir.model.fields,field_description:account_banking_common.field_account_bank_statement_import_journal_creation__effetti_presentati
+#: model:ir.model.fields,field_description:account_banking_common.field_account_journal__effetti_presentati
+msgid "Effetti presentatti SBF"
+msgstr "Effetti presentatti SBF"
 
 #. module: account_banking_common
 #: model:ir.actions.server,name:account_banking_common.server_action_payment_order_generate
 msgid "Genera Distinta"
-msgstr ""
+msgstr "Genera Distinta"
 
 #. module: account_banking_common
 #: model:ir.model,name:account_banking_common.model_wizard_account_banking_common_insoluto
 msgid "Gestione insoluti"
-msgstr ""
+msgstr "Gestione insoluti"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_account_payment_order__has_incassi_effettuati
 msgid "Ha incassi effettuati"
-msgstr ""
+msgstr "Ha incassi effettuati"
 
 #. module: account_banking_common
+#: code:addons/account_banking_common/models/account_journal.py:400
+msgid ""
+"I conti 'Effetti presentati SBF' e 'Conto portafoglio SBF' sono in "
+"conflitto: impostare soltanto uno dei due\n"
+"Usare 'Effetti presentati SBF' per la tradizionale gestione delle RIBA. "
+"Questa configurazione disabilita il controllo del credito verso il "
+"cliente e della disponibilità del portafoglio!\n"
+"Usare 'Conto portafoglio SBF' per gestire e controllare il conto di "
+"portafoglio\n"
+msgstr ""
+"I conti 'Effetti presentati SBF' e 'Conto portafoglio SBF' sono in "
+"conflitto: impostare soltanto uno dei due\n"
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_banking_common_insoluto__id
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_compensation_generate__id
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_payment_add_move_lines__id
@@ -415,41 +484,59 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_payment_order_confirm__id
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_payment_order_credit__id
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_set_payment_method__id
+"Usare 'Effetti presentati SBF' per la tradizionale gestione delle RIBA. "
+"Questa configurazione disabilita il controllo del credito verso il "
+"cliente e della disponibilità del portafoglio!\n"
+"Usare 'Conto portafoglio SBF' per gestire e controllare il conto di "
+"portafoglio\n"
+
+#. module: account_banking_common
+#: code:addons/account_banking_common/models/account_journal.py:316
 msgid "ID"
 msgstr "ID"
+
+#. module: account_banking_common
+#: code:addons/account_banking_common/models/account_journal.py:316
+msgid "Il conto avere predefinito deve essere un conto di tipo credito clienti"
+msgstr "Il conto avere predefinito deve essere un conto di tipo credito clienti"
+
+#. module: account_banking_common
+#: code:addons/account_banking_common/models/account_journal.py:302
+msgid "Il conto dare predefinito deve essere un conto di tipo credito clienti"
+msgstr "Il conto dare predefinito deve essere un conto di tipo credito clienti"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_payment_order_confirm__amount_expense
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_payment_order_credit__amount_expense
 msgid "Importo"
-msgstr ""
+msgstr "Importo"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_account_bank_statement_import_journal_creation__impegno_effetti_sbf
 #: model:ir.model.fields,field_description:account_banking_common.field_account_journal__impegno_effetti_sbf
 msgid "Importo da presentare"
-msgstr ""
+msgstr "Importo da presentare"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_compensation_generate__compensation_amount
 msgid "Importo di compensazione"
-msgstr ""
+msgstr "Importo di compensazione"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_register_payment__total_amount
 msgid "Importo pagamento"
-msgstr ""
+msgstr "Importo pagamento"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_banking_common_insoluto__expenses_amount
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_register_payment__expenses_amount
 msgid "Importo spese"
-msgstr ""
+msgstr "Importo spese"
 
 #. module: account_banking_common
 #: model_terms:ir.ui.view,arch_db:account_banking_common.res_config_settings_view_common_form
 msgid "Impostazione Abbuoni"
-msgstr ""
+msgstr "Impostazione Abbuoni"
 
 #. module: account_banking_common
 #: model:ir.model,name:account_banking_common.model_account_invoice
@@ -467,15 +554,14 @@ msgid "Journal Item"
 msgstr "Movimento contabile"
 
 #. module: account_banking_common
-#: code:addons/account_banking_common/wizard/wizard_account_register_payment.py:97
-#: code:addons/account_banking_common/wizard/wizard_account_register_payment.py:97
+#: code:addons/account_banking_common/wizard/wizard_account_register_payment.py:89
 msgid "La differenza di importo è elevata."
-msgstr "."
+msgstr "La differenza di importo è elevata."
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_register_payment__payment_difference_open
 msgid "Lasciare aperto"
-msgstr ""
+msgstr "Lasciare aperto"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_banking_common_insoluto____last_update
@@ -499,7 +585,7 @@ msgstr "Ultima modifica il"
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_payment_order_credit__write_uid
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_set_payment_method__write_uid
 msgid "Last Updated by"
-msgstr "Ultimo aggiornamento di"
+msgstr "Last Updated by"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_banking_common_insoluto__write_date
@@ -511,18 +597,18 @@ msgstr "Ultimo aggiornamento di"
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_payment_order_credit__write_date
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_set_payment_method__write_date
 msgid "Last Updated on"
-msgstr "Ultimo aggiornamento il"
+msgstr "Last Updated on"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_account_bank_statement_import_journal_creation__invoice_financing_evaluate
 #: model:ir.model.fields,field_description:account_banking_common.field_account_journal__invoice_financing_evaluate
 msgid "Metodo calcolo anticipo fatture"
-msgstr ""
+msgstr "Metodo calcolo anticipo fatture"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_set_payment_method__payment_method
 msgid "Metodo di pagamento"
-msgstr ""
+msgstr "Metodo di pagamento"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_res_partner_bank__display_name
@@ -532,7 +618,7 @@ msgstr "Descrizione"
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_register_payment__note
 msgid "Nota"
-msgstr ""
+msgstr "Nota"
 
 #. module: account_banking_common
 #: model_terms:ir.ui.view,arch_db:account_banking_common.view_move_line_form_duedates_orders
@@ -542,13 +628,18 @@ msgstr "Ordini"
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_payment_add_move_lines__payment_orders
 msgid "Ordini di pagamento"
-msgstr ""
+msgstr "Ordini di pagamento"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_account_setup_bank_manual_config__has_children
 #: model:ir.model.fields,field_description:account_banking_common.field_res_partner_bank__has_children
 msgid "Padre"
-msgstr ""
+msgstr "Padre"
+
+#. module: account_banking_common
+#: model:ir.model,name:account_banking_common.model_account_payment_line
+msgid "Payment Lines"
+msgstr "Payment Lines"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_payment_generate__payment_mode_id
@@ -558,80 +649,79 @@ msgstr "Modo di pagamento"
 #. module: account_banking_common
 #: model:ir.model,name:account_banking_common.model_account_payment_order
 msgid "Payment Order"
-msgstr "Ordini di pagamento"
+msgstr "Ordine di pagamento"
 
 #. module: account_banking_common
 #: model_terms:ir.ui.view,arch_db:account_banking_common.view_move_line_form_duedates_orders
 msgid "Payment Orders"
-msgstr "Pagamento Ordini"
+msgstr "Ordini di pagamento"
 
 #. module: account_banking_common
-#: code:addons/account_banking_common/models/account_payment_order.py:288
-#: code:addons/account_banking_common/models/account_payment_order.py:288
+#: code:addons/account_banking_common/models/account_payment_order.py:417
 #, python-format
 msgid "Payment order %s"
-msgstr ""
+msgstr "Ordine di pagamento %s"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_account_bank_statement_import_journal_creation__invoice_financing_percent
 #: model:ir.model.fields,field_description:account_banking_common.field_account_journal__invoice_financing_percent
 msgid "Percentuale di anticipo fatture"
-msgstr ""
+msgstr "Percentuale di anticipo fatture"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_account_bank_statement_import_journal_creation__importo_effetti_sbf
 #: model:ir.model.fields,field_description:account_banking_common.field_account_journal__importo_effetti_sbf
 msgid "Portafoglio utilizzato"
-msgstr ""
+msgstr "Portafoglio utilizzato"
 
 #. module: account_banking_common
 #: model:ir.model,name:account_banking_common.model_wizard_account_register_payment
 msgid "Register payment from duedates tree view"
-msgstr ""
+msgstr "Registrare pagamento da vista scadenze"
 
 #. module: account_banking_common
 #: model_terms:ir.ui.view,arch_db:account_banking_common.wizard_account_banking_common_insoluto
 msgid "Registra"
-msgstr ""
+msgstr "Registra"
 
 #. module: account_banking_common
 #: model:ir.actions.server,name:account_banking_common.server_action_insoluto
 #: model_terms:ir.ui.view,arch_db:account_banking_common.wizard_account_banking_common_insoluto
 msgid "Registra Insoluto"
-msgstr ""
+msgstr "Registra Insoluto"
 
 #. module: account_banking_common
 #: model:ir.actions.server,name:account_banking_common.server_action_register_payment_duedates
 #: model_terms:ir.ui.view,arch_db:account_banking_common.wizard_account_register_payment
 msgid "Registra pagamento"
-msgstr ""
+msgstr "Registra pagamento"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_compensation_generate__journal_id
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_register_payment__journal_id
 msgid "Registro"
-msgstr ""
+msgstr "Registro"
 
 #. module: account_banking_common
 #: model:ir.model,name:account_banking_common.model_wizard_set_payment_method
 msgid "Set or update payment mathod into due dates"
-msgstr ""
+msgstr "Set or update payment mathod into due dates"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_account_bank_statement_import_journal_creation__sezionale
 #: model:ir.model.fields,field_description:account_banking_common.field_account_journal__sezionale
 msgid "Sezionale"
-msgstr ""
+msgstr "Sezionale"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_set_payment_method__overwrite
 msgid "Sovrascrivi"
-msgstr ""
+msgstr "Sovrascrivi"
 
 #. module: account_banking_common
 #: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_compensation_generate__same_account
 msgid "Stesso conto"
-msgstr ""
+msgstr "Stesso conto"
 
 #. module: account_banking_common
 #: model:ir.model.fields,help:account_banking_common.field_account_payment_order__payment_method_code
@@ -639,23 +729,23 @@ msgid ""
 "This code is used in the code of the Odoo module that handles this "
 "payment method. Therefore, if you change it, the generation of the "
 "payment file may fail."
-msgstr "."
+msgstr ""
+"This code is used in the code of the Odoo module that handles this "
+"payment method. Therefore, if you change it, the generation of the "
+"payment file may fail."
 
 #. module: account_banking_common
-#: selection:account.journal,invoice_financing_evaluate:0
 #: selection:account.journal,invoice_financing_evaluate
 msgid "imponibile su imponibile"
-msgstr ""
+msgstr "imponibile su imponibile"
 
 #. module: account_banking_common
-#: selection:account.journal,invoice_financing_evaluate:0
 #: selection:account.journal,invoice_financing_evaluate
 msgid "percentuale su totale"
-msgstr ""
+msgstr "percentuale su totale"
 
 #. module: account_banking_common
 #: model:ir.model,name:account_banking_common.model_wizard_payment_order_credit
 msgid "wizard.payment.order.credit"
-msgstr ""
-
+msgstr "wizard.payment.order.credit"
 
