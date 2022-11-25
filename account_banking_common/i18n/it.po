@@ -476,19 +476,6 @@ msgid ""
 msgstr ""
 "I conti 'Effetti presentati SBF' e 'Conto portafoglio SBF' sono in "
 "conflitto: impostare soltanto uno dei due\n"
-#: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_banking_common_insoluto__id
-#: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_compensation_generate__id
-#: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_payment_add_move_lines__id
-#: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_payment_generate__id
-#: model:ir.model.fields,field_description:account_banking_common.field_wizard_account_register_payment__id
-#: model:ir.model.fields,field_description:account_banking_common.field_wizard_payment_order_confirm__id
-#: model:ir.model.fields,field_description:account_banking_common.field_wizard_payment_order_credit__id
-#: model:ir.model.fields,field_description:account_banking_common.field_wizard_set_payment_method__id
-"Usare 'Effetti presentati SBF' per la tradizionale gestione delle RIBA. "
-"Questa configurazione disabilita il controllo del credito verso il "
-"cliente e della disponibilità del portafoglio!\n"
-"Usare 'Conto portafoglio SBF' per gestire e controllare il conto di "
-"portafoglio\n"
 
 #. module: account_banking_common
 #: code:addons/account_banking_common/models/account_journal.py:316
