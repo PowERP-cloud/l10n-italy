@@ -5,6 +5,7 @@
 #
 import datetime
 from odoo import models, fields, api
+from odoo.exceptions import Warning as UserError
 from ..utils.misc import MOVE_TYPE_INV_CN
 
 
@@ -419,7 +420,6 @@ class DueDateManager(models.Model):
 
         if param_cm['payment_terms'].first_duedate_tax and self.invoice_id:
             add_tax = True
-
         # end if
 
         for due_date in due_dates:
@@ -428,6 +428,18 @@ class DueDateManager(models.Model):
             elif param_cm['doc_type'] in ('in_invoice', 'out_refund'):
                 payment_method = due_date[2]['debit']
             # end if
+
+            if not payment_method:
+                pt = param_cm['payment_terms']
+                error_msg = f'Termine di pagamento {pt.display_name} (id: {pt.id}) non correttamente configurato.'
+
+                if not pt.line_ids:
+                    error_msg += '\n"Condizioni" non configurate'
+                # end if
+
+                raise UserError(error_msg)
+            # end if
+
             if add_tax:
                 due_amount = due_date[1] + tax
                 add_tax = False
@@ -451,7 +463,19 @@ class DueDateManager(models.Model):
 
     @api.model
     def _get_split_date_period(self, parent_id, doc_type, date):
-        comparison_date = datetime.datetime.strptime(date, "%Y-%m-%d").date()
+
+        if isinstance(date, str):
+            comparison_date = datetime.datetime.strptime(date, "%Y-%m-%d").date()
+        elif isinstance(date, datetime.datetime):
+            comparison_date = date.date()
+        elif isinstance(date, datetime.date):
+            comparison_date = date
+        else:
+            raise TypeError(
+                f'Parametro date di tipo non valido (tipo: {type(date)}, valore:{date})'
+            )
+        # end if
+
         if parent_id.partner_duedates_dr_ids:
             for period in parent_id.partner_duedates_dr_ids:
                 enable_period = False

@@ -6,7 +6,7 @@
 #
 {
     'name': 'Suddivisione dei costi',
-    'version': '12.0.0.1.18',
+    'version': '12.0.0.1.19',
     'category': 'Accounting',
     'summary': 'Suddivisione dei costi',
     'author': 'powERP enterprise network and other partners',

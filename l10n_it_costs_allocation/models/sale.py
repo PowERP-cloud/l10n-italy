@@ -78,6 +78,10 @@ class SaleOrder(models.Model):
 
     # end write
 
+    def calcola_ventilazione_costi(self):
+        ventilazione_costi(self, self.order_line)
+    # end aggiorna_ventilazione_costi
+
 # end SaleOrder
 
 
