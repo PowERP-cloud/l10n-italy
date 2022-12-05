@@ -259,20 +259,24 @@ def same_bank_account_wallet(account_move_lines):
 
     for line in account_move_lines:
 
-        line_company_bank = line.company_bank_id
-        if not line_company_bank:
-            pay_order_date = False
-            for pay_line in line.payment_line_ids:
-                if not pay_order_date:
-                    pay_order_date = pay_line.order_id.date_uploaded
-                if pay_line.order_id.date_uploaded < pay_order_date:
-                    continue
-                line_company_bank = pay_line.order_id.company_partner_bank_id
+        # line_company_bank = line.company_bank_id
+        line_company_bank = (
+            line.payment_line_ids
+            and line.payment_line_ids[0].order_id.company_partner_bank_id
+        )
+        # if not line_company_bank:
+        #     pay_order_date = False
+        #     for pay_line in line.payment_line_ids:
+        #         if not pay_order_date:
+        #             pay_order_date = pay_line.order_id.date_uploaded
+        #         if pay_line.order_id.date_uploaded < pay_order_date:
+        #             continue
+        #         line_company_bank = pay_line.order_id.company_partner_bank_id
 
         if bank_wallet is None:
             bank_wallet = line_company_bank
 
-        if bank_wallet.bank_is_wallet is False:
+        if not bank_wallet.bank_is_wallet:
             raise UserError(
                 "Le scadenze selezionate devono avere "
                 "un conto bancario di portafoglio"
@@ -283,13 +287,6 @@ def same_bank_account_wallet(account_move_lines):
                 "Le scadenze selezionate devono avere "
                 "tutte lo stesso conto bancario di portafoglio"
             )
-
-        else:
-            pass
-
-        # end if
-
-    # end for
 
     return bank_wallet
 

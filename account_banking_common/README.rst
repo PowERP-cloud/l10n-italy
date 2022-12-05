@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.46
+|icon| Account Banking Common 12.0.3.7.47
 =========================================
 
 
@@ -149,6 +149,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.47 (2022-12-05)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Confirm payment w/o company bank / Conferma pagamento segnala assenza banca azienda
+
 12.0.3.7.46 (2022-11-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -209,12 +214,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Gestito controllo su distinte riconciliate
-
-12.0.3.7.35 (2022-03-03)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
- * [IMP] Gestione operazioni di registrazione pagamenti fornitori e compensazione tra fatture e note di credito nelle registrazioni
- * [IMP] Gestione spese bancarie
 
 
 
@@ -279,7 +278,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-11-23
+Last Update / Ultimo aggiornamento: 2022-12-05
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

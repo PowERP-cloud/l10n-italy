@@ -1,3 +1,8 @@
+12.0.3.7.47 (2022-12-05)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Confirm payment w/o company bank / Conferma pagamento segnala assenza banca azienda
+
 12.0.3.7.46 (2022-11-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
