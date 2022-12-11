@@ -813,7 +813,7 @@ class WizardExportFatturapa(models.TransientModel):
 
                 if partner_bank.bank_name:
                     DettaglioPagamento.IstitutoFinanziario = \
-                        partner_bank.bank_name
+                        partner_bank.bank_name[:80]  # String80LatinType
                 if partner_bank.acc_number and partner_bank.acc_type == 'iban':
                     DettaglioPagamento.IBAN = \
                         ''.join(partner_bank.acc_number.split())
@@ -927,6 +927,9 @@ class WizardExportFatturapa(models.TransientModel):
                     raise UserError(
                         _("E-invoice export file still present for invoice %s.")
                         % (inv.number))
+
+                _logger.info(f"Creating XML for invoice {inv.number} ...")
+
                 if self.report_print_menu:
                     self.generate_attach_report(inv)
                 invoice_body = FatturaElettronicaBodyType()
@@ -949,10 +952,14 @@ class WizardExportFatturapa(models.TransientModel):
         invoices_by_partner = self.group_invoices_by_partner()
         company = self.env.user.company_id
 
+        count = 0
+        t_count = len(self._context['active_ids'])
         for partner in invoices_by_partner:
             context_partner = self.env.context.copy()
             context_partner.update({'lang': partner.lang})
             for invoice_ids in invoices_by_partner[partner]:
+                count += len(invoice_ids)
+                _logger.info(f"{count}/{t_count}")
                 fatturapa, number = self.exportInvoiceXML(
                     company, partner, invoice_ids, context=context_partner)
 
