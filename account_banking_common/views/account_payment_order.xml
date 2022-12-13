@@ -23,14 +23,15 @@
 
             <xpath expr="//button[@name='action_done_cancel']" position="replace">
                 <button
-                    name="action_done_cancel"
-                    type="object"
-                    string="Cancel Payments"
-                    attrs="{'invisible': ['|', ('has_incassi_effettuati', '=', True), ('state', 'not in', ['uploaded', 'done'])]}"
-                />
+                       name="action_done_cancel"
+                       type="object"
+                       string="Cancel Payments"
+                       attrs="{'invisible': ['|', ('has_incassi_effettuati', '=', True), ('state', 'not in', ['uploaded', 'done'])]}"
+                       />
             </xpath>
 
         </field>
     </record>
 
 </odoo>
+

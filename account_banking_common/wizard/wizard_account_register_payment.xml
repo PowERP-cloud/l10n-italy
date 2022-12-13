@@ -7,9 +7,9 @@
             <form string="Registra pagamento">
                 <group>
                     <field
-                        name="journal_id"
-                        domain="[('is_wallet', '=', False), ('type', 'in', ('bank', 'cash'))]"
-                    />
+                          name="journal_id"
+                          domain="[('is_wallet', '=', False), ('type', 'in', ('bank', 'cash'))]"
+                          />
                     <field name="registration_date"/>
                 </group>
 

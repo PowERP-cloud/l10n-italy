@@ -14,12 +14,12 @@ _logger = logging.getLogger(__name__)
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
-    @api.depends('payment_order_lines')
+    @api.depends('payment_line_ids')
     def _compute_amount_payment_line(self):
         for record in self:
-            if record.payment_order_lines and len(record.payment_order_lines) > 0:
-                order_line = record.payment_order_lines[
-                    len(record.payment_order_lines) - 1]
+            if record.payment_line_ids and len(record.payment_line_ids) > 0:
+                order_line = record.payment_line_ids[
+                    len(record.payment_line_ids) - 1]
                 record.amount_into_payment_line = order_line.amount_currency
             else:
                 record.amount_into_payment_line = False
@@ -91,9 +91,11 @@ class AccountMoveLine(models.Model):
         search='_search_has_order',
     )
 
-    payment_order_lines = fields.One2many(
+    payment_line_ids = fields.One2many(
         comodel_name='account.payment.line',
         inverse_name='move_line_id',
+        string="Payment lines",
+        # oldname="payment_order_lines"
     )
 
     incasso_effettuato = fields.Boolean(
