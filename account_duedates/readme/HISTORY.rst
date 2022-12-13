@@ -1,5 +1,10 @@
+12.0.4.8.37_2 (2022-11-22)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Field account_move_line.payment_order_lines renamed to payment_line_ids
+
 12.0.4.8.37_1 (2022-05-04)
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Impostato campo fattura in sola lettura
 

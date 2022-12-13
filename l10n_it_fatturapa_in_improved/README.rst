@@ -1,12 +1,12 @@
 
-=========================================
-|icon| Account Banking Common 12.0.3.7.47
-=========================================
+======================================================================
+|icon| Italian localization - l10n_it_fatturapa_in_improved 12.0.0.3.4
+======================================================================
 
 
-**Common stuff for payment modules**
+**Corrections to official l10n_it_fatturapa_in**
 
-.. |icon| image:: https://raw.githubusercontent.com/zeroincombenze/l10n-italy/12.0/account_banking_common/static/description/icon.png
+.. |icon| image:: https://raw.githubusercontent.com/zeroincombenze/l10n-italy/12.0/l10n_it_fatturapa_in_improved/static/description/icon.png
 
 |Maturity| |Build Status| |Codecov Status| |license gpl| |Try Me|
 
@@ -18,18 +18,18 @@
 Overview / Panoramica
 =====================
 
-|en| This module adds some fields to account.journal and res.partner.bank to manage wallet account.
-A wallet account is a special bank account with financial amounts.
-Any bank acount may be linked to one ore more wallet accounts.
-With this module, user can declare the bank account hierarchy.
+|en| This module improves e-invoice import and makes available
+the default account for purchase invoice.
+It set tax code for round line.
+
 
 |
 
-|it| Questo modulo aggiunge i campi per la gestione dei conti di portafoglio.
-I conti di portafoglio sono conti bancari speciali usati per la gestione degli importi SBF.
-Ogni conto bancario puà essere collegato ad uno o più conti di portafoglio.
-Ad esempio, la Banca Alpha oltre al conto di liquidità con IBAN ufficiale puà fornire un conto di portafoglio per la presentazione RIBA ed uno per gli anticipi fatture.
-Grazie a questo modulo l'utente può dichiarare la gerarchia dei conti bancari.
+|it| Questo modulo semplifica l'importazione delle fatture elettroniche fornitori
+permettendo di utilizzare un conto di costo predefinito.
+
+Inoltre aggiunge il codice iva alle righe di arrotondamento.
+
 
 |
 |
@@ -84,7 +84,7 @@ From UI: go to:
 
 * |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
-* |menu| Setting > Apps |right_do| Select **account_banking_common** > Install
+* |menu| Setting > Apps |right_do| Select **l10n_it_fatturapa_in_improved** > Install
 
 
 |
@@ -149,71 +149,10 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
-12.0.3.7.47 (2022-12-05)
-~~~~~~~~~~~~~~~~~~~~~~~~
+12.0.0.3.4 (2022-11-15)
+~~~~~~~~~~~~~~~~~~~~~~~
 
-* [FIX] Confirm payment w/o company bank / Conferma pagamento segnala assenza banca azienda
-
-12.0.3.7.46 (2022-11-15)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Confirm payment w/o company bank / Conferma pagamento segnala assenza banca azienda
-* [FIX] Crash if not compiled portafoglio SBF / Crash se manca conto portafoglio SBF
-* [FIX] Errato caricamento conto effetti attivi
-* [IMP] Bank form: help and more info / Form banca: help + info dettagliate
-* [IMP] Field account_move_line.payment_order_lines renamed to payment_line_ids
-
-12.0.3.7.45 (2022-10-03)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestione riconciliazioni degli insoluti
-
-12.0.3.7.44 (2022-07-05)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Ricalcolo disponibilità
-
-12.0.3.7.43 (2022-04-15)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Impostato warning su differenza importo scadenze minore del delta impostato in configurazione
-
-12.0.3.7.42 (2022-04-07)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [REF] Effettuato refactoring della registrazione del pagamento delle scadenze
-* [FIX] Gestito riconciliazioni nella registrazione degli insoluti
-
-12.0.3.7.41 (2022-03-11)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Impostato ordinamento delle azioni nel rispettivo menù di pagamenti e scadenze
-
-12.0.3.7.40 (2022-03-11)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Impostato configurazione conti di abbuono e abbuono delta
-* [FIX] Esposto in tutti i registri il conto spese bancarie
-
-12.0.3.7.39 (2022-03-10)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito importi scadenze in insoluto standard
-
-12.0.3.7.38 (2022-03-09)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [IMP] Inserita data accredito da wizard
-
-12.0.3.7.37 (2022-03-04)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito controllo su distinte insolute
-
-12.0.3.7.36 (2022-03-03)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito controllo su distinte riconciliate
+* [DOC] Documentazione
 
 
 
@@ -235,18 +174,15 @@ Odoo is a trademark of `Odoo S.A. <https://www.odoo.com/>`__ (formerly OpenERP)
 Authors / Autori
 ----------------
 
-* `powERP <https://www.powerp.it>`__
-* `SHS-AV s.r.l. <https://www.zeroincombenze.it/>`__
-* `Didotech s.r.l. <https://www.didotech.com>`__
-* `LibrERP <https://www.librerp.it>`__
+* `librERP <https://www.librerp.it>`__
+* `SHS-AV s.r.l. <https://www.zeroincombenze.it>`__
+* `Didotech srl <https://www.didotech.com>`__
 
 
 Contributors / Collaboratori
 ----------------------------
 
 * Antonio Maria Vigliotti <antoniomaria.vigliotti@gmail.com>
-* Marco Tosato <marco.tosato@didotech.com>
-* Fabio Giovannelli <fabio.giovannelli@didotech.com>
 
 
 Maintainer / Manutenzione
@@ -278,9 +214,9 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-12-05
+Last Update / Ultimo aggiornamento: 2022-11-16
 
-.. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
+.. |Maturity| image:: https://img.shields.io/badge/maturity-Alfa-black.png
     :target: https://odoo-community.org/page/development-status
     :alt: 
 .. |Build Status| image:: https://travis-ci.org/zeroincombenze/l10n-italy.svg?branch=12.0

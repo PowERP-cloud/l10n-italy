@@ -19,7 +19,7 @@
         <field name="arch" type="xml">
 
             <xpath expr="//form/sheet/group[1]/group[last()]" position="after">
-                <group colspan="4" string="Conti di default" >
+                <group colspan="4" string="Conti Effetti attivi a presentazione distinta" >
                     <field name="default_credit_account_id" />
                     <field name="default_debit_account_id" />
                     <field name="default_bank_expenses_account"/>
@@ -29,30 +29,31 @@
                         <field name="has_children" invisible="1"/>
                         <field name="is_wallet" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])], 'readonly':[('has_children', '=', True)]}"/>
                         <field name="wallet_ids" attrs="{'invisible': ['|', ('is_wallet', '=', True), ('type', 'not in', ['bank', 'cash'])]}">
-                        <tree>
-                            <field name="name" />
-                            <field name="type" />
-                            <field name="bank_acc_number" />
-                        </tree>
+                            <tree>
+                                <field name="name" />
+                                <field name="type" />
+                                <field name="bank_acc_number" />
+                            </tree>
                         </field>
                         <field name="main_bank_account_id" attrs="{'required': [('is_wallet', '=', True)], 'invisible': [('is_wallet', '=', False)]}"/>
                     </group>
                     <group colspan="4" string="Configurazione conti pagamenti">
                         <group
-                            attrs="{'invisible': [('is_wallet', '=', False)]}">
-                                    <field name="invoice_financing_evaluate"/>
+                              attrs="{'invisible': [('is_wallet', '=', False)]}">
+                            <field name="invoice_financing_evaluate"/>
                         </group>
                         <group attrs="{'invisible': [('is_wallet', '=', False)]}">
-                                <field
-                                      name="invoice_financing_percent"
-                                      attrs="{
-                                      'invisible': [('invoice_financing_evaluate', '=', False)],
-                                      'required' : [('invoice_financing_evaluate', '!=', False)]
-                                      }"
-                                      />
+                            <field
+                                  name="invoice_financing_percent"
+                                  attrs="{
+                                  'invisible': [('invoice_financing_evaluate', '=', False)],
+                                  'required' : [('invoice_financing_evaluate', '!=', False)]
+                                  }"
+                                  />
                         </group>
                         <group attrs="{'invisible': [('is_wallet', '=', False)]}">
                             <field name="sezionale"/>
+                            <field name="effetti_presentati"/>
                             <field name="portafoglio_sbf"/>
                             <field name="effetti_allo_sconto"/>
                         </group>
@@ -80,3 +81,4 @@
         </field>
     </record>
 </odoo>
+

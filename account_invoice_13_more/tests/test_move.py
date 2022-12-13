@@ -678,7 +678,7 @@ class TestAccountMove(common.SingleTransactionCase):
     # ------------------ #
     def setUp(self):
         super().setUp()
-        self.setup_records(lang='it_IT')
+        self.setup_records()
 
     def tearDown(self):
         super().tearDown()

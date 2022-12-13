@@ -1,7 +1,8 @@
-#
+# Copyright 2020-22 LibrERP enterprise network <https://www.librerp.it>
 # Copyright 2020-22 SHS-AV s.r.l. <https://www.zeroincombenze.it>
-# Copyright 2020-22 powERP enterprise network <https://www.powerp.it>
 # Copyright 2020-22 Didotech s.r.l. <https://www.didotech.com>
+#
+# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 #
 import typing
 
@@ -9,7 +10,7 @@ from odoo.exceptions import UserError
 
 
 def same_payment_method(account_move_lines):
-    '''Ensures all lines have the same payment method'''
+    """Ensures all lines have the same payment method"""
 
     assert len(account_move_lines) > 0
 
@@ -24,8 +25,8 @@ def same_payment_method(account_move_lines):
 
         elif line_pay_method.id != pay_method.id:
             raise UserError(
-                'Le scadenze selezionate devono avere '
-                'tutte lo stesso metodo di pagamento'
+                "Le scadenze selezionate devono avere "
+                "tutte lo stesso metodo di pagamento"
             )
 
         else:
@@ -38,32 +39,31 @@ def same_payment_method(account_move_lines):
     return pay_method
 
 
-
 def allowed_payment_method(account_move_lines, payment_method_codes: typing.List[str]):
-    '''Ensures the selected lines have a supported payment method'''
+    """Ensures the selected lines have a supported payment method"""
 
     assert len(account_move_lines) > 0
 
-    assert len(payment_method_codes) > 0, \
-        'At least one payment method code must be specified ' \
-        '...otherwise what are you calling this function for????'
+    assert len(payment_method_codes) > 0, (
+        "At least one payment method code must be specified "
+        "...otherwise what are you calling this function for????"
+    )
 
     for line in account_move_lines:
 
         if line.payment_method.code not in payment_method_codes:
             raise UserError(
-                'La funzione è supportata solo '
-                'per i seguenti metodi di pagamento:'
-                ' ' + ', '.join(payment_method_codes)
+                "La funzione è supportata solo "
+                "per i seguenti metodi di pagamento:"
+                " " + ", ".join(payment_method_codes)
             )
         # end if
 
     # end for
 
 
-
 def assigned_to_payment_order(account_move_lines, assigned: bool):
-    '''
+    """
     Check if the selected lines are assigned to a payment order or not.
     If the "assigned" parameters is:
 
@@ -72,7 +72,7 @@ def assigned_to_payment_order(account_move_lines, assigned: bool):
 
       - False the method requires that all lines have NOT been assigned to a
         payment order, raises an exception otherwise
-    '''
+    """
 
     assert len(account_move_lines) > 0
 
@@ -80,13 +80,13 @@ def assigned_to_payment_order(account_move_lines, assigned: bool):
 
         if assigned and not line.in_order:
             raise UserError(
-                'Le scadenze selezionate devono essere '
-                'assegnate ad un ordine di pagamento'
+                "Le scadenze selezionate devono essere "
+                "assegnate ad un ordine di pagamento"
             )
         elif not assigned and line.in_order:
             raise UserError(
-                'Le scadenze selezionate non possono essere '
-                'già assegnate ad un ordine di pagamento'
+                "Le scadenze selezionate non possono essere "
+                "già assegnate ad un ordine di pagamento"
             )
         else:
             pass
@@ -95,9 +95,8 @@ def assigned_to_payment_order(account_move_lines, assigned: bool):
     # end for
 
 
-
 def same_payment_order(account_move_lines):
-    '''Ensures that all the move lines are in the same payment_order'''
+    """Ensures that all the move lines are in the same payment_order"""
 
     assert len(account_move_lines) > 0
 
@@ -107,9 +106,9 @@ def same_payment_order(account_move_lines):
 
         if line.payment_order_name != po_name:
             raise UserError(
-                'Per poter procedere con l\'operazione tutte le righe '
-                'selezionate devono appartenere allo stesso ordine di '
-                'pagamento'
+                "Per poter procedere con l'operazione tutte le righe "
+                "selezionate devono appartenere allo stesso ordine di "
+                "pagamento"
             )
         else:
             pass
@@ -121,62 +120,61 @@ def same_payment_order(account_move_lines):
     return po_name
 
 
-
-def allowed_payment_order_status(account_move_lines, payment_order_status: typing.List[str]):
-    '''
+def allowed_payment_order_status(
+    account_move_lines, payment_order_status: typing.List[str]
+):
+    """
     Ensures that all the payment orders referenced by the lines are in one of
     the valid statuses listed in the payment_order_status parameter
-    '''
+    """
 
     assert len(account_move_lines) > 0
 
-    assert len(payment_order_status) > 0, \
-        'At least one state must be specified ' \
-        '...otherwise what are you calling this function for????'
+    assert len(payment_order_status) > 0, (
+        "At least one state must be specified "
+        "...otherwise what are you calling this function for????"
+    )
 
     for line in account_move_lines:
 
         if line.state not in payment_order_status:
 
             # Translate the values to user friendly labels
-            val_to_label = dict(line.fields_get(['state'])['state']['selection'])
+            val_to_label = dict(line.fields_get(["state"])["state"]["selection"])
             labels_list = [val_to_label[x] for x in payment_order_status]
 
             if len(payment_order_status) > 1:
-                msg = 'in uno dei seguenti stati: ' + ', '.join(labels_list)
+                msg = "in uno dei seguenti stati: " + ", ".join(labels_list)
             else:
-                msg = 'nello stato: ' + labels_list[0]
+                msg = "nello stato: " + labels_list[0]
             # end if
 
             raise UserError(
-                'Per poter procedere con l\'operazione l\'ordine di pagamento '
-                'di ciascuna scadenza selezionata deve essere ' + msg
+                "Per poter procedere con l'operazione l'ordine di pagamento "
+                "di ciascuna scadenza selezionata deve essere " + msg
             )
         # end if
 
     # end for
 
 
-
-def except_payment_order_status(account_move_lines,
-                                payment_order_status: typing.List):
-    '''
+def except_payment_order_status(account_move_lines, payment_order_status: typing.List):
+    """
     Ensures that all the payment orders referenced by the lines are not in
     one of the valid statuses listed in the payment_order_status parameter
-    '''
+    """
 
     for line in account_move_lines:
 
         if line.state in payment_order_status:
             raise UserError(
-                'Per poter procedere con l\'operazione l\'ordine '
-                'di pagamento di ciascuna scadenza selezionata non deve '
+                "Per poter procedere con l'operazione l'ordine "
+                "di pagamento di ciascuna scadenza selezionata non deve "
                 'essere nello stato "Documento Caricato"'
             )
         # end if
 
     # end for
-
 
 
 def lines_has_payment(account_move_lines, paid: bool):
@@ -197,13 +195,11 @@ def lines_has_payment(account_move_lines, paid: bool):
 
         if paid and not line.incasso_effettuato:
             raise UserError(
-                'Le scadenze selezionate devono avere '
-                'l\'incasso effettuato'
+                "Le scadenze selezionate devono avere " "l'incasso effettuato"
             )
         elif not paid and line.incasso_effettuato:
             raise UserError(
-                'Le scadenze selezionate non devono avere '
-                'l\'incasso effettuato'
+                "Le scadenze selezionate non devono avere " "l'incasso effettuato"
             )
         else:
             pass
@@ -212,9 +208,7 @@ def lines_has_payment(account_move_lines, paid: bool):
     # end for
 
 
-
-def lines_check_invoice_type(account_move_lines,
-                             allowed_documents: typing.List[str]):
+def lines_check_invoice_type(account_move_lines, allowed_documents: typing.List[str]):
     """
     Check if the selected lines document type is in the list.
     """
@@ -224,10 +218,10 @@ def lines_check_invoice_type(account_move_lines,
     documents_allowed = []
 
     document_labels = {
-        'out_invoice': 'Fattura attiva',
-        'in_invoice': 'Fattura passiva',
-        'out_refund': 'Nota di credito cliente',
-        'in_refund': 'Nota di credito fornitore',
+        "out_invoice": "Fattura attiva",
+        "in_invoice": "Fattura passiva",
+        "out_refund": "Nota di credito cliente",
+        "in_refund": "Nota di credito fornitore",
     }
 
     for inv_type in allowed_documents:
@@ -238,27 +232,26 @@ def lines_check_invoice_type(account_move_lines,
 
         if line.invoice_id.type not in allowed_documents:
             raise UserError(
-                'La funzione è supportata solo '
-                'per i tipi di documento: '
-                ' ' + ', '.join(documents_allowed)
+                "La funzione è supportata solo "
+                "per i tipi di documento: "
+                " " + ", ".join(documents_allowed)
             )
         # end if
 
     # end for
 
 
-
 def insoluto(account_move_lines):
     same_payment_method(account_move_lines)
     assigned_to_payment_order(account_move_lines, assigned=True)
     same_payment_order(account_move_lines)
-    allowed_payment_order_status(account_move_lines, ['done'])
+    allowed_payment_order_status(account_move_lines, ["done"])
     lines_has_payment(account_move_lines, paid=True)
-    lines_check_invoice_type(account_move_lines, ['out_invoice'])
+    lines_check_invoice_type(account_move_lines, ["out_invoice"])
 
 
 def same_bank_account_wallet(account_move_lines):
-    '''Ensures all lines have the same payment method'''
+    """Ensures all lines have the same payment method"""
 
     assert len(account_move_lines) > 0
 
@@ -266,29 +259,34 @@ def same_bank_account_wallet(account_move_lines):
 
     for line in account_move_lines:
 
-        line_bank_wallet = line.company_bank_id
+        # line_company_bank = line.company_bank_id
+        line_company_bank = (
+            line.payment_line_ids
+            and line.payment_line_ids[0].order_id.company_partner_bank_id
+        )
+        # if not line_company_bank:
+        #     pay_order_date = False
+        #     for pay_line in line.payment_line_ids:
+        #         if not pay_order_date:
+        #             pay_order_date = pay_line.order_id.date_uploaded
+        #         if pay_line.order_id.date_uploaded < pay_order_date:
+        #             continue
+        #         line_company_bank = pay_line.order_id.company_partner_bank_id
 
         if bank_wallet is None:
-            bank_wallet = line_bank_wallet
+            bank_wallet = line_company_bank
 
-        if bank_wallet.bank_is_wallet is False:
+        if not bank_wallet.bank_is_wallet:
             raise UserError(
-                'Le scadenze selezionate devono avere '
-                'un conto bancario di portafoglio'
+                "Le scadenze selezionate devono avere "
+                "un conto bancario di portafoglio"
             )
 
-        elif line_bank_wallet.id != bank_wallet.id:
+        elif line_company_bank.id != bank_wallet.id:
             raise UserError(
-                'Le scadenze selezionate devono avere '
-                'tutte lo stesso conto bancario di portafoglio'
+                "Le scadenze selezionate devono avere "
+                "tutte lo stesso conto bancario di portafoglio"
             )
-
-        else:
-            pass
-
-        # end if
-
-    # end for
 
     return bank_wallet
 
@@ -301,10 +299,10 @@ def payment_confirm(account_move_lines):
     same_payment_method(account_move_lines)
     allowed_payment_method(
         account_move_lines,
-        ['invoice_financing', 'riba_cbi', 'sepa_direct_debit'],
+        ["invoice_financing", "riba_cbi", "sepa_direct_debit"],
     )
     assigned_to_payment_order(account_move_lines, assigned=True)
-    allowed_payment_order_status(account_move_lines, ['done'])
+    allowed_payment_order_status(account_move_lines, ["done"])
 
     # same res partner bank and must be a wallet bank account
     same_bank_account_wallet(account_move_lines)
@@ -313,4 +311,4 @@ def payment_confirm(account_move_lines):
     # we catch lines from different orders
     # same_payment_order(account_move_lines)
 
-    lines_check_invoice_type(account_move_lines, ['out_invoice'])
+    lines_check_invoice_type(account_move_lines, ["out_invoice"])
