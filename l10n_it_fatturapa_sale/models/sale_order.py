@@ -24,11 +24,19 @@ class SaleOrder (models.Model):
             orders = invoice.invoice_line_ids.mapped('sale_line_ids.order_id')
             orders = orders.filtered(lambda o: o in self)
             sale_documents = orders.mapped('related_documents')
-            invoice.update({
-                'related_documents': [
-                    (4, sale_document_id)
-                    for sale_document_id in sale_documents.ids],
-            })
+            related_docs = {}
+            for doc in sale_documents:
+                current_index = "{name}-{cig}-{cup}".format(cig=doc.cig,
+                                                            cup=doc.cup,
+                                                            name=doc.name)
+                if current_index not in related_docs.keys():
+                    related_docs[current_index] = doc.id
+            if related_docs:
+                invoice.update({
+                    'related_documents': [
+                        (4, sale_document_id)
+                        for sale_document_id in related_docs.values()],
+                })
         return res
 
     @api.multi
