@@ -960,15 +960,30 @@ class WizardExportFatturapa(models.TransientModel):
             for invoice_ids in invoices_by_partner[partner]:
                 count += len(invoice_ids)
                 _logger.info(f"{count}/{t_count}")
-                fatturapa, number = self.exportInvoiceXML(
-                    company, partner, invoice_ids, context=context_partner)
+                try:
+                    fatturapa, number = self.exportInvoiceXML(
+                        company, partner, invoice_ids, context=context_partner)
 
-                attach = self.saveAttachment(fatturapa, number)
-                attachments |= attach
+                    if self._context.get('simulation', False):
+                        for invoice_id in invoice_ids:
+                            inv = invoice_obj.browse(invoice_id)
+                            inv.write({'simulation_data': 'Success'})
+                    else:
+                        attach = self.saveAttachment(fatturapa, number)
+                        attachments |= attach
 
-                for invoice_id in invoice_ids:
-                    inv = invoice_obj.browse(invoice_id)
-                    inv.write({'fatturapa_attachment_out_id': attach.id})
+                        for invoice_id in invoice_ids:
+                            inv = invoice_obj.browse(invoice_id)
+                            inv.write({'fatturapa_attachment_out_id': attach.id})
+
+                except Exception as e:
+                    if self._context.get('simulation', False):
+                        for invoice_id in invoice_ids:
+                            inv = invoice_obj.browse(invoice_id)
+                            inv.write({'simulation_data': str(e)})
+                        continue
+                    else:
+                        raise e
 
         action = {
             'view_type': 'form',
@@ -983,6 +998,18 @@ class WizardExportFatturapa(models.TransientModel):
             action['view_mode'] = 'tree,form'
             action['domain'] = [('id', 'in', attachments.ids)]
         return action
+
+    def action_simulate_xml(self):
+        self.with_context(simulation=True).exportFatturaPA()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': "Export FatturaPA",
+            'res_model': 'account.invoice',
+            'view_mode': 'tree',
+            'view_id': self.env.ref('l10n_it_fatturapa_out.view_export_fattura_simulation_tree').id,
+            "target": "current",
+            'domain': [('id', 'in', self._context['active_ids'])]
+        }
 
     def generate_attach_report(self, inv):
         binding_model_id = self.with_context(
