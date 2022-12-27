@@ -115,4 +115,16 @@
         </field>
     </record>
 
+    <record id="view_export_fattura_simulation_tree" model="ir.ui.view">
+        <field name="name">account.invoice.simulation.tree</field>
+        <field name="model">account.invoice</field>
+        <field name="priority">25</field>
+        <field name="arch" type="xml">
+            <tree string="Simulation Electronic Invoice" create="false">
+                <field name="number" string="Invoice"/>
+                <field name="simulation_data"/>
+            </tree>
+        </field>
+    </record>
+
 </odoo>
