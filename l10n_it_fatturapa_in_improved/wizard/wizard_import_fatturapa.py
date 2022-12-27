@@ -14,6 +14,16 @@ class WizardImportFatturapa(models.TransientModel):
         """
         Override the original method because of not raising errors
         """
+        # get supplier
+        attachment_id = self._context['active_id']
+        attachment = self.env['fatturapa.attachment.in'].browse(attachment_id)
+        supplier = attachment.xml_supplier_id
+
+        if supplier and supplier.e_invoice_default_account_id and supplier.e_invoice_default_account_id.tax_ids:
+            default_vat_into_default_account = supplier.e_invoice_default_account_id.tax_ids[0]
+        else:
+            default_vat_into_default_account = False
+
         account_tax_model = self.env['account.tax']
         # check if a default tax exists and generate def_purchase_tax object
         ir_values = self.env['ir.default']
@@ -44,6 +54,10 @@ class WizardImportFatturapa(models.TransientModel):
                 self.log_inconsistency(msg)
                 # raise UserError(msg)
         else:
+
+            if default_vat_into_default_account and float(AliquotaIVA) == default_vat_into_default_account.amount:
+                return default_vat_into_default_account
+
             account_taxes = account_tax_model.search(
                 [
                     ('type_tax_use', '=', 'purchase'),
