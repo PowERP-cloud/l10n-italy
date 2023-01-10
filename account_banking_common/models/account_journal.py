@@ -99,7 +99,7 @@ class AccountJournal(models.Model):
                     FROM account_move_line, account_move
                     WHERE account_move_line.account_id = {account_id}
                     and account_move_line.move_id = account_move.id
-                    and account_move.state = 'posted')
+                    and account_move.state = 'posted'
                 """.format(
                     account_id=rec.portafoglio_sbf.id
                 )
