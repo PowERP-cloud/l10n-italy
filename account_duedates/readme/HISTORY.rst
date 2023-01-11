@@ -1,3 +1,8 @@
+12.0.4.8.37_3 (2023-01-11)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Field account_move_line.payment_order_lines renamed to payment_line_ids - updated the account_due_list_view.xml view to use the new field name
+
 12.0.4.8.37_2 (2022-11-22)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
