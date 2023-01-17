@@ -85,7 +85,7 @@ Installation / Installazione
 
 From UI: go to:
 
-* |menu| Setting > Activate Developer mode 
+* |menu| Setting > Activate Developer mode
 * |menu| Apps > Update Apps List
 * |menu| Setting > Apps |right_do| Select **account_duedates** > Install
 
@@ -151,6 +151,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
+
+12.0.4.8.37_3 (2023-01-11)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Field account_move_line.payment_order_lines renamed to payment_line_ids - updated the account_due_list_view.xml view to use the new field name
 
 12.0.4.8.37_2 (2022-11-22)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -279,7 +284,7 @@ Last Update / Ultimo aggiornamento: 2022-11-23
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
-    :alt: 
+    :alt:
 .. |Build Status| image:: https://travis-ci.org/zeroincombenze/l10n-italy.svg?branch=12.0
     :target: https://travis-ci.com/zeroincombenze/l10n-italy
     :alt: github.com

@@ -81,10 +81,10 @@
             <xpath expr="//filter[@name='unreconciled']" position="after">
                 <separator/>
                 <filter string="Non in distinta"
-                        domain="[('payment_order_lines', '=', False)]"
+                        domain="[('payment_line_ids', '=', False)]"
                         name="not_in_distinta"/>
                 <filter string="In distinta"
-                        domain="[('payment_order_lines', '!=', False)]"
+                        domain="[('payment_line_ids', '!=', False)]"
                         name="in_distinta"/>
                 <separator/>
                 <filter string="Effetti incassati"
