@@ -1,3 +1,8 @@
+12.0.4.7.47 (2023-01-17)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Nella descrizione delle righe della registrazione di insoluto viene riportato il numero fattura se il campo "name" di "account.invoice" non è valorizzato
+
 12.0.3.7.47 (2022-12-05)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
