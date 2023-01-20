@@ -247,7 +247,7 @@ class AccountMoveLine(models.Model):
                     "name": str(
                         f"Scadenza {move_line.date_maturity}"
                         " - "
-                        f'Fattura {my_invoice.name or "N/A"}'
+                        f'Fattura {my_invoice.name or my_invoice.number}'
                     ),
                 }
             )
