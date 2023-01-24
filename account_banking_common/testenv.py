@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Test Environment v2.0.4.2
+"""Test Environment v2.0.4.1
 
 Copy this file in tests directory of your module.
 Please copy the documentation testenv.rst file too in your module.
@@ -181,7 +181,6 @@ class MainTest(SingleTransactionCase):
         self._logger = _logger
         self.setup_data_list = {}
         self.setup_data = {}
-        self.setup_xrefs = {}
         self.struct = {}
         self.skeys = {}
         self.parent_name = {}
@@ -192,10 +191,8 @@ class MainTest(SingleTransactionCase):
         self.convey_record = {}
         for item in self.__module__.split("."):
             if item not in ("odoo", "openerp", "addons"):
-                self.module = self.env["ir.module.module"].search(
-                    [("name", "=", item)])[0]
-                if self.module:
-                    break
+                self.module = item
+                break
         # self.tnldict = {}
         # transodoo.read_stored_dict({})
         # self.decl_version = "librerp12"
@@ -435,7 +432,6 @@ class MainTest(SingleTransactionCase):
             if child_xref.startswith(xref):
                 record = self.resource_bind(
                     child_xref, raise_if_not_found=False, resource=childs_resource,
-                    group=group,
                 )
                 if record:
                     values[field].append((1, record.id, child_xref))
@@ -477,14 +473,14 @@ class MainTest(SingleTransactionCase):
         xrefs[0].write(values)                                       # pragma: no cover
         return xrefs[0]                                              # pragma: no cover
 
-    def _get_xref_id(self, resource, xref, fmt=None, group=None):
+    def _get_xref_id(self, resource, xref, fmt=None):
         res = xref
         if xref.isdigit() or (xref.startswith("-") and xref[1:].isdigit()):
             res = int(xref)
         elif self._is_xref(xref):
             if fmt:
                 res = self.resource_bind(
-                    xref, raise_if_not_found=False, resource=resource, group=group,
+                    xref, raise_if_not_found=False, resource=resource
                 )
                 if not res and not self.get_resource_data(resource, xref):
                     self._logger.info("⚠ External reference %s not found" % xref)
@@ -699,7 +695,7 @@ class MainTest(SingleTransactionCase):
     # -------------------------------
 
     def _get_binary_filename(self, xref, bin_types=None):
-        binary_root = get_module_resource(self.module.name, "tests", "data")
+        binary_root = get_module_resource(self.module, "tests", "data")
         if not bin_types:
             binary_file = os.path.join(binary_root, xref)
             if os.path.isfile(binary_file):
@@ -745,7 +741,6 @@ class MainTest(SingleTransactionCase):
                 self.struct[resource][field].get("relation", resource),
                 value,
                 fmt=fmt,
-                group=group,
             )
         if not value:
             value = None
@@ -787,7 +782,7 @@ class MainTest(SingleTransactionCase):
         items = value2list(value)
         for item in items:
             if isinstance(item, basestring):
-                xid = self._get_xref_id(resource, item, fmt=fmt, group=group)
+                xid = self._get_xref_id(resource, item, fmt=fmt)
                 if xid:
                     res.append(xid)
                 is_cmd = False
@@ -1218,7 +1213,7 @@ class MainTest(SingleTransactionCase):
             Same of <wizard_start>
         """
         act_model = "ir.actions.act_window"
-        module = self.module.name if module == "." else module
+        module = self.module if module == "." else module
         act_windows = self.env[act_model].for_xml_id(module, action_name)
         return self._wiz_launch(
             act_windows,
@@ -1345,7 +1340,6 @@ class MainTest(SingleTransactionCase):
             resource, xref, name, group))
         if name not in self.setup_data_list[group]:
             self.setup_data_list[group].append(name)
-        self.setup_xrefs[xref] = (group, resource)
 
     def default_company(self):
         return self.env.user.company_id
@@ -1362,7 +1356,7 @@ class MainTest(SingleTransactionCase):
         """
         return python_plus.compute_date(self.u(date), refdate=self.u(refdate))
 
-    def resource_bind(self, xref, raise_if_not_found=True, resource=None, group=None):
+    def resource_bind(self, xref, raise_if_not_found=True, resource=None):
         """Bind record by xref or searching it or browsing it.
         This function returns a record using issued parameters. It works in follow ways:
 
@@ -1377,7 +1371,6 @@ class MainTest(SingleTransactionCase):
             raise_if_not_found (bool): raise exception if xref not found or
                                        if more records found
             resource (str): Odoo model name, i.e. "res.partner"
-            group (str): used to manager group data; default is "base"
 
         Returns:
             obj: the Odoo model record
@@ -1400,8 +1393,6 @@ class MainTest(SingleTransactionCase):
         if record:
             return record
         # Simulate external reference
-        if not resource and not group and xref in self.setup_xrefs:
-            group, resource = self.setup_xrefs[xref]
         if not resource:
             if raise_if_not_found:                                   # pragma: no cover
                 self.raise_error("No model issued for binding")
@@ -1417,9 +1408,7 @@ class MainTest(SingleTransactionCase):
             self._logger.info("⚠ Model %s without search key" % resource)
             return False
 
-        values = self.get_resource_data(resource, xref, group=group)
         module, name = xref.split(".", 1)
-        key_field = self.skeys[resource][0]
         parent_name = self.parent_name.get(resource)
         if parent_name and self.parent_resource[resource] in self.childs_resource:
             # This is a 3 level external reference for header/detail relationship
@@ -1434,20 +1423,17 @@ class MainTest(SingleTransactionCase):
                     return False                                     # pragma: no cover
             # if self.struct[resource][self.skeys[resource][0]]["type"] == "many2one":
             #     pass
-            domain = [(key_field, "=", x)]
+            domain = [(self.skeys[resource][0], "=", x)]
             x = self.resource_bind(
                 "%s.%s" % (module, name),
                 resource=self.parent_resource[resource],
                 raise_if_not_found=False,
-                group=group,
             )
             if not x:                                                # pragma: no cover
                 return False
             domain.append((parent_name, "=", x.id))
         else:
-            if key_field in values:
-                name = values[key_field]
-            domain = [(key_field, "=", name)]
+            domain = [(self.skeys[resource][0], "=", name)]
         if (
             resource not in RESOURCE_WO_COMPANY
             and "company_id" in self.struct[resource]
@@ -1541,8 +1527,7 @@ class MainTest(SingleTransactionCase):
         """
         if isinstance(resource, basestring):
             record = self.resource_bind(
-                xref, resource=resource, raise_if_not_found=raise_if_not_found,
-                group=group,
+                xref, resource=resource, raise_if_not_found=raise_if_not_found
             )
         else:
             record = resource
@@ -1667,10 +1652,8 @@ class MainTest(SingleTransactionCase):
         Returns:
             dictionary with data or empty dictionary
         """
-        xref = self._get_conveyed_value(resource, None, xref)
-        if not resource and not group and xref in self.setup_xrefs:
-            group, resource = self.setup_xrefs[xref]
         group = group or "base"
+        xref = self._get_conveyed_value(resource, None, xref)
         if (
             group in self.setup_data
             and resource in self.setup_data[group]
@@ -1741,8 +1724,7 @@ class MainTest(SingleTransactionCase):
             self.env["base.update.translations"].create(vals).act_update()
 
     def setup_company(
-        self, company, xref=None, partner_xref=None, bnk1_xref=None, values={},
-        group=None
+        self, company, xref=None, partner_xref=None, values={}, group=None
     ):
         """Setup company values for current user.
         This function assigns company to current user and / or can create xref aliases
@@ -1758,7 +1740,6 @@ class MainTest(SingleTransactionCase):
             company (obj): company to update; if not supplied a new company is created
             xref (str): external reference or alias for main company
             partner_xref (str): external reference or alias for main company partner
-            bnk1_xref (str): external reference or alias for 1st liquidity bank
             values (dict): company data to update immediately
             group (str): if supplied select specific group data; default is "base"
 
@@ -1770,9 +1751,7 @@ class MainTest(SingleTransactionCase):
             company = self.env["res.company"].create(values)
             add_alias = True
         elif values:
-            company.write(self.cast_types("res.company", values, fmt="cmd"))
-        chart_template = self.env["account.chart.template"].search(
-            [("id", "=", company.chart_template_id.id)])
+            company.write(values)
         if xref:
             if not add_alias:
                 self.add_xref(xref, "res.company", company.id)       # pragma: no cover
@@ -1786,14 +1765,6 @@ class MainTest(SingleTransactionCase):
                 self.add_alias_xref(
                     partner_xref, "base.main_partner",
                     resource="res.partner", group=group)
-        if bnk1_xref:
-            bank_prefix = chart_template.bank_account_code_prefix
-            banks = self.env["account.account"].search(
-                [("user_type_id",
-                  "=",
-                  self.env.ref("account.data_account_type_liquidity").id),
-                 ("code", "like", bank_prefix)])
-            self._add_xref(bnk1_xref, banks[0].id, "account.account")
         if self.env.user.company_id != company:
             self.env.user.company_id = company                       # pragma: no cover
         return self.default_company()
@@ -1827,10 +1798,7 @@ class MainTest(SingleTransactionCase):
             None
         """
         self._logger.info(
-            "🎺 Starting test v2.0.4.2 (debug_level=%s)" % (self.debug_level))
-        self._logger.info(
-            "🎺 Testing module: %s (%s)" % (self.module.name,
-                                            self.module.installed_version))
+            "🎺 Starting test v2.0.4 (debug_level=%s)" % (self.debug_level))
         if locale:                                                   # pragma: no cover
             self.set_locale(locale)
         if lang:                                                     # pragma: no cover
