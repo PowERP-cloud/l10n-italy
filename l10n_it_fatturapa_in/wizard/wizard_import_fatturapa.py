@@ -1520,7 +1520,10 @@ class WizardImportFatturapa(models.TransientModel):
 
     def get_invoice_obj(self, fatturapa_attachment):
         xml_string = fatturapa_attachment.get_xml_string()
-        return fatturapa.CreateFromDocument(xml_string)
+        if xml_string:
+            return fatturapa.CreateFromDocument(xml_string)
+        else:
+            return False
 
     def _set_decimal_precision(self, precision_name, field_name):
         precision = self.env["decimal.precision"].search([

@@ -146,10 +146,13 @@ class FatturaPAAttachmentIn(models.Model):
     def _get_has_attachment(self):
         for att in self:
             fatt = self.env['wizard.import.fatturapa'].get_invoice_obj(att)
-            for invoice_body in fatt.FatturaElettronicaBody:
-                AttachmentsData = invoice_body.Allegati
-                if AttachmentsData:
-                    att.xml_has_attachment = True
+            if fatt:
+                for invoice_body in fatt.FatturaElettronicaBody:
+                    AttachmentsData = invoice_body.Allegati
+                    if AttachmentsData:
+                        att.xml_has_attachment = True
+            else:
+                att.xml_has_attachment = False
 
     @api.multi
     def download_attachment(self):
