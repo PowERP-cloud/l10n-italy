@@ -96,7 +96,10 @@ class Attachment(models.Model):
             pass
 
         try:
-            return self.cleanup_xml(data)
+            if data:
+                return self.cleanup_xml(data)
+            else:
+                return ''
         # cleanup_xml calls root.iter(), but root is None if the parser fails
         # Invalid xml 'NoneType' object has no attribute 'iter'
         except AttributeError as e:
