@@ -1,3 +1,9 @@
+12.0.1.2.7_46 (2023-02-15)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Validation error on self invoice in prior year / Errata segnalazione di errore per auto-fatture anno preceente
+* [TEST] Regressione test: 25% (456/340)
+
 12.0.1.2.7_45 (2022-06-27)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

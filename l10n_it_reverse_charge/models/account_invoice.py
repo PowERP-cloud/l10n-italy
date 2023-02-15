@@ -258,6 +258,9 @@ class AccountInvoice(models.Model):
         for field in ("date", "date_apply_balance", "date_apply_vat", "date_effective"):
             if hasattr(self, field):
                 inv_vals[field] = getattr(self, field)
+        for field in ("fiscalyear_id", ):
+            if hasattr(self, field):
+                inv_vals[field] = getattr(self, field).id
 
         inv_vals["comment"] = _(
             "Reverse charge self invoice.\n"
