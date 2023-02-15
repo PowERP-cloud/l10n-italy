@@ -149,6 +149,12 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.48 (2023-02-15)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Payment confirm for refund line / Conferma pagamento di righe con NC
+* [TEST] Regression test: 21% (1438/1135)
+
 12.0.3.7.47 (2022-12-05)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -210,11 +216,6 @@ ChangeLog History / Cronologia modifiche
 
 * [FIX] Gestito controllo su distinte insolute
 
-12.0.3.7.36 (2022-03-03)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito controllo su distinte riconciliate
-
 
 
 |
@@ -239,6 +240,8 @@ Authors / Autori
 * `SHS-AV s.r.l. <https://www.zeroincombenze.it/>`__
 * `Didotech s.r.l. <https://www.didotech.com>`__
 * `LibrERP <https://www.librerp.it>`__
+Authors
+-------
 
 
 Contributors / Collaboratori
@@ -247,6 +250,9 @@ Contributors / Collaboratori
 * Antonio Maria Vigliotti <antoniomaria.vigliotti@gmail.com>
 * Marco Tosato <marco.tosato@didotech.com>
 * Fabio Giovannelli <fabio.giovannelli@didotech.com>
+Contributors
+------------
+
 
 
 Maintainer / Manutenzione
@@ -278,7 +284,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2023-01-25
+Last Update / Ultimo aggiornamento: 2023-02-15
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status

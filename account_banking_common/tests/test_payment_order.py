@@ -308,11 +308,6 @@ class TestPaymentOrder(SingleTransactionCase):
             item = "TEST_%s" % resource.upper().replace(".", "_")
             data[item] = globals()[item]
         self.declare_all_data(data)
-        # for field in ("default_debit_account_id", "default_credit_account_id"):
-        #     self.add_translation(
-        #         "account.journal",
-        #         field,
-        #         ["z0bug.coa_180003", xref_bank])
         self.setup_company(self.default_company(),
                            bnk1_xref="z0bug.coa_bnk1")
         self.setup_env()  # Create test environment

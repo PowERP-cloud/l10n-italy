@@ -1,3 +1,9 @@
+12.0.3.7.48 (2023-02-15)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Payment confirm for refund line / Conferma pagamento di righe con NC
+* [TEST] Regression test: 21% (1438/1135)
+
 12.0.3.7.47 (2022-12-05)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
