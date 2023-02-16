@@ -189,7 +189,7 @@ class AccountJournal(models.Model):
     main_bank_account_id = fields.Many2one(
         comodel_name="account.journal",
         string="Conto principale di liquidità",
-        domain= _domain_main_sezionale,
+        domain=_domain_main_sezionale,
         default=_set_main_bank_account_id_default,
     )
 
@@ -355,12 +355,11 @@ class AccountJournal(models.Model):
                 # Deprecated
                 "banca_conto_effetti": None,
                 "portafoglio_sbf": None,
-                "conto_effetti_attivi":None,
+                "conto_effetti_attivi": None,
                 "effetti_allo_sconto": None,
                 "conto_spese_bancarie": self.default_bank_expenses_account,
                 "effetti_presentati": None,
             }
-
 
     @api.onchange("invoice_financing_evaluate")
     def _onchange_invoice_financing_evaluate(self):

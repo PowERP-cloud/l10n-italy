@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.47
+|icon| Account Banking Common 12.0.4.7.48
 =========================================
 
 
@@ -82,7 +82,7 @@ Installation / Installazione
 
 From UI: go to:
 
-* |menu| Setting > Activate Developer mode
+* |menu| Setting > Activate Developer mode 
 * |menu| Apps > Update Apps List
 * |menu| Setting > Apps |right_do| Select **account_banking_common** > Install
 
@@ -149,14 +149,16 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.48 (2023-02-15)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Payment confirm for refund line / Conferma pagamento di righe con NC
+* [TEST] Regression test: 21% (1438/1135)
+
 12.0.4.7.47 (2023-01-17)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Nella descrizione delle righe della registrazione di insoluto viene riportato il numero fattura se il campo "name" di "account.invoice" non è valorizzato
-
-12.0.3.7.47 (2022-12-05)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
 * [FIX] Confirm payment w/o company bank / Conferma pagamento segnala assenza banca azienda
 
 12.0.3.7.46 (2022-11-15)
@@ -215,11 +217,6 @@ ChangeLog History / Cronologia modifiche
 
 * [FIX] Gestito controllo su distinte insolute
 
-12.0.3.7.36 (2022-03-03)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito controllo su distinte riconciliate
-
 
 
 |
@@ -244,6 +241,8 @@ Authors / Autori
 * `SHS-AV s.r.l. <https://www.zeroincombenze.it/>`__
 * `Didotech s.r.l. <https://www.didotech.com>`__
 * `LibrERP <https://www.librerp.it>`__
+Authors
+-------
 
 
 Contributors / Collaboratori
@@ -252,6 +251,9 @@ Contributors / Collaboratori
 * Antonio Maria Vigliotti <antoniomaria.vigliotti@gmail.com>
 * Marco Tosato <marco.tosato@didotech.com>
 * Fabio Giovannelli <fabio.giovannelli@didotech.com>
+Contributors
+------------
+
 
 
 Maintainer / Manutenzione
@@ -283,11 +285,11 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-12-05
+Last Update / Ultimo aggiornamento: 2023-02-16
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
-    :alt:
+    :alt: 
 .. |Build Status| image:: https://travis-ci.org/zeroincombenze/l10n-italy.svg?branch=12.0
     :target: https://travis-ci.com/zeroincombenze/l10n-italy
     :alt: github.com
