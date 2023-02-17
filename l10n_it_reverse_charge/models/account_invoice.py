@@ -271,7 +271,7 @@ class AccountInvoice(models.Model):
         ) % (
             self.partner_id.display_name,
             self.reference or "",
-            self.date,
+            self.date_invoice,
             self.number,
         )
         return inv_vals

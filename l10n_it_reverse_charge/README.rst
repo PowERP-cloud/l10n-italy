@@ -381,6 +381,7 @@ ChangeLog History / Cronologia modifiche
 12.0.1.2.7_46 (2023-02-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+* [IMP] Self invoice date is equla to purchase invoice and diff from date / Data auto-fattura eguale a fattura fornitori e diversa da data contabile
 * [FIX] Validation error on self invoice in prior year / Errata segnalazione di errore per auto-fatture anno preceente
 * [TEST] Regressione test: 25% (456/340)
 
@@ -495,7 +496,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2023-02-15
+Last Update / Ultimo aggiornamento: 2023-02-17
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
