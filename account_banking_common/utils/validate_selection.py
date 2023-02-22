@@ -311,4 +311,4 @@ def payment_confirm(account_move_lines):
     # we catch lines from different orders
     # same_payment_order(account_move_lines)
 
-    lines_check_invoice_type(account_move_lines, ["out_invoice"])
+    lines_check_invoice_type(account_move_lines, ["out_invoice", "out_refund"])

@@ -1,5 +1,11 @@
-12.0.4.7.47 (2023-01-17)
+12.0.3.7.48 (2023-02-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Payment confirm for refund line / Conferma pagamento di righe con NC
+* [TEST] Regression test: 21% (1438/1135)
+
+12.0.4.7.47.1 (2023-01-17)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Nella descrizione delle righe della registrazione di insoluto viene riportato il numero fattura se il campo "name" di "account.invoice" non è valorizzato
 
