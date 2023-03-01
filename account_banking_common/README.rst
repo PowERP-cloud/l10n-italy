@@ -1,6 +1,6 @@
 
 =========================================
-|icon| Account Banking Common 12.0.3.7.48
+|icon| Account Banking Common 12.0.3.7.49
 =========================================
 
 
@@ -149,6 +149,11 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.3.7.49 (2023-02-28)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Error "Accredito" with refunc / Errore "Accredito" se NC
+
 12.0.3.7.48 (2023-02-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -215,11 +220,6 @@ ChangeLog History / Cronologia modifiche
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [IMP] Inserita data accredito da wizard
-
-12.0.3.7.37 (2022-03-04)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Gestito controllo su distinte insolute
 
 
 
@@ -289,7 +289,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2023-02-15
+Last Update / Ultimo aggiornamento: 2023-02-28
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
