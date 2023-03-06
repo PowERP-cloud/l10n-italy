@@ -464,10 +464,16 @@ class AccountPaymentLine(models.Model):
             raise UserError(
                 "Invalid %s value: must be 'debit' or 'credit'" % side
             )
-        opposite_side = "debit" if side == "credit" else "credit"
+        amount_side = amount or self.amount_currency
+        if amount_side < 0.0:
+            opposite_side = side
+            side = "debit" if opposite_side == "credit" else "credit"
+            amount_side = abs(amount_side)
+        else:
+            opposite_side = "debit" if side == "credit" else "credit"
         values = {
             "account_id": account_id,
-            side: amount or self.amount_currency,
+            side: amount_side,
             opposite_side: 0.0,
         }
         if not duedate and amount:
