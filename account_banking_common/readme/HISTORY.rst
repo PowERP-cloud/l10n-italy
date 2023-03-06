@@ -1,9 +1,13 @@
+12.0.3.7.49 (2023-02-28)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [FIX] Error "Accredito" with refunc / Errore "Accredito" se NC
+
 12.0.3.7.48 (2023-02-15)
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 * [FIX] Payment confirm for refund line / Conferma pagamento di righe con NC
 * [TEST] Regression test: 21% (1438/1135)
->>>>>>> origin/12.0-hotfix_riba_nardo
 
 12.0.4.7.47.1 (2023-01-17)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

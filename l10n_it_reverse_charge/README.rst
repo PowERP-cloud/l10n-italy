@@ -1,6 +1,6 @@
 
 ===============================================
-|icon| ITA - Inversione contabile 12.0.1.2.7_45
+|icon| ITA - Inversione contabile 12.0.1.2.7_46
 ===============================================
 
 
@@ -378,6 +378,13 @@ An Enhancement Proposal may be submitted if your idea gains ground.
 ChangeLog History / Cronologia modifiche
 ----------------------------------------
 
+12.0.1.2.7_46 (2023-02-15)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* [IMP] Self invoice date is equla to purchase invoice and diff from date / Data auto-fattura eguale a fattura fornitori e diversa da data contabile
+* [FIX] Validation error on self invoice in prior year / Errata segnalazione di errore per auto-fatture anno preceente
+* [TEST] Regressione test: 25% (456/340)
+
 12.0.1.2.7_45 (2022-06-27)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -418,26 +425,6 @@ ChangeLog History / Cronologia modifiche
 
 * [FIX] Invalid tax nature check / Errato controllo natura codice IVA
 
-12.0.1.2.7_37 (2022-01-07)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Impostato tipo documento per l'autofattura da posizione fiscale
-
-12.0.1.2.7_36 (2021-12-30)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Fix BUG 601 / 602
-
-12.0.1.2.7_35 (2021-12-17)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Inserito avviso per conto iva vendite
-
-12.0.1.2.7_34 (2021-12-16)
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* [FIX] Fix autofattura
-
 
 
 |
@@ -462,6 +449,8 @@ Authors / Autori
 * `SHS-AV s.r.l. <https://www.zeroincombenze.it/>`__
 * `Didotech s.r.l. <https://www.didotech.com>`__
 * `LibrERP <https://www.librerp.it>`__
+Authors
+-------
 
 
 Contributors / Collaboratori
@@ -473,6 +462,9 @@ Contributors / Collaboratori
 * Antonio Maria Vigliotti <antoniomaria.vigliotti@gmail.com>
 * Marco Tosato <marco.tosato@didotech.com>
 * Fabio Giovannelli <fabio.giovannelli@didotech.com>
+Contributors
+------------
+
 
 
 Maintainer / Manutenzione
@@ -504,7 +496,7 @@ La distribuzione `Zeroincombenze® <https://wiki.zeroincombenze.org/en/Odoo>`__ 
 
 This module is part of l10n-italy project.
 
-Last Update / Ultimo aggiornamento: 2022-06-30
+Last Update / Ultimo aggiornamento: 2023-02-17
 
 .. |Maturity| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
