@@ -1,23 +1,18 @@
 # Copyright 2019 Simone Rubino - Agile Business Group
-# Copyright 2021 powERP enterprise network <https://www.powerp.it>
-# Copyright 2020-2021 Odoo Community Association (OCA) <https://odoo-community.org>
-# Copyright 2021 SHS-AV s.r.l. <https://www.zeroincombenze.it>
-# Copyright 2021 Didotech s.r.l. <https://www.didotech.com>
-#
-# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
-#
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+
 {
-    'name': 'ITA - Dichiarazione Intrastat Plus',
-    'version': '12.0.1.2.4_13',
+    'name': "ITA - Dichiarazione Intrastat",
+    'version': '12.0.1.4.1',
     'category': 'Account',
-    'summary': 'Dichiarazione Intrastat Plus per l"Agenzia delle Dogane',
-    'author': 'Odoo Community Association (OCA) and other partners',
-    'website': 'https://odoo-community.org',
-    'development_status': 'Beta',
+    'summary': 'Dichiarazione Intrastat per l\'Agenzia delle Dogane',
+    'author': "Openforce, Link IT srl, Agile Business Group, "
+              "Odoo Community Association (OCA)",
+    'website': 'https://github.com/OCA/l10n-italy'
+               '/tree/12.0/l10n_it_intrastat_statement',
     'license': 'AGPL-3',
     'depends': [
-        'l10n_it_costs_allocation',
-        'l10n_it_intrastat_plus',
+        'l10n_it_intrastat',
     ],
     'data': [
         'data/sequence.xml',
@@ -32,7 +27,5 @@
         'report/report_intrastat_mod2.xml',
         'report/report_intrastat_mod2_bis.xml',
         'report/reports.xml',
-    ],
-    'installable': True,
-    'pre_init_hook': 'pre_init_hook',
+    ]
 }

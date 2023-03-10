@@ -1,10 +1,5 @@
 # Copyright 2019 Simone Rubino - Agile Business Group
-# Copyright 2021 powERP enterprise network <https://www.powerp.it>
-#
-# License AGPL-3 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
-#
-
-import re
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
@@ -41,29 +36,7 @@ def format_9(value, length):
     :param length: length of the formatted field
     :return: formatted value
     """
-    value = str(value or "")[-length:]  # Formatting only sets minimum width
-    return ('{:0>' + str(length) + '}').format(value)
-
-def format_9b(value, length):
-    """
-    Format for numeric characters.
-
-    > i dati numerici (rappresentati con “9”) vanno allineati a destra,
-    > riempiendo il campo, ove occorra, di zeri non significativi a sinistra.
-    > Negative values will be rewritten in gang'COBOL'-style.
-
-    :param value: value to be formatted
-    :param length: length of the formatted field
-    :return: formatted value
-    """
-    if value < 0:
-        subsetChars = r'[^0-9]'
-        tValue = re.sub(subsetChars, '', "{}".format(value).strip())
-        lValue = "{}".format(tValue)[:len(tValue)-1]
-        rValue = "{}".format(tValue)[len(tValue)-1]
-        value = "{}{}".format(lValue, chr(112+int(rValue)))
-    else:
-        value = str(value or "")[-length:]  # Formatting only sets minimum width
+    value = str(value or "")[:length]  # Formatting only sets minimum width
     return ('{:0>' + str(length) + '}').format(value)
 
 
@@ -73,7 +46,21 @@ class AccountIntrastatStatement(models.Model):
     _rec_name = 'number'
 
     @api.multi
-    def round_min_amount(self, amount, company=None, prec_digits=None):
+    def round_min_amount(self, amount,
+                         company=None, prec_digits=None, truncate=False):
+        """
+        Return an integer representing `amount`,
+        ready for usage in the statement.
+
+        :param amount: Amount to be edited
+        :param company: Company to be used for fetching minimal value,
+                        if not present the statement's company is used
+        :param prec_digits: Digits to be used for rounding,
+                            if not present it is rounded to the unit
+        :param truncate: True if the float number
+                         has to be truncated, otherwise it is rounded
+        :return: An integer representing `amount`
+        """
         self.ensure_one()
         if company is None:
             company = self.company_id
@@ -81,7 +68,12 @@ class AccountIntrastatStatement(models.Model):
         if prec_digits:
             round_amount = float_round(amount, precision_digits=prec_digits)
         else:
-            round_amount = round(amount)
+            round_amount = float_round(amount, precision_digits=0)
+
+        if truncate:
+            round_amount = int(round_amount)
+        else:
+            round_amount = int(float_round(round_amount, precision_digits=0))
 
         return max(round_amount or 1, company.intrastat_min_amount)
 
@@ -210,7 +202,8 @@ class AccountIntrastatStatement(models.Model):
         help="Values accepted:\n"
              " - Month : From 1 to 12\n"
              " - Quarter: From 1 to 4",
-             required=True)
+        default=1,
+        required=True)
     date_start = fields.Date(
         string="Start Date",
         store=True,
@@ -252,6 +245,10 @@ class AccountIntrastatStatement(models.Model):
     purchase = fields.Boolean(
         string='Purchases',
         default=True)
+    exclude_optional_column_sect_1_3 = fields.Boolean(
+        "Exclude supplier data",
+        help="Exclude supplier country, TIN and currency amount from statement"
+    )
     intrastat_type_data = fields.Selection(
         selection=[
             ('all', "All (Fiscal and Statistic)"),
@@ -668,12 +665,11 @@ class AccountIntrastatStatement(models.Model):
 
             section_op_amount_field = \
                 '%s_section%s_operation_amount' % (kind, section_number)
-#             amount = self[section_op_amount_field]
-#             if section_number == 2:
-#                 self._format_negative_number_frontispiece(amount)
-            rcd += format_9b(self[section_op_amount_field], 13)
-        # solo per  cessioni di beni e servizi resi
-        # Numero di righe dettaglio della sezione 5 (non gestita)
+            amount = self[section_op_amount_field]
+            if section_number == 2:
+                amount = self._format_negative_number_frontispiece(amount)
+            rcd += format_9(amount, 13)
+        # Aggiunti segnaposti per sezione 5. non supportata
         if kind == 'sale':
             rcd += format_9(0, 5)
 
@@ -683,86 +679,57 @@ class AccountIntrastatStatement(models.Model):
     @api.multi
     def generate_file_export(self):
         self.ensure_one()
-
-        def set_purchase(self, content_purchase):
-            # Purchase
-            purchase_content = ''
-            if (
-                    self.purchase_section1_operation_number or
-                    self.purchase_section2_operation_number or
-                    self.purchase_section3_operation_number or
-                    self.purchase_section4_operation_number
-            ) and content_purchase:
-                ref_number = self.purchase_statement_sequence
-                # frontispiece
-                purchase_content += self._prepare_export_frontispiece(
-                    'purchase', ref_number)
-                # Section 1
-                purchase_lines = [
-                    self.purchase_section1_ids,
-                    self.purchase_section2_ids,
-                    self.purchase_section3_ids,
-                    self.purchase_section4_ids,
-                ]
-                for section_lines in purchase_lines:
-                    for line in section_lines:
-                        rcd = self._prepare_export_prefix(ref_number, line)
-                        rcd += line._prepare_export_line()
-                        purchase_content += rcd
-            return purchase_content
-
-        def set_sale(self, content_sale):
-            # Sale
-            sale_content = ''
-            if (
-                (self.sale_section1_operation_number
-                 or self.sale_section2_operation_number
-                 or self.sale_section3_operation_number
-                 or self.sale_section4_operation_number)
-                 and content_sale):
-                ref_number = self.sale_statement_sequence
-                # frontispiece
-                sale_content += self._prepare_export_frontispiece(
-                    'sale', ref_number)
-                sale_lines = [
-                    self.sale_section1_ids,
-                    self.sale_section2_ids,
-                    self.sale_section3_ids,
-                    self.sale_section4_ids,
-                ]
-                for section_lines in sale_lines:
-                    for line in section_lines:
-                        rcd = self._prepare_export_prefix(ref_number, line)
-                        rcd += line._prepare_export_line()
-                        sale_content += rcd
-            return sale_content
-
         file_content = ''
         # Head
         if not self.env.context.get('export_without_head'):
             file_content += self._prepare_export_head()
-
         content_sale = self.env.context.get('sale')
         content_purchase = self.env.context.get('purchase')
-
-        if content_sale and content_purchase:
-
-            purchase_seq = self.purchase_statement_sequence
-            sale_seq = self.sale_statement_sequence
-
-            if purchase_seq > sale_seq:
-                file_content += set_sale(self, content_sale)
-                file_content += set_purchase(self, content_purchase)
-            elif sale_seq > purchase_seq:
-                file_content += set_purchase(self, content_purchase)
-                file_content += set_sale(self, content_sale)
-            else:
-                file_content += set_purchase(self, content_purchase)
-                file_content += set_sale(self, content_sale)
-        elif content_sale:
-            file_content += set_sale(self, content_sale)
-        elif content_purchase:
-            file_content += set_purchase(self, content_purchase)
+        # Purchase
+        if (
+                self.purchase_section1_operation_number or
+                self.purchase_section2_operation_number or
+                self.purchase_section3_operation_number or
+                self.purchase_section4_operation_number
+        ) and content_purchase:
+            ref_number = self.purchase_statement_sequence
+            # frontispiece
+            file_content += self._prepare_export_frontispiece(
+                'purchase', ref_number)
+            # Section 1
+            purchase_lines = [
+                self.purchase_section1_ids,
+                self.purchase_section2_ids,
+                self.purchase_section3_ids,
+                self.purchase_section4_ids,
+            ]
+            for section_lines in purchase_lines:
+                for line in section_lines:
+                    rcd = self._prepare_export_prefix(ref_number, line)
+                    rcd += line._prepare_export_line()
+                    file_content += rcd
+        # Sale
+        if (
+                (self.sale_section1_operation_number
+                 or self.sale_section2_operation_number
+                 or self.sale_section3_operation_number
+                 or self.sale_section4_operation_number)
+                and content_sale):
+            ref_number = self.sale_statement_sequence
+            # frontispiece
+            file_content += self._prepare_export_frontispiece(
+                'sale', ref_number)
+            sale_lines = [
+                self.sale_section1_ids,
+                self.sale_section2_ids,
+                self.sale_section3_ids,
+                self.sale_section4_ids,
+            ]
+            for section_lines in sale_lines:
+                for line in section_lines:
+                    rcd = self._prepare_export_prefix(ref_number, line)
+                    rcd += line._prepare_export_line()
+                    file_content += rcd
 
         # Data validation
         if not file_content:
@@ -800,10 +767,7 @@ class AccountIntrastatStatement(models.Model):
         domain.append(('type', 'in', inv_type))
 
         statement_data = dict()
-        # all invoices
         invoices = self.env['account.invoice'].search(domain)
-        # european only
-        invoices = invoices.filtered(self.european_invoice)
 
         for inv_intra_line in invoices.mapped('intrastat_line_ids'):
             for section_type in ['purchase', 'sale']:
@@ -919,24 +883,3 @@ class AccountIntrastatStatement(models.Model):
                     not (1 <= statement.period_number <= 4):
                 raise ValidationError(
                     _("Period Not Valid! Range accepted: from 1 to 4"))
-
-    def european_invoice(self, invoice):
-        """
-        method used to filter european country
-        """
-        country = invoice.partner_id.country_id
-
-        europe = self.env.ref('base.europe')
-        if not europe:
-            europe = self.env["res.country.group"].search([('name', '=',
-                                                            'Europe')],
-                                                          limit=1)
-        # end if
-
-        if europe and country.id in europe.country_ids.ids:
-            return True
-        else:
-            return False
-        # end if
-
-    # end european_invoice

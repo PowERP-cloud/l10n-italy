@@ -13,11 +13,11 @@
                 </div>
                 <footer states="choose">
                     <button name="act_getfile" string="Export submission file" type="object" class="oe_highlight"
-                            context="{'export_without_head': 0, 'purchase': True, 'sale': True}"/> or
+                        context="{'export_without_head': 0, 'purchase': True, 'sale': True}"/> or
                     <button name="act_getfile" string="Export acquisti.cee" type="object" class="oe_highlight"
-                            context="{'export_without_head': 1, 'export_filename': 'SCAMBI.CEE', 'purchase': True, 'sale': False}" /> or
+                        context="{'export_without_head': 1, 'export_filename': 'SCAMBI.CEE', 'purchase': True, 'sale': False}" /> or
                     <button name="act_getfile" string="Export cessioni.cee" type="object" class="oe_highlight"
-                            context="{'export_without_head': 1, 'export_filename': 'SCAMBI.CEE', 'purchase': False, 'sale': True}" /> or
+                        context="{'export_without_head': 1, 'export_filename': 'SCAMBI.CEE', 'purchase': False, 'sale': True}" /> or
                     <button special="cancel" string="Cancel" type="object" class="oe_link"/>
                 </footer>
                 <footer states="get">
@@ -29,7 +29,7 @@
 
     <record id="action_wizard_wizard_account_intrastat_export_file" model="ir.actions.act_window">
         <field name="name">Export Intrastat File</field>
-
+        <field name="type">ir.actions.act_window</field>
         <field name="res_model">account.intrastat.export.file</field>
         <field name="view_type">form</field>
         <field name="view_mode">form</field>
@@ -38,4 +38,3 @@
     </record>
 
 </odoo>
-
