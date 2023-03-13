@@ -423,10 +423,14 @@ class DueDateManager(models.Model):
         # end if
 
         for due_date in due_dates:
-            if param_cm['doc_type'] in ('out_invoice', 'in_refund'):
-                payment_method = due_date[2]['credit']
-            elif param_cm['doc_type'] in ('in_invoice', 'out_refund'):
+            if param_cm['doc_type'] == 'in_refund':
                 payment_method = due_date[2]['debit']
+            elif param_cm['doc_type'] == 'out_invoice':
+                payment_method = due_date[2]['credit']
+            elif param_cm['doc_type'] == 'in_invoice':
+                payment_method = due_date[2]['debit']
+            elif param_cm['doc_type'] == 'out_refund':
+                payment_method = due_date[2]['credit']
             # end if
 
             if not payment_method:
