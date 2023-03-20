@@ -25,7 +25,7 @@ def format_x(value, length):
     return ('{: <' + str(length) + '}').format(value)
 
 
-def format_9(value, length):
+def format_9(value, length, suffix=False):
     """
     Format for numeric characters.
 
@@ -37,7 +37,10 @@ def format_9(value, length):
     :return: formatted value
     """
     value = str(value or "")[:length]  # Formatting only sets minimum width
-    return ('{:0>' + str(length) + '}').format(value)
+    if suffix:
+        return ('{:0<' + str(length) + '}').format(value)
+    else:
+        return ('{:0>' + str(length) + '}').format(value)
 
 
 class AccountIntrastatStatement(models.Model):
