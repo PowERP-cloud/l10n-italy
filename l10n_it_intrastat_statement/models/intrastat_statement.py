@@ -770,7 +770,10 @@ class AccountIntrastatStatement(models.Model):
         domain.append(('type', 'in', inv_type))
 
         statement_data = dict()
+        # all invoices
         invoices = self.env['account.invoice'].search(domain)
+        # european only
+        invoices = invoices.filtered(self.european_invoice)
 
         for inv_intra_line in invoices.mapped('intrastat_line_ids'):
             for section_type in ['purchase', 'sale']:
@@ -886,3 +889,24 @@ class AccountIntrastatStatement(models.Model):
                     not (1 <= statement.period_number <= 4):
                 raise ValidationError(
                     _("Period Not Valid! Range accepted: from 1 to 4"))
+
+    def european_invoice(self, invoice):
+        """
+        method used to filter european country
+        """
+        country = invoice.partner_id.country_id
+
+        europe = self.env.ref('base.europe')
+        if not europe:
+            europe = self.env["res.country.group"].search([
+                ('name', '=', 'Europe')
+            ], limit=1)
+        # end if
+
+        if europe and country.id in europe.country_ids.ids:
+            return True
+        else:
+            return False
+        # end if
+
+    # end european_invoice
