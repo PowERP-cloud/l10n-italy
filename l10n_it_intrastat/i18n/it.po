@@ -30661,8 +30661,8 @@ msgstr "Codice Intrastat"
 #. module: l10n_it_intrastat
 #: code:addons/l10n_it_intrastat/models/account.py:360
 #: code:addons/l10n_it_intrastat/models/account.py:360
-msgid "Intrastat total must be equal to invoice untaxed total - Invoice num: {i_num} (id: {i_id})"
-msgstr "Il totale Intrastat deve corrispondere al totale imponibile della fattura - Fattura num: {invoice.number} (id: {invoice.id})"
+msgid "Intrastat total must be equal to invoice untaxed total\nInvoice date: {i_date} - Invoice partner: {i_partner} - Invoice id: {i_id}"
+msgstr "Il totale Intrastat deve corrispondere al totale imponibile della fattura\nData fattura: {i_date} - Partner fattura: {i_partner} - Id fattura: {i_id}"
 
 #. module: l10n_it_intrastat
 #: model:report.intrastat.code,description:l10n_it_intrastat.intrastat_category_2014_11082000
