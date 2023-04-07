@@ -1,8 +1,5 @@
-# Copyright 2019 Simone Rubino - Agile Business Group
-# Copyright 2021 powERP enterprise network <https://www.powerp.it>
-#
-# License AGPL-3 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
-#
+#  Copyright 2019 Simone Rubino - Agile Business Group
+#  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import api, fields, models, _
 import odoo.addons.decimal_precision as dp
@@ -21,6 +18,12 @@ class IntrastatStatementSaleSection(models.AbstractModel):
     def get_section_type(self):
         return 'sale'
 
+    @api.model
+    def _default_transaction_nature_id(self):
+        company_id = self.env.context.get(
+            'company_id', self.env.user.company_id)
+        return company_id.intrastat_sale_transaction_nature_id
+
 
 class IntrastatStatementSaleSection1(models.Model):
     _inherit = 'account.intrastat.statement.sale.section'
@@ -29,7 +32,13 @@ class IntrastatStatementSaleSection1(models.Model):
 
     transaction_nature_id = fields.Many2one(
         comodel_name='account.intrastat.transaction.nature',
-        string="Transaction Nature")
+        string="Transaction Nature",
+        default=lambda m: m._default_transaction_nature_id(),
+    )
+    transaction_nature_b_id = fields.Many2one(
+        comodel_name='account.intrastat.transaction.nature.b',
+        string="Transaction Nature B",
+        default=lambda m: m._default_transaction_nature_b_id(),)
     weight_kg = fields.Integer(
         string="Net Mass (kg)")
     additional_units = fields.Integer(
@@ -84,8 +93,7 @@ class IntrastatStatementSaleSection1(models.Model):
 
     @api.onchange('weight_kg')
     def change_weight_kg(self):
-        if self.statement_id.company_id.intrastat_additional_unit_from == \
-            'weight':
+        if self.statement_id.company_id.intrastat_additional_unit_from == 'weight':
             self.additional_units = self.weight_kg
 
     @api.onchange('transaction_nature_id')
@@ -120,19 +128,18 @@ class IntrastatStatementSaleSection1(models.Model):
             or company_id.intrastat_sale_transport_code_id
 
         # Amounts
-        # dp_model = self.env['decimal.precision']
         statistic_amount = statement_id.round_min_amount(
             statistic_amount,
             statement_id.company_id or company_id,
-            # dp_model.precision_get('Account'))
             0)
 
-        nature_b_company = company_id.intrastat_sale_transaction_nature_b_id
+        # not setting default yet
+        nature_b_model = self.env['account.intrastat.transaction.nature.b']
 
         if inv_intra_line.transaction_nature_b_id:
             transaction_nature_b_id = inv_intra_line.transaction_nature_b_id
         else:
-            transaction_nature_b_id = nature_b_company
+            transaction_nature_b_id = nature_b_model
 
         triangulation = inv_intra_line.triangulation
         country_good_origin_id = inv_intra_line.country_good_origin_id
@@ -165,7 +172,6 @@ class IntrastatStatementSaleSection1(models.Model):
         rcd += format_x(self.vat_code.replace(' ', ''), 12)
         # Ammontare delle operazioni in euro
         rcd += format_9(self.amount_euro, 13)
-
         # Codice della natura della transazione
         if self.triangulation:  # in caso triangolazione
             rcd += format_x(self.transaction_nature_id.triangulation, 1)
@@ -189,19 +195,13 @@ class IntrastatStatementSaleSection1(models.Model):
             rcd += format_9(transport_code, 1)
             #  Codice del paese di destinazione
             rcd += format_x(self.country_destination_id.code, 2)
-            #  Codice del paese di origine della merce
+            #  Codice della provincia di origine della merce
             rcd += format_x(self.province_origin_id.code, 2)
-
             # new fields
             if self.triangulation:
                 nb_code = ''
             else:
-                if self.transaction_nature_b_id \
-                    and self.transaction_nature_b_id.code:
-                    nb_code = self.transaction_nature_b_id.code
-                else:
-                    nb_code = ''
-
+                nb_code = self.transaction_nature_b_id.code
             rcd += format_x(nb_code, 1)
 
             rcd += format_x(self.country_origin_id.code, 2)
@@ -228,7 +228,9 @@ class IntrastatStatementSaleSection2(models.Model):
         string="Adjustment Sign")
     transaction_nature_id = fields.Many2one(
         comodel_name='account.intrastat.transaction.nature',
-        string="Transaction Nature")
+        string="Transaction Nature",
+        default=lambda m: m._default_transaction_nature_id(),
+    )
     statistic_amount_euro = fields.Integer(
         string="Statistic Value in Euro",
         digits=dp.get_precision('Account'))
@@ -253,11 +255,9 @@ class IntrastatStatementSaleSection2(models.Model):
             or company_id.intrastat_sale_statistic_amount
 
         # Amounts
-        # dp_model = self.env['decimal.precision']
         statistic_amount = statement_id.round_min_amount(
             statistic_amount,
             statement_id.company_id or company_id,
-            # dp_model.precision_get('Account'))
             0)
 
         # Period Ref
@@ -307,7 +307,7 @@ class IntrastatStatementSaleSection2(models.Model):
         #  Trimestre di riferimento del riepilogo da rettificare
         rcd += format_9(self.quarterly, 1)
         # Anno periodo di ref da modificare
-        year = (self.year_id or 0) % 100
+        year = (self.year_id or 0) // 100
         rcd += format_9(year, 2)
         # Codice dello Stato membro dell’acquirente
         country_id = self.country_partner_id or self.partner_id.country_id
@@ -493,15 +493,6 @@ class IntrastatStatementSaleSection4(models.Model):
         if not self.progressive_to_modify:
             raise ValidationError(
                 _("Missing progressive to adjust on 'Sales - Section 4'"))
-        if (not self.invoice_number) or (not self.invoice_date):
-            raise ValidationError(
-                _("Missing invoice data on 'Sales - Section 4'"))
-        if not self.supply_method:
-            raise ValidationError(
-                _("Missing supply method on 'Sales - Section 4'"))
-        if not self.payment_method:
-            raise ValidationError(
-                _("Missing payment method on 'Sales - Section 4'"))
         if not self.country_payment_id:
             raise ValidationError(
                 _("Missing payment country on 'Sales - Section 4'"))

@@ -23,10 +23,10 @@
 
                                         <td>
                                             <b>
-                                              RIEPILOGO DELLE CESSIONI
-                                              INTRACOMUNITARIE
+                                                RIEPILOGO DELLE CESSIONI
+                                                INTRACOMUNITARIE
                                                 <br/>
-                                                   DI BENI E DEI SERVIZI RESI
+                                                DI BENI E DEI SERVIZI RESI
                                             </b>
                                         </td>
                                         <td>Mod.INTRA-1 Ter</td>
@@ -37,9 +37,9 @@
                             <div class="row">
                                 <span class="text-center col-7 col-offset-3">
                                     <strong>
-                                           SEZIONE 2. RETTIFICHE ALLE CESSIONI DI
-                                           BENI
-                                           RELATIVE A PERIODI PRECEDENTI
+                                        SEZIONE 2. RETTIFICHE ALLE CESSIONI DI
+                                        BENI
+                                        RELATIVE A PERIODI PRECEDENTI
                                     </strong>
                                     <p/>
                                 </span>
@@ -174,4 +174,3 @@
         </t>
     </template>
 </odoo>
-

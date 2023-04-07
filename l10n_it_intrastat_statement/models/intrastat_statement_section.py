@@ -1,11 +1,7 @@
-# Copyright 2019 Simone Rubino - Agile Business Group
-# Copyright 2021 powERP enterprise network <https://www.powerp.it>
-#
-# License AGPL-3 or later (https://www.odoo.com/documentation/user/12.0/legal/licenses/licenses.html#odoo-apps).
-#
+#  Copyright 2019 Simone Rubino - Agile Business Group
+#  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import api, fields, models, _
-# import odoo.addons.decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -28,7 +24,6 @@ class IntrastatStatementSection(models.AbstractModel):
     vat_code = fields.Char()
     amount_euro = fields.Integer(
         string="Amount in Euro",
-        # digits=dp.get_precision('Account'))
     )
     invoice_id = fields.Many2one(
         comodel_name='account.invoice',
@@ -61,11 +56,9 @@ class IntrastatStatementSection(models.AbstractModel):
         partner_id = invoice_id.partner_id
 
         # Amounts
-        # dp_model = self.env['decimal.precision']
         amount_euro = statement_id.round_min_amount(
             inv_intra_line.amount_euro,
             statement_id.company_id or company_id,
-            # dp_model.precision_get('Account'))
             0)
 
         return {
