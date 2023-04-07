@@ -355,8 +355,12 @@ class AccountInvoice(models.Model):
                     total_amount - subtotal,
                     precision_digits=precision_digits
                 ):
-                    raise UserError(_('Intrastat total must be equal to '
-                                      'invoice untaxed total'))
+                    i_date = invoice.date_invoice
+                    i_partner = invoice.partner_id
+                    i_id = invoice.id
+                    raise UserError(_(
+                        f'Intrastat total must be equal to invoice untaxed total\nInvoice date: {i_date} - Invoice partner: {i_partner} - Invoice id: {i_id}'
+                    ))
         return True
 
     @api.multi
