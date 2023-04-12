@@ -577,7 +577,10 @@ class StockPickingPackagePreparationLine(models.Model):
     sale_line_id = fields.Many2one(
         related='move_id.sale_line_id',
         string='Sale order line',
-        store=True, readonly=True)
+        store=True,
+        readonly=True,
+        index=True,
+    )
     price_unit = fields.Float('Unit Price', digits=dp.get_precision(
         'Product Price'), default=0.0)
     tax_ids = fields.Many2many('account.tax', string='Taxes')
