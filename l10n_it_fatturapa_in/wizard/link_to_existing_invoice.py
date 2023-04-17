@@ -1,3 +1,4 @@
+# © 2023 Andrei Levin - Didotech srl (www.didotech.com)
 
 from odoo import models, api, fields
 from odoo.tools.translate import _
@@ -16,6 +17,12 @@ class WizardLinkToInvoiceLine(models.TransientModel):
 
     wizard_id = fields.Many2one(
         comodel_name='wizard.link.to.invoice',
+    )
+    partner_id = fields.Many2one(
+        'res.partner',
+        readonly=True,
+        # related='wizard_id.attachment_id.xml_supplier_id',
+        string='Partner'
     )
     e_invoice_nbr = fields.Integer(
         string="Bill number in XML",
@@ -108,6 +115,7 @@ class WizardLinkToInvoice(models.TransientModel):
                     bill_tax=invoice_model.compute_xml_amount_tax(
                         dati_riepilogo)
                 ),
+                'partner_id': attachment.xml_supplier_id.id
             })
         return line_vals
 

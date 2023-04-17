@@ -1,4 +1,4 @@
-# © 2022 Andrei Levin - Didotech srl (www.didotech.com)
+# © 2022-2023 Andrei Levin - Didotech srl (www.didotech.com)
 
 import logging
 import re
@@ -262,6 +262,11 @@ class WizardImportFatturapa(models.TransientModel):
             ])
             if autoinvoices:
                 partner_id = autoinvoices[0].partner_id.id
+            else:
+                message = f"Can't find relative partner for Autoinvoice {dati_generali.Numero} del {dati_generali.Data}"
+                _logger.info(message)
+                raise Exception(message)
+                # return False
 
         if not partner_id:
             partner_id = self.getPartnerBase(cedPrest.DatiAnagrafici)

@@ -1,3 +1,4 @@
+# © 2023 Andrei Levin - Didotech srl (www.didotech.com)
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError
@@ -243,7 +244,7 @@ class AccountInvoice(models.Model):
         for tup in result:
             invoice = self.browse(tup[0])
             if invoice.type in ('in_invoice', 'in_refund'):
-                name = "%s, %s" % (tup[1], invoice.partner_id.name)
+                name = f"{tup[1]}, {invoice.date_invoice}, {invoice.partner_id.name}"
                 if invoice.amount_total_signed:
                     name += ', %s %s' % (
                         invoice.amount_total_signed, invoice.currency_id.symbol

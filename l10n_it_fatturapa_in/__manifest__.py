@@ -2,12 +2,12 @@
 # Copyright 2015 innoviu Srl <http://www.innoviu.com>
 # Copyright 2018 Lorenzo Battistini
 # Copyright 2018 Sergio Zanchetta (Associazione PNLUG - Gruppo Odoo)
-# © 2022 Andrei Levin - Didotech srl (www.didotech.com)
+# © 2022-2023 Andrei Levin - Didotech srl (www.didotech.com)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
     'name': 'ITA - Fattura elettronica - Ricezione',
-    'version': '12.0.2.6.1_5',
+    'version': '12.0.2.6.1_6',
     "development_status": "Beta",
     'category': 'Localization/Italy',
     'summary': 'Ricezione fatture elettroniche',

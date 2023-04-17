@@ -1,4 +1,4 @@
-# © 2022 Andrei Levin - Didotech srl (www.didotech.com)
+# © 2022-2023 Andrei Levin - Didotech srl (www.didotech.com)
 
 import base64
 import zipfile
@@ -6,6 +6,9 @@ from io import BytesIO
 from odoo import fields, models, api, _
 from odoo.tools import format_date
 from odoo.exceptions import ValidationError
+
+import logging
+_logger = logging.getLogger(__name__)
 
 
 class FatturaPAAttachmentIn(models.Model):
@@ -145,11 +148,14 @@ class FatturaPAAttachmentIn(models.Model):
     @api.multi
     def _get_has_attachment(self):
         for att in self:
-            fatt = self.env['wizard.import.fatturapa'].get_invoice_obj(att)
-            for invoice_body in fatt.FatturaElettronicaBody:
-                AttachmentsData = invoice_body.Allegati
-                if AttachmentsData:
-                    att.xml_has_attachment = True
+            if att.datas:
+                fatt = self.env['wizard.import.fatturapa'].get_invoice_obj(att)
+                for invoice_body in fatt.FatturaElettronicaBody:
+                    AttachmentsData = invoice_body.Allegati
+                    if AttachmentsData:
+                        att.xml_has_attachment = True
+            else:
+                _logger.info(f'No data was found for attachment {att.att_name}')
 
     @api.multi
     def download_attachment(self):
