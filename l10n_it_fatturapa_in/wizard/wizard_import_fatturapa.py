@@ -254,19 +254,27 @@ class WizardImportFatturapa(models.TransientModel):
         partner_id = False
         if dati_generali.TipoDocumento in ('TD17', 'TD18', 'TD19'):
             # When we create XML we clean partner name, so we can't use it to find original partner
-            autoinvoices = self.env['account.invoice'].search([
-                ('number', '=', dati_generali.Numero),
-                ('date_invoice', '=', dati_generali.Data),
-                ('fiscal_document_type_id.code', '=', dati_generali.TipoDocumento),
-                ('type', '=', 'out_invoice')
-            ])
-            if autoinvoices:
-                partner_id = autoinvoices[0].partner_id.id
-            else:
-                message = f"Can't find relative partner for Autoinvoice {dati_generali.Numero} del {dati_generali.Data}"
-                _logger.info(message)
-                raise Exception(message)
-                # return False
+            # This approach works only for invoices inside CEE, but fails for extra CEE because of the way out invoice is composed
+            # autoinvoices = self.env['account.invoice'].search([
+            #     ('number', '=', dati_generali.Numero),
+            #     ('date_invoice', '=', dati_generali.Data),
+            #     ('fiscal_document_type_id.code', '=', dati_generali.TipoDocumento),
+            #     ('type', 'in', ('out_invoice', 'out_refund'))
+            # ])
+            invoice_info = dict([value.split(':') for value in dati_generali.Causale if ':' in value])
+            if invoice_info:
+                autoinvoices = self.env['account.invoice'].search([
+                    ('number', '=', invoice_info['Riferimento interno'].strip()),
+                    ('reference', '=', invoice_info['Riferimento'].strip()),
+                    ('type', 'in', ('in_invoice', 'in_refund'))
+                ])
+                if autoinvoices:
+                    partner_id = autoinvoices[0].partner_id.id
+                else:
+                    message = f"Can't find relative partner for Autoinvoice {dati_generali.Numero} del {dati_generali.Data}"
+                    _logger.info(message)
+                    raise Exception(message)
+                    # return False
 
         if not partner_id:
             partner_id = self.getPartnerBase(cedPrest.DatiAnagrafici)
