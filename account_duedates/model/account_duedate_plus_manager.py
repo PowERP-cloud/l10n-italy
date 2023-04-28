@@ -332,7 +332,7 @@ class DueDateManager(models.Model):
         # get extra amount tax into invoice
         types = self._get_tax_type()
 
-        if types['is_split'] or types['is_rc'] or types['is_ra']:
+        if types['is_split'] or types['is_rc'] or types['is_ra'] or types['is_deposit']:
             # get tax payment method
             payment_method_tax = self.env[
                 'account.payment.method'
@@ -403,7 +403,7 @@ class DueDateManager(models.Model):
             new_dudate_lines = self._compute_duedates_lines(
                 due_dates, param_cm, tax
             )
-            # extra line (sp, ra, rc)
+            # extra line (sp, ra, rc, deposit)
             extra_line = self._extra_duedate_line(
                 param_cm, types_amount, payment_method_tax.id
             )
@@ -518,6 +518,10 @@ class DueDateManager(models.Model):
             line['due_amount'] = self.invoice_id.amount_rc
         # end is_rc
 
+        # if types['is_deposit']:
+        #     line['due_amount'] = self.invoice_id.deposit
+        # # end is_deposit
+
         return line
 
     # end _extra_lines
@@ -575,6 +579,28 @@ class DueDateManager(models.Model):
             }
         # end if
 
+        if bool(types_amount['deposit']):
+            split_date = self._get_split_date_period(
+                param_cm['partner_id'],
+                param_cm['doc_type'],
+                param_cm['invoice_date'].strftime('%Y-%m-%d'),
+            )
+            # payment_method_tax = self.env['account.payment.method'].search([('code', '=', 'tax')])
+            #
+            # line['duedate_manager_id'] = self.id
+            # line['due_amount'] = self.invoice_id.deposit
+            # line['due_date'] = split_date
+            # line['payment_method_id'] = payment_method_tax
+            #
+            #
+            line = {
+                'duedate_manager_id': self.id,
+                'payment_method_id': payment_method_id,
+                'due_date': split_date,
+                'due_amount': types_amount['deposit'],
+            }
+        # end if
+
         return line
 
     # end _extra_duedate_line
@@ -600,6 +626,10 @@ class DueDateManager(models.Model):
             amount -= self.invoice_id.amount_rc
         # end if
 
+        if types['is_deposit']:
+            amount -= self.invoice_id.deposit
+        # end if
+
         return amount
 
     @api.model
@@ -622,6 +652,10 @@ class DueDateManager(models.Model):
             tax_amount = self.invoice_id.amount_tax - self.invoice_id.amount_rc
         # end if
 
+        # if types['is_deposit']:
+        #     tax_amount = self.invoice_id.amount_tax - self.invoice_id.deposit
+        # # end if
+
         return tax_amount
     # end _compute_tax_to_add
 
@@ -633,6 +667,7 @@ class DueDateManager(models.Model):
                 self.invoice_id, 'withholding_tax_amount', None
             ),
             'rc_amount': getattr(self.invoice_id, 'amount_rc', None),
+            'deposit': getattr(self.invoice_id, 'deposit', None),
         }
     # end _get_amount_tax_type
 
@@ -644,6 +679,7 @@ class DueDateManager(models.Model):
                 getattr(self.invoice_id, 'withholding_tax_amount', None)
             ),
             'is_rc': bool(getattr(self.invoice_id, 'amount_rc', None)),
+            'is_deposit': bool(getattr(self.invoice_id, 'deposit', None)),
         }
     # end _get_amount_tax_type
 
