@@ -395,7 +395,8 @@ class AccountMove(models.Model):
                     lines_other.append(line)
                 # end if
             # end for
-
+            if not lines_cd and not invoice_id:
+                return None
             # Build the move line template dictionary
             move_line_template = lines_cd[0].copy_data()[0]
             # remove 'move_id' because it is set by the update method
