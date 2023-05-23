@@ -830,6 +830,10 @@ class WizardExportFatturapa(models.TransientModel):
                 attachment_name = doc_id.datas_fname if len(
                     doc_id.datas_fname) <= 60 else ''.join([
                         file_name[:(60-len(file_extension))], file_extension])
+                # windows characters not allowed
+                # backslash so far
+                if '/' in attachment_name:
+                    attachment_name = attachment_name.replace('/', '_')
                 AttachDoc = AllegatiType(
                     NomeAttachment=encode_for_export(attachment_name, 60),
                     Attachment=base64.decodestring(doc_id.datas)
