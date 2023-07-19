@@ -199,10 +199,10 @@ class ReportRegistroIva(models.AbstractModel):
         total = 0.0
         receivable_payable_found = False
         for move_line in move.line_ids:
-            if move_line.line_type == 'receivable':
+            if move_line.account_id.internal_type == "receivable":
                 total += move_line.debit or (- move_line.credit)
                 receivable_payable_found = True
-            elif move_line.line_type == 'payable':
+            elif move_line.account_id.internal_type == "payable":
                 total += (- move_line.debit) or move_line.credit
                 receivable_payable_found = True
         if receivable_payable_found:
