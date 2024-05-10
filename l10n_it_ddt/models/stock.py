@@ -7,7 +7,8 @@
 # Copyright 2018 Simone Rubino - Agile Business Group
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import fields, models, api
+from odoo import fields, models, api, _
+from odoo.exceptions import Warning
 
 
 class StockPicking(models.Model):
@@ -67,8 +68,10 @@ class StockPicking(models.Model):
                 return move_partners[0]
             else:
                 return self.partner_id
-        else:
+        elif self.location_dest_id.partner_id:
             return self.location_dest_id.partner_id
+        else:
+            raise Warning(_(f"Partner is not defined for location {self.location_dest_id.name}"))
 
     @api.multi
     def open_form_current(self):
