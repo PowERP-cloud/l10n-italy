@@ -27,9 +27,9 @@
 
     <template id="template_asset_journal_title">
         <div>
-            <h1 style="text-align:center;">
+            <h4 style="text-align:center;">
                 <span t-field="o.report_name"/>
-            </h1>
+            </h4>
         </div>
     </template>
 
@@ -56,11 +56,11 @@
         <t t-if="o.show_totals">
             <br/>
             <div name="category_name">
-                <h2 style="text-align: center;">
+                <h3 style="text-align: center;">
                     <span style="margin: 5px; font-weight: bold;">
                         <span>Totals</span>
                     </span>
-                </h2>
+                </h3>
             </div>
             <t t-set="totals_sections" t-value="o.report_total_ids"/>
             <t t-call="assets_management.template_asset_journal_totals"/>
@@ -69,7 +69,7 @@
 
     <template id="template_asset_journal_category_data">
         <div name="category_name">
-            <h2 style="text-align: center;">
+            <h4 style="text-align: center;">
                 <t t-set="domain"
                    t-value="[('id', 'in', category_section.report_asset_ids.mapped('asset_id').ids)]"/>
                 <span style="margin: 5px; font-weight: bold;">
@@ -80,17 +80,17 @@
                         <t t-raw="category_section.category_name"/>
                     </a>
                 </span>
-            </h2>
+            </h4>
         </div>
     </template>
 
     <template id="template_asset_journal_category_totals">
         <div name="category_name">
-            <h2 style="text-align: centerNel;">
+            <h4 style="text-align: centerNel;">
                 <span style="margin: 5px; font-weight: bold;">
                     <span>Totals for: </span><span t-field="category_section.category_name"/>
                 </span>
-            </h2>
+            </h4>
         </div>
         <div>
             <t t-set="totals_sections" t-value="category_section.report_total_ids"/>
@@ -101,10 +101,9 @@
     <template id="template_asset_journal_asset">
         <t t-set="asset_counter" t-value="1"/>
         <t t-foreach="category_section.report_asset_ids" t-as="asset_section">
+            <t t-call="assets_management.template_asset_journal_asset_title"/>
             <div class="act_as_table" style="width: 100%">
-                <div class="act_as_thead"
-                     style="width: 100%; font-size: 14px; margin: 3px;">
-                    <t t-call="assets_management.template_asset_journal_asset_title"/>
+                <div class="act_as_thead" style="width: 100%; font-size: 14px; margin: 3px;">
                     <t t-call="assets_management.template_asset_journal_asset_table_header"/>
                     <t t-call="assets_management.template_asset_journal_asset_table_data"/>
                 </div>
@@ -139,7 +138,7 @@
 
     <template id="template_asset_journal_asset_title">
         <div name="asset_name">
-            <h2 style="text-align: left;">
+            <h4 style="text-align: left;">
                 <t t-set="active_id" t-value="asset_section.asset_id.id"/>
                 <span style="margin: 5px;">
                     <span>Asset: </span>
@@ -149,7 +148,7 @@
                         <t t-raw="asset_section.asset_name"/>
                     </a>
                 </span>
-            </h2>
+            </h4>
         </div>
     </template>
 
