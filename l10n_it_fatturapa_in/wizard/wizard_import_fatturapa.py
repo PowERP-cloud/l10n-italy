@@ -173,10 +173,21 @@ class WizardImportFatturapa(models.TransientModel):
                 if DatiAnagrafici.IdFiscaleIVA.IdCodice.startswith("IT"):
                     vat = DatiAnagrafici.IdFiscaleIVA.IdCodice.rjust(13, '0')[:13]
                 else:
-                    vat = "%s%s" % (
-                        DatiAnagrafici.IdFiscaleIVA.IdPaese.upper(),
-                        DatiAnagrafici.IdFiscaleIVA.IdCodice.rjust(11, '0')[:11]
-                    )
+                    if not supplier:
+                        check = self.env['res.partner'].simple_vat_check(
+                            DatiAnagrafici.IdFiscaleIVA.IdPaese.lower(),
+                            DatiAnagrafici.IdFiscaleIVA.IdCodice.rjust(11, '0')[:11]
+                        )
+                    else:
+                        check = True
+
+                    if check:
+                        vat = "%s%s" % (
+                            DatiAnagrafici.IdFiscaleIVA.IdPaese.upper(),
+                            DatiAnagrafici.IdFiscaleIVA.IdCodice.rjust(11, '0')[:11]
+                        )
+                    else:
+                        vat = False
             else:
                 vat = "%s%s" % (
                     DatiAnagrafici.IdFiscaleIVA.IdPaese.upper(),
