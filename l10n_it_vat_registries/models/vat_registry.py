@@ -198,6 +198,7 @@ class ReportRegistroIva(models.AbstractModel):
     def _get_move_total(self, move):
         total = 0.0
         receivable_payable_found = False
+
         for move_line in move.line_ids:
             if move_line.account_id.internal_type == "receivable":
                 total += move_line.debit or (- move_line.credit)
@@ -205,12 +206,17 @@ class ReportRegistroIva(models.AbstractModel):
             elif move_line.account_id.internal_type == "payable":
                 total += (- move_line.debit) or move_line.credit
                 receivable_payable_found = True
+            elif move.fiscal_position_id.rc_type and move_line.line_type == 'tax':
+                total += move_line.debit or (-move_line.credit)
+
         if receivable_payable_found:
             total = abs(total)
         else:
             total = abs(move.amount)
+
         if 'refund' in move.type:
             total = -total
+
         return total
 
     def _compute_totals_tax(self, tax, data):

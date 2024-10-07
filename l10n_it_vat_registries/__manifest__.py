@@ -4,9 +4,9 @@
 # Copyright 2012-2018 Lorenzo Battistini - Agile Business Group
 # Copyright 2012-15 LinkIt srl (<http://http://www.linkgroup.it>)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
+# noinspection PyStatementEffect
 {
-    'version': '12.0.1.2.5_7',
+    'version': '12.0.1.2.5_8',
     'name': 'ITA - Registri IVA',
     'category': 'Localization/Italy',
     "author": "Agile Business Group, Odoo Community Association (OCA)"
