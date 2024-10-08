@@ -8,7 +8,7 @@
 # noinspection PyStatementEffect
 {
     'name': 'ITA - DDT: documento di trasporto',
-    'version': '12.0.1.10.2_b',
+    'version': '12.0.1.10.2_c',
     'version_ori': '12.0.2.9.1',
     'category': 'Localization/Italy',
     'summary': 'Documento di Trasporto',

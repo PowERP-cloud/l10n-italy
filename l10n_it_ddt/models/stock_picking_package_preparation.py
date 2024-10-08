@@ -658,10 +658,15 @@ class StockPickingPackagePreparationLine(models.Model):
             if line['move_id']:
                 move = self.env['stock.move'].browse(line['move_id'])
                 sale_line = move.sale_line_id or False
+
             if sale_line:
                 line['price_unit'] = sale_line.price_unit or 0
                 line['discount'] = sale_line.discount or 0
-                line['tax_ids'] = [(6, 0, [x.id]) for x in sale_line.tax_id]
+                line['tax_ids'] = [(6, False, [x.id]) for x in sale_line.tax_id]
+            else:
+                product = self.env['product.product'].browse(line['product_id'])
+                line['price_unit'] = product.list_price or product.lst_price
+                line['tax_ids'] = [(6, False, [tax.id]) for tax in product.taxes_id]
         return lines
 
     @api.multi
